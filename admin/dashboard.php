@@ -14,6 +14,8 @@ function ensureAll(): void {
     ensureAlertsTable();
     ensureNoticesTable();
     ensureGuideTable();
+    ensureContactDirectoryTable();
+    ensureCabinetDecisionsTable();
 }
 ensureAll();
 
@@ -105,6 +107,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // ── Messages ─────────────────────────────────────────────────────────────
     if ($action === 'mark_read') { $db->prepare('UPDATE contact_messages SET is_read=1 WHERE id=?')->execute([(int)$_POST['id']]); header('Location: /admin/dashboard.php?tab=messages'); exit; }
     if ($action === 'delete_msg') { $db->prepare('DELETE FROM contact_messages WHERE id=?')->execute([(int)$_POST['id']]); header('Location: /admin/dashboard.php?tab=messages'); exit; }
+
+    // ── Contact Directory ───────────────────────────────────────────────────────
+    if ($action === 'add_contact') {
+        $db->prepare('INSERT INTO contact_directory (name,name_ne,category,category_ne,city,phone,address,email) VALUES (?,?,?,?,?,?,?,?)')->execute([$_POST['name'],$_POST['name_ne'],$_POST['category'],$_POST['category_ne'],$_POST['city'],$_POST['phone'],$_POST['address'],$_POST['email']]);
+        flash('Contact added.'); header('Location: /admin/dashboard.php?tab=contacts'); exit;
+    }
+    if ($action === 'edit_contact') {
+        $db->prepare('UPDATE contact_directory SET name=?,name_ne=?,category=?,category_ne=?,city=?,phone=?,address=?,email=? WHERE id=?')->execute([$_POST['name'],$_POST['name_ne'],$_POST['category'],$_POST['category_ne'],$_POST['city'],$_POST['phone'],$_POST['address'],$_POST['email'],(int)$_POST['id']]);
+        flash('Contact updated.'); header('Location: /admin/dashboard.php?tab=contacts'); exit;
+    }
+    if ($action === 'delete_contact') { $db->prepare('DELETE FROM contact_directory WHERE id=?')->execute([(int)$_POST['id']]); flash('Deleted.'); header('Location: /admin/dashboard.php?tab=contacts'); exit; }
+
+    // ── Cabinet Decisions ────────────────────────────────────────────────────────
+    if ($action === 'add_decision') {
+        $db->prepare('INSERT INTO cabinet_decisions (date,date_np,title,title_ne,category,category_ne,summary,summary_ne,details,details_ne) VALUES (?,?,?,?,?,?,?,?,?,?)')->execute([$_POST['date'],$_POST['date_np'],$_POST['title'],$_POST['title_ne'],$_POST['category'],$_POST['category_ne'],$_POST['summary'],$_POST['summary_ne'],$_POST['details'],$_POST['details_ne']]);
+        flash('Decision added.'); header('Location: /admin/dashboard.php?tab=decisions'); exit;
+    }
+    if ($action === 'edit_decision') {
+        $db->prepare('UPDATE cabinet_decisions SET date=?,date_np=?,title=?,title_ne=?,category=?,category_ne=?,summary=?,summary_ne=?,details=?,details_ne=? WHERE id=?')->execute([$_POST['date'],$_POST['date_np'],$_POST['title'],$_POST['title_ne'],$_POST['category'],$_POST['category_ne'],$_POST['summary'],$_POST['summary_ne'],$_POST['details'],$_POST['details_ne'],(int)$_POST['id']]);
+        flash('Decision updated.'); header('Location: /admin/dashboard.php?tab=decisions'); exit;
+    }
+    if ($action === 'delete_decision') { $db->prepare('DELETE FROM cabinet_decisions WHERE id=?')->execute([(int)$_POST['id']]); flash('Deleted.'); header('Location: /admin/dashboard.php?tab=decisions'); exit; }
 }
 
 // ─── Load Data ────────────────────────────────────────────────────────────────
@@ -115,6 +139,8 @@ $messages    = $db->query('SELECT * FROM contact_messages ORDER BY created_at DE
 $noticeItems = $db->query('SELECT * FROM notices ORDER BY created_at DESC LIMIT 200')->fetchAll();
 $guides      = $db->query('SELECT id,title,category,icon,level,is_published,created_at FROM ai_guides ORDER BY created_at DESC')->fetchAll();
 $alertItems  = $db->query('SELECT * FROM alerts ORDER BY created_at DESC LIMIT 200')->fetchAll();
+$contacts    = $db->query('SELECT * FROM contact_directory ORDER BY name ASC')->fetchAll();
+$decisions   = $db->query('SELECT * FROM cabinet_decisions ORDER BY date DESC')->fetchAll();
 $unread      = count(array_filter($messages, fn($m) => !$m['is_read']));
 $activeAlerts = count(array_filter($alertItems, fn($a) => $a['is_active']));
 
@@ -124,6 +150,8 @@ $editNews   = isset($_GET['edit_news'])   ? $db->query('SELECT * FROM tech_news 
 $editNotice = isset($_GET['edit_notice']) ? $db->query('SELECT * FROM notices WHERE id='.(int)$_GET['edit_notice'])->fetch() : null;
 $editGuide  = isset($_GET['edit_guide'])  ? $db->query('SELECT * FROM ai_guides WHERE id='.(int)$_GET['edit_guide'])->fetch() : null;
 $editAlert  = isset($_GET['edit_alert'])  ? $db->query('SELECT * FROM alerts WHERE id='.(int)$_GET['edit_alert'])->fetch() : null;
+$editContact = isset($_GET['edit_contact']) ? $db->query('SELECT * FROM contact_directory WHERE id='.(int)$_GET['edit_contact'])->fetch() : null;
+$editDecision = isset($_GET['edit_decision']) ? $db->query('SELECT * FROM cabinet_decisions WHERE id='.(int)$_GET['edit_decision'])->fetch() : null;
 
 // ─── Field Helpers ────────────────────────────────────────────────────────────
 function adField(string $name, string $label, string $type = 'text', $value = '', string $ph = '', string $hint = ''): void {
@@ -211,6 +239,8 @@ $navItems = [
   ['notices','bell','Notices',count($noticeItems)],
   ['alerts','siren','Alerts',$activeAlerts>0?"$activeAlerts active":''],
   ['guides','bot','AI Guides',count($guides)],
+  ['contacts','phone','Contact Directory',count($contacts)],
+  ['decisions','scroll-text','Cabinet Decisions',count($decisions)],
   ['messages','message-circle','Messages',$unread>0?"$unread unread":''],
 ];
 ?>
@@ -308,6 +338,8 @@ $navItems = [
         ['bell','Notices',count($noticeItems),'notices'],
         ['siren','Alerts',$activeAlerts?:count($alertItems),'alerts'],
         ['bot','Guides',count($guides),'guides'],
+        ['phone','Contacts',count($contacts),'contacts'],
+        ['scroll-text','Decisions',count($decisions),'decisions'],
         ['message-circle','Messages',$unread?:count($messages),'messages'],
       ] as [$ico,$label,$val,$key]): ?>
       <a href="?tab=<?= $key ?>" class="stat <?= $tab===$key?'active':'' ?>">
@@ -733,6 +765,92 @@ $navItems = [
       </div>
       <?php endforeach; ?>
     </div>
+
+    <!-- ═══════════ CONTACT DIRECTORY TAB ═════════════════════════════════════ -->
+    <?php elseif ($tab === 'contacts'): ?>
+    <div class="flex justify-between items-center mb-5">
+      <h2 class="section-title"><i data-lucide="phone" class="ic"></i> Contact Directory</h2>
+      <button onclick="document.getElementById('modal-add-contact').classList.add('open')" class="px-4 py-2 text-xs font-bold btn-p" style="border-radius:8px;"><i data-lucide="plus" class="ic-sm"></i> New Contact</button>
+    </div>
+    <div class="space-y-3">
+      <?php foreach ($contacts as $c): ?>
+      <div class="bg-[#ffffff] border border-[#e2e8f0] rounded p-4 flex items-start gap-4">
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2 mb-1 flex-wrap">
+            <span class="text-[10px] border border-[#e2e8f0] px-2 py-0.5 rounded text-[#64748b] font-mono uppercase"><?= htmlspecialchars($c['category']) ?></span>
+            <span class="text-[10px] border border-[#e2e8f0] px-2 py-0.5 rounded text-[#64748b] font-mono uppercase"><?= htmlspecialchars($c['city']) ?></span>
+          </div>
+          <h3 class="font-bold text-[#0f172a] text-sm"><?= htmlspecialchars($c['name']) ?> <span class="text-[#64748b] ne"><?= htmlspecialchars($c['name_ne']) ?></span></h3>
+          <p class="text-xs text-[#64748b] font-mono mt-1"><?= htmlspecialchars($c['phone']) ?></p>
+          <?php if ($c['email']): ?><p class="text-xs text-[#64748b] font-mono"><?= htmlspecialchars($c['email']) ?></p><?php endif; ?>
+        </div>
+        <div class="flex gap-2 shrink-0">
+          <a href="?tab=contacts&edit_contact=<?= $c['id'] ?>" class="text-xs text-[#64748b] hover:text-[#14b8a6] font-mono">Edit</a>
+          <form method="POST" onsubmit="return confirm('Delete?')"><input type="hidden" name="action" value="delete_contact"/><input type="hidden" name="id" value="<?= $c['id'] ?>"/><button type="submit" class="text-xs text-[#ef4444] font-mono">Del</button></form>
+        </div>
+      </div>
+      <?php endforeach; ?>
+    </div>
+    <?php if ($editContact): ?>
+    <div class="mt-6 bg-[#ffffff] border border-[#0f766e]/40 rounded p-6">
+      <h3 class="text-base font-bold uppercase tracking-wider text-[#14b8a6] mb-5">Editing: <?= htmlspecialchars($editContact['name']) ?></h3>
+      <form method="POST" class="space-y-4">
+        <input type="hidden" name="action" value="edit_contact"/><input type="hidden" name="id" value="<?= $editContact['id'] ?>"/>
+        <div class="grid grid-cols-2 gap-4">
+          <?php adField('name','Name (English)','text',$editContact['name']); adField('name_ne','Name (Nepali)','text',$editContact['name_ne']); ?>
+          <?php adField('category','Category (English)','text',$editContact['category']); adField('category_ne','Category (Nepali)','text',$editContact['category_ne']); ?>
+          <?php adField('city','City','text',$editContact['city']); adField('phone','Phone','text',$editContact['phone']); ?>
+        </div>
+        <?php adField('address','Address','textarea',$editContact['address']??''); ?>
+        <?php adField('email','Email','text',$editContact['email']??''); ?>
+        <div class="flex gap-3"><button type="submit" class="flex-1 py-2.5 btn-p rounded font-bold uppercase text-sm">Update</button><a href="?tab=contacts" class="flex-1 py-2.5 text-center btn-o rounded font-bold uppercase text-sm">Cancel</a></div>
+      </form>
+    </div>
+    <?php endif; ?>
+
+    <!-- ═══════════ CABINET DECISIONS TAB ═════════════════════════════════════ -->
+    <?php elseif ($tab === 'decisions'): ?>
+    <div class="flex justify-between items-center mb-5">
+      <h2 class="section-title"><i data-lucide="scroll-text" class="ic"></i> Cabinet Decisions</h2>
+      <button onclick="document.getElementById('modal-add-decision').classList.add('open')" class="px-4 py-2 text-xs font-bold btn-p" style="border-radius:8px;"><i data-lucide="plus" class="ic-sm"></i> New Decision</button>
+    </div>
+    <div class="space-y-3">
+      <?php foreach ($decisions as $d): ?>
+      <div class="bg-[#ffffff] border border-[#e2e8f0] rounded p-4 flex items-start gap-4">
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2 mb-1 flex-wrap">
+            <span class="text-[10px] border border-[#e2e8f0] px-2 py-0.5 rounded text-[#64748b] font-mono uppercase"><?= htmlspecialchars($d['category']) ?></span>
+            <span class="text-[10px] text-[#64748b] font-mono"><?= htmlspecialchars($d['date_np']) ?></span>
+          </div>
+          <h3 class="font-bold text-[#0f172a] text-sm"><?= htmlspecialchars($d['title']) ?> <span class="text-[#64748b] ne"><?= htmlspecialchars($d['title_ne']) ?></span></h3>
+          <p class="text-xs text-[#64748b] mt-1"><?= htmlspecialchars($d['summary_ne']) ?></p>
+        </div>
+        <div class="flex gap-2 shrink-0">
+          <a href="?tab=decisions&edit_decision=<?= $d['id'] ?>" class="text-xs text-[#64748b] hover:text-[#14b8a6] font-mono">Edit</a>
+          <form method="POST" onsubmit="return confirm('Delete?')"><input type="hidden" name="action" value="delete_decision"/><input type="hidden" name="id" value="<?= $d['id'] ?>"/><button type="submit" class="text-xs text-[#ef4444] font-mono">Del</button></form>
+        </div>
+      </div>
+      <?php endforeach; ?>
+    </div>
+    <?php if ($editDecision): ?>
+    <div class="mt-6 bg-[#ffffff] border border-[#0f766e]/40 rounded p-6">
+      <h3 class="text-base font-bold uppercase tracking-wider text-[#14b8a6] mb-5">Editing: <?= htmlspecialchars($editDecision['title']) ?></h3>
+      <form method="POST" class="space-y-4">
+        <input type="hidden" name="action" value="edit_decision"/><input type="hidden" name="id" value="<?= $editDecision['id'] ?>"/>
+        <div class="grid grid-cols-2 gap-4">
+          <?php adField('date','Date (YYYY-MM-DD)','date',$editDecision['date']); adField('date_np','Date (Nepali)','text',$editDecision['date_np']); ?>
+          <?php adField('category','Category (English)','text',$editDecision['category']); adField('category_ne','Category (Nepali)','text',$editDecision['category_ne']); ?>
+        </div>
+        <?php adField('title','Title (English)','text',$editDecision['title']); ?>
+        <?php adField('title_ne','Title (Nepali)','text',$editDecision['title_ne']); ?>
+        <?php adField('summary','Summary (English)','textarea',$editDecision['summary']??''); ?>
+        <?php adField('summary_ne','Summary (Nepali)','textarea',$editDecision['summary_ne']??''); ?>
+        <?php adField('details','Details (English, JSON array)','textarea',$editDecision['details']??''); ?>
+        <?php adField('details_ne','Details (Nepali, JSON array)','textarea',$editDecision['details_ne']??''); ?>
+        <div class="flex gap-3"><button type="submit" class="flex-1 py-2.5 btn-p rounded font-bold uppercase text-sm">Update</button><a href="?tab=decisions" class="flex-1 py-2.5 text-center btn-o rounded font-bold uppercase text-sm">Cancel</a></div>
+      </form>
+    </div>
+    <?php endif; ?>
     <?php endif; ?>
 
   </div><!-- /max-w -->
@@ -842,6 +960,39 @@ $navItems = [
     <?php adField('content','Full Content (HTML/Text)','textarea'); ?>
     <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="is_published" value="1" checked class="w-4 h-4 accent-[#0f766e]"/><span class="text-sm font-mono text-[#64748b]">Publish</span></label>
     <button type="submit" class="w-full py-2.5 btn-p rounded font-bold uppercase text-sm">Publish Guide</button>
+  </form>
+</div></div>
+
+<!-- Add Contact -->
+<div id="modal-add-contact" class="modal"><div class="bg-[#ffffff] border border-[#e2e8f0] rounded w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6">
+  <div class="flex justify-between items-center mb-5"><h3 class="font-bold uppercase tracking-wider text-[#0f172a]">New Contact</h3><button onclick="this.closest('.modal').classList.remove('open')" class="text-[#64748b] text-2xl leading-none">&times;</button></div>
+  <form method="POST" class="space-y-4"><input type="hidden" name="action" value="add_contact"/>
+    <div class="grid grid-cols-2 gap-4">
+      <?php adField('name','Name (English)','text','',''); adField('name_ne','Name (Nepali)','text','',''); ?>
+      <?php adField('category','Category (English)','text','','government'); adField('category_ne','Category (Nepali)','text','','सरकारी'); ?>
+      <?php adField('city','City','text','','Kathmandu'); adField('phone','Phone','text','',''); ?>
+    </div>
+    <?php adField('address','Address','textarea',''); ?>
+    <?php adField('email','Email','text',''); ?>
+    <button type="submit" class="w-full py-2.5 btn-p rounded font-bold uppercase text-sm">Add Contact</button>
+  </form>
+</div></div>
+
+<!-- Add Decision -->
+<div id="modal-add-decision" class="modal"><div class="bg-[#ffffff] border border-[#e2e8f0] rounded w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6">
+  <div class="flex justify-between items-center mb-5"><h3 class="font-bold uppercase tracking-wider text-[#0f172a]">New Cabinet Decision</h3><button onclick="this.closest('.modal').classList.remove('open')" class="text-[#64748b] text-2xl leading-none">&times;</button></div>
+  <form method="POST" class="space-y-4"><input type="hidden" name="action" value="add_decision"/>
+    <div class="grid grid-cols-2 gap-4">
+      <?php adField('date','Date (YYYY-MM-DD)','date',''); adField('date_np','Date (Nepali)','text',''); ?>
+      <?php adField('category','Category (English)','text','economic'); adField('category_ne','Category (Nepali)','text','आर्थिक'); ?>
+    </div>
+    <?php adField('title','Title (English)','text',''); ?>
+    <?php adField('title_ne','Title (Nepali)','text',''); ?>
+    <?php adField('summary','Summary (English)','textarea',''); ?>
+    <?php adField('summary_ne','Summary (Nepali)','textarea',''); ?>
+    <?php adField('details','Details (English, JSON array)','textarea','[]'); ?>
+    <?php adField('details_ne','Details (Nepali, JSON array)','textarea','[]'); ?>
+    <button type="submit" class="w-full py-2.5 btn-p rounded font-bold uppercase text-sm">Add Decision</button>
   </form>
 </div></div>
 

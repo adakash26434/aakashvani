@@ -1103,6 +1103,52 @@ function ensureGuideTable(): void {
     $done = true;
 }
 
+function ensureContactDirectoryTable(): void {
+    static $done = false;
+    if ($done) return;
+    $ai = dbAI();
+    db()->exec("CREATE TABLE IF NOT EXISTS contact_directory (
+        id           $ai,
+        name         VARCHAR(500) NOT NULL,
+        name_ne      VARCHAR(500) NOT NULL,
+        category     VARCHAR(100) NOT NULL,
+        category_ne  VARCHAR(100) NOT NULL,
+        city         VARCHAR(100) NOT NULL,
+        phone        VARCHAR(50) NOT NULL,
+        address      TEXT,
+        email        VARCHAR(255),
+        created_at   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        updated_at   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+    )" . dbCharset());
+    dbIndex('idx_contacts_city', 'contact_directory', 'city');
+    dbIndex('idx_contacts_category', 'contact_directory', 'category');
+    $done = true;
+}
+
+function ensureCabinetDecisionsTable(): void {
+    static $done = false;
+    if ($done) return;
+    $ai = dbAI();
+    db()->exec("CREATE TABLE IF NOT EXISTS cabinet_decisions (
+        id           $ai,
+        date         DATE NOT NULL,
+        date_np      VARCHAR(50) NOT NULL,
+        title        VARCHAR(500) NOT NULL,
+        title_ne     VARCHAR(500) NOT NULL,
+        category     VARCHAR(100) NOT NULL,
+        category_ne  VARCHAR(100) NOT NULL,
+        summary      TEXT,
+        summary_ne   TEXT,
+        details      TEXT,
+        details_ne   TEXT,
+        created_at   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        updated_at   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+    )" . dbCharset());
+    dbIndex('idx_decisions_date', 'cabinet_decisions', 'date');
+    dbIndex('idx_decisions_category', 'cabinet_decisions', 'category');
+    $done = true;
+}
+
 function getPublishedGuides(?string $category = null, int $limit = 20, int $offset = 0): array {
     ensureGuideTable();
     $sql = 'SELECT * FROM ai_guides WHERE is_published = 1';
