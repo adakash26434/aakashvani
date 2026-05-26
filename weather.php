@@ -183,6 +183,80 @@ if (isset($nepalCities[$selectedCity])) {
   
   <?php endif; ?>
 
+  <!-- Earthquake Monitor -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 mb-6">
+    <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+      <i data-lucide="activity" class="w-5 h-5 text-red-500"></i>
+      <span class="ne">भूकम्प निगरानी</span>
+    </h3>
+    
+    <div class="bg-gradient-to-r from-orange-50 to-red-50 rounded-xl p-4 border border-orange-100 mb-4">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-xl bg-red-100 flex items-center justify-center">
+          <span class="text-2xl">🌋</span>
+        </div>
+        <div>
+          <p class="text-sm text-orange-800 ne">नेपाल र छिमेकी क्षेत्रमा हालैका भूकम्पहरू</p>
+          <p class="text-xs text-orange-600 mt-1">Real-time data from USGS Earthquake Catalog</p>
+        </div>
+      </div>
+    </div>
+    
+    <div id="earthquake-list" class="space-y-3">
+      <div class="text-center py-4">
+        <div class="inline-block w-6 h-6 border-2 border-red-500 border-t-transparent rounded-full animate-spin"></div>
+        <p class="text-sm text-gray-500 mt-2 ne">भूकम्प डाटा लोड हुँदैछ...</p>
+      </div>
+    </div>
+    
+    <div class="mt-4 pt-4 border-t border-gray-100">
+      <a href="https://www.seismonepal.gov.np/" target="_blank" class="inline-flex items-center gap-2 text-sm text-red-600 hover:text-red-700 font-medium">
+        <span class="ne">National Earthquake Monitoring Centre मा हेर्नुहोस्</span>
+        <i data-lucide="external-link" class="w-4 h-4"></i>
+      </a>
+    </div>
+  </div>
+
+  <script>
+  // Load earthquake data
+  (function(){
+    fetch('/api/earthquake.php?minmag=4.0&days=7')
+      .then(r => r.ok ? r.json() : null)
+      .then(d => {
+        var box = document.getElementById('earthquake-list');
+        if(!box || !d || !d.ok || !d.data || !d.data.length){
+          if(box) box.innerHTML = '<div class="text-center py-4 text-gray-500 ne">भूकम्प डाटा उपलब्ध छैन</div>';
+          return;
+        }
+        
+        box.innerHTML = d.data.slice(0, 5).map(function(eq){
+          var color = eq.significance.color || '#6b7280';
+          var timeAgo = Math.floor((Date.now() - eq.time) / 3600000);
+          var timeText = timeAgo < 1 ? 'केही मिनेट अघि' : timeAgo + ' घण्टा अघि';
+          
+          return '<div class="flex items-center justify-between p-3 bg-gray-50 rounded-xl">'+
+            '<div class="flex items-center gap-3">'+
+              '<div class="w-10 h-10 rounded-lg flex items-center justify-center text-white font-bold text-sm" style="background:'+color+'">'+
+                eq.magnitude+
+              '</div>'+
+              '<div>'+
+                '<p class="font-medium text-gray-900 ne">'+eq.place+'</p>'+
+                '<p class="text-xs text-gray-500">'+timeText+' • '+eq.distance_from_kathmandu+' km from Kathmandu</p>'+
+              '</div>'+
+            '</div>'+
+            '<a href="'+eq.url+'" target="_blank" class="text-gray-400 hover:text-gray-600">'+
+              '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>'+
+            '</a>'+
+          '</div>';
+        }).join('');
+      })
+      .catch(() => {
+        var box = document.getElementById('earthquake-list');
+        if(box) box.innerHTML = '<div class="text-center py-4 text-gray-500 ne">भूकम्प डाटा लोड हुन सकेन</div>';
+      });
+  })();
+  </script>
+
   <!-- Official Source -->
   <div class="bg-amber-50 rounded-xl p-4 border border-amber-100">
     <p class="text-sm text-amber-800 ne">
