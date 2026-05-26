@@ -16,6 +16,10 @@ header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
 header('Cache-Control: public, max-age=3600');
 
+// Ensure UTF-8 encoding
+mb_internal_encoding('UTF-8');
+mb_http_output('UTF-8');
+
 // Rate limiting
 $rateKey = 'rashifal:' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown');
 if (!checkRateLimit($rateKey, 100, 60)) {
@@ -29,9 +33,18 @@ ob_start();
 
 $rashi = $_GET['rashi'] ?? null;
 $lang = $_GET['lang'] ?? 'ne';
+$forceRefresh = isset($_GET['refresh']); // Force cache refresh
 
 $cacheDir = __DIR__ . '/../data/cache/';
 if (!is_dir($cacheDir)) mkdir($cacheDir, 0755, true);
+
+// Clear cache if refresh requested
+if ($forceRefresh) {
+    $files = glob($cacheDir . 'rashifal_*.json');
+    foreach ($files as $file) {
+        @unlink($file);
+    }
+}
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // RASHI DATA
