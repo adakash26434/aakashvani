@@ -33,15 +33,17 @@ if (is_file($cacheFile) && (time() - filemtime($cacheFile)) < 300) {
   readfile($cacheFile); exit;
 }
 
-function http_get_json(string $url, int $timeout = 8) {
-  $ctx = stream_context_create([
-    'http' => ['timeout'=>$timeout, 'header'=>"User-Agent: Aakashvani/1.0\r\nAccept: application/json\r\n", 'ignore_errors'=>true],
-    'ssl'  => ['verify_peer'=>true, 'verify_peer_name'=>true],
-  ]);
-  $raw = @file_get_contents($url, false, $ctx);
-  if ($raw === false) return null;
-  $j = json_decode($raw, true);
-  return is_array($j) ? $j : null;
+if (!function_exists('http_get_json')) {
+  function http_get_json(string $url, int $timeout = 8) {
+    $ctx = stream_context_create([
+      'http' => ['timeout'=>$timeout, 'header'=>"User-Agent: Aakashvani/1.0\r\nAccept: application/json\r\n", 'ignore_errors'=>true],
+      'ssl'  => ['verify_peer'=>true, 'verify_peer_name'=>true],
+    ]);
+    $raw = @file_get_contents($url, false, $ctx);
+    if ($raw === false) return null;
+    $j = json_decode($raw, true);
+    return is_array($j) ? $j : null;
+  }
 }
 
 $alerts = [];

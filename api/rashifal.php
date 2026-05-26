@@ -292,20 +292,24 @@ function getFallbackRashifal(int $rashiIndex, array $rashiInfo, array $bsDate): 
 // CACHE AND RETRIEVE
 // ═══════════════════════════════════════════════════════════════════════════════
 
-function readCache(string $key): ?array {
-    global $cacheDir;
-    $file = $cacheDir . $key . '.json';
-    if (file_exists($file) && (time() - filemtime($file)) < 86400) { // 24 hour cache
-        $data = json_decode(file_get_contents($file), true);
-        if ($data) return $data;
+if (!function_exists('readCache')) {
+    function readCache(string $key): ?array {
+        global $cacheDir;
+        $file = $cacheDir . $key . '.json';
+        if (file_exists($file) && (time() - filemtime($file)) < 86400) { // 24 hour cache
+            $data = json_decode(file_get_contents($file), true);
+            if ($data) return $data;
+        }
+        return null;
     }
-    return null;
 }
 
-function writeCache(string $key, array $data): void {
-    global $cacheDir;
-    $data['cached_at'] = date('Y-m-d H:i:s');
-    file_put_contents($cacheDir . $key . '.json', json_encode($data, JSON_UNESCAPED_UNICODE));
+if (!function_exists('writeCache')) {
+    function writeCache(string $key, array $data): void {
+        global $cacheDir;
+        $data['cached_at'] = date('Y-m-d H:i:s');
+        file_put_contents($cacheDir . $key . '.json', json_encode($data, JSON_UNESCAPED_UNICODE));
+    }
 }
 
 function readDbRashifal(int $rashiIndex, string $dateAd, string $lang): ?array {

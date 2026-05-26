@@ -45,9 +45,11 @@ function writeCache(string $key, array $data): void {
     file_put_contents($cacheDir . $key . '.json', json_encode($data));
 }
 
-function fetchUrl(string $url, array $headers = [], int $timeout = 10): ?string {
-    require_once __DIR__ . '/../includes/http.php';
-    return nh_fetchUrl($url, $headers, $timeout, true);
+if (!function_exists('fetchUrl')) {
+    function fetchUrl(string $url, array $headers = [], int $timeout = 10): ?string {
+        require_once __DIR__ . '/../includes/http.php';
+        return nh_fetchUrl($url, $headers, $timeout, true);
+    }
 }
 
 /**
