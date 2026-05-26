@@ -621,6 +621,29 @@ button, .btn, .chip, .pill, .tab, .tile{font-family:'Hind Siliguri',system-ui,sa
 $_flash = getFlash();
 ?>
 <body class="<?= $EMBED ? 'embed-mode' : '' ?>">
+
+<!-- ═══ PAGE LOADING SPINNER ═══════════════════════════════════════════════════ -->
+<div id="page-loader" style="position:fixed;top:0;left:0;width:100%;height:100%;background:#fff;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 0.3s;">
+  <div style="width:60px;height:60px;border:4px solid #f0fdfa;border-top:4px solid #0d9488;border-radius:50%;animation:spin 1s linear infinite;"></div>
+  <div style="margin-top:20px;font-size:14px;color:#64748b;font-family:'Hind Siliguri',sans-serif;" class="ne">लोड हुँदैछ...</div>
+</div>
+<style>
+  @keyframes spin{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
+  #page-loader.hidden{opacity:0;pointer-events:none;}
+</style>
+<script>
+  // Hide loader when page is fully loaded
+  window.addEventListener('load', function() {
+    setTimeout(function() {
+      var loader = document.getElementById('page-loader');
+      if(loader) {
+        loader.classList.add('hidden');
+        setTimeout(function() { loader.style.display = 'none'; }, 300);
+      }
+    }, 500); // Minimum 500ms show time so user sees it
+  });
+</script>
+
 <?php if ($_flash): ?>
 <div id="flash-toast"
   class="fixed top-4 left-1/2 -translate-x-1/2 z-[9999] max-w-sm w-[92%] flex items-center gap-3 px-4 py-3 rounded-2xl shadow-2xl border text-[13px] font-semibold
