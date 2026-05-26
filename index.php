@@ -146,6 +146,9 @@ window.__chips = {
       <a href="/kundali-milan.php" onclick="return openInDetailPane('/kundali-milan.php');" class="hero-icon-btn bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/20 rounded-xl py-2 text-center text-[11px] font-semibold flex flex-col items-center gap-1 transition-all" data-url="/kundali-milan.php">
         <i data-lucide="heart" class="w-4 h-4"></i><span class="ne"><?= $t('कुण्डली','Kundali') ?></span>
       </a>
+      <a href="/flight-status.php" onclick="return openInDetailPane('/flight-status.php');" class="hero-icon-btn bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/20 rounded-xl py-2 text-center text-[11px] font-semibold flex flex-col items-center gap-1 transition-all" data-url="/flight-status.php">
+        <i data-lucide="plane" class="w-4 h-4"></i><span class="ne"><?= $t('उडान','Flight') ?></span>
+      </a>
     </div>
   </div>
 </section>
