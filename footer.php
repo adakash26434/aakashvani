@@ -260,7 +260,7 @@ $todayQuote = $_quotes[$_qIdx];
               <span class="ic bg-i5"><i data-lucide="sparkles" class="w-[18px] h-[18px]"></i></span>
               <span class="lbl ne"><?= $tF('राशिफल','Rashifal') ?></span>
             </a>
-            <a href="/nepali-patro-enhanced.php" class="dpd-tile">
+            <a href="/nepali-patro.php" class="dpd-tile">
               <span class="ic bg-i4"><i data-lucide="calendar-days" class="w-[18px] h-[18px]"></i></span>
               <span class="lbl ne"><?= $tF('पात्रो','Patro') ?></span>
             </a>
