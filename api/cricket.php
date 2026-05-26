@@ -61,10 +61,10 @@ function ckt_cached(string $key, int $ttl, callable $fn): array {
 
 /* ── TheSportsDB league IDs ── */
 define('CKT_LEAGUES', [
-    'ipl'        => ['id'=>'4337', 'name'=>'IPL',                  'flag'=>'🇮🇳'],
-    'intl'       => ['id'=>'4688', 'name'=>'International Cricket', 'flag'=>'🌍'],
-    'wpl'        => ['id'=>'5296', 'name'=>'Women Premier League',  'flag'=>'🏏'],
-    't20wc'      => ['id'=>'4688', 'name'=>'T20 World Cup',         'flag'=>'🌏'],
+    'ipl'        => ['id'=>'4337', 'name'=>'IPL',                  'icon'=>'flag'],
+    'intl'       => ['id'=>'4688', 'name'=>'International Cricket', 'icon'=>'globe'],
+    'wpl'        => ['id'=>'5296', 'name'=>'Women Premier League',  'icon'=>'trophy'],
+    't20wc'      => ['id'=>'4688', 'name'=>'T20 World Cup',         'icon'=>'award'],
 ]);
 
 /* ── Fetch matches from TheSportsDB ── */
