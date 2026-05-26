@@ -19,6 +19,9 @@ function ensureAll(): void {
     ensureCabinetDecisionsTable();
     ensureGovernmentTendersTable();
     ensureStoriesTable();
+    ensureVisitPlacesTable();
+    ensureRadioStationsTable();
+    ensureRadioPodcastsTable();
 }
 ensureAll();
 
@@ -165,6 +168,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     if ($action === 'delete_story') { $db->prepare('DELETE FROM stories WHERE id=?')->execute([(int)$_POST['id']]); flash('Deleted.'); header('Location: /admin/dashboard.php?tab=stories'); exit;
     }
+
+    // ── Visit Places ───────────────────────────────────────────────────────────
+    if ($action === 'add_visit') {
+        $slug = entSlugify($_POST['title']);
+        $db->prepare('INSERT INTO visit_places (slug,title,title_en,short_caption,description,description_en,image_path,image_thumb,district,province,region,category,featured,sort_order,status) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)')->execute([$slug,$_POST['title'],$_POST['title_en'],$_POST['short_caption'],$_POST['description'],$_POST['description_en'],$_POST['image_path'],$_POST['image_thumb'],$_POST['district'],$_POST['province'],$_POST['region'],$_POST['category'],isset($_POST['featured'])?1:0,(int)$_POST['sort_order'],$_POST['status']]);
+        flash('Visit place added.'); header('Location: /admin/dashboard.php?tab=visit'); exit;
+    }
+    if ($action === 'edit_visit') {
+        $slug = entSlugify($_POST['title']);
+        $db->prepare('UPDATE visit_places SET slug=?,title=?,title_en=?,short_caption=?,description=?,description_en=?,image_path=?,image_thumb=?,district=?,province=?,region=?,category=?,featured=?,sort_order=?,status=? WHERE id=?')->execute([$slug,$_POST['title'],$_POST['title_en'],$_POST['short_caption'],$_POST['description'],$_POST['description_en'],$_POST['image_path'],$_POST['image_thumb'],$_POST['district'],$_POST['province'],$_POST['region'],$_POST['category'],isset($_POST['featured'])?1:0,(int)$_POST['sort_order'],$_POST['status'],(int)$_POST['id']]);
+        flash('Visit place updated.'); header('Location: /admin/dashboard.php?tab=visit'); exit;
+    }
+    if ($action === 'delete_visit') { $db->prepare('DELETE FROM visit_places WHERE id=?')->execute([(int)$_POST['id']]); flash('Deleted.'); header('Location: /admin/dashboard.php?tab=visit'); exit;
+    }
+
+    // ── Radio Stations ─────────────────────────────────────────────────────────
+    if ($action === 'add_radio') {
+        $db->prepare('INSERT INTO radio_stations (name,name_en,logo_path,frequency,location,website,streaming_url,featured,sort_order,status) VALUES (?,?,?,?,?,?,?,?,?,?)')->execute([$_POST['name'],$_POST['name_en'],$_POST['logo_path'],$_POST['frequency'],$_POST['location'],$_POST['website'],$_POST['streaming_url'],isset($_POST['featured'])?1:0,(int)$_POST['sort_order'],$_POST['status']]);
+        flash('Radio station added.'); header('Location: /admin/dashboard.php?tab=radio'); exit;
+    }
+    if ($action === 'edit_radio') {
+        $db->prepare('UPDATE radio_stations SET name=?,name_en=?,logo_path=?,frequency=?,location=?,website=?,streaming_url=?,featured=?,sort_order=?,status=? WHERE id=?')->execute([$_POST['name'],$_POST['name_en'],$_POST['logo_path'],$_POST['frequency'],$_POST['location'],$_POST['website'],$_POST['streaming_url'],isset($_POST['featured'])?1:0,(int)$_POST['sort_order'],$_POST['status'],(int)$_POST['id']]);
+        flash('Radio station updated.'); header('Location: /admin/dashboard.php?tab=radio'); exit;
+    }
+    if ($action === 'delete_radio') { $db->prepare('DELETE FROM radio_stations WHERE id=?')->execute([(int)$_POST['id']]); flash('Deleted.'); header('Location: /admin/dashboard.php?tab=radio'); exit;
+    }
+
+    // ── Radio Podcasts ─────────────────────────────────────────────────────────
+    if ($action === 'add_podcast') {
+        $db->prepare('INSERT INTO radio_podcasts (station_id,title,title_en,description,description_en,audio_url,duration,episode_number,published_at,status) VALUES (?,?,?,?,?,?,?,?,?,?)')->execute([(int)$_POST['station_id'],$_POST['title'],$_POST['title_en'],$_POST['description'],$_POST['description_en'],$_POST['audio_url'],(int)$_POST['duration'],(int)$_POST['episode_number'],$_POST['published_at'],$_POST['status']]);
+        flash('Podcast added.'); header('Location: /admin/dashboard.php?tab=podcasts'); exit;
+    }
+    if ($action === 'edit_podcast') {
+        $db->prepare('UPDATE radio_podcasts SET station_id=?,title=?,title_en=?,description=?,description_en=?,audio_url=?,duration=?,episode_number=?,published_at=?,status=? WHERE id=?')->execute([(int)$_POST['station_id'],$_POST['title'],$_POST['title_en'],$_POST['description'],$_POST['description_en'],$_POST['audio_url'],(int)$_POST['duration'],(int)$_POST['episode_number'],$_POST['published_at'],$_POST['status'],(int)$_POST['id']]);
+        flash('Podcast updated.'); header('Location: /admin/dashboard.php?tab=podcasts'); exit;
+    }
+    if ($action === 'delete_podcast') { $db->prepare('DELETE FROM radio_podcasts WHERE id=?')->execute([(int)$_POST['id']]); flash('Deleted.'); header('Location: /admin/dashboard.php?tab=podcasts'); exit;
+    }
 }
 
 // ─── Load Data ────────────────────────────────────────────────────────────────
@@ -179,6 +220,9 @@ $contacts    = $db->query('SELECT * FROM contact_directory ORDER BY name ASC')->
 $decisions   = $db->query('SELECT * FROM cabinet_decisions ORDER BY date DESC')->fetchAll();
 $tenders     = $db->query('SELECT * FROM government_tenders ORDER BY deadline DESC')->fetchAll();
 $stories     = $db->query('SELECT * FROM stories ORDER BY created_at DESC')->fetchAll();
+$visitPlaces = $db->query('SELECT * FROM visit_places ORDER BY featured DESC, sort_order ASC, created_at DESC')->fetchAll();
+$radioStations = $db->query('SELECT * FROM radio_stations ORDER BY featured DESC, sort_order ASC, name ASC')->fetchAll();
+$radioPodcasts = $db->query('SELECT p.*, s.name AS station_name FROM radio_podcasts p LEFT JOIN radio_stations s ON s.id = p.station_id ORDER BY p.published_at DESC')->fetchAll();
 $unread      = count(array_filter($messages, fn($m) => !$m['is_read']));
 $activeAlerts = count(array_filter($alertItems, fn($a) => $a['is_active']));
 
@@ -192,6 +236,9 @@ $editContact = isset($_GET['edit_contact']) ? $db->query('SELECT * FROM contact_
 $editDecision = isset($_GET['edit_decision']) ? $db->query('SELECT * FROM cabinet_decisions WHERE id='.(int)$_GET['edit_decision'])->fetch() : null;
 $editTender = isset($_GET['edit_tender']) ? $db->query('SELECT * FROM government_tenders WHERE id='.(int)$_GET['edit_tender'])->fetch() : null;
 $editStory = isset($_GET['edit_story']) ? $db->query('SELECT * FROM stories WHERE id='.(int)$_GET['edit_story'])->fetch() : null;
+$editVisit = isset($_GET['edit_visit']) ? $db->query('SELECT * FROM visit_places WHERE id='.(int)$_GET['edit_visit'])->fetch() : null;
+$editRadio = isset($_GET['edit_radio']) ? $db->query('SELECT * FROM radio_stations WHERE id='.(int)$_GET['edit_radio'])->fetch() : null;
+$editPodcast = isset($_GET['edit_podcast']) ? $db->query('SELECT * FROM radio_podcasts WHERE id='.(int)$_GET['edit_podcast'])->fetch() : null;
 
 // ─── Field Helpers ────────────────────────────────────────────────────────────
 function adField(string $name, string $label, string $type = 'text', $value = '', string $ph = '', string $hint = ''): void {
@@ -283,6 +330,9 @@ $navItems = [
   ['decisions','scroll-text','Cabinet Decisions',count($decisions)],
   ['tenders','file-text','Government Tenders',count($tenders)],
   ['stories','book-open','Stories',count($stories)],
+  ['visit','map-pin','Visit Places',count($visitPlaces)],
+  ['radio','radio','Radio Stations',count($radioStations)],
+  ['podcasts','mic','Podcasts',count($radioPodcasts)],
   ['messages','message-circle','Messages',$unread>0?"$unread unread":''],
 ];
 ?>
@@ -384,6 +434,9 @@ $navItems = [
         ['scroll-text','Decisions',count($decisions),'decisions'],
         ['file-text','Tenders',count($tenders),'tenders'],
         ['book-open','Stories',count($stories),'stories'],
+        ['map-pin','Visit',count($visitPlaces),'visit'],
+        ['radio','Radio',count($radioStations),'radio'],
+        ['mic','Podcasts',count($radioPodcasts),'podcasts'],
         ['message-circle','Messages',$unread?:count($messages),'messages'],
       ] as [$ico,$label,$val,$key]): ?>
       <a href="?tab=<?= $key ?>" class="stat <?= $tab===$key?'active':'' ?>">
@@ -992,6 +1045,157 @@ $navItems = [
       </form>
     </div>
     <?php endif; ?>
+
+    <!-- ═══════════ VISIT PLACES TAB ════════════════════════════════════ -->
+    <?php elseif ($tab === 'visit'): ?>
+    <div class="flex justify-between items-center mb-5">
+      <h2 class="section-title"><i data-lucide="map-pin" class="ic"></i> Visit Places</h2>
+      <button onclick="document.getElementById('modal-add-visit').classList.add('open')" class="px-4 py-2 text-xs font-bold btn-p" style="border-radius:8px;"><i data-lucide="plus" class="ic-sm"></i> New Place</button>
+    </div>
+    <div class="space-y-3">
+      <?php foreach ($visitPlaces as $v): ?>
+      <div class="bg-[#ffffff] border border-[#e2e8f0] rounded p-4 flex items-start gap-4">
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2 mb-1 flex-wrap">
+            <?php if ($v['featured']): ?><span class="text-[10px] bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded font-mono uppercase">⭐ Featured</span><?php endif; ?>
+            <span class="text-[10px] border border-[#e2e8f0] px-2 py-0.5 rounded text-[#64748b] font-mono uppercase"><?= htmlspecialchars($v['category']) ?></span>
+            <span class="text-[10px] text-[#64748b] font-mono"><?= htmlspecialchars($v['district']) ?></span>
+            <span class="text-[10px] text-[#64748b] font-mono"><?= $v['views'] ?> views</span>
+          </div>
+          <h3 class="font-bold text-[#0f172a] text-sm"><?= htmlspecialchars($v['title']) ?> <span class="text-[#64748b]"><?= htmlspecialchars($v['title_en'] ?? '') ?></span></h3>
+          <p class="text-xs text-[#64748b] mt-1"><?= htmlspecialchars($v['short_caption'] ?? '') ?></p>
+        </div>
+        <div class="flex gap-2 shrink-0">
+          <a href="?tab=visit&edit_visit=<?= $v['id'] ?>" class="text-xs text-[#64748b] hover:text-[#14b8a6] font-mono">Edit</a>
+          <form method="POST" onsubmit="return confirm('Delete?')"><input type="hidden" name="action" value="delete_visit"/><input type="hidden" name="id" value="<?= $v['id'] ?>"/><button type="submit" class="text-xs text-[#ef4444] font-mono">Del</button></form>
+        </div>
+      </div>
+      <?php endforeach; ?>
+    </div>
+    <?php if ($editVisit): ?>
+    <div class="mt-6 bg-[#ffffff] border border-[#0f766e]/40 rounded p-6">
+      <h3 class="text-base font-bold uppercase tracking-wider text-[#14b8a6] mb-5">Editing: <?= htmlspecialchars($editVisit['title']) ?></h3>
+      <form method="POST" class="space-y-4">
+        <input type="hidden" name="action" value="edit_visit"/><input type="hidden" name="id" value="<?= $editVisit['id'] ?>"/>
+        <div class="grid grid-cols-2 gap-4">
+          <?php adField('title','Title (Nepali)','text',$editVisit['title']); adField('title_en','Title (English)','text',$editVisit['title_en']??''); ?>
+          <?php adField('district','District','text',$editVisit['district']??''); adField('province','Province','text',$editVisit['province']??''); ?>
+          <?php adField('region','Region','text',$editVisit['region']??''); adField('category','Category','text',$editVisit['category']??''); ?>
+          <?php adField('sort_order','Sort Order','number',$editVisit['sort_order']??0); ?>
+        </div>
+        <?php adField('short_caption','Short Caption','text',$editVisit['short_caption']??''); ?>
+        <?php adField('description','Description (Nepali)','textarea',$editVisit['description']??''); ?>
+        <?php adField('description_en','Description (English)','textarea',$editVisit['description_en']??''); ?>
+        <?php adField('image_path','Image Path','text',$editVisit['image_path']??''); ?>
+        <?php adField('image_thumb','Thumbnail Path','text',$editVisit['image_thumb']??''); ?>
+        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="featured" value="1" <?= $editVisit['featured']?'checked':'' ?> class="w-4 h-4 accent-[#0f766e]"/><span class="text-sm font-mono text-[#64748b]">Featured</span></label>
+        <div class="flex gap-3">
+          <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="status" value="published" <?= $editVisit['status']==='published'?'checked':'' ?> class="w-4 h-4 accent-[#0f766e]"/><span class="text-sm font-mono text-[#64748b]">Published</span></label>
+          <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="status" value="draft" <?= $editVisit['status']==='draft'?'checked':'' ?> class="w-4 h-4 accent-[#0f766e]"/><span class="text-sm font-mono text-[#64748b]">Draft</span></label>
+        </div>
+        <div class="flex gap-3"><button type="submit" class="flex-1 py-2.5 btn-p rounded font-bold uppercase text-sm">Update</button><a href="?tab=visit" class="flex-1 py-2.5 text-center btn-o rounded font-bold uppercase text-sm">Cancel</a></div>
+      </form>
+    </div>
+    <?php endif; ?>
+
+    <!-- ═══════════ RADIO STATIONS TAB ════════════════════════════════════ -->
+    <?php elseif ($tab === 'radio'): ?>
+    <div class="flex justify-between items-center mb-5">
+      <h2 class="section-title"><i data-lucide="radio" class="ic"></i> Radio Stations</h2>
+      <button onclick="document.getElementById('modal-add-radio').classList.add('open')" class="px-4 py-2 text-xs font-bold btn-p" style="border-radius:8px;"><i data-lucide="plus" class="ic-sm"></i> New Station</button>
+    </div>
+    <div class="space-y-3">
+      <?php foreach ($radioStations as $r): ?>
+      <div class="bg-[#ffffff] border border-[#e2e8f0] rounded p-4 flex items-start gap-4">
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2 mb-1 flex-wrap">
+            <?php if ($r['featured']): ?><span class="text-[10px] bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded font-mono uppercase">⭐ Featured</span><?php endif; ?>
+            <span class="text-[10px] border border-[#e2e8f0] px-2 py-0.5 rounded text-[#64748b] font-mono uppercase"><?= htmlspecialchars($r['status']) ?></span>
+            <span class="text-[10px] text-[#64748b] font-mono"><?= htmlspecialchars($r['frequency'] ?? '') ?></span>
+            <span class="text-[10px] text-[#64748b] font-mono"><?= htmlspecialchars($r['location'] ?? '') ?></span>
+          </div>
+          <h3 class="font-bold text-[#0f172a] text-sm"><?= htmlspecialchars($r['name']) ?> <span class="text-[#64748b]"><?= htmlspecialchars($r['name_en'] ?? '') ?></span></h3>
+          <?php if ($r['website']): ?><p class="text-xs text-sky-600 mt-1"><a href="<?= htmlspecialchars($r['website']) ?>" target="_blank"><?= htmlspecialchars($r['website']) ?></a></p><?php endif; ?>
+        </div>
+        <div class="flex gap-2 shrink-0">
+          <a href="?tab=radio&edit_radio=<?= $r['id'] ?>" class="text-xs text-[#64748b] hover:text-[#14b8a6] font-mono">Edit</a>
+          <form method="POST" onsubmit="return confirm('Delete?')"><input type="hidden" name="action" value="delete_radio"/><input type="hidden" name="id" value="<?= $r['id'] ?>"/><button type="submit" class="text-xs text-[#ef4444] font-mono">Del</button></form>
+        </div>
+      </div>
+      <?php endforeach; ?>
+    </div>
+    <?php if ($editRadio): ?>
+    <div class="mt-6 bg-[#ffffff] border border-[#0f766e]/40 rounded p-6">
+      <h3 class="text-base font-bold uppercase tracking-wider text-[#14b8a6] mb-5">Editing: <?= htmlspecialchars($editRadio['name']) ?></h3>
+      <form method="POST" class="space-y-4">
+        <input type="hidden" name="action" value="edit_radio"/><input type="hidden" name="id" value="<?= $editRadio['id'] ?>"/>
+        <div class="grid grid-cols-2 gap-4">
+          <?php adField('name','Name (Nepali)','text',$editRadio['name']); adField('name_en','Name (English)','text',$editRadio['name_en']??''); ?>
+          <?php adField('frequency','Frequency','text',$editRadio['frequency']??''); adField('location','Location','text',$editRadio['location']??''); ?>
+          <?php adField('sort_order','Sort Order','number',$editRadio['sort_order']??0); ?>
+        </div>
+        <?php adField('logo_path','Logo Path','text',$editRadio['logo_path']??''); ?>
+        <?php adField('website','Website','text',$editRadio['website']??''); ?>
+        <?php adField('streaming_url','Streaming URL','text',$editRadio['streaming_url']??''); ?>
+        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="featured" value="1" <?= $editRadio['featured']?'checked':'' ?> class="w-4 h-4 accent-[#0f766e]"/><span class="text-sm font-mono text-[#64748b]">Featured</span></label>
+        <div class="flex gap-3">
+          <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="status" value="active" <?= $editRadio['status']==='active'?'checked':'' ?> class="w-4 h-4 accent-[#0f766e]"/><span class="text-sm font-mono text-[#64748b]">Active</span></label>
+          <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="status" value="inactive" <?= $editRadio['status']==='inactive'?'checked':'' ?> class="w-4 h-4 accent-[#0f766e]"/><span class="text-sm font-mono text-[#64748b]">Inactive</span></label>
+        </div>
+        <div class="flex gap-3"><button type="submit" class="flex-1 py-2.5 btn-p rounded font-bold uppercase text-sm">Update</button><a href="?tab=radio" class="flex-1 py-2.5 text-center btn-o rounded font-bold uppercase text-sm">Cancel</a></div>
+      </form>
+    </div>
+    <?php endif; ?>
+
+    <!-- ═══════════ PODCASTS TAB ════════════════════════════════════ -->
+    <?php elseif ($tab === 'podcasts'): ?>
+    <div class="flex justify-between items-center mb-5">
+      <h2 class="section-title"><i data-lucide="mic" class="ic"></i> Radio Podcasts</h2>
+      <button onclick="document.getElementById('modal-add-podcast').classList.add('open')" class="px-4 py-2 text-xs font-bold btn-p" style="border-radius:8px;"><i data-lucide="plus" class="ic-sm"></i> New Podcast</button>
+    </div>
+    <div class="space-y-3">
+      <?php foreach ($radioPodcasts as $p): ?>
+      <div class="bg-[#ffffff] border border-[#e2e8f0] rounded p-4 flex items-start gap-4">
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2 mb-1 flex-wrap">
+            <span class="text-[10px] border border-[#e2e8f0] px-2 py-0.5 rounded text-[#64748b] font-mono uppercase"><?= htmlspecialchars($p['status']) ?></span>
+            <span class="text-[10px] text-[#64748b] font-mono">Ep <?= htmlspecialchars($p['episode_number'] ?? '') ?></span>
+            <span class="text-[10px] text-[#64748b] font-mono"><?= htmlspecialchars($p['station_name'] ?? 'No Station') ?></span>
+            <span class="text-[10px] text-[#64748b] font-mono"><?= $p['duration'] ? htmlspecialchars($p['duration'] . ' min') : '' ?></span>
+          </div>
+          <h3 class="font-bold text-[#0f172a] text-sm"><?= htmlspecialchars($p['title']) ?> <span class="text-[#64748b]"><?= htmlspecialchars($p['title_en'] ?? '') ?></span></h3>
+          <p class="text-xs text-[#64748b] mt-1"><?= htmlspecialchars($p['description'] ?? '') ?></p>
+          <?php if ($p['audio_url']): ?><p class="text-xs text-sky-600 mt-1"><a href="<?= htmlspecialchars($p['audio_url']) ?>" target="_blank">🎧 Listen</a></p><?php endif; ?>
+        </div>
+        <div class="flex gap-2 shrink-0">
+          <a href="?tab=podcasts&edit_podcast=<?= $p['id'] ?>" class="text-xs text-[#64748b] hover:text-[#14b8a6] font-mono">Edit</a>
+          <form method="POST" onsubmit="return confirm('Delete?')"><input type="hidden" name="action" value="delete_podcast"/><input type="hidden" name="id" value="<?= $p['id'] ?>"/><button type="submit" class="text-xs text-[#ef4444] font-mono">Del</button></form>
+        </div>
+      </div>
+      <?php endforeach; ?>
+    </div>
+    <?php if ($editPodcast): ?>
+    <div class="mt-6 bg-[#ffffff] border border-[#0f766e]/40 rounded p-6">
+      <h3 class="text-base font-bold uppercase tracking-wider text-[#14b8a6] mb-5">Editing: <?= htmlspecialchars($editPodcast['title']) ?></h3>
+      <form method="POST" class="space-y-4">
+        <input type="hidden" name="action" value="edit_podcast"/><input type="hidden" name="id" value="<?= $editPodcast['id'] ?>"/>
+        <div class="grid grid-cols-2 gap-4">
+          <?php adField('title','Title (Nepali)','text',$editPodcast['title']); adField('title_en','Title (English)','text',$editPodcast['title_en']??''); ?>
+          <?php adField('station_id','Station ID','number',$editPodcast['station_id']??''); adField('episode_number','Episode Number','number',$editPodcast['episode_number']??''); ?>
+          <?php adField('duration','Duration (minutes)','number',$editPodcast['duration']??''); ?>
+        </div>
+        <?php adField('description','Description (Nepali)','textarea',$editPodcast['description']??''); ?>
+        <?php adField('description_en','Description (English)','textarea',$editPodcast['description_en']??''); ?>
+        <?php adField('audio_url','Audio URL','text',$editPodcast['audio_url']??''); ?>
+        <?php adField('published_at','Published At','datetime',$editPodcast['published_at']??''); ?>
+        <div class="flex gap-3">
+          <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="status" value="published" <?= $editPodcast['status']==='published'?'checked':'' ?> class="w-4 h-4 accent-[#0f766e]"/><span class="text-sm font-mono text-[#64748b]">Published</span></label>
+          <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="status" value="draft" <?= $editPodcast['status']==='draft'?'checked':'' ?> class="w-4 h-4 accent-[#0f766e]"/><span class="text-sm font-mono text-[#64748b]">Draft</span></label>
+        </div>
+        <div class="flex gap-3"><button type="submit" class="flex-1 py-2.5 btn-p rounded font-bold uppercase text-sm">Update</button><a href="?tab=podcasts" class="flex-1 py-2.5 text-center btn-o rounded font-bold uppercase text-sm">Cancel</a></div>
+      </form>
+    </div>
+    <?php endif; ?>
     <?php endif; ?>
 
   </div><!-- /max-w -->
@@ -1177,6 +1381,72 @@ $navItems = [
     <?php adField('tags_en','Tags (English, comma separated)','text',''); ?>
     <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="is_published" value="1" checked class="w-4 h-4 accent-[#0f766e]"/><span class="text-sm font-mono text-[#64748b]">Published</span></label>
     <button type="submit" class="w-full py-2.5 btn-p rounded font-bold uppercase text-sm">Add Story</button>
+  </form>
+</div></div>
+
+<!-- Add Visit Place -->
+<div id="modal-add-visit" class="modal"><div class="bg-[#ffffff] border border-[#e2e8f0] rounded w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6">
+  <div class="flex justify-between items-center mb-5"><h3 class="font-bold uppercase tracking-wider text-[#0f172a]">New Visit Place</h3><button onclick="this.closest('.modal').classList.remove('open')" class="text-[#64748b] text-2xl leading-none">&times;</button></div>
+  <form method="POST" class="space-y-4"><input type="hidden" name="action" value="add_visit"/>
+    <div class="grid grid-cols-2 gap-4">
+      <?php adField('title','Title (Nepali)','text',''); adField('title_en','Title (English)','text',''); ?>
+      <?php adField('district','District','text',''); adField('province','Province','text',''); ?>
+      <?php adField('region','Region','text',''); adField('category','Category','text',''); ?>
+      <?php adField('sort_order','Sort Order','number','0'); ?>
+    </div>
+    <?php adField('short_caption','Short Caption','text',''); ?>
+    <?php adField('description','Description (Nepali)','textarea',''); ?>
+    <?php adField('description_en','Description (English)','textarea',''); ?>
+    <?php adField('image_path','Image Path','text','/uploads/visit/'); ?>
+    <?php adField('image_thumb','Thumbnail Path','text','/uploads/visit/'); ?>
+    <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="featured" value="1" class="w-4 h-4 accent-[#0f766e]"/><span class="text-sm font-mono text-[#64748b]">Featured</span></label>
+    <div class="flex gap-3">
+      <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="status" value="published" checked class="w-4 h-4 accent-[#0f766e]"/><span class="text-sm font-mono text-[#64748b]">Published</span></label>
+      <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="status" value="draft" class="w-4 h-4 accent-[#0f766e]"/><span class="text-sm font-mono text-[#64748b]">Draft</span></label>
+    </div>
+    <button type="submit" class="w-full py-2.5 btn-p rounded font-bold uppercase text-sm">Add Visit Place</button>
+  </form>
+</div></div>
+
+<!-- Add Radio Station -->
+<div id="modal-add-radio" class="modal"><div class="bg-[#ffffff] border border-[#e2e8f0] rounded w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6">
+  <div class="flex justify-between items-center mb-5"><h3 class="font-bold uppercase tracking-wider text-[#0f172a]">New Radio Station</h3><button onclick="this.closest('.modal').classList.remove('open')" class="text-[#64748b] text-2xl leading-none">&times;</button></div>
+  <form method="POST" class="space-y-4"><input type="hidden" name="action" value="add_radio"/>
+    <div class="grid grid-cols-2 gap-4">
+      <?php adField('name','Name (Nepali)','text',''); adField('name_en','Name (English)','text',''); ?>
+      <?php adField('frequency','Frequency','text',''); adField('location','Location','text',''); ?>
+      <?php adField('sort_order','Sort Order','number','0'); ?>
+    </div>
+    <?php adField('logo_path','Logo Path','text','/uploads/radio/'); ?>
+    <?php adField('website','Website','text',''); ?>
+    <?php adField('streaming_url','Streaming URL','text',''); ?>
+    <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="featured" value="1" class="w-4 h-4 accent-[#0f766e]"/><span class="text-sm font-mono text-[#64748b]">Featured</span></label>
+    <div class="flex gap-3">
+      <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="status" value="active" checked class="w-4 h-4 accent-[#0f766e]"/><span class="text-sm font-mono text-[#64748b]">Active</span></label>
+      <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="status" value="inactive" class="w-4 h-4 accent-[#0f766e]"/><span class="text-sm font-mono text-[#64748b]">Inactive</span></label>
+    </div>
+    <button type="submit" class="w-full py-2.5 btn-p rounded font-bold uppercase text-sm">Add Radio Station</button>
+  </form>
+</div></div>
+
+<!-- Add Podcast -->
+<div id="modal-add-podcast" class="modal"><div class="bg-[#ffffff] border border-[#e2e8f0] rounded w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6">
+  <div class="flex justify-between items-center mb-5"><h3 class="font-bold uppercase tracking-wider text-[#0f172a]">New Podcast</h3><button onclick="this.closest('.modal').classList.remove('open')" class="text-[#64748b] text-2xl leading-none">&times;</button></div>
+  <form method="POST" class="space-y-4"><input type="hidden" name="action" value="add_podcast"/>
+    <div class="grid grid-cols-2 gap-4">
+      <?php adField('title','Title (Nepali)','text',''); adField('title_en','Title (English)','text',''); ?>
+      <?php adField('station_id','Station ID','number',''); adField('episode_number','Episode Number','number',''); ?>
+      <?php adField('duration','Duration (minutes)','number',''); ?>
+    </div>
+    <?php adField('description','Description (Nepali)','textarea',''); ?>
+    <?php adField('description_en','Description (English)','textarea',''); ?>
+    <?php adField('audio_url','Audio URL','text',''); ?>
+    <?php adField('published_at','Published At','datetime',''); ?>
+    <div class="flex gap-3">
+      <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="status" value="published" checked class="w-4 h-4 accent-[#0f766e]"/><span class="text-sm font-mono text-[#64748b]">Published</span></label>
+      <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="status" value="draft" class="w-4 h-4 accent-[#0f766e]"/><span class="text-sm font-mono text-[#64748b]">Draft</span></label>
+    </div>
+    <button type="submit" class="w-full py-2.5 btn-p rounded font-bold uppercase text-sm">Add Podcast</button>
   </form>
 </div></div>
 

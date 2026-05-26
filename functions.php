@@ -1213,6 +1213,87 @@ function ensureStoriesTable(): void {
     $done = true;
 }
 
+function ensureVisitPlacesTable(): void {
+    static $done = false;
+    if ($done) return;
+    $ai = dbAI();
+    db()->exec("CREATE TABLE IF NOT EXISTS visit_places (
+        id                  $ai,
+        slug                VARCHAR(200) NOT NULL UNIQUE,
+        title               VARCHAR(500) NOT NULL,
+        title_en            VARCHAR(500),
+        short_caption       TEXT,
+        description         TEXT,
+        description_en      TEXT,
+        image_path          VARCHAR(500),
+        image_thumb         VARCHAR(500),
+        district            VARCHAR(100),
+        province            VARCHAR(100),
+        region              VARCHAR(100),
+        category            VARCHAR(100),
+        featured            TINYINT NOT NULL DEFAULT 0,
+        sort_order          INT NOT NULL DEFAULT 0,
+        views               INT NOT NULL DEFAULT 0,
+        status              VARCHAR(20) NOT NULL DEFAULT 'published',
+        created_at          DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        updated_at          DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+    )" . dbCharset());
+    dbIndex('idx_visit_places_slug', 'visit_places', 'slug');
+    dbIndex('idx_visit_places_district', 'visit_places', 'district');
+    dbIndex('idx_visit_places_featured', 'visit_places', 'featured');
+    dbIndex('idx_visit_places_status', 'visit_places', 'status');
+    $done = true;
+}
+
+function ensureRadioStationsTable(): void {
+    static $done = false;
+    if ($done) return;
+    $ai = dbAI();
+    db()->exec("CREATE TABLE IF NOT EXISTS radio_stations (
+        id                  $ai,
+        name                VARCHAR(200) NOT NULL,
+        name_en             VARCHAR(200),
+        logo_path           VARCHAR(500),
+        frequency           VARCHAR(100),
+        location            VARCHAR(200),
+        website             VARCHAR(500),
+        streaming_url       VARCHAR(500),
+        featured            TINYINT NOT NULL DEFAULT 0,
+        sort_order          INT NOT NULL DEFAULT 0,
+        status              VARCHAR(20) NOT NULL DEFAULT 'active',
+        created_at          DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        updated_at          DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+    )" . dbCharset());
+    dbIndex('idx_radio_stations_status', 'radio_stations', 'status');
+    dbIndex('idx_radio_stations_featured', 'radio_stations', 'featured');
+    $done = true;
+}
+
+function ensureRadioPodcastsTable(): void {
+    static $done = false;
+    if ($done) return;
+    $ai = dbAI();
+    db()->exec("CREATE TABLE IF NOT EXISTS radio_podcasts (
+        id                  $ai,
+        station_id          INT,
+        title               VARCHAR(500) NOT NULL,
+        title_en            VARCHAR(500),
+        description         TEXT,
+        description_en      TEXT,
+        audio_url           VARCHAR(500),
+        duration            INT,
+        episode_number      INT,
+        published_at        DATETIME,
+        status              VARCHAR(20) NOT NULL DEFAULT 'published',
+        created_at          DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        updated_at          DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+    )" . dbCharset());
+    dbIndex('idx_radio_podcasts_station', 'radio_podcasts', 'station_id');
+    dbIndex('idx_radio_podcasts_status', 'radio_podcasts', 'status');
+    dbIndex('idx_radio_podcasts_published', 'radio_podcasts', 'published_at');
+    $done = true;
+}
+
 function getPublishedGuides(?string $category = null, int $limit = 20, int $offset = 0): array {
     ensureGuideTable();
     $sql = 'SELECT * FROM ai_guides WHERE is_published = 1';
