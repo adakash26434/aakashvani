@@ -332,6 +332,31 @@ $todayQuote = $_quotes[$_qIdx];
             }
           });
 
+        // ── Bank Interest Rates (NRB Data) ─────────────────────────────────
+        fetch('/api/bank-interest-rates.php',{credentials:'same-origin'})
+          .then(r=>r.ok?r.json():null).then(d=>{
+            if(!d || !d.ok || !d.data) return;
+            var rates = d.data;
+            
+            // Fixed deposit rate
+            var fdRate = document.getElementById('dpd-fd-rate');
+            if(fdRate && rates.deposit_rates && rates.deposit_rates.fixed_1_year){
+              fdRate.textContent = rates.deposit_rates.fixed_1_year.avg + '%';
+            }
+            
+            // Base rate
+            var baseRate = document.getElementById('dpd-base-rate');
+            if(baseRate && rates.lending_rates && rates.lending_rates.base_rate){
+              baseRate.textContent = rates.lending_rates.base_rate.avg + '%';
+            }
+            
+            // Policy rate
+            var policyRate = document.getElementById('dpd-policy-rate');
+            if(policyRate && rates.policy_rates && rates.policy_rates.repo_rate){
+              policyRate.textContent = rates.policy_rates.repo_rate.rate + '%';
+            }
+          }).catch(()=>{});
+
         // ── Live weather + 3-day forecast (Open-Meteo — free, CORS-enabled) ──
         var WX_CODES={0:'सफा',1:'धमिलो',2:'आंशिक बादल',3:'बादल',45:'कुहिरो',48:'कुहिरो',51:'सिमसिम',53:'सिमसिम',55:'झरी',61:'पानी',63:'पानी',65:'भारी पानी',71:'हिउँ',73:'हिउँ',75:'भारी हिउँ',80:'पानी',81:'पानी',82:'भारी पानी',95:'चट्याङ',96:'चट्याङ',99:'चट्याङ'};
         var WX_ICONS={0:'sun',1:'cloud-sun',2:'cloud-sun',3:'cloud',45:'cloud-fog',48:'cloud-fog',51:'cloud-drizzle',53:'cloud-drizzle',55:'cloud-rain',61:'cloud-rain',63:'cloud-rain',65:'cloud-rain',71:'snowflake',73:'snowflake',75:'snowflake',80:'cloud-drizzle',81:'cloud-rain',82:'cloud-lightning',95:'cloud-lightning',96:'cloud-lightning',99:'cloud-lightning'};
