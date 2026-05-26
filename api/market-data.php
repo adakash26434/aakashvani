@@ -46,7 +46,7 @@ function writeCache(string $key, array $data): void {
 }
 
 if (!function_exists('fetchUrl')) {
-    function fetchUrl(string $url, array $headers = [], int $timeout = 10): ?string {
+    function fetchUrl(string $url, int $timeout = 10, array $headers = []): ?string {
         require_once __DIR__ . '/../includes/http.php';
         return nh_fetchUrl($url, $headers, $timeout, true);
     }
@@ -56,7 +56,7 @@ if (!function_exists('fetchUrl')) {
  * Scrape gold price from FENEGOSIDA (Nepal Gold & Silver Dealers' Association)
  */
 function scrapeGoldFromFenegosida(): ?array {
-    $html = fetchUrl('https://www.fenegosida.org/', [], 15);
+    $html = fetchUrl('https://www.fenegosida.org/', 15);
     if (!$html) return null;
 
     $goldHallmark = null;
@@ -104,7 +104,7 @@ function scrapeGoldFromFenegosida(): ?array {
  * Scrape gold from Hamro Patro (backup source)
  */
 function scrapeGoldFromHamroPatro(): ?array {
-    $html = fetchUrl('https://www.hamropatro.com/gold', [], 15);
+    $html = fetchUrl('https://www.hamropatro.com/gold', 15);
     if (!$html) return null;
 
     $hallmark = null;
@@ -222,7 +222,7 @@ function scrapePetrolFromNOC(): ?array {
 
     $html = null;
     foreach ($urls as $url) {
-        $h = fetchUrl($url, [], 15);
+        $h = fetchUrl($url, 15);
         if ($h && (
             stripos($h, 'petrol') !== false ||
             stripos($h, 'diesel') !== false ||

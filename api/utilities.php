@@ -38,10 +38,12 @@ function writeCache(string $key, array $data): void {
     $data['cached_at'] = date('Y-m-d H:i:s');
     @file_put_contents($cacheDir . $key . '.json', json_encode($data, JSON_UNESCAPED_UNICODE));
 }
-function fetchUrl(string $url, int $timeout = 12): ?string {
-    if (!function_exists('curl_init')) return null;
-    require_once __DIR__ . '/../includes/http.php';
-    return nh_fetchUrl($url, [], $timeout, true);
+if (!function_exists('fetchUrl')) {
+    function fetchUrl(string $url, int $timeout = 12): ?string {
+        if (!function_exists('curl_init')) return null;
+        require_once __DIR__ . '/../includes/http.php';
+        return nh_fetchUrl($url, [], $timeout, true);
+    }
 }
 
 /**
