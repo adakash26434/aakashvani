@@ -55,6 +55,7 @@ function ip_href(?string $html): string {
 
 /** Fetch one Sharesansar issue-type bucket as a clean PHP array. */
 function ip_fetch_type(int $type): array {
+    // Try Sharesansar first
     $url = 'https://www.sharesansar.com/existing-issues?type=' . $type
          . '&draw=1&start=0&length=100&_=' . time();
     $raw = nh_fetchUrl($url, [
@@ -62,12 +63,30 @@ function ip_fetch_type(int $type): array {
         'Accept: application/json, text/javascript, */*; q=0.01',
         'Referer: https://www.sharesansar.com/existing-issues',
     ], 12);
-    if (!$raw) return [];
-    $j = json_decode($raw, true);
-    if (!is_array($j) || empty($j['data']) || !is_array($j['data'])) return [];
+    if ($raw) {
+        $j = json_decode($raw, true);
+        if (is_array($j) && !empty($j['data']) && is_array($j['data'])) {
+            return ip_parse_sharesansar($j['data']);
+        }
+    }
+    
+    // Try Mero Lagani as fallback
+    $url2 = 'https://www.merolagani.com/IPOList';
+    $raw2 = nh_fetchUrl($url2, [], 10);
+    if ($raw2) {
+        // Parse Mero Lagani HTML (simplified)
+        if (preg_match_all('/<tr[^>]*>.*?<\/tr>/is', $raw2, $matches)) {
+            return ip_parse_merolagani($matches[0]);
+        }
+    }
+    
+    return [];
+}
 
+/** Parse Sharesansar data format */
+function ip_parse_sharesansar(array $data): array {
     $out = [];
-    foreach ($j['data'] as $row) {
+    foreach ($data as $row) {
         $co     = $row['company'] ?? [];
         $symbol = ip_clean($co['symbol']      ?? '');
         $name   = ip_clean($co['companyname'] ?? '');
@@ -101,6 +120,37 @@ function ip_fetch_type(int $type): array {
             'eligibleUrl' => $eligible ?: '',
             'companyUrl'  => ip_href($co['symbol'] ?? ''),
         ];
+    }
+    return $out;
+}
+
+/** Parse Mero Lagani HTML format (simplified) */
+function ip_parse_merolagani(array $rows): array {
+    $out = [];
+    foreach ($rows as $row) {
+        if (strpos($row, '<td') === false) continue;
+        // Simple regex extraction - would need proper HTML parser in production
+        if (preg_match('/<td[^>]*>([^<]+)<\/td>/is', $row, $matches)) {
+            $name = ip_clean($matches[1]);
+            if ($name) {
+                $out[] = [
+                    'name' => $name,
+                    'symbol' => '',
+                    'sector' => 'Unknown',
+                    'shares' => '',
+                    'price' => '',
+                    'ratio' => '',
+                    'openDate' => '',
+                    'closeDate' => '',
+                    'finalDate' => '',
+                    'listingDate' => '',
+                    'manager' => '',
+                    'announceUrl' => '',
+                    'eligibleUrl' => '',
+                    'companyUrl' => '',
+                ];
+            }
+        }
     }
     return $out;
 }
