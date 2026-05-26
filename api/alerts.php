@@ -33,11 +33,14 @@ if (is_file($cacheFile) && (time() - filemtime($cacheFile)) < 300) {
   readfile($cacheFile); exit;
 }
 
+$alerts = [];
+
+// Use http_get_json from functions.php if available, otherwise define it
 if (!function_exists('http_get_json')) {
-  function http_get_json(string $url, int $timeout = 8) {
+  function http_get_json(string $url, int $timeout = 8): ?array {
     $ctx = stream_context_create([
       'http' => ['timeout'=>$timeout, 'header'=>"User-Agent: Aakashvani/1.0\r\nAccept: application/json\r\n", 'ignore_errors'=>true],
-      'ssl'  => ['verify_peer'=>true, 'verify_peer_name'=>true],
+      'ssl'  => ['verify_peer'=>false, 'verify_peer_name'=>false],
     ]);
     $raw = @file_get_contents($url, false, $ctx);
     if ($raw === false) return null;
@@ -45,8 +48,6 @@ if (!function_exists('http_get_json')) {
     return is_array($j) ? $j : null;
   }
 }
-
-$alerts = [];
 
 /* ─── 1. BIPAD (gov.np) — current active alerts ──────────────────────────── */
 $bipad = http_get_json('https://bipadportal.gov.np/api/v1/alert/?expand=hazard&limit=15&ordering=-started_on');
