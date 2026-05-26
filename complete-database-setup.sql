@@ -33,8 +33,7 @@ CREATE TABLE IF NOT EXISTS radio_podcasts (
     duration VARCHAR(20),
     publish_date DATE,
     status VARCHAR(20) DEFAULT 'published',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (station_id) REFERENCES radio_stations(id) ON DELETE CASCADE
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- 3. Loksewa Notices Table
@@ -260,7 +259,16 @@ INSERT INTO alerts (title, description, severity, category, source, source_url, 
 ('Load Shedding Schedule', 'आजबाट नयाँ लोडसेडिङ तालिका लागू हुनेछ', 'info', 'power', 'NEA', 'https://www.nea.org.np', NOW(), 'active');
 
 -- ═══════════════════════════════════════════════════════════════════════════════
--- SECTION 4: CREATE INDEXES
+-- SECTION 4: CREATE FOREIGN KEYS (After all tables exist)
+-- ═══════════════════════════════════════════════════════════════════════════════
+
+-- Add foreign key to radio_podcasts (radio_stations must exist first)
+ALTER TABLE radio_podcasts 
+ADD CONSTRAINT fk_podcasts_station 
+FOREIGN KEY (station_id) REFERENCES radio_stations(id) ON DELETE SET NULL;
+
+-- ═══════════════════════════════════════════════════════════════════════════════
+-- SECTION 5: CREATE INDEXES
 -- ═══════════════════════════════════════════════════════════════════════════════
 
 CREATE INDEX idx_radio_status ON radio_stations(status);
