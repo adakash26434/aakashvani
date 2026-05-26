@@ -101,8 +101,8 @@ window.__chips = {
 
 <!-- ═══ HERO CARD: greeting + BS date + quick actions ════════════════════════ -->
 <section class="mt-3">
-  <div class="rounded-3xl overflow-hidden relative text-white p-4"
-       style="background:radial-gradient(120% 100% at 0% 0%,#14b8a6 0%,#0d9488 45%,#0f766e 100%);box-shadow:0 16px 40px -16px rgba(13,148,136,.5)">
+  <div class="rounded-3xl overflow-hidden relative text-white p-5"
+       style="background:radial-gradient(120% 100% at 0% 0%,#0d9488 0%,#0f766e 40%,#115e59 100%);box-shadow:0 20px 50px -16px rgba(13,148,136,.6)">
     <div class="flex items-start justify-between gap-3">
       <div class="min-w-0">
         <div class="text-[12px] opacity-85 ne font-medium"><?= htmlspecialchars($bsDateStr,ENT_QUOTES,'UTF-8') ?></div>
@@ -122,7 +122,7 @@ window.__chips = {
       <a href="/news.php" onclick="return openInDetailPane('/news.php');" class="hero-icon-btn bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/20 rounded-xl py-2 text-center text-[11px] font-semibold flex flex-col items-center gap-1 transition-all" data-url="/news.php">
         <i data-lucide="newspaper" class="w-4 h-4"></i><span class="ne"><?= $t('समाचार','News') ?></span>
       </a>
-      <a href="/nepali-patro.php" onclick="return openInDetailPane('/nepali-patro.php');" class="hero-icon-btn bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/20 rounded-xl py-2 text-center text-[11px] font-semibold flex flex-col items-center gap-1 transition-all" data-url="/nepali-patro.php">
+      <a href="/nepali-patro-enhanced.php" onclick="return openInDetailPane('/nepali-patro-enhanced.php');" class="hero-icon-btn bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/20 rounded-xl py-2 text-center text-[11px] font-semibold flex flex-col items-center gap-1 transition-all" data-url="/nepali-patro-enhanced.php">
         <i data-lucide="calendar-days" class="w-4 h-4"></i><span class="ne"><?= $t('पात्रो','Patro') ?></span>
       </a>
       <a href="/rashifal.php" onclick="return openInDetailPane('/rashifal.php');" class="hero-icon-btn bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/20 rounded-xl py-2 text-center text-[11px] font-semibold flex flex-col items-center gap-1 transition-all" data-url="/rashifal.php">
