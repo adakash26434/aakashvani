@@ -149,7 +149,7 @@ $activeCat = isset($_GET['cat']) ? strtolower(trim($_GET['cat'])) : 'all';
     var shown = items.slice(0, visible);
     var html = shown.map(function(it){
       var thumb = it.image
-        ? '<div class="thumb"><img src="'+escapeHtml(it.image)+'" alt="" loading="lazy" onerror="this.parentNode.style.display=\'none\'"></div>'
+        ? '<div class="thumb"><img src="'+escapeHtml(it.image)+'" alt="'+escapeHtml(it.title || 'News image')+'" loading="lazy" onerror="this.parentNode.style.display=\'none\'"></div>'
         : '';
       var sum = it.summary ? '<div class="sum ne">'+escapeHtml(it.summary)+'</div>' : '';
       var ago = it.ago || timeAgo(it.pubDate);
