@@ -5,12 +5,25 @@
  * "सूचनाको खुला आकाश"
  */
 ob_start();
+
+require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/../functions.php';
+require_once __DIR__ . '/../includes/error-logger.php';
+
+// Security headers
+sendSecurityHeaders();
 header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
 header('Cache-Control: public, max-age=3600');
 
-require_once __DIR__ . '/../config.php';
-require_once __DIR__ . '/../functions.php';
+// Rate limiting
+$rateKey = 'rashifal:' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown');
+if (!checkRateLimit($rateKey, 100, 60)) {
+    http_response_code(429);
+    echo json_encode(['ok' => false, 'error' => 'Rate limit exceeded']);
+    exit;
+}
+
 while (ob_get_level() > 0) ob_end_clean();
 ob_start();
 

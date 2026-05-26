@@ -4,13 +4,25 @@
  * Sources: TheSportsDB (free), CricAPI fallback, Nepal cricket news RSS
  * Cache: 10 min for live, 30 min for schedule/results
  */
-header('Content-Type: application/json; charset=utf-8');
-header('Cache-Control: public, max-age=600');
-header('Access-Control-Allow-Origin: *');
 @ini_set('default_socket_timeout', 7);
 
 require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../functions.php';
+require_once __DIR__ . '/../includes/error-logger.php';
+
+// Security headers
+sendSecurityHeaders();
+header('Content-Type: application/json; charset=utf-8');
+header('Cache-Control: public, max-age=600');
+header('Access-Control-Allow-Origin: *');
+
+// Rate limiting
+$rateKey = 'cricket:' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown');
+if (!checkRateLimit($rateKey, 60, 60)) {
+    http_response_code(429);
+    echo json_encode(['ok' => false, 'error' => 'Rate limit exceeded']);
+    exit;
+}
 
 $mode   = $_GET['mode'] ?? 'all';   // all | live | upcoming | results | news | nepal
 $cacheDir = __DIR__ . '/../data/cache';
