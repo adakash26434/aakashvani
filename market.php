@@ -117,6 +117,15 @@ include __DIR__ . '/header.php';
     </a>
   </div>
   <?php endif; ?>
+  
+  <?php if (!empty($nepse['source'])): ?>
+  <div class="mt-2 text-xs text-slate-400 flex items-center justify-between">
+    <span><?= $t('स्रोत', 'Source') ?>: <?= $nepse['source'] ?></span>
+    <?php if (!empty($nepse['source_url'])): ?>
+    <a href="<?= htmlspecialchars($nepse['source_url']) ?>" target="_blank" class="text-sky-600 hover:underline"><?= $t('आधिकारिक स्रोत', 'Official Source') ?> →</a>
+    <?php endif; ?>
+  </div>
+  <?php endif; ?>
 </section>
 
 <!-- Gold & Silver Section -->
@@ -182,6 +191,15 @@ include __DIR__ . '/header.php';
     <p class="text-sm text-slate-500 ne"><?= $t('सुनचाँदी भाउ उपलब्ध छैन', 'Gold price unavailable') ?></p>
   </div>
   <?php endif; ?>
+  
+  <?php if (!empty($gold['source'])): ?>
+  <div class="mt-2 text-xs text-slate-400 flex items-center justify-between">
+    <span><?= $t('स्रोत', 'Source') ?>: <?= $gold['source'] ?></span>
+    <?php if (!empty($gold['source_url'])): ?>
+    <a href="<?= htmlspecialchars($gold['source_url']) ?>" target="_blank" class="text-sky-600 hover:underline"><?= $t('आधिकारिक स्रोत', 'Official Source') ?> →</a>
+    <?php endif; ?>
+  </div>
+  <?php endif; ?>
 </section>
 
 <!-- Forex Section -->
@@ -233,6 +251,15 @@ include __DIR__ . '/header.php';
     <p class="text-sm text-slate-500 ne"><?= h($forex['note'] ?? $t('विनिमय दर उपलब्ध छैन', 'Forex rates unavailable')) ?></p>
   </div>
   <?php endif; ?>
+  
+  <?php if (!empty($forex['source'])): ?>
+  <div class="mt-2 text-xs text-slate-400 flex items-center justify-between">
+    <span><?= $t('स्रोत', 'Source') ?>: <?= $forex['source'] ?></span>
+    <?php if (!empty($forex['source_url'])): ?>
+    <a href="<?= htmlspecialchars($forex['source_url']) ?>" target="_blank" class="text-sky-600 hover:underline"><?= $t('आधिकारिक स्रोत', 'Official Source') ?> →</a>
+    <?php endif; ?>
+  </div>
+  <?php endif; ?>
 </section>
 
 <!-- Fuel Section -->
@@ -281,9 +308,14 @@ include __DIR__ . '/header.php';
     </div>
     
     <div class="px-4 py-2 bg-slate-50 flex items-center justify-between text-xs text-slate-400">
-      <span><?= $t('स्रोत', 'Source') ?>: Nepal Oil Corporation</span>
+      <span><?= $t('स्रोत', 'Source') ?>: <?= $petrol['source'] ?? 'Nepal Oil Corporation' ?></span>
       <span><?= $petrol['updated_at'] ?? date('Y-m-d') ?></span>
     </div>
+    <?php if (!empty($petrol['source_url'])): ?>
+    <div class="px-4 py-1 bg-slate-50 flex items-center justify-between text-xs text-slate-400 border-t border-slate-100">
+      <a href="<?= htmlspecialchars($petrol['source_url']) ?>" target="_blank" class="text-sky-600 hover:underline"><?= $t('आधिकारिक स्रोत हेर्नुहोस्', 'View Official Source') ?> →</a>
+    </div>
+    <?php endif; ?>
   </div>
   <?php endif; ?>
 </section>
