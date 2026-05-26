@@ -3,8 +3,7 @@
  * /radio.php — Online radio + offline-capable podcasts
  * Streams live via HTML5 audio. Podcasts cached by Service Worker for offline.
  */
-require_once __DIR__ . '/config.php';
-require_once __DIR__ . '/functions.php';
+require_once __DIR__ . '/header.php';
 require_once __DIR__ . '/includes/functions.entertainment.php';
 
 $stations = getRadioStations(true);
@@ -12,9 +11,6 @@ $podcasts = getRadioPodcasts(12);
 
 $pageTitle = 'अनलाइन रेडियो | ' . SITE_NAME;
 $pageDesc  = 'नेपालका प्रमुख FM, समाचार र संगीत रेडियो लाइभ सुन्नुहोस्।';
-
-if (function_exists('renderHeader')) renderHeader($pageTitle, $pageDesc);
-else echo "<!doctype html><html lang='ne'><head><meta charset='utf-8'><title>".htmlspecialchars($pageTitle)."</title></head><body>";
 ?>
 <div class="rd-wrap">
   <div class="rd-hero">
@@ -118,4 +114,5 @@ async function rdDownload(url) {
 audio.addEventListener('ended', () => { btn.textContent = '▶'; });
 </script>
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-<?php if (function_exists('renderFooter')) renderFooter(); else echo "</body></html>"; ?>
+
+<?php require_once __DIR__ . '/footer.php'; ?>
