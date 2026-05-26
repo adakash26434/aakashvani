@@ -10,11 +10,24 @@
  * Cached for 1 hour in /data/cache/ipo.json. Falls back to the
  * cached copy (even if stale) when the upstream call fails.
  */
+require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/../functions.php';
+require_once __DIR__ . '/../includes/error-logger.php';
+require_once __DIR__ . '/../includes/http.php';
+
+// Security headers
+sendSecurityHeaders();
 header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
 header('Cache-Control: no-cache');
 
-require_once __DIR__ . '/../includes/http.php';
+// Rate limiting
+$rateKey = 'ipo:' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown');
+if (!checkRateLimit($rateKey, 60, 60)) {
+    http_response_code(429);
+    echo json_encode(['ok' => false, 'error' => 'Rate limit exceeded']);
+    exit;
+}
 
 $cacheDir = __DIR__ . '/../data/cache/';
 if (!is_dir($cacheDir)) @mkdir($cacheDir, 0755, true);
