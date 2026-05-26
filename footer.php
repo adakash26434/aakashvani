@@ -401,7 +401,7 @@ $todayQuote = $_quotes[$_qIdx];
             if(box) box.innerHTML='<div style="background:#fff;border:1px solid #e6eaf2;border-radius:12px;padding:10px;font-size:12px;color:#94a3b8" class="ne">चेतावनी load हुन सकेन</div>';
           });
 
-        // ── Live RSS headlines (with photos — only renders when image exists) ──
+        // ── Live RSS headlines (with photos — grid card layout) ──
         function esc(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
         fetch('/api/news-rss.php?limit=6',{credentials:'same-origin'})
           .then(r=>r.ok?r.json():null).then(d=>{
@@ -410,17 +410,20 @@ $todayQuote = $_quotes[$_qIdx];
               box.innerHTML='<div style="background:#fff;border:1px solid #e6eaf2;border-radius:12px;padding:10px;font-size:12px;color:#94a3b8" class="ne">समाचार उपलब्ध छैन</div>';
               return;
             }
+            // Grid layout: 2 columns on desktop
+            box.style.display='grid';
+            box.style.gridTemplateColumns='repeat(auto-fit, minmax(140px, 1fr))';
+            box.style.gap='10px';
             box.innerHTML = d.items.map(it=>{
               var thumb = it.image
-                ? '<div style="width:60px;height:60px;flex-shrink:0;border-radius:10px;overflow:hidden;background:linear-gradient(135deg,#f0fdfa,#cffafe)"><img src="'+esc(it.image)+'" alt="" loading="lazy" style="width:100%;height:100%;object-fit:cover" onerror="this.parentNode.style.display=\'none\'"></div>'
-                : '';
+                ? '<div style="width:100%;height:90px;border-radius:8px;overflow:hidden;background:linear-gradient(135deg,#f0fdfa,#cffafe);margin-bottom:8px;"><img src="'+esc(it.image)+'" alt="" loading="lazy" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display=\'none\'"></div>'
+                : '<div style="width:100%;height:50px;border-radius:8px;background:linear-gradient(135deg,#f0fdfa,#cffafe);margin-bottom:8px;display:flex;align-items:center;justify-content:center;"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0d9488" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"></path><path d="M18 14h-8"></path><path d="M15 18h-5"></path><path d="M10 6h8v4h-8V6Z"></path></svg></div>';
               var url = it.internalUrl || (it.slug ? '/news-detail.php?slug=' + encodeURIComponent(it.slug) : '/news-detail.php?url=' + encodeURIComponent(it.link || '') + '&src=' + encodeURIComponent(it.sourceLabel || ''));
-              return '<a href="'+url+'" style="display:flex;gap:10px;background:#fff;border:1px solid #e6eaf2;border-radius:12px;padding:9px;text-decoration:none;color:inherit;align-items:flex-start">'+
+              return '<a href="'+url+'" style="display:block;background:#fff;border:1px solid #e6eaf2;border-radius:12px;padding:10px;text-decoration:none;color:inherit;transition:all 0.2s;" onmouseover="this.style.transform=\'translateY(-2px)\';this.style.boxShadow=\'0 4px 12px rgba(0,0,0,0.08)\'" onmouseout="this.style.transform=\'none\';this.style.boxShadow=\'none\'">'+
                 thumb +
-                '<div style="flex:1;min-width:0">'+
-                  '<div style="font-size:10.5px;color:#0f766e;font-weight:700" class="ne">'+esc(it.sourceLabel||'')+' · '+esc(it.ago||'')+'</div>'+
-                  '<div style="font-size:12.5px;font-weight:600;color:#0b1220;line-height:1.4;margin-top:2px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden" class="ne">'+esc(it.title)+'</div>'+
-                '</div>'+
+                '<div style="font-size:9px;color:#0d9488;font-weight:700;text-transform:uppercase;letter-spacing:0.3px;" class="ne">'+esc(it.sourceLabel||'')+'</div>'+
+                '<div style="font-size:10px;color:#94a3b8;margin-top:2px;" class="ne">'+esc(it.ago||'')+'</div>'+
+                '<div style="font-size:11px;font-weight:600;color:#0b1220;line-height:1.4;margin-top:4px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;" class="ne">'+esc(it.title)+'</div>'+
               '</a>';
             }).join('');
           }).catch(()=>{
