@@ -9,13 +9,23 @@
  *   ?source=onlinekhabar|setopati|ratopati|bbc                         (optional)
  */
 
+@ini_set('default_socket_timeout', 6);
+require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/../functions.php';
+
+// Security headers
+sendSecurityHeaders();
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: public, max-age=600');
 header('Access-Control-Allow-Origin: *');
 
-@ini_set('default_socket_timeout', 6);
-require_once __DIR__ . '/../config.php';
-require_once __DIR__ . '/../functions.php';
+// Simple rate limiting
+$rateKey = 'rss:' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown');
+if (!checkRateLimit($rateKey, 120, 60)) {
+    http_response_code(429);
+    echo json_encode(['ok' => false, 'error' => 'Rate limit exceeded. Please try again later.']);
+    exit;
+}
 
 $cat   = isset($_GET['cat'])   ? strtolower(trim($_GET['cat']))   : 'all';
 $limit = isset($_GET['limit']) ? max(1, min(50, (int)$_GET['limit'])) : 20;
