@@ -7,9 +7,23 @@
  *     headers/routing/output and just expose the get*Data() helpers.
  */
 if (!defined('MARKET_LIB_ONLY')) {
+    require_once __DIR__ . '/../config.php';
+    require_once __DIR__ . '/../functions.php';
+    require_once __DIR__ . '/../includes/error-logger.php';
+    
+    // Security headers
+    sendSecurityHeaders();
     header('Content-Type: application/json');
     header('Access-Control-Allow-Origin: *');
     header('Cache-Control: no-cache');
+    
+    // Rate limiting
+    $rateKey = 'market:' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown');
+    if (!checkRateLimit($rateKey, 60, 60)) {
+        http_response_code(429);
+        echo json_encode(['ok' => false, 'error' => 'Rate limit exceeded']);
+        exit;
+    }
 }
 
 $type      = $_GET['type'] ?? 'all';

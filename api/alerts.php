@@ -7,9 +7,23 @@
  * Cache: 5 minutes (file-based)
  * No external library, no API key required.
  */
+require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/../functions.php';
+require_once __DIR__ . '/../includes/error-logger.php';
+
+// Security headers
+sendSecurityHeaders();
 header('Content-Type: application/json; charset=UTF-8');
 header('Access-Control-Allow-Origin: *');
 header('Cache-Control: public, max-age=300');
+
+// Rate limiting
+$rateKey = 'alerts:' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown');
+if (!checkRateLimit($rateKey, 30, 60)) {
+    http_response_code(429);
+    echo json_encode(['ok' => false, 'error' => 'Rate limit exceeded']);
+    exit;
+}
 
 $cacheDir  = __DIR__ . '/../cache';
 $cacheFile = $cacheDir . '/alerts.json';
