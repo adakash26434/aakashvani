@@ -194,6 +194,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     if ($action === 'delete_radio') { $db->prepare('DELETE FROM radio_stations WHERE id=?')->execute([(int)$_POST['id']]); flash('Deleted.'); header('Location: /admin/dashboard.php?tab=radio'); exit;
     }
+    if ($action === 'sync_radio') {
+        require_once __DIR__ . '/../includes/functions.entertainment.php';
+        $result = syncRadioStationsFromAPI();
+        flash($result['message']); header('Location: /admin/dashboard.php?tab=radio'); exit;
+    }
 
     // ── Radio Podcasts ─────────────────────────────────────────────────────────
     if ($action === 'add_podcast') {
@@ -1102,7 +1107,13 @@ $navItems = [
     <?php elseif ($tab === 'radio'): ?>
     <div class="flex justify-between items-center mb-5">
       <h2 class="section-title"><i data-lucide="radio" class="ic"></i> Radio Stations</h2>
-      <button onclick="document.getElementById('modal-add-radio').classList.add('open')" class="px-4 py-2 text-xs font-bold btn-p" style="border-radius:8px;"><i data-lucide="plus" class="ic-sm"></i> New Station</button>
+      <div class="flex gap-2">
+        <form method="POST" class="inline">
+          <input type="hidden" name="action" value="sync_radio"/>
+          <button type="submit" class="px-4 py-2 text-xs font-bold btn-o" style="border-radius:8px;"><i data-lucide="refresh-cw" class="ic-sm"></i> Sync from API</button>
+        </form>
+        <button onclick="document.getElementById('modal-add-radio').classList.add('open')" class="px-4 py-2 text-xs font-bold btn-p" style="border-radius:8px;"><i data-lucide="plus" class="ic-sm"></i> New Station</button>
+      </div>
     </div>
     <div class="space-y-3">
       <?php foreach ($radioStations as $r): ?>

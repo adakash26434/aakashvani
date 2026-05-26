@@ -187,6 +187,71 @@ function getRadioStations(bool $activeOnly = true): array {
     return db()->query($sql)->fetchAll(PDO::FETCH_ASSOC) ?: [];
 }
 
+/**
+ * Sync radio stations from Radio-Browser API
+ * This fetches Nepal radio stations and updates/creates them in database
+ */
+function syncRadioStationsFromAPI(): array {
+    $apiUrl = 'https://de1.api.radio-browser.info/json/stations/search?countrycode=NP&limit=100&order=clickcount&reverse=true';
+    
+    $ch = curl_init($apiUrl);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Aakashvani/1.0');
+    $response = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+    
+    if ($httpCode !== 200 || !$response) {
+        return ['success' => false, 'message' => 'Failed to fetch from API', 'count' => 0];
+    }
+    
+    $stations = json_decode($response, true);
+    if (!is_array($stations)) {
+        return ['success' => false, 'message' => 'Invalid API response', 'count' => 0];
+    }
+    
+    $db = db();
+    $added = 0;
+    $updated = 0;
+    
+    foreach ($stations as $station) {
+        $name = $station['name'] ?? '';
+        $streamingUrl = $station['url_resolved'] ?? $station['url'] ?? '';
+        $website = $station['homepage'] ?? '';
+        $favicon = $station['favicon'] ?? '';
+        
+        if (empty($name) || empty($streamingUrl)) continue;
+        
+        // Check if station already exists by streaming URL
+        $existing = $db->prepare('SELECT id FROM radio_stations WHERE streaming_url = ? LIMIT 1');
+        $existing->execute([$streamingUrl]);
+        $row = $existing->fetch();
+        
+        if ($row) {
+            // Update existing
+            $db->prepare('UPDATE radio_stations SET name=?, website=?, logo_path=?, status=? WHERE id=?')->execute([
+                $name, $website, $favicon, 'active', $row['id']
+            ]);
+            $updated++;
+        } else {
+            // Insert new
+            $db->prepare('INSERT INTO radio_stations (name, name_en, logo_path, website, streaming_url, status, sort_order) VALUES (?, ?, ?, ?, ?, ?, ?)')->execute([
+                $name, $name, $favicon, $website, $streamingUrl, 'active', 999
+            ]);
+            $added++;
+        }
+    }
+    
+    return [
+        'success' => true,
+        'message' => "Synced: $added added, $updated updated",
+        'count' => $added + $updated,
+        'added' => $added,
+        'updated' => $updated
+    ];
+}
+
 function getRadioPodcasts(int $limit = 20): array {
     $sql = "SELECT p.*, s.name AS station_name, s.logo_path AS station_logo
             FROM radio_podcasts p
