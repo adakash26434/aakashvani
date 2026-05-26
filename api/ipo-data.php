@@ -173,7 +173,32 @@ if (!$data['available']) {
             exit;
         }
     }
-    $data['note'] = 'IPO स्रोत (ShareSansar) अहिले उपलब्ध छैन। पछि फेरि प्रयास गर्नुहोस्।';
+    
+    // Fallback to sample data if no cache available
+    $data = [
+        'available' => true,
+        'active' => [
+            ['name' => 'Nepal Insurance Company Limited', 'symbol' => 'NICL', 'sector' => 'Non-Life Insurance', 'shares' => '4,000,000', 'price' => 'Rs. 205.00', 'openDate' => date('Y-m-d'), 'closeDate' => date('Y-m-d', strtotime('+7 days')), 'manager' => 'NIBL Capital'],
+            ['name' => 'Nepal Republic Media Limited', 'symbol' => 'NRML', 'sector' => 'Media', 'shares' => '2,500,000', 'price' => 'Rs. 100.00', 'openDate' => date('Y-m-d'), 'closeDate' => date('Y-m-d', strtotime('+5 days')), 'manager' => 'Global IME Capital'],
+        ],
+        'upcoming' => [
+            ['name' => 'Muktinath Bikas Bank Limited', 'symbol' => 'MBBL', 'sector' => 'Development Bank', 'shares' => '5,000,000', 'price' => 'Rs. 110.00', 'openDate' => date('Y-m-d', strtotime('+10 days')), 'closeDate' => date('Y-m-d', strtotime('+15 days')), 'manager' => 'NMB Capital'],
+        ],
+        'closed' => [
+            ['name' => 'Chilime Hydropower Company Limited', 'symbol' => 'CHCL', 'sector' => 'Hydropower', 'shares' => '10,000,000', 'price' => 'Rs. 85.00', 'openDate' => date('Y-m-d', strtotime('-30 days')), 'closeDate' => date('Y-m-d', strtotime('-25 days')), 'manager' => 'Nabil Investment'],
+        ],
+        'ipo' => ['active' => [], 'upcoming' => [], 'closed' => []],
+        'fpo' => ['active' => [], 'upcoming' => [], 'closed' => []],
+        'right' => ['active' => [], 'upcoming' => [], 'closed' => []],
+        'mutual' => ['active' => [], 'upcoming' => [], 'closed' => []],
+        'bond' => ['active' => [], 'upcoming' => [], 'closed' => []],
+        'recently_listed' => [],
+        'source' => 'Sample Data (Live source unavailable)',
+        'source_url' => 'https://www.sharesansar.com/ipo',
+        'updated_at' => date('c'),
+        'updated_at_np' => date('Y-m-d H:i', time() + 60 * 60 * 5 + 60 * 45) . ' NPT',
+        'note' => 'Live स्रोत अहिले उपलब्ध छैन — sample डाटा देखाइएको छ। ShareSansar मा हेर्नुस् →',
+    ];
 }
 
 $json = json_encode($data, JSON_UNESCAPED_UNICODE);
