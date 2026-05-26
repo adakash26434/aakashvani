@@ -131,6 +131,9 @@ window.__chips = {
       <a href="/cricket.php" onclick="return openInDetailPane('/cricket.php');" class="hero-icon-btn bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/20 rounded-xl py-2 text-center text-[11px] font-semibold flex flex-col items-center gap-1 transition-all" data-url="/cricket.php">
         <i data-lucide="trophy" class="w-4 h-4"></i><span class="ne"><?= $t('क्रिकेट','Cricket') ?></span>
       </a>
+      <a href="/weather.php" onclick="return openInDetailPane('/weather.php');" class="hero-icon-btn bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/20 rounded-xl py-2 text-center text-[11px] font-semibold flex flex-col items-center gap-1 transition-all" data-url="/weather.php">
+        <i data-lucide="cloud-sun" class="w-4 h-4"></i><span class="ne"><?= $t('मौसम','Weather') ?></span>
+      </a>
       <a href="/transportation.php" onclick="return openInDetailPane('/transportation.php');" class="hero-icon-btn bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/20 rounded-xl py-2 text-center text-[11px] font-semibold flex flex-col items-center gap-1 transition-all" data-url="/transportation.php">
         <i data-lucide="bus" class="w-4 h-4"></i><span class="ne"><?= $t('यातायात','Bus') ?></span>
       </a>
