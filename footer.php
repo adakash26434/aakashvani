@@ -478,9 +478,35 @@ if (!$__embedFooter): ?>
 <?php @include __DIR__ . '/includes/ai-assistant.php'; ?>
 <?php endif; ?>
 
-<!-- Re-render lucide icons for any dynamically added content -->
+<!-- ═══ DETAIL PANE NAVIGATION & LUCIDE ICONS ═══════════════════════════════════ -->
 <script>
-// Lucide is deferred — wait for it then render remaining icons
+// Detail Pane Navigation - Opens content in right panel on desktop
+function openInDetailPane(url) {
+  // Check if detail pane exists (desktop view)
+  var pane = document.getElementById('detail-pane');
+  var isDesktop = window.innerWidth >= 1024 && pane;
+  
+  if (isDesktop) {
+    // Desktop: Open in detail pane
+    pane.classList.add('open');
+    var iframe = pane.querySelector('iframe');
+    if (iframe) {
+      pane.classList.add('loading');
+      iframe.src = url + (url.indexOf('?') > -1 ? '&' : '?') + 'embed=1';
+    }
+    return false; // Prevent default navigation
+  }
+  // Mobile: Allow normal navigation
+  return true;
+}
+
+// Close detail pane function
+function NSH_closePane() {
+  var pane = document.getElementById('detail-pane');
+  if (pane) pane.classList.remove('open');
+}
+
+// Lucide icons re-render
 (function(){
   function tryRender(){if(window.lucide&&lucide.createIcons)try{lucide.createIcons({nameAttr:'data-lucide'});}catch(e){}}
   if(window.lucide){tryRender();}else{window.addEventListener('load',tryRender,{once:true});}
