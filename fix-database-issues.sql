@@ -27,17 +27,28 @@ ALTER TABLE IF EXISTS tech_news
 TRUNCATE TABLE IF EXISTS loksewa_notices;
 
 -- 4. Insert Sample Radio Stations (So radio page shows something)
+-- Popular FM stations from Kathmandu and other cities
 INSERT INTO radio_stations 
     (name, stream_url, stream_type, city, frequency, logo_path, status, featured, sort_order, created_at) 
 VALUES
+-- Kathmandu Popular Stations
 ('Radio Kantipur', 'https://streaming.softnep.net:8002/stream', 'mp3', 'Kathmandu', '96.1 FM', NULL, 'active', 1, 1, NOW()),
 ('Ujyalo Radio Network', 'https://stream.ujyalo.com/live', 'mp3', 'Kathmandu', '90.4 FM', NULL, 'active', 1, 2, NOW()),
-('Kalinchowk FM', 'https://streaming.softnep.net:8092/stream', 'mp3', 'Kathmandu', '106.0 FM', NULL, 'active', 0, 3, NOW()),
-('Radio Nepal', 'https://stream.radionepal.gov.np/live', 'mp3', 'Kathmandu', 'AM 765', NULL, 'active', 0, 4, NOW()),
-('BBC Nepali', 'https://stream.live.vc.bbcmedia.co.uk/bbc_nepali_radio', 'mp3', 'London', 'Online', NULL, 'active', 1, 5, NOW()),
-('Radio Sagarmatha', 'https://streaming.softnep.net:8036/stream', 'mp3', 'Kathmandu', '102.4 FM', NULL, 'active', 0, 6, NOW()),
-('Hits FM', 'https://streaming.softnep.net:8052/stream', 'mp3', 'Kathmandu', '91.2 FM', NULL, 'active', 0, 7, NOW()),
-('Radio Audio', 'https://streaming.softnep.net:8062/stream', 'mp3', 'Kathmandu', '106.3 FM', NULL, 'active', 0, 8, NOW());
+('Hits FM', 'https://streaming.softnep.net:8052/stream', 'mp3', 'Kathmandu', '91.2 FM', NULL, 'active', 1, 3, NOW()),
+('Radio Audio', 'https://streaming.softnep.net:8062/stream', 'mp3', 'Kathmandu', '106.3 FM', NULL, 'active', 0, 4, NOW()),
+('Radio Sagarmatha', 'https://streaming.softnep.net:8036/stream', 'mp3', 'Kathmandu', '102.4 FM', NULL, 'active', 0, 5, NOW()),
+('Kalinchowk FM', 'https://streaming.softnep.net:8092/stream', 'mp3', 'Kathmandu', '106.0 FM', NULL, 'active', 0, 6, NOW()),
+('Radio Nepal', 'https://stream.radionepal.gov.np/live', 'mp3', 'Kathmandu', 'AM 765', NULL, 'active', 0, 7, NOW()),
+
+-- Other Cities
+('Radio Lumbini', 'https://streaming.softnep.net:8024/stream', 'mp3', 'Butwal', '96.8 FM', NULL, 'active', 0, 8, NOW()),
+('Radio Pokhara', 'https://streaming.softnep.net:8028/stream', 'mp3', 'Pokhara', '95.6 FM', NULL, 'active', 0, 9, NOW()),
+('Radio Birgunj', 'https://streaming.softnep.net:8090/stream', 'mp3', 'Birgunj', '105.6 FM', NULL, 'active', 0, 10, NOW()),
+('Radio Janakpur', 'https://streaming.softnep.net:8044/stream', 'mp3', 'Janakpur', '97.0 FM', NULL, 'active', 0, 11, NOW()),
+
+-- International / Online
+('BBC Nepali', 'https://stream.live.vc.bbcmedia.co.uk/bbc_nepali_radio', 'mp3', 'London', 'Online', NULL, 'active', 1, 12, NOW()),
+('Voice of America Nepali', 'https://voa-53.akacast.akamaistream.net/7/55/322395/v1/ibb.akacast.akamaistream.net/voa-53', 'mp3', 'USA', 'Online', NULL, 'active', 0, 13, NOW());
 
 -- 5. Insert Sample Success Stories (For testing)
 INSERT INTO success_stories 

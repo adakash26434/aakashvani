@@ -152,11 +152,14 @@ function lk_collect_live2(int $limit = 40): array {
         }
     }
 
+    // Multiple RSS sources as backup when PSC blocks scraping
     $feeds = [
-        ['OnlineKhabar', 'https://www.onlinekhabar.com/content/job-vacancy/feed', 'https://www.onlinekhabar.com'],
-        ['Gorkhapatra',  'https://gorkhapatraonline.com/feed',                    'https://gorkhapatraonline.com'],
-        ['Kantipur',     'https://ekantipur.com/feed',                            'https://ekantipur.com'],
-        ['Ratopati',     'https://ratopati.com/feed',                             'https://ratopati.com'],
+        ['OnlineKhabar Jobs', 'https://www.onlinekhabar.com/content/job-vacancy/feed', 'https://www.onlinekhabar.com'],
+        ['Gorkhapatra',       'https://gorkhapatraonline.com/feed',                    'https://gorkhapatraonline.com'],
+        ['Kantipur',          'https://ekantipur.com/feed',                            'https://ekantipur.com'],
+        ['Ratopati',          'https://ratopati.com/feed',                             'https://ratopati.com'],
+        ['Annapurna Post',    'https://www.annapurnapost.com/feed',                    'https://www.annapurnapost.com'],
+        ['Himalkhabar',       'https://himalkhabar.com/feed',                          'https://himalkhabar.com'],
     ];
     foreach ($feeds as [$src, $feedUrl, $srcUrl]) {
         foreach (lk_parse_rss2(lk_fetch2($feedUrl, 6), $src, $srcUrl) as $it) {
