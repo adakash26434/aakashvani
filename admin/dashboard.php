@@ -18,6 +18,7 @@ function ensureAll(): void {
     ensureContactDirectoryTable();
     ensureCabinetDecisionsTable();
     ensureGovernmentTendersTable();
+    ensureStoriesTable();
 }
 ensureAll();
 
@@ -152,6 +153,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $total = count($results);
         flash("Synced $success/$total sources successfully."); header('Location: /admin/dashboard.php'); exit;
     }
+
+    // ── Stories ───────────────────────────────────────────────────────────────
+    if ($action === 'add_story') {
+        $db->prepare('INSERT INTO stories (title,title_en,category,category_ne,author,author_en,content,content_en,tags,tags_en,reading_time,image_url,is_published) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)')->execute([$_POST['title'],$_POST['title_en'],$_POST['category'],$_POST['category_ne'],$_POST['author'],$_POST['author_en'],$_POST['content'],$_POST['content_en'],$_POST['tags'],$_POST['tags_en'],(int)$_POST['reading_time'],$_POST['image_url'],isset($_POST['is_published'])?1:0]);
+        flash('Story added.'); header('Location: /admin/dashboard.php?tab=stories'); exit;
+    }
+    if ($action === 'edit_story') {
+        $db->prepare('UPDATE stories SET title=?,title_en=?,category=?,category_ne=?,author=?,author_en=?,content=?,content_en=?,tags=?,tags_en=?,reading_time=?,image_url=?,is_published=? WHERE id=?')->execute([$_POST['title'],$_POST['title_en'],$_POST['category'],$_POST['category_ne'],$_POST['author'],$_POST['author_en'],$_POST['content'],$_POST['content_en'],$_POST['tags'],$_POST['tags_en'],(int)$_POST['reading_time'],$_POST['image_url'],isset($_POST['is_published'])?1:0,(int)$_POST['id']]);
+        flash('Story updated.'); header('Location: /admin/dashboard.php?tab=stories'); exit;
+    }
+    if ($action === 'delete_story') { $db->prepare('DELETE FROM stories WHERE id=?')->execute([(int)$_POST['id']]); flash('Deleted.'); header('Location: /admin/dashboard.php?tab=stories'); exit;
+    }
 }
 
 // ─── Load Data ────────────────────────────────────────────────────────────────
@@ -165,6 +178,7 @@ $alertItems  = $db->query('SELECT * FROM alerts ORDER BY created_at DESC LIMIT 2
 $contacts    = $db->query('SELECT * FROM contact_directory ORDER BY name ASC')->fetchAll();
 $decisions   = $db->query('SELECT * FROM cabinet_decisions ORDER BY date DESC')->fetchAll();
 $tenders     = $db->query('SELECT * FROM government_tenders ORDER BY deadline DESC')->fetchAll();
+$stories     = $db->query('SELECT * FROM stories ORDER BY created_at DESC')->fetchAll();
 $unread      = count(array_filter($messages, fn($m) => !$m['is_read']));
 $activeAlerts = count(array_filter($alertItems, fn($a) => $a['is_active']));
 
@@ -177,6 +191,7 @@ $editAlert  = isset($_GET['edit_alert'])  ? $db->query('SELECT * FROM alerts WHE
 $editContact = isset($_GET['edit_contact']) ? $db->query('SELECT * FROM contact_directory WHERE id='.(int)$_GET['edit_contact'])->fetch() : null;
 $editDecision = isset($_GET['edit_decision']) ? $db->query('SELECT * FROM cabinet_decisions WHERE id='.(int)$_GET['edit_decision'])->fetch() : null;
 $editTender = isset($_GET['edit_tender']) ? $db->query('SELECT * FROM government_tenders WHERE id='.(int)$_GET['edit_tender'])->fetch() : null;
+$editStory = isset($_GET['edit_story']) ? $db->query('SELECT * FROM stories WHERE id='.(int)$_GET['edit_story'])->fetch() : null;
 
 // ─── Field Helpers ────────────────────────────────────────────────────────────
 function adField(string $name, string $label, string $type = 'text', $value = '', string $ph = '', string $hint = ''): void {
@@ -267,6 +282,7 @@ $navItems = [
   ['contacts','phone','Contact Directory',count($contacts)],
   ['decisions','scroll-text','Cabinet Decisions',count($decisions)],
   ['tenders','file-text','Government Tenders',count($tenders)],
+  ['stories','book-open','Stories',count($stories)],
   ['messages','message-circle','Messages',$unread>0?"$unread unread":''],
 ];
 ?>
@@ -367,6 +383,7 @@ $navItems = [
         ['phone','Contacts',count($contacts),'contacts'],
         ['scroll-text','Decisions',count($decisions),'decisions'],
         ['file-text','Tenders',count($tenders),'tenders'],
+        ['book-open','Stories',count($stories),'stories'],
         ['message-circle','Messages',$unread?:count($messages),'messages'],
       ] as [$ico,$label,$val,$key]): ?>
       <a href="?tab=<?= $key ?>" class="stat <?= $tab===$key?'active':'' ?>">
@@ -929,6 +946,52 @@ $navItems = [
       </form>
     </div>
     <?php endif; ?>
+
+    <!-- ═══════════ STORIES TAB ══════════════════════════════════════ -->
+    <?php elseif ($tab === 'stories'): ?>
+    <div class="flex justify-between items-center mb-5">
+      <h2 class="section-title"><i data-lucide="book-open" class="ic"></i> Nepali Stories</h2>
+      <button onclick="document.getElementById('modal-add-story').classList.add('open')" class="px-4 py-2 text-xs font-bold btn-p" style="border-radius:8px;"><i data-lucide="plus" class="ic-sm"></i> New Story</button>
+    </div>
+    <div class="space-y-3">
+      <?php foreach ($stories as $s): ?>
+      <div class="bg-[#ffffff] border border-[#e2e8f0] rounded p-4 flex items-start gap-4">
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2 mb-1 flex-wrap">
+            <span class="text-[10px] border border-[#e2e8f0] px-2 py-0.5 rounded text-[#64748b] font-mono uppercase"><?= htmlspecialchars($s['category']) ?></span>
+            <span class="text-[10px] text-[#64748b] font-mono"><?= $s['reading_time'] ?> min</span>
+            <span class="text-[10px] text-[#64748b] font-mono"><?= $s['views'] ?> views</span>
+          </div>
+          <h3 class="font-bold text-[#0f172a] text-sm"><?= htmlspecialchars($s['title']) ?> <span class="text-[#64748b] ne"><?= htmlspecialchars($s['title_en']) ?></span></h3>
+          <p class="text-xs text-[#64748b] mt-1"><?= htmlspecialchars($s['author']) ?></p>
+        </div>
+        <div class="flex gap-2 shrink-0">
+          <a href="?tab=stories&edit_story=<?= $s['id'] ?>" class="text-xs text-[#64748b] hover:text-[#14b8a6] font-mono">Edit</a>
+          <form method="POST" onsubmit="return confirm('Delete?')"><input type="hidden" name="action" value="delete_story"/><input type="hidden" name="id" value="<?= $s['id'] ?>"/><button type="submit" class="text-xs text-[#ef4444] font-mono">Del</button></form>
+        </div>
+      </div>
+      <?php endforeach; ?>
+    </div>
+    <?php if ($editStory): ?>
+    <div class="mt-6 bg-[#ffffff] border border-[#0f766e]/40 rounded p-6">
+      <h3 class="text-base font-bold uppercase tracking-wider text-[#14b8a6] mb-5">Editing: <?= htmlspecialchars($editStory['title']) ?></h3>
+      <form method="POST" class="space-y-4">
+        <input type="hidden" name="action" value="edit_story"/><input type="hidden" name="id" value="<?= $editStory['id'] ?>"/>
+        <div class="grid grid-cols-2 gap-4">
+          <?php adField('title','Title (Nepali)','text',$editStory['title']); adField('title_en','Title (English)','text',$editStory['title_en']); ?>
+          <?php adField('category','Category (Nepali)','text',$editStory['category_ne']); adField('category_ne','Category (English)','text',$editStory['category']); ?>
+          <?php adField('author','Author (Nepali)','text',$editStory['author']); adField('author_en','Author (English)','text',$editStory['author_en']); ?>
+          <?php adField('reading_time','Reading Time (minutes)','number',$editStory['reading_time']); adField('image_url','Image URL','text',$editStory['image_url']??''); ?>
+        </div>
+        <?php adField('content','Content (Nepali)','textarea',$editStory['content']); ?>
+        <?php adField('content_en','Content (English)','textarea',$editStory['content_en']); ?>
+        <?php adField('tags','Tags (Nepali, comma separated)','text',$editStory['tags']??''); ?>
+        <?php adField('tags_en','Tags (English, comma separated)','text',$editStory['tags_en']??''); ?>
+        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="is_published" value="1" <?= $editStory['is_published']?'checked':'' ?> class="w-4 h-4 accent-[#0f766e]"/><span class="text-sm font-mono text-[#64748b]">Published</span></label>
+        <div class="flex gap-3"><button type="submit" class="flex-1 py-2.5 btn-p rounded font-bold uppercase text-sm">Update</button><a href="?tab=stories" class="flex-1 py-2.5 text-center btn-o rounded font-bold uppercase text-sm">Cancel</a></div>
+      </form>
+    </div>
+    <?php endif; ?>
     <?php endif; ?>
 
   </div><!-- /max-w -->
@@ -1095,6 +1158,25 @@ $navItems = [
     <?php adField('documents','Documents (comma separated)','text',''); ?>
     <?php adField('link','Link','text',''); ?>
     <button type="submit" class="w-full py-2.5 btn-p rounded font-bold uppercase text-sm">Add Tender</button>
+  </form>
+</div></div>
+
+<!-- Add Story -->
+<div id="modal-add-story" class="modal"><div class="bg-[#ffffff] border border-[#e2e8f0] rounded w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6">
+  <div class="flex justify-between items-center mb-5"><h3 class="font-bold uppercase tracking-wider text-[#0f172a]">New Nepali Story</h3><button onclick="this.closest('.modal').classList.remove('open')" class="text-[#64748b] text-2xl leading-none">&times;</button></div>
+  <form method="POST" class="space-y-4"><input type="hidden" name="action" value="add_story"/>
+    <div class="grid grid-cols-2 gap-4">
+      <?php adField('title','Title (Nepali)','text',''); adField('title_en','Title (English)','text',''); ?>
+      <?php adField('category','Category (Nepali)','text','नैतिक कथा'); adField('category_ne','Category (English)','text','moral'); ?>
+      <?php adField('author','Author (Nepali)','text',''); adField('author_en','Author (English)','text',''); ?>
+      <?php adField('reading_time','Reading Time (minutes)','number','5'); adField('image_url','Image URL','text',''); ?>
+    </div>
+    <?php adField('content','Content (Nepali)','textarea',''); ?>
+    <?php adField('content_en','Content (English)','textarea',''); ?>
+    <?php adField('tags','Tags (Nepali, comma separated)','text',''); ?>
+    <?php adField('tags_en','Tags (English, comma separated)','text',''); ?>
+    <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="is_published" value="1" checked class="w-4 h-4 accent-[#0f766e]"/><span class="text-sm font-mono text-[#64748b]">Published</span></label>
+    <button type="submit" class="w-full py-2.5 btn-p rounded font-bold uppercase text-sm">Add Story</button>
   </form>
 </div></div>
 

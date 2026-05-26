@@ -1185,6 +1185,34 @@ function ensureGovernmentTendersTable(): void {
     $done = true;
 }
 
+function ensureStoriesTable(): void {
+    static $done = false;
+    if ($done) return;
+    $ai = dbAI();
+    db()->exec("CREATE TABLE IF NOT EXISTS stories (
+        id                  $ai,
+        title               VARCHAR(500) NOT NULL,
+        title_en            VARCHAR(500) NOT NULL,
+        category            VARCHAR(100) NOT NULL,
+        category_ne         VARCHAR(100) NOT NULL,
+        author              VARCHAR(200) NOT NULL,
+        author_en           VARCHAR(200) NOT NULL,
+        content             TEXT NOT NULL,
+        content_en          TEXT NOT NULL,
+        tags                TEXT,
+        tags_en             TEXT,
+        reading_time        INT NOT NULL DEFAULT 5,
+        views               INT NOT NULL DEFAULT 0,
+        image_url           VARCHAR(500),
+        is_published        TINYINT NOT NULL DEFAULT 1,
+        created_at          DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        updated_at          DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+    )" . dbCharset());
+    dbIndex('idx_stories_category', 'stories', 'category');
+    dbIndex('idx_stories_published', 'stories', 'is_published');
+    $done = true;
+}
+
 function getPublishedGuides(?string $category = null, int $limit = 20, int $offset = 0): array {
     ensureGuideTable();
     $sql = 'SELECT * FROM ai_guides WHERE is_published = 1';
