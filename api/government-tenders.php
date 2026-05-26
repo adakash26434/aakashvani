@@ -36,150 +36,33 @@ try {
 }
 
 function getGovernmentTenders(?string $category = null, ?string $ministry = null, int $days = 30): array {
-    $allTenders = [
-        [
-            'id' => 1,
-            'title' => 'Construction of Road Section',
-            'title_ne' => 'सडक खण्ड निर्माण',
-            'ministry' => 'Ministry of Physical Infrastructure',
-            'ministry_ne' => 'भौतिक पूर्वाधार मन्त्रालय',
-            'department' => 'Department of Roads',
-            'department_ne' => 'सडक विभाग',
-            'category' => 'Construction',
-            'category_ne' => 'निर्माण',
-            'location' => 'Kathmandu',
-            'location_ne' => 'काठमाडौं',
-            'deadline' => '2081-02-15',
-            'deadline_ne' => 'जेष्ठ १५, २०८१',
-            'estimated_cost' => 'NPR 50,00,00,000',
-            'status' => 'Open',
-            'status_ne' => 'खुला',
-            'published_date' => '2081-01-20',
-            'published_date_ne' => 'बैशाख २०, २०८१',
-            'description' => 'Construction of 25 km road section from Kathmandu to Dhading with complete infrastructure.',
-            'description_ne' => 'काठमाडौं देखि धादिङ सम्म २५ किमी सडक खण्ड निर्माण पूर्ण पूर्वाधार सहित।',
-            'documents' => ['Tender Notice', 'Technical Specifications', 'Bid Form'],
-            'link' => 'https://dor.gov.np/tenders',
-        ],
-        [
-            'id' => 2,
-            'title' => 'Supply of Medical Equipment',
-            'title_ne' => 'चिकित्सा उपकरण आपूर्ति',
-            'ministry' => 'Ministry of Health',
-            'ministry_ne' => 'स्वास्थ्य मन्त्रालय',
-            'department' => 'Department of Health Services',
-            'department_ne' => 'स्वास्थ्य सेवा विभाग',
-            'category' => 'Supply',
-            'category_ne' => 'आपूर्ति',
-            'location' => 'All Nepal',
-            'location_ne' => 'सम्पूर्ण नेपाल',
-            'deadline' => '2081-02-10',
-            'deadline_ne' => 'जेष्ठ १०, २०८१',
-            'estimated_cost' => 'NPR 15,00,00,000',
-            'status' => 'Open',
-            'status_ne' => 'खुला',
-            'published_date' => '2081-01-18',
-            'published_date_ne' => 'बैशाख १८, २०८१',
-            'description' => 'Supply of medical equipment for government hospitals across Nepal.',
-            'description_ne' => 'नेपाल भरका सरकारी अस्पतालहरूका लागि चिकित्सा उपकरण आपूर्ति।',
-            'documents' => ['Tender Notice', 'Equipment List', 'Technical Specifications'],
-            'link' => 'https://dohs.gov.np/tenders',
-        ],
-        [
-            'id' => 3,
-            'title' => 'IT System Development',
-            'title_ne' => 'आईटी प्रणाली विकास',
-            'ministry' => 'Ministry of Communication',
-            'ministry_ne' => 'सञ्चार मन्त्रालय',
-            'department' => 'Department of Information Technology',
-            'department_ne' => 'सूचना प्रविधि विभाग',
-            'category' => 'Services',
-            'category_ne' => 'सेवा',
-            'location' => 'Kathmandu',
-            'location_ne' => 'काठमाडौं',
-            'deadline' => '2081-02-20',
-            'deadline_ne' => 'जेष्ठ २०, २०८१',
-            'estimated_cost' => 'NPR 8,00,00,000',
-            'status' => 'Open',
-            'status_ne' => 'खुला',
-            'published_date' => '2081-01-22',
-            'published_date_ne' => 'बैशाख २२, २०८१',
-            'description' => 'Development of integrated IT system for government data management.',
-            'description_ne' => 'सरकारी डाटा व्यवस्थापनका लागि एकीकृत आईटी प्रणाली विकास।',
-            'documents' => ['Tender Notice', 'Requirements Document', 'Technical Proposal'],
-            'link' => 'https://doit.gov.np/tenders',
-        ],
-        [
-            'id' => 4,
-            'title' => 'School Building Construction',
-            'title_ne' => 'विद्यालय भवन निर्माण',
-            'ministry' => 'Ministry of Education',
-            'ministry_ne' => 'शिक्षा मन्त्रालय',
-            'department' => 'Department of Education',
-            'department_ne' => 'शिक्षा विभाग',
-            'category' => 'Construction',
-            'category_ne' => 'निर्माण',
-            'location' => 'Province 3',
-            'location_ne' => 'प्रदेश ३',
-            'deadline' => '2081-02-25',
-            'deadline_ne' => 'जेष्ठ २५, २०८१',
-            'estimated_cost' => 'NPR 3,50,00,000',
-            'status' => 'Open',
-            'status_ne' => 'खुला',
-            'published_date' => '2081-01-25',
-            'published_date_ne' => 'बैशाख २५, २०८१',
-            'description' => 'Construction of 5 school buildings in Province 3.',
-            'description_ne' => 'प्रदेश ३ मा ५ विद्यालय भवन निर्माण।',
-            'documents' => ['Tender Notice', 'Building Plans', 'Technical Specifications'],
-            'link' => 'https://doe.gov.np/tenders',
-        ],
-        [
-            'id' => 5,
-            'title' => 'Hydropower Project Survey',
-            'title_ne' => 'जलविद्युत परियोजना सर्वेक्षण',
-            'ministry' => 'Ministry of Energy',
-            'ministry_ne' => 'ऊर्जा मन्त्रालय',
-            'department' => 'Department of Electricity',
-            'department_ne' => 'विद्युत विभाग',
-            'category' => 'Consultancy',
-            'category_ne' => 'परामर्श',
-            'location' => 'Sindhupalchok',
-            'location_ne' => 'सिन्धुपाल्चोक',
-            'deadline' => '2081-03-05',
-            'deadline_ne' => 'असार ५, २०८१',
-            'estimated_cost' => 'NPR 2,00,00,000',
-            'status' => 'Open',
-            'status_ne' => 'खुला',
-            'published_date' => '2081-01-28',
-            'published_date_ne' => 'बैशाख २८, २०८१',
-            'description' => 'Feasibility study and survey for 50 MW hydropower project.',
-            'description_ne' => '५० मेगावाट जलविद्युत परियोजनाको सम्भाव्यता अध्ययन र सर्वेक्षण।',
-            'documents' => ['Tender Notice', 'Terms of Reference', 'Survey Guidelines'],
-            'link' => 'https://doe.gov.np/tenders',
-        ],
-    ];
+    ensureGovernmentTendersTable();
+    $db = db();
     
-    // Filter by category
+    $sql = 'SELECT * FROM government_tenders WHERE 1=1';
+    $params = [];
+    
     if ($category) {
-        $allTenders = array_filter($allTenders, function($t) use ($category) {
-            return strtolower($t['category']) === strtolower($category) || strtolower($t['category_ne']) === strtolower($category);
-        });
+        $sql .= ' AND category = ?';
+        $params[] = $category;
     }
     
-    // Filter by ministry
     if ($ministry) {
-        $allTenders = array_filter($allTenders, function($t) use ($ministry) {
-            return strtolower($t['ministry']) === strtolower($ministry) || strtolower($t['ministry_ne']) === strtolower($ministry);
-        });
+        $sql .= ' AND ministry = ?';
+        $params[] = $ministry;
     }
     
-    $result = array_values($allTenders);
-    $result[] = [
-        'source' => 'Public Procurement Monitoring Office (PPMO)',
-        'source_url' => 'https://ppmo.gov.np',
-        'note' => 'टेन्डर विवरण PPMO आधिकारिक वेबसाइटबाट लिइएको हो।',
-    ];
-    return $result;
+    if ($days > 0) {
+        $sql .= ' AND deadline >= DATE("now", "-' . (int)$days . ' days")';
+    }
+    
+    $sql .= ' ORDER BY deadline ASC';
+    
+    $stmt = $db->prepare($sql);
+    $stmt->execute($params);
+    $tenders = $stmt->fetchAll();
+    
+    return $tenders;
 }
 
 function getTenderCategories(): array {
