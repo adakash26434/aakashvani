@@ -172,7 +172,6 @@ $todayQuote = $_quotes[$_qIdx];
         <div class="dpd-section-t ne">
           <i data-lucide="zap" class="w-4 h-4 text-brand-600"></i>
           <?= $tF('द्रुत सेवा','Quick Services') ?>
-          <a href="/gov-services.php" class="more ne"><?= $tF('सबै →','All →') ?></a>
         </div>
         
         <!-- Finance & Market -->
@@ -281,7 +280,7 @@ $todayQuote = $_quotes[$_qIdx];
           <?= $tF('समाचार वर्ग','News Categories') ?>
           <a href="/news.php" class="more ne"><?= $tF('सबै →','All →') ?></a>
         </div>
-        <div class="dpd-tiles" style="grid-template-columns:repeat(3,1fr)">
+        <div class="dpd-tiles" style="grid-template-columns:repeat(4,1fr)">
           <?php foreach([
             ['/news.php?cat=politics','<i data-lucide="landmark" class="w-5 h-5"></i>',$tF('राजनीति','Politics')],
             ['/news.php?cat=economy','<i data-lucide="banknote" class="w-5 h-5"></i>',$tF('अर्थ','Economy')],
@@ -289,6 +288,8 @@ $todayQuote = $_quotes[$_qIdx];
             ['/news.php?cat=entertainment','<i data-lucide="film" class="w-5 h-5"></i>',$tF('मनोरञ्जन','Entertainment')],
             ['/news.php?cat=world','<i data-lucide="globe" class="w-5 h-5"></i>',$tF('विश्व','World')],
             ['/news.php?cat=technology','<i data-lucide="cpu" class="w-5 h-5"></i>',$tF('प्रविधि','Tech')],
+            ['/news.php?cat=health','<i data-lucide="heart-pulse" class="w-5 h-5"></i>',$tF('स्वास्थ्य','Health')],
+            ['/news.php?cat=education','<i data-lucide="graduation-cap" class="w-5 h-5"></i>',$tF('शिक्षा','Education')],
           ] as $c): ?>
             <a href="<?= $c[0] ?>" class="dpd-tile" style="padding:10px 4px">
               <span style="line-height:1;color:#64748b"><?= $c[1] ?></span>
@@ -541,9 +542,12 @@ $todayQuote = $_quotes[$_qIdx];
     <!-- Icon link grid removed — bottom navigation already exposes these shortcuts -->
 
 
-    <div class="mt-4 pt-3 border-t border-line flex items-center gap-2 text-[11px] text-slate-400">
-      © <?= date('Y') ?> <?= htmlspecialchars(defined('SITE_NAME')?SITE_NAME:'आकाशवाणी',ENT_QUOTES,'UTF-8') ?>
-      <a href="?lang=<?= $lang==='ne'?'en':'ne' ?>" class="ml-auto text-brand-700 font-semibold"><?= $lang==='ne'?'EN':'नेपा' ?></a>
+    <div class="mt-4 pt-3 border-t border-line flex items-center justify-between text-[11px] text-slate-400">
+      <div>© <?= date('Y') ?> <?= htmlspecialchars(defined('SITE_NAME')?SITE_NAME:'आकाशवाणी',ENT_QUOTES,'UTF-8') ?></div>
+      <a href="?lang=<?= $lang==='ne'?'en':'ne' ?>" class="px-3 py-1.5 bg-brand-50 text-brand-700 rounded-lg font-semibold hover:bg-brand-100 transition-colors flex items-center gap-1.5">
+        <i data-lucide="globe" class="w-3.5 h-3.5"></i>
+        <?= $lang==='ne'?'EN':'नेपा' ?>
+      </a>
     </div>
 
     <div class="mt-2 flex items-center gap-3 text-[11px] text-slate-500 flex-wrap">
