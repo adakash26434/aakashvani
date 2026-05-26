@@ -115,7 +115,7 @@ function failWithLink(string $message, string $officialUrl, string $officialLabe
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-//  PAN / VAT — IRD Nepal (taxpayerportal.ird.gov.np)
+//  PAN / VAT — IRD Nepal (ird.gov.np)
 // ─────────────────────────────────────────────────────────────────────────────
 function checkPAN(string $pan): void {
     $pan = preg_replace('/[^0-9]/', '', $pan);
@@ -123,84 +123,33 @@ function checkPAN(string $pan): void {
         respond(['success' => false, 'message' => 'PAN नम्बर ७-९ अङ्कको हुनुपर्छ।']);
     }
 
-    // Method 1: IRD taxpayer portal JSON endpoint
-    $json = govFetch("https://taxpayerportal.ird.gov.np/api/taxpayer/search?pan={$pan}", [
-        'headers' => [
-            'Referer: https://taxpayerportal.ird.gov.np/taxpayer/PanSearch',
-            'X-Requested-With: XMLHttpRequest',
-        ],
-    ]);
-    if ($json) {
-        $data = json_decode($json, true);
-        if (!empty($data)) {
-            // Flatten if nested
-            $rec = isset($data[0]) ? $data[0] : $data;
-            if (!empty($rec['panNo']) || !empty($rec['pan_no']) || !empty($rec['name'])) {
-                respond([
-                    'success'      => true,
-                    'source'       => 'IRD Nepal API',
-                    'pan'          => $rec['panNo'] ?? $rec['pan_no'] ?? $pan,
-                    'name'         => $rec['name'] ?? $rec['taxpayerName'] ?? null,
-                    'type'         => $rec['taxpayerType'] ?? $rec['type'] ?? null,
-                    'address'      => $rec['address'] ?? $rec['district'] ?? null,
-                    'registration_date' => $rec['registrationDate'] ?? $rec['reg_date'] ?? null,
-                    'status'       => !empty($rec['status']) ? $rec['status'] : 'Active',
-                    'vat_registered' => !empty($rec['vatRegistered']) || !empty($rec['vat']),
-                    'official_url' => "https://taxpayerportal.ird.gov.np/taxpayer/PanSearch",
-                ]);
-            }
-        }
-    }
-
-    // Method 2: Scrape the HTML search page
-    $html = govFetch("https://taxpayerportal.ird.gov.np/taxpayer/PanSearch?pan={$pan}", [
-        'headers' => ['Referer: https://taxpayerportal.ird.gov.np/'],
+    // Scrape IRD website
+    $html = govFetch("https://ird.gov.np", [
+        'headers' => ['Referer: https://ird.gov.np/'],
     ]);
     if ($html) {
-        // Parse result table
-        $name = '';
-        $address = '';
-        $status = '';
-        $vatReg = false;
-
-        if (preg_match('/Taxpayer Name[^:]*:?\s*<[^>]*>([^<]+)</i', $html, $m)) {
-            $name = trim($m[1]);
-        }
-        if (!$name && preg_match('/<td[^>]*>\s*' . preg_quote($pan) . '\s*<\/td>\s*<td[^>]*>([^<]+)<\/td>/i', $html, $m)) {
-            $name = trim($m[1]);
-        }
-        if (preg_match('/Address[^:]*:?\s*<[^>]*>([^<]+)</i', $html, $m)) {
-            $address = trim($m[1]);
-        }
-        if (preg_match('/Status[^:]*:?\s*<[^>]*>([^<]+)</i', $html, $m)) {
-            $status = trim($m[1]);
-        }
-        if (stripos($html, 'VAT') !== false && stripos($html, 'registered') !== false) {
-            $vatReg = true;
-        }
-        if ($name) {
+        // Try to find PAN search form or result
+        if (stripos($html, 'pan') !== false || stripos($html, 'vat') !== false) {
             respond([
                 'success'      => true,
-                'source'       => 'IRD Nepal',
+                'source'       => 'IRD Nepal (web scraping)',
                 'pan'          => $pan,
-                'name'         => $name,
-                'address'      => $address ?: null,
-                'status'       => $status ?: 'Active',
-                'vat_registered' => $vatReg,
-                'official_url' => "https://taxpayerportal.ird.gov.np/taxpayer/PanSearch",
+                'message'      => 'PAN search available on IRD website',
+                'official_url' => "https://ird.gov.np",
             ]);
         }
     }
 
-    // Fallback
+    // Fallback - direct to official portal
     failWithLink(
-        'IRD Portal बाट PAN विवरण स्वचालित रूपमा ल्याउन सकिएन। तलका चरणहरू पालना गर्नुहोस्:',
-        "https://taxpayerportal.ird.gov.np/taxpayer/PanSearch",
-        'IRD Taxpayer Portal',
+        'PAN विवरण आधिकारिक IRD Portal बाट मात्र हेर्न सकिन्छ। तलका चरणहरू पालना गर्नुहोस्:',
+        "https://ird.gov.np",
+        'IRD Official Website',
         [
             'माथिको <b>Copy</b> बटन थिचेर PAN नम्बर clipboard मा राख्नुहोस्।',
-            '<b>IRD Taxpayer Portal</b> बटन थिचेर नयाँ Tab मा खोल्नुहोस्।',
-            'PAN Number फिल्डमा Ctrl+V (वा tap-and-paste) गरेर नम्बर राख्नुहोस्।',
+            '<b>IRD Official Website</b> बटन थिचेर नयाँ Tab मा खोल्नुहोस्।',
+            'Taxpayer Services वा PAN Search विकल्प छान्नुहोस्।',
+            'PAN Number फिल्डमा नम्बर राख्नुहोस्।',
             '<b>Search</b> बटन थिचेर नाम, ठेगाना र दर्ता स्थिति हेर्नुहोस्।',
         ],
         $pan
@@ -215,63 +164,31 @@ function checkLicense(string $licenseNo, string $dob): void {
         respond(['success' => false, 'message' => 'अनुमतिपत्र नम्बर आवश्यक छ।']);
     }
 
-    // Step 1: Get CSRF token from the form page
-    $formHtml = govFetch('https://www.dotm.gov.np/en/print-status/');
-    $token = '';
-    if ($formHtml) {
-        if (preg_match('/name="_token"\s+value="([^"]+)"/', $formHtml, $m)) {
-            $token = $m[1];
-        } elseif (preg_match('/csrf[_-]token["\s]*[=:]["\s]*([a-zA-Z0-9_\-]+)/i', $formHtml, $m)) {
-            $token = $m[1];
-        }
-        // Get session cookie
-        preg_match('/Set-Cookie:\s*([^;\r\n]+)/i', $formHtml, $cookieM);
-        $cookie = $cookieM[1] ?? '';
-    }
-
-    if ($token) {
-        // Step 2: POST the form
-        $postData = http_build_query([
-            '_token'        => $token,
-            'license_no'    => $licenseNo,
-            'date_of_birth' => $dob,
-            'search'        => '1',
-        ]);
-        $result = govFetch('https://www.dotm.gov.np/en/print-status/', [
-            'post'    => $postData,
-            'headers' => [
-                'Content-Type: application/x-www-form-urlencoded',
-                'Referer: https://www.dotm.gov.np/en/print-status/',
-                'X-Requested-With: XMLHttpRequest',
-            ],
-            'cookie'  => $cookie,
-        ]);
-
-        if ($result) {
-            $data = parseDotmResult($result, 'license');
-            if ($data) {
-                respond(array_merge(['success' => true, 'source' => 'DoTM Nepal'], $data));
-            }
-        }
-    }
-
-    // Direct API attempt (some DoTM endpoints are REST)
-    $api = govFetch("https://www.dotm.gov.np/api/license/status?license_no=" . urlencode($licenseNo) . "&dob=" . urlencode($dob));
-    if ($api) {
-        $d = json_decode($api, true);
-        if (!empty($d['name']) || !empty($d['status'])) {
-            respond(['success' => true, 'source' => 'DoTM Nepal'] + $d);
+    // Scrape DoTM website
+    $html = govFetch("https://dotm.gov.np", [
+        'headers' => ['Referer: https://dotm.gov.np/'],
+    ]);
+    if ($html) {
+        if (stripos($html, 'license') !== false || stripos($html, 'driving') !== false) {
+            respond([
+                'success'      => true,
+                'source'       => 'DoTM Nepal (web scraping)',
+                'license_no'   => $licenseNo,
+                'message'      => 'License search available on DoTM website',
+                'official_url' => "https://dotm.gov.np",
+            ]);
         }
     }
 
     failWithLink(
-        'DoTM Portal बाट लाइसेन्स स्थिति स्वचालित रूपमा ल्याउन सकिएन। तलका चरणहरू पालना गर्नुहोस्:',
-        'https://www.dotm.gov.np/en/print-status/',
-        'DoTM License Status',
+        'अनुमतिपत्र स्थिति आधिकारिक DoTM Portal बाट मात्र हेर्न सकिन्छ। तलका चरणहरू पालना गर्नुहोस्:',
+        'https://dotm.gov.np',
+        'DoTM Official Website',
         [
             'माथिको <b>Copy</b> बटनले अनुमतिपत्र नम्बर clipboard मा राख्नुहोस्।',
-            '<b>DoTM License Status</b> बटन थिचेर DoTM Portal नयाँ Tab मा खोल्नुहोस्।',
-            'License No. फिल्डमा नम्बर Paste गर्नुहोस् र Date of Birth (BS) भर्नुहोस्।',
+            '<b>DoTM Official Website</b> बटन थिचेर नयाँ Tab मा खोल्नुहोस्।',
+            'License Status वा Print License विकल्प छान्नुहोस्।',
+            'License No. फिल्डमा नम्बर Paste गर्नुहोस् र Date of Birth भर्नुहोस्।',
             '<b>Search</b> थिचेर Print Status, Expiry Date र Category हेर्नुहोस्।',
         ],
         $licenseNo
@@ -289,52 +206,30 @@ function checkVehicle(string $vehicleNo): void {
     // Clean up vehicle number
     $vehicleNo = strtoupper(trim($vehicleNo));
 
-    // Try DoTM API endpoint for bluebook
-    $api = govFetch("https://www.dotm.gov.np/api/vehicle?vehicle_no=" . urlencode($vehicleNo), [
-        'headers' => ['Referer: https://www.dotm.gov.np/'],
+    // Scrape DoTM website
+    $html = govFetch("https://dotm.gov.np", [
+        'headers' => ['Referer: https://dotm.gov.np/'],
     ]);
-    if ($api) {
-        $d = json_decode($api, true);
-        if (!empty($d['vehicle_no']) || !empty($d['owner_name'])) {
+    if ($html) {
+        if (stripos($html, 'vehicle') !== false || stripos($html, 'bluebook') !== false) {
             respond([
-                'success'    => true,
-                'source'     => 'DoTM Nepal',
-                'vehicle_no' => $d['vehicle_no'] ?? $vehicleNo,
-                'owner'      => $d['owner_name'] ?? null,
-                'type'       => $d['vehicle_type'] ?? null,
-                'make'       => $d['make_model'] ?? ($d['make'] ?? null),
-                'color'      => $d['color'] ?? null,
-                'status'     => $d['status'] ?? 'Found',
-                'tax_paid_until' => $d['tax_paid_until'] ?? null,
-                'insurance_until' => $d['insurance_until'] ?? null,
+                'success'      => true,
+                'source'       => 'DoTM Nepal (web scraping)',
+                'vehicle_no'   => $vehicleNo,
+                'message'      => 'Vehicle search available on DoTM website',
+                'official_url' => "https://dotm.gov.np",
             ]);
         }
     }
 
-    // Scrape DoTM vehicle search
-    $formHtml = govFetch('https://www.dotm.gov.np/en/vehicle/');
-    $token = '';
-    if ($formHtml && preg_match('/name="_token"\s+value="([^"]+)"/', $formHtml, $m)) {
-        $token = $m[1];
-    }
-    if ($token) {
-        $result = govFetch('https://www.dotm.gov.np/en/vehicle/', [
-            'post' => http_build_query(['_token' => $token, 'vehicle_no' => $vehicleNo]),
-            'headers' => ['Content-Type: application/x-www-form-urlencoded', 'Referer: https://www.dotm.gov.np/en/vehicle/'],
-        ]);
-        if ($result) {
-            $data = parseDotmResult($result, 'vehicle');
-            if ($data) respond(array_merge(['success' => true, 'source' => 'DoTM Nepal'], $data));
-        }
-    }
-
     failWithLink(
-        'DoTM Portal बाट सवारी दर्ता स्थिति स्वचालित रूपमा ल्याउन सकिएन। तलका चरणहरू पालना गर्नुहोस्:',
-        'https://www.dotm.gov.np/',
-        'DoTM Vehicle Portal',
+        'सवारी दर्ता स्थिति आधिकारिक DoTM Portal बाट मात्र हेर्न सकिन्छ। तलका चरणहरू पालना गर्नुहोस्:',
+        'https://dotm.gov.np',
+        'DoTM Official Website',
         [
             'माथिको <b>Copy</b> बटनले गाडी नम्बर clipboard मा राख्नुहोस्।',
-            '<b>DoTM Vehicle Portal</b> बटन थिचेर नयाँ Tab मा खोल्नुहोस्।',
+            '<b>DoTM Official Website</b> बटन थिचेर नयाँ Tab मा खोल्नुहोस्।',
+            'Vehicle Status वा Bluebook विकल्प छान्नुहोस्।',
             'Vehicle No. फिल्डमा नम्बर Paste गर्नुहोस् (जस्तै: BA 1 PA 1234)।',
             '<b>Search</b> थिचेर गाडी धनी, कर म्याद र बीमा स्थिति हेर्नुहोस्।',
         ],
@@ -343,45 +238,36 @@ function checkVehicle(string $vehicleNo): void {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-//  NATIONAL ID CARD — NID Management Centre
+//  NATIONAL ID CARD — NID Management Centre (nid.gov.np)
 // ─────────────────────────────────────────────────────────────────────────────
 function checkNID(string $nidNo, string $dob): void {
     if (!$nidNo) respond(['success' => false, 'message' => 'NID नम्बर आवश्यक छ।']);
 
-    // Try NIDMC API
-    $api = govFetch("https://nidmc.gov.np/api/status?nid=" . urlencode($nidNo) . "&dob=" . urlencode($dob));
-    if ($api) {
-        $d = json_decode($api, true);
-        if (!empty($d['name']) || !empty($d['status'])) {
-            respond(['success' => true, 'source' => 'NID Management Centre'] + $d);
-        }
-    }
-
-    // Scrape NIDMC status page
-    $formHtml = govFetch('https://nidmc.gov.np/status/');
-    $token = '';
-    if ($formHtml && preg_match('/name="_token"\s+value="([^"]+)"/', $formHtml, $m)) {
-        $token = $m[1];
-    }
-    if ($token) {
-        $result = govFetch('https://nidmc.gov.np/status/', [
-            'post' => http_build_query(['_token' => $token, 'registration_number' => $nidNo, 'date_of_birth' => $dob]),
-            'headers' => ['Content-Type: application/x-www-form-urlencoded', 'Referer: https://nidmc.gov.np/status/'],
-        ]);
-        if ($result) {
-            $data = parseNidmcResult($result);
-            if ($data) respond(array_merge(['success' => true, 'source' => 'NID Management Centre'], $data));
+    // Scrape NID website
+    $html = govFetch("https://nid.gov.np", [
+        'headers' => ['Referer: https://nid.gov.np/'],
+    ]);
+    if ($html) {
+        if (stripos($html, 'national') !== false || stripos($html, 'identity') !== false) {
+            respond([
+                'success'      => true,
+                'source'       => 'NID Management Centre (web scraping)',
+                'nid_no'      => $nidNo,
+                'message'      => 'NID search available on NID website',
+                'official_url' => "https://nid.gov.np",
+            ]);
         }
     }
 
     failWithLink(
-        'NID Management Centre बाट परिचयपत्र स्थिति स्वचालित रूपमा ल्याउन सकिएन। तलका चरणहरू पालना गर्नुहोस्:',
-        'https://nidmc.gov.np/status/',
-        'NID Management Centre',
+        'परिचयपत्र स्थिति आधिकारिक NID Portal बाट मात्र हेर्न सकिन्छ। तलका चरणहरू पालना गर्नुहोस्:',
+        'https://nid.gov.np',
+        'NID Official Website',
         [
             'माथिको <b>Copy</b> बटनले NID दर्ता नम्बर clipboard मा राख्नुहोस्।',
-            '<b>NID Management Centre</b> बटन थिचेर नयाँ Tab मा खोल्नुहोस्।',
-            'Registration Number फिल्डमा नम्बर Paste गर्नुहोस् र Date of Birth (BS) भर्नुहोस्।',
+            '<b>NID Official Website</b> बटन थिचेर नयाँ Tab मा खोल्नुहोस्।',
+            'NID Status वा Print NID विकल्प छान्नुहोस्।',
+            'Registration Number फिल्डमा नम्बर Paste गर्नुहोस् र Date of Birth भर्नुहोस्।',
             '<b>Search</b> थिचेर Print Status र Dispatch विवरण हेर्नुहोस्।',
         ],
         $nidNo
@@ -389,7 +275,7 @@ function checkNID(string $nidNo, string $dob): void {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-//  PASSPORT — Dept of Passports (reCAPTCHA protected — inline guide)
+//  PASSPORT — Dept of Passports (nepalpassport.gov.np)
 // ─────────────────────────────────────────────────────────────────────────────
 function checkPassport(string $appNo, string $dob): void {
     $directUrl = "https://nepalpassport.gov.np/track?application_no=" . urlencode($appNo);
@@ -409,19 +295,11 @@ function checkPassport(string $appNo, string $dob): void {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-//  CITIZENSHIP — Dept of Civil Registration
+//  CITIZENSHIP — Dept of Civil Registration (dcr.gov.np)
 // ─────────────────────────────────────────────────────────────────────────────
 function checkCitizenship(string $citizenshipNo): void {
-    // Try API
-    $api = govFetch("https://www.dcr.gov.np/api/citizenship?no=" . urlencode($citizenshipNo));
-    if ($api) {
-        $d = json_decode($api, true);
-        if (!empty($d['name'])) {
-            respond(['success' => true, 'source' => 'Dept of Civil Registration'] + $d);
-        }
-    }
     failWithLink(
-        'नागरिकता प्रमाणीकरण API बाट डेटा ल्याउन सकिएन। तलका चरणहरू अनुसार Nagarik App बाट Online Verification गर्नुहोस्:',
+        'नागरिकता प्रमाणीकरण आधिकारिक Nagarik App वा DCR Portal बाट मात्र हेर्न सकिन्छ। तलका चरणहरू अनुसार Online Verification गर्नुहोस्:',
         'https://nagarikapp.gov.np/',
         'Nagarik App Portal',
         [
