@@ -5,12 +5,25 @@
  * ?type=notice|vacancy|result|syllabus|all  ?limit=40
  */
 ob_start();
-header('Content-Type: application/json; charset=utf-8');
-header('Cache-Control: public, max-age=600');
-header('Access-Control-Allow-Origin: *');
 @ini_set('default_socket_timeout', 8);
 
 require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/../functions.php';
+require_once __DIR__ . '/../includes/error-logger.php';
+
+// Security headers
+sendSecurityHeaders();
+header('Content-Type: application/json; charset=utf-8');
+header('Cache-Control: public, max-age=600');
+header('Access-Control-Allow-Origin: *');
+
+// Rate limiting
+$rateKey = 'loksewa:' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown');
+if (!checkRateLimit($rateKey, 60, 60)) {
+    http_response_code(429);
+    echo json_encode(['ok' => false, 'error' => 'Rate limit exceeded']);
+    exit;
+}
 
 $type  = strtolower(trim($_GET['type']  ?? 'all'));
 $limit = max(1, min(80, (int)($_GET['limit'] ?? 40)));

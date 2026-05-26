@@ -3,9 +3,23 @@
  * आकाशवाणी — Weather & Alerts API v13
  * Real-time Weather for Nepal + Earthquake Alerts
  */
+require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/../functions.php';
+require_once __DIR__ . '/../includes/error-logger.php';
+
+// Security headers
+sendSecurityHeaders();
 header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
 header('Cache-Control: public, max-age=600');
+
+// Rate limiting
+$rateKey = 'weather:' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown');
+if (!checkRateLimit($rateKey, 60, 60)) {
+    http_response_code(429);
+    echo json_encode(['ok' => false, 'error' => 'Rate limit exceeded']);
+    exit;
+}
 
 $type = $_GET['type'] ?? 'all';
 $city = $_GET['city'] ?? null;
