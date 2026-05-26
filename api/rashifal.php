@@ -596,6 +596,9 @@ if ($rashi !== null) {
     
     if ($rashiIndex !== null && isset($rashiData[$rashiIndex])) {
         $response = getRashifalForRashi($rashiIndex, $type);
+        $response['source'] = 'AI Generated (OpenAI GPT)';
+        $response['source_url'] = 'https://openai.com';
+        $response['note'] = 'राशिफल AI द्वारा उत्पन्न गरिएको हो। यो केवल मनोरञ्जनको लागि हो, व्यावसायिक वा धार्मिक निर्णयको लागि होइन।';
     } else {
         $response = [
             'error'      => 'Rashi not found',
@@ -606,6 +609,9 @@ if ($rashi !== null) {
 } else {
     // All rashifal
     $response = getAllRashifal($type);
+    $response['source'] = 'AI Generated (OpenAI GPT)';
+    $response['source_url'] = 'https://openai.com';
+    $response['note'] = 'राशिफल AI द्वारा उत्पन्न गरिएको हो। यो केवल मनोरञ्जनको लागि हो, व्यावसायिक वा धार्मिक निर्णयको लागि होइन।';
 }
 
 while (ob_get_level() > 0) ob_end_clean();

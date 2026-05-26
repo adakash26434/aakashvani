@@ -161,7 +161,13 @@ function getCabinetDecisions(?string $month = null, ?string $year = null): array
         });
     }
     
-    return array_values($allDecisions);
+    $result = array_values($allDecisions);
+    $result[] = [
+        'source' => 'Office of the Prime Minister and Council of Ministers',
+        'source_url' => 'https://opmcm.gov.np',
+        'note' => 'मन्त्रिपरिषद्को निर्णयहरू प्रधानमन्त्री तथा मन्त्रिपरिषद्को कार्यालयबाट लिइएको हो।',
+    ];
+    return $result;
 }
 
 function getAvailableMonths(): array {

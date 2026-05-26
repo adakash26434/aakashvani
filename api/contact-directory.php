@@ -104,7 +104,13 @@ function getContacts(?string $search = null, ?string $category = null, ?string $
         });
     }
     
-    return array_values($allContacts);
+    $result = array_values($allContacts);
+    $result[] = [
+        'source' => 'Government of Nepal & Public Services',
+        'source_url' => 'https://www.nepal.gov.np',
+        'note' => 'सम्पर्क विवरण सरकारी र सार्वजनिक सेवा वेबसाइटबाट लिइएको हो।',
+    ];
+    return $result;
 }
 
 function getAvailableCategories(): array {

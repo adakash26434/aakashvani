@@ -173,7 +173,13 @@ function getGovernmentTenders(?string $category = null, ?string $ministry = null
         });
     }
     
-    return array_values($allTenders);
+    $result = array_values($allTenders);
+    $result[] = [
+        'source' => 'Public Procurement Monitoring Office (PPMO)',
+        'source_url' => 'https://ppmo.gov.np',
+        'note' => 'टेन्डर विवरण PPMO आधिकारिक वेबसाइटबाट लिइएको हो।',
+    ];
+    return $result;
 }
 
 function getTenderCategories(): array {
