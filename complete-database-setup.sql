@@ -258,6 +258,14 @@ INSERT INTO alerts (title, description, severity, category, source, source_url, 
 ('काठमाडौंमा Heavy Rain Alert', 'अर्को २४ घण्टामा काठमाडौं उपत्यकामा भारी वर्षाको सम्भावना', 'warning', 'weather', 'DHM', 'https://www.dhm.gov.np', NOW(), 'active'),
 ('Load Shedding Schedule', 'आजबाट नयाँ लोडसेडिङ तालिका लागू हुनेछ', 'info', 'power', 'NEA', 'https://www.nea.org.np', NOW(), 'active');
 
+-- Insert Sample Radio Podcasts
+INSERT INTO radio_podcasts (station_id, title, description, audio_url, duration, publish_date, status) VALUES
+(1, 'कान्तिपुर समाचार', 'आजको मुख्य समाचार र अपडेट', 'https://example.com/podcast1.mp3', '15:00', CURDATE(), 'published'),
+(2, 'उज्यालो सुबह', 'सुबहको मनोरञ्जन कार्यक्रम', 'https://example.com/podcast2.mp3', '30:00', CURDATE(), 'published'),
+(3, 'Hits FM Top 10', 'यो हप्ताको टप १० गीतहरू', 'https://example.com/podcast3.mp3', '45:00', CURDATE(), 'published'),
+(7, 'रेडियो नेपाल समाचार', 'सरकारी समाचार र घोषणा', 'https://example.com/podcast4.mp3', '20:00', CURDATE(), 'published'),
+(12, 'BBC Nepali Daily', 'अन्तर्राष्ट्रिय समाचार र विश्लेषण', 'https://example.com/podcast5.mp3', '25:00', CURDATE(), 'published');
+
 -- ═══════════════════════════════════════════════════════════════════════════════
 -- SECTION 4: CREATE FOREIGN KEYS (After all tables exist)
 -- ═══════════════════════════════════════════════════════════════════════════════
