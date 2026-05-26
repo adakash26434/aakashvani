@@ -178,7 +178,7 @@ $todayQuote = $_quotes[$_qIdx];
         <!-- Finance & Market -->
         <div class="mb-3">
           <div class="text-xs font-semibold text-gray-500 mb-2 ne flex items-center gap-1">
-            <i data-lucide="banknote" class="w-3 h-3"></i> <?= $tF('अर्थ तथा बजार','Finance & Market') ?>
+            💰 <?= $tF('अर्थ तथा बजार','Finance & Market') ?>
           </div>
           <div class="dpd-tiles" style="grid-template-columns:repeat(4,1fr)">
             <a href="/ipo-tracker.php" class="dpd-tile">
@@ -203,7 +203,7 @@ $todayQuote = $_quotes[$_qIdx];
         <!-- News & Info -->
         <div class="mb-3">
           <div class="text-xs font-semibold text-gray-500 mb-2 ne flex items-center gap-1">
-            <i data-lucide="newspaper" class="w-3 h-3"></i> <?= $tF('समाचार तथा सूचना','News & Info') ?>
+            📰 <?= $tF('समाचार तथा सूचना','News & Info') ?>
           </div>
           <div class="dpd-tiles" style="grid-template-columns:repeat(4,1fr)">
             <a href="/news.php" class="dpd-tile">
@@ -228,7 +228,7 @@ $todayQuote = $_quotes[$_qIdx];
         <!-- Tools & Utilities -->
         <div class="mb-3">
           <div class="text-xs font-semibold text-gray-500 mb-2 ne flex items-center gap-1">
-            <i data-lucide="wrench" class="w-3 h-3"></i> <?= $tF('उपकरण तथा सेवा','Tools & Services') ?>
+            🔧 <?= $tF('उपकरण तथा सेवा','Tools & Services') ?>
           </div>
           <div class="dpd-tiles" style="grid-template-columns:repeat(4,1fr)">
             <a href="/tools.php" class="dpd-tile">
@@ -253,7 +253,7 @@ $todayQuote = $_quotes[$_qIdx];
         <!-- Lifestyle & Culture -->
         <div>
           <div class="text-xs font-semibold text-gray-500 mb-2 ne flex items-center gap-1">
-            <i data-lucide="heart" class="w-3 h-3"></i> <?= $tF('जीवनशैली तथा संस्कृति','Lifestyle & Culture') ?>
+            ❤️ <?= $tF('जीवनशैली तथा संस्कृति','Lifestyle & Culture') ?>
           </div>
           <div class="dpd-tiles" style="grid-template-columns:repeat(4,1fr)">
             <a href="/rashifal.php" class="dpd-tile">
