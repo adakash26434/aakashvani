@@ -154,11 +154,17 @@ require_once __DIR__ . '/header.php';
 
   <!-- ══ SOURCE ATTRIBUTION — always first, always prominent ══════════════ -->
   <div class="art-srcbar" style="--src-color:<?= htmlspecialchars($srcMeta['color']) ?>">
-    <div class="logo"><?= htmlspecialchars(mb_substr($srcMeta['name'], 0, 1, 'UTF-8')) ?></div>
-    <div class="meta">
-      <div class="name ne"><?= htmlspecialchars($srcMeta['name']) ?></div>
-      <div class="lic ne">© <?= date('Y') ?> <?= htmlspecialchars($srcMeta['name']) ?> — मूल प्रकाशक</div>
+    <div class="src-left" style="display:flex;align-items:center;gap:12px;flex:1;">
+      <div class="logo"><?= htmlspecialchars(mb_substr($srcMeta['name'], 0, 1, 'UTF-8')) ?></div>
+      <div class="meta">
+        <div class="name ne"><?= htmlspecialchars($srcMeta['name']) ?></div>
+        <div class="lic ne">© <?= date('Y') ?> <?= htmlspecialchars($srcMeta['name']) ?> — मूल प्रकाशक</div>
+      </div>
     </div>
+    <a href="<?= htmlspecialchars($url) ?>" target="_blank" rel="noopener" class="read-source-btn ne" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:var(--src-color,#0d9488);color:#fff;border-radius:8px;text-decoration:none;font-size:13px;font-weight:600;white-space:nowrap;">
+      <i data-lucide="external-link" class="w-4 h-4"></i>
+      मूल स्रोतमा पढ्नुहोस्
+    </a>
   </div>
 
   <h1 class="art-title ne"><?= htmlspecialchars($title) ?></h1>
@@ -212,10 +218,6 @@ require_once __DIR__ . '/header.php';
         <i data-lucide="info" class="w-3.5 h-3.5"></i>
         मूल स्रोत: <?= htmlspecialchars($srcMeta['name']) ?> — यो सामग्री आकाशवाणीमा पढ्न मिल्ने गरी तयार पारिएको
       </span>
-      <a href="<?= htmlspecialchars($url) ?>" target="_blank" rel="noopener" class="read-full ne" style="text-decoration:none;color:inherit;">
-        <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
-        मूल स्रोतमा पढ्नुहोस्
-      </a>
     </div>
   </div>
 

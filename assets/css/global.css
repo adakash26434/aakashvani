@@ -207,6 +207,13 @@
 .art-srcbar .name { font-size: 14px; font-weight: 800; color: #0b1220; }
 .art-srcbar .name a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
 .art-srcbar .lic { font-size: 11px; color: #64748b; margin-top: 2px; }
+.art-srcbar .read-source-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; background: var(--src-color,#0d9488); color: #fff; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: 600; white-space: nowrap; transition: opacity 0.2s; }
+.art-srcbar .read-source-btn:hover { opacity: 0.9; }
+.art-srcbar .read-source-btn svg, .art-srcbar .read-source-btn i { width: 16px; height: 16px; }
+@media (max-width: 480px) {
+  .art-srcbar { flex-wrap: wrap; }
+  .art-srcbar .read-source-btn { width: 100%; justify-content: center; margin-top: 8px; }
+}
 .art-title { font-size: 21px; font-weight: 800; line-height: 1.35; color: #0b1220; margin: 0 0 10px; }
 .art-meta { font-size: 12px; color: #64748b; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .art-hero { width: 100%; border-radius: 14px; overflow: hidden; margin-bottom: 16px; background: linear-gradient(135deg,#f0fdfa,#cffafe); }
