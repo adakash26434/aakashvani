@@ -168,45 +168,111 @@ $todayQuote = $_quotes[$_qIdx];
           </div>
         </div>
 
-        <!-- Quick services -->
+        <!-- Quick Services - Category Grid -->
         <div class="dpd-section-t ne">
           <i data-lucide="zap" class="w-4 h-4 text-brand-600"></i>
           <?= $tF('द्रुत सेवा','Quick Services') ?>
           <a href="/gov-services.php" class="more ne"><?= $tF('सबै →','All →') ?></a>
         </div>
-        <div class="dpd-tiles">
-          <a href="/news.php" class="dpd-tile">
-            <span class="ic bg-i2"><i data-lucide="newspaper" class="w-[18px] h-[18px]"></i></span>
-            <span class="lbl ne"><?= $tF('समाचार','News') ?></span>
-          </a>
-          <a href="/ipo-tracker.php" class="dpd-tile">
-            <span class="ic bg-i1"><i data-lucide="trending-up" class="w-[18px] h-[18px]"></i></span>
-            <span class="lbl ne">IPO</span>
-          </a>
-          <a href="/rashifal.php" class="dpd-tile">
-            <span class="ic bg-i5"><i data-lucide="sparkles" class="w-[18px] h-[18px]"></i></span>
-            <span class="lbl ne"><?= $tF('राशिफल','Rashifal') ?></span>
-          </a>
-          <a href="/gov-services.php" class="dpd-tile">
-            <span class="ic bg-i6"><i data-lucide="landmark" class="w-[18px] h-[18px]"></i></span>
-            <span class="lbl ne"><?= $tF('सरकारी','Gov') ?></span>
-          </a>
-          <a href="/tools.php" class="dpd-tile">
-            <span class="ic bg-i3"><i data-lucide="wrench" class="w-[18px] h-[18px]"></i></span>
-            <span class="lbl ne"><?= $tF('टूल','Tools') ?></span>
-          </a>
-          <a href="/tax-calculator.php" class="dpd-tile">
-            <span class="ic bg-i8"><i data-lucide="receipt" class="w-[18px] h-[18px]"></i></span>
-            <span class="lbl ne"><?= $tF('कर','Tax') ?></span>
-          </a>
-          <a href="/emergency.php" class="dpd-tile">
-            <span class="ic bg-i6"><i data-lucide="phone-call" class="w-[18px] h-[18px]"></i></span>
-            <span class="lbl ne"><?= $tF('आपतकाल','SOS') ?></span>
-          </a>
-          <a href="/downloads.php" class="dpd-tile">
-            <span class="ic bg-i7"><i data-lucide="download" class="w-[18px] h-[18px]"></i></span>
-            <span class="lbl ne"><?= $tF('डाउनलोड','Files') ?></span>
-          </a>
+        
+        <!-- Finance & Market -->
+        <div class="mb-3">
+          <div class="text-xs font-semibold text-gray-500 mb-2 ne flex items-center gap-1">
+            <i data-lucide="banknote" class="w-3 h-3"></i> <?= $tF('अर्थ तथा बजार','Finance & Market') ?>
+          </div>
+          <div class="dpd-tiles" style="grid-template-columns:repeat(4,1fr)">
+            <a href="/ipo-tracker.php" class="dpd-tile">
+              <span class="ic bg-i1"><i data-lucide="trending-up" class="w-[18px] h-[18px]"></i></span>
+              <span class="lbl ne">IPO</span>
+            </a>
+            <a href="/market.php" class="dpd-tile">
+              <span class="ic bg-i2"><i data-lucide="line-chart" class="w-[18px] h-[18px]"></i></span>
+              <span class="lbl ne"><?= $tF('बजार','Market') ?></span>
+            </a>
+            <a href="/tax-calculator.php" class="dpd-tile">
+              <span class="ic bg-i8"><i data-lucide="receipt" class="w-[18px] h-[18px]"></i></span>
+              <span class="lbl ne"><?= $tF('कर','Tax') ?></span>
+            </a>
+            <a href="/auction-notices.php" class="dpd-tile">
+              <span class="ic bg-i6"><i data-lucide="gavel" class="w-[18px] h-[18px]"></i></span>
+              <span class="lbl ne"><?= $tF('लिलामी','Auction') ?></span>
+            </a>
+          </div>
+        </div>
+
+        <!-- News & Info -->
+        <div class="mb-3">
+          <div class="text-xs font-semibold text-gray-500 mb-2 ne flex items-center gap-1">
+            <i data-lucide="newspaper" class="w-3 h-3"></i> <?= $tF('समाचार तथा सूचना','News & Info') ?>
+          </div>
+          <div class="dpd-tiles" style="grid-template-columns:repeat(4,1fr)">
+            <a href="/news.php" class="dpd-tile">
+              <span class="ic bg-i2"><i data-lucide="newspaper" class="w-[18px] h-[18px]"></i></span>
+              <span class="lbl ne"><?= $tF('समाचार','News') ?></span>
+            </a>
+            <a href="/notices.php" class="dpd-tile">
+              <span class="ic bg-i5"><i data-lucide="scroll" class="w-[18px] h-[18px]"></i></span>
+              <span class="lbl ne"><?= $tF('सूचना','Notices') ?></span>
+            </a>
+            <a href="/loksewa.php" class="dpd-tile">
+              <span class="ic bg-i6"><i data-lucide="briefcase" class="w-[18px] h-[18px]"></i></span>
+              <span class="lbl ne"><?= $tF('लोकसेवा','Lok Sewa') ?></span>
+            </a>
+            <a href="/nokari.php" class="dpd-tile">
+              <span class="ic bg-i3"><i data-lucide="user" class="w-[18px] h-[18px]"></i></span>
+              <span class="lbl ne"><?= $tF('नोकरी','Jobs') ?></span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Tools & Utilities -->
+        <div class="mb-3">
+          <div class="text-xs font-semibold text-gray-500 mb-2 ne flex items-center gap-1">
+            <i data-lucide="wrench" class="w-3 h-3"></i> <?= $tF('उपकरण तथा सेवा','Tools & Services') ?>
+          </div>
+          <div class="dpd-tiles" style="grid-template-columns:repeat(4,1fr)">
+            <a href="/tools.php" class="dpd-tile">
+              <span class="ic bg-i3"><i data-lucide="wrench" class="w-[18px] h-[18px]"></i></span>
+              <span class="lbl ne"><?= $tF('टूल','Tools') ?></span>
+            </a>
+            <a href="/gov-services.php" class="dpd-tile">
+              <span class="ic bg-i6"><i data-lucide="landmark" class="w-[18px] h-[18px]"></i></span>
+              <span class="lbl ne"><?= $tF('सरकारी','Gov') ?></span>
+            </a>
+            <a href="/emergency.php" class="dpd-tile">
+              <span class="ic bg-i6"><i data-lucide="phone-call" class="w-[18px] h-[18px]"></i></span>
+              <span class="lbl ne"><?= $tF('आपतकाल','SOS') ?></span>
+            </a>
+            <a href="/downloads.php" class="dpd-tile">
+              <span class="ic bg-i7"><i data-lucide="download" class="w-[18px] h-[18px]"></i></span>
+              <span class="lbl ne"><?= $tF('डाउनलोड','Files') ?></span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Lifestyle & Culture -->
+        <div>
+          <div class="text-xs font-semibold text-gray-500 mb-2 ne flex items-center gap-1">
+            <i data-lucide="heart" class="w-3 h-3"></i> <?= $tF('जीवनशैली तथा संस्कृति','Lifestyle & Culture') ?>
+          </div>
+          <div class="dpd-tiles" style="grid-template-columns:repeat(4,1fr)">
+            <a href="/rashifal.php" class="dpd-tile">
+              <span class="ic bg-i5"><i data-lucide="sparkles" class="w-[18px] h-[18px]"></i></span>
+              <span class="lbl ne"><?= $tF('राशिफल','Rashifal') ?></span>
+            </a>
+            <a href="/nepali-patro-enhanced.php" class="dpd-tile">
+              <span class="ic bg-i4"><i data-lucide="calendar-days" class="w-[18px] h-[18px]"></i></span>
+              <span class="lbl ne"><?= $tF('पात्रो','Patro') ?></span>
+            </a>
+            <a href="/weather.php" class="dpd-tile">
+              <span class="ic bg-i1"><i data-lucide="cloud-sun" class="w-[18px] h-[18px]"></i></span>
+              <span class="lbl ne"><?= $tF('मौसम','Weather') ?></span>
+            </a>
+            <a href="/cricket.php" class="dpd-tile">
+              <span class="ic bg-i2"><i data-lucide="trophy" class="w-[18px] h-[18px]"></i></span>
+              <span class="lbl ne"><?= $tF('क्रिकेट','Cricket') ?></span>
+            </a>
+          </div>
         </div>
 
         <!-- ═══ News by Category (no broken API — direct links) ═════════════ -->
