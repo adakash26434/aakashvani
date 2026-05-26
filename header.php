@@ -191,13 +191,13 @@ if (getSeoSetting('schema_enabled','') === '1'):
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 
 <!-- Google Fonts: async load with font-display:swap (no render block) -->
-<!-- Only 2 weights per family — saves ~40KB vs loading 4-5 weights -->
+<!-- Noto Sans Devanagari for better Nepali rendering, Mukta for headings -->
 <link rel="preload" as="style"
-  href="https://fonts.googleapis.com/css2?family=Mukta:wght@700;800&family=Hind+Siliguri:wght@400;600&display=swap"
+  href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Mukta:wght@600;700;800&family=Hind+Siliguri:wght@400;500;600&display=swap"
   onload="this.onload=null;this.rel='stylesheet'"/>
 <noscript>
   <link rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Mukta:wght@700;800&family=Hind+Siliguri:wght@400;600&display=swap"/>
+    href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Mukta:wght@600;700;800&family=Hind+Siliguri:wght@400;500;600&display=swap"/>
 </noscript>
 
 <!-- Tailwind CDN config must come BEFORE the CDN script -->
@@ -209,8 +209,8 @@ tailwind={config:{darkMode:'class',theme:{extend:{
     page:'#f4f6fb',surface:'#ffffff',line:'#e6eaf2',
   },
   fontFamily:{
-    sans:['"Hind Siliguri"','system-ui','sans-serif'],
-    display:['Mukta','"Hind Siliguri"','system-ui','sans-serif'],
+    sans:['"Noto Sans Devanagari"','"Hind Siliguri"','system-ui','sans-serif'],
+    display:['Mukta','"Noto Sans Devanagari"','system-ui','sans-serif'],
   },
   boxShadow:{
     'app':'0 1px 2px rgba(11,18,32,.04),0 8px 24px -12px rgba(11,18,32,.10)',
