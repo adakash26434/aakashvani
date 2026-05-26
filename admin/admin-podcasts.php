@@ -245,7 +245,7 @@ $podcasts = $pdo->query("SELECT id, title, slug, category, featured, status, vie
                             }
                         ?></td>
                         <td class="actions">
-                            <a href="?action=edit&id=<?= $p['id'] ?>"><button class="btn btn-sm" onclick="return !window.location.href='?action=edit&id=<?= $p['id'] ?>'">संपादन</button></a>
+                            <a href="?action=edit&id=<?= $p['id'] ?>"><button class="btn btn-sm">संपादन</button></a>
                             <a href="?action=del&id=<?= $p['id'] ?>" onclick="return confirm('मेटाउन निश्चित?')"><button class="btn btn-sm btn-danger">मेट्नुहोस्</button></a>
                         </td>
                     </tr>
@@ -258,8 +258,10 @@ $podcasts = $pdo->query("SELECT id, title, slug, category, featured, status, vie
     <?php elseif ($action === 'edit' && !empty($_GET['id'])): ?>
     <?php 
         $id = (int)$_GET['id'];
-        $pod = $pdo->prepare("SELECT * FROM user_podcasts WHERE id=?")->execute([$id])->fetch(PDO::FETCH_ASSOC);
-        if (!$pod) { echo '<p>पोडकास्ट नभेटिएन</p>'; } else:
+        $stmt = $pdo->prepare("SELECT * FROM user_podcasts WHERE id=?");
+        $stmt->execute([$id]);
+        $pod = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!$pod): echo '<p>पोडकास्ट नभेटिएन</p>'; else:
     ?>
     <div class="card">
         <h2>पोडकास्ट संपादन गर्नुहोस्</h2>

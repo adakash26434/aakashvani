@@ -39,8 +39,8 @@ class DataManager {
         int $limit = 50,
         int $offset = 0
     ): array {
-        $cacheKey = md5("news_${category}_${search}_${limit}_${offset}");
-        $cacheFile = $this->cacheDir . "/news_${cacheKey}.json";
+        $cacheKey = md5("news_{$category}_{$search}_{$limit}_{$offset}");
+        $cacheFile = $this->cacheDir . "/news_{$cacheKey}.json";
         
         // Check cache (30-minute TTL)
         if (file_exists($cacheFile) && time() - filemtime($cacheFile) < 1800) {
@@ -79,7 +79,7 @@ class DataManager {
                 }
                 if ($search) {
                     $query .= " AND (title LIKE ? OR excerpt LIKE ?)";
-                    $searchTerm = "%${search}%";
+                    $searchTerm = "%{$search}%";
                     $params[] = $searchTerm;
                     $params[] = $searchTerm;
                 }
@@ -136,8 +136,8 @@ class DataManager {
         ?string $category = null,
         int $limit = 50
     ): array {
-        $cacheKey = md5("market_${category}_${limit}");
-        $cacheFile = $this->cacheDir . "/market_${cacheKey}.json";
+        $cacheKey = md5("market_{$category}_{$limit}");
+        $cacheFile = $this->cacheDir . "/market_{$cacheKey}.json";
         
         // Check cache (5-minute TTL for real-time data)
         if (file_exists($cacheFile) && time() - filemtime($cacheFile) < 300) {
@@ -235,7 +235,7 @@ class DataManager {
         try {
             if ($type) {
                 // Clear specific type
-                $files = glob($this->cacheDir . "/${type}_*.json");
+                $files = glob($this->cacheDir . "/{$type}_*.json");
                 foreach ($files as $file) {
                     @unlink($file);
                 }

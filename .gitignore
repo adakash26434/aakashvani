@@ -1,0 +1,26 @@
+# Ignore local config and sensitive files
+config.php
+.env
+
+# Cache, uploads, and data
+data/cache/
+cache/
+/uploads/
+/uploads/*
+
+# Node / vendor
+node_modules/
+vendor/
+
+# OS files
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Build
+dist/
+
+# Logs
+*.log
