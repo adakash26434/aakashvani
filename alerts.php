@@ -182,15 +182,18 @@ require_once __DIR__ . '/header.php';
     }
     el.innerHTML = list.map(function(a){
       var m = TYPE_META[a.type] || {ic:'bell',cl:'slate',label:a.type};
-      var srcBadge = a.source ? '<a href="'+esc(a.source_url||'#')+'" target="_blank" rel="noopener" class="inline-flex items-center gap-1 bg-slate-100 hover:bg-slate-200 text-slate-700 px-1.5 py-0.5 rounded-md text-[9.5px] font-bold uppercase tracking-wide">'+esc(a.source)+(a.source_url?' <i data-lucide="external-link" class="w-2.5 h-2.5"></i>':'')+'</a>' : '';
-      return '<div class="bg-white rounded-2xl p-3.5 shadow-app flex gap-3">'+
+      // Create unique ID for alert
+      var alertId = btoa(JSON.stringify({t:a.title,s:a.source,time:a.time})).replace(/[^a-zA-Z0-9]/g,'').substring(0,20);
+      // Link to internal detail page
+      var detailUrl = '/alert-detail.php?id='+alertId+'&src='+encodeURIComponent(a.source||'BIPAD')+'&type='+encodeURIComponent(a.type||'alert');
+      return '<a href="'+detailUrl+'" class="block bg-white rounded-2xl p-3.5 shadow-app flex gap-3 cursor-pointer hover:bg-slate-50 transition-colors">'+
         '<div class="w-11 h-11 rounded-xl bg-'+m.cl+'-100 text-'+m.cl+'-700 flex items-center justify-center shrink-0"><i data-lucide="'+m.ic+'" class="w-5 h-5"></i></div>'+
         '<div class="flex-1 min-w-0">'+
-          '<div class="flex items-start justify-between gap-2"><div class="text-[13px] font-bold text-slate-900">'+esc(a.title)+'</div>'+srcBadge+'</div>'+
+          '<div class="flex items-start justify-between gap-2"><div class="text-[13px] font-bold text-slate-900">'+esc(a.title)+'</div></div>'+
           (a.msg?'<div class="text-[12px] text-slate-600 mt-0.5">'+esc(a.msg)+'</div>':'')+
           '<div class="text-[10px] text-slate-400 mt-1 flex items-center gap-1"><span class="px-1.5 py-0.5 rounded bg-'+m.cl+'-50 text-'+m.cl+'-700 font-semibold">'+esc(m.label)+'</span> · '+esc(ago(a.time))+'</div>'+
         '</div>'+
-      '</div>';
+      '</a>';
     }).join('');
     if(window.lucide) lucide.createIcons();
   }

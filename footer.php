@@ -383,10 +383,14 @@ $todayQuote = $_quotes[$_qIdx];
             }
             if(cnt){ cnt.textContent=d.count+(d.count>12?'+':''); }
             var SEV={severe:{bg:'#fef2f2',bd:'#fca5a5',fg:'#991b1b',ic:'⚠️'},active:{bg:'#fff7ed',bd:'#fdba74',fg:'#9a3412',ic:'🔔'},moderate:{bg:'#fefce8',bd:'#fde047',fg:'#854d0e',ic:'📢'},minor:{bg:'#f0f9ff',bd:'#7dd3fc',fg:'#075985',ic:'ℹ️'},info:{bg:'#f8fafc',bd:'#cbd5e1',fg:'#475569',ic:'ℹ️'}};
-            box.innerHTML=d.items.slice(0,5).map(function(a){
+            box.innerHTML=d.items.slice(0,5).map(function(a,i){
               var s=SEV[a.severity]||SEV.info;
               var when=a.startedOn?new Date(a.startedOn).toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}):'';
-              return '<a href="'+(a.link||'#')+'" target="_blank" rel="noopener" style="display:block;background:'+s.bg+';border:1px solid '+s.bd+';border-radius:12px;padding:9px 10px;text-decoration:none">'+
+              // Create unique ID for alert
+              var alertId = btoa(JSON.stringify({t:a.title,s:a.source,time:a.startedOn})).replace(/[^a-zA-Z0-9]/g,'').substring(0,20);
+              // Link to internal detail page
+              var detailUrl = '/alert-detail.php?id='+alertId+'&src='+encodeURIComponent(a.source||'BIPAD')+'&type='+encodeURIComponent(a.hazard||'alert');
+              return '<a href="'+detailUrl+'" style="display:block;background:'+s.bg+';border:1px solid '+s.bd+';border-radius:12px;padding:9px 10px;text-decoration:none;cursor:pointer;">'+
                 '<div style="display:flex;gap:6px;align-items:center;font-size:10.5px;font-weight:700;color:'+s.fg+'" class="ne">'+s.ic+' '+(a.hazard||'')+' · '+(a.source||'')+'</div>'+
                 '<div style="font-size:12.5px;font-weight:600;color:#0b1220;line-height:1.4;margin-top:3px" class="ne">'+(a.title||'')+'</div>'+
                 (when?'<div style="font-size:10px;color:#64748b;margin-top:2px">🕐 '+when+'</div>':'')+
