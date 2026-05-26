@@ -152,6 +152,9 @@ window.__chips = {
       <a href="/nea-bill.php" onclick="return openInDetailPane('/nea-bill.php');" class="hero-icon-btn bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/20 rounded-xl py-2 text-center text-[11px] font-semibold flex flex-col items-center gap-1 transition-all" data-url="/nea-bill.php">
         <i data-lucide="zap" class="w-4 h-4"></i><span class="ne"><?= $t('बिजुली','Electricity') ?></span>
       </a>
+      <a href="/hospitals.php" onclick="return openInDetailPane('/hospitals.php');" class="hero-icon-btn bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/20 rounded-xl py-2 text-center text-[11px] font-semibold flex flex-col items-center gap-1 transition-all" data-url="/hospitals.php">
+        <i data-lucide="heart-pulse" class="w-4 h-4"></i><span class="ne"><?= $t('अस्पताल','Hospital') ?></span>
+      </a>
     </div>
   </div>
 </section>
