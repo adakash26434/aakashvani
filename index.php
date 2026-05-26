@@ -118,15 +118,24 @@ window.__chips = {
       </div>
     </div>
 
-    <div class="mt-3 grid grid-cols-3 gap-2">
-      <a href="/news.php" onclick="return openInDetailPane('/news.php');" class="hero-icon-btn bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/20 rounded-2xl py-2.5 text-center text-[12px] font-semibold flex flex-col items-center gap-1 transition-all" data-url="/news.php">
+    <div class="mt-3 grid grid-cols-6 gap-2">
+      <a href="/news.php" onclick="return openInDetailPane('/news.php');" class="hero-icon-btn bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/20 rounded-xl py-2 text-center text-[11px] font-semibold flex flex-col items-center gap-1 transition-all" data-url="/news.php">
         <i data-lucide="newspaper" class="w-4 h-4"></i><span class="ne"><?= $t('समाचार','News') ?></span>
       </a>
-      <a href="/nepali-patro.php" onclick="return openInDetailPane('/nepali-patro.php');" class="hero-icon-btn bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/20 rounded-2xl py-2.5 text-center text-[12px] font-semibold flex flex-col items-center gap-1 transition-all" data-url="/nepali-patro.php">
+      <a href="/nepali-patro.php" onclick="return openInDetailPane('/nepali-patro.php');" class="hero-icon-btn bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/20 rounded-xl py-2 text-center text-[11px] font-semibold flex flex-col items-center gap-1 transition-all" data-url="/nepali-patro.php">
         <i data-lucide="calendar-days" class="w-4 h-4"></i><span class="ne"><?= $t('पात्रो','Patro') ?></span>
       </a>
-      <a href="/rashifal.php" onclick="return openInDetailPane('/rashifal.php');" class="hero-icon-btn bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/20 rounded-2xl py-2.5 text-center text-[12px] font-semibold flex flex-col items-center gap-1 transition-all" data-url="/rashifal.php">
+      <a href="/rashifal.php" onclick="return openInDetailPane('/rashifal.php');" class="hero-icon-btn bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/20 rounded-xl py-2 text-center text-[11px] font-semibold flex flex-col items-center gap-1 transition-all" data-url="/rashifal.php">
         <i data-lucide="sparkles" class="w-4 h-4"></i><span class="ne"><?= $t('राशिफल','Rashi') ?></span>
+      </a>
+      <a href="/cricket.php" onclick="return openInDetailPane('/cricket.php');" class="hero-icon-btn bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/20 rounded-xl py-2 text-center text-[11px] font-semibold flex flex-col items-center gap-1 transition-all" data-url="/cricket.php">
+        <i data-lucide="trophy" class="w-4 h-4"></i><span class="ne"><?= $t('क्रिकेट','Cricket') ?></span>
+      </a>
+      <a href="/transportation.php" onclick="return openInDetailPane('/transportation.php');" class="hero-icon-btn bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/20 rounded-xl py-2 text-center text-[11px] font-semibold flex flex-col items-center gap-1 transition-all" data-url="/transportation.php">
+        <i data-lucide="bus" class="w-4 h-4"></i><span class="ne"><?= $t('यातायात','Bus') ?></span>
+      </a>
+      <a href="/nokari.php" onclick="return openInDetailPane('/nokari.php');" class="hero-icon-btn bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/20 rounded-xl py-2 text-center text-[11px] font-semibold flex flex-col items-center gap-1 transition-all" data-url="/nokari.php">
+        <i data-lucide="briefcase" class="w-4 h-4"></i><span class="ne"><?= $t('नोकरी','Jobs') ?></span>
       </a>
     </div>
   </div>
