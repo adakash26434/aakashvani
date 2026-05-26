@@ -103,14 +103,6 @@ require_once __DIR__ . '/header.php';
 <div class="pb-4"></div>
 </main>
 
-<style>
-.job-tab.active { background:#1d4ed8; color:#fff; border-color:#1d4ed8; }
-.job-card { background:#fff; border:1px solid #e2e8f0; border-radius:14px; padding:12px 14px; }
-.job-card .title { font-size:14px; font-weight:700; color:#0f172a; line-height:1.4; }
-.job-card .meta  { font-size:11px; color:#64748b; margin-top:5px; display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
-.job-card .sum   { font-size:12px; color:#475569; margin-top:5px; line-height:1.5; display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden; }
-</style>
-
 <script>
 (function(){
   var currentCat  = 'all';

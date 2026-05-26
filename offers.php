@@ -104,10 +104,6 @@ require_once __DIR__ . '/header.php';
 <div class="pb-6"></div>
 </main>
 
-<style>
-.of-chip.active { background:#f43f5e; color:#fff; border-color:#f43f5e; }
-</style>
-
 <script>
 (function(){
   var allOffers = [];

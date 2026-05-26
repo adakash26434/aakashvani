@@ -47,11 +47,11 @@ else echo "<!doctype html><html lang='ne'><head><meta charset='utf-8'><title>".h
 
   <?php if (!empty($p['how_to_reach'])): ?>
     <h3>🛣️ कसरी पुग्ने?</h3>
-    <p style="line-height:1.7"><?= nl2br(htmlspecialchars($p['how_to_reach'])) ?></p>
+    <p class="vp-desc"><?= nl2br(htmlspecialchars($p['how_to_reach'])) ?></p>
   <?php endif; ?>
 
   <?php if ($p['latitude'] && $p['longitude']): ?>
-    <iframe class="vp-map" style="width:100%;border:0"
+    <iframe class="vp-map"
       src="https://www.openstreetmap.org/export/embed.html?bbox=<?= $p['longitude']-0.02 ?>%2C<?= $p['latitude']-0.02 ?>%2C<?= $p['longitude']+0.02 ?>%2C<?= $p['latitude']+0.02 ?>&layer=mapnik&marker=<?= $p['latitude'] ?>%2C<?= $p['longitude'] ?>"></iframe>
   <?php endif; ?>
 </div>

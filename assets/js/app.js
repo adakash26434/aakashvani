@@ -453,7 +453,138 @@
 
   window.NSHAlerts = { addRateAlert, openRateAlertModal, checkRateAlerts, list: getRateAlerts };
 
+  // ═════════════════════════ SPA NAVIGATION ═════════════════════════
+  // Intercepts internal link clicks and loads pages via AJAX for smooth transitions
+  (function initSPANavigation() {
+    // Don't enable SPA for embed mode or admin pages
+    if (location.search.includes('embed=1')) return;
+    if (location.pathname.startsWith('/admin/')) return;
+    if (!history.pushState) return; // Browser support check
 
+    let isNavigating = false;
+    const mainContent = document.getElementById('app-shell') || document.querySelector('main') || document.querySelector('.app-shell') || document.body;
+    const progressBar = document.createElement('div');
+    progressBar.className = 'nsh-page-progress';
+    progressBar.innerHTML = '<div class="nsh-progress-bar"></div>';
+    document.body.appendChild(progressBar);
+
+    // Add global styles for progress bar and transitions
+    const style = document.createElement('style');
+    style.textContent = `
+      .nsh-page-progress { position:fixed; top:0; left:0; right:0; z-index:9999; height:3px; background:transparent; pointer-events:none; }
+      .nsh-progress-bar { height:100%; width:0; background:linear-gradient(90deg, #0d9488, #14b8a6); transition:width 0.3s ease; }
+      .nsh-page-progress.loading .nsh-progress-bar { width:70%; transition:width 0.5s ease; }
+      .nsh-page-progress.loaded .nsh-progress-bar { width:100%; transition:width 0.2s ease; }
+      .nsh-page-transition { opacity:0; transform:translateY(8px); }
+      .nsh-page-transition.in { opacity:1; transform:translateY(0); transition:opacity 0.25s ease, transform 0.25s ease; }
+    `;
+    document.head.appendChild(style);
+
+    function isInternalLink(href) {
+      try {
+        const url = new URL(href, location.origin);
+        return url.origin === location.origin && !url.hash && !url.search.includes('embed=1');
+      } catch { return false; }
+    }
+
+    async function loadPage(url, push = true) {
+      if (isNavigating) return;
+      isNavigating = true;
+      progressBar.classList.add('loading');
+
+      try {
+        const resp = await fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+        if (!resp.ok) throw new Error('Failed to load');
+        const html = await resp.text();
+
+        // Parse the response
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const newContent = doc.getElementById('app-shell') || doc.querySelector('main') || doc.querySelector('.app-shell') || doc.body;
+        const newTitle = doc.querySelector('title')?.textContent || document.title;
+
+        // Update content with transition
+        mainContent.classList.add('nsh-page-transition');
+        await new Promise(r => setTimeout(r, 50));
+
+        // Extract and update content
+        if (newContent) {
+          // Update main content - preserve the container but replace inner
+          if (mainContent.id === 'app-shell' && newContent.id === 'app-shell') {
+            mainContent.innerHTML = newContent.innerHTML;
+          } else if (mainContent.tagName === 'MAIN' && newContent.tagName === 'MAIN') {
+            mainContent.innerHTML = newContent.innerHTML;
+          } else {
+            // Fallback: replace the entire container
+            mainContent.outerHTML = newContent.outerHTML;
+          }
+        }
+
+        // Update title
+        document.title = newTitle;
+
+        // Push to history
+        if (push) history.pushState({ url }, newTitle, url);
+
+        // Re-initialize page-specific scripts
+        progressBar.classList.remove('loading');
+        progressBar.classList.add('loaded');
+        setTimeout(() => progressBar.classList.remove('loaded'), 300);
+
+        // Scroll to top
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        // Re-init Lucide icons
+        if (window.lucide && lucide.createIcons) lucide.createIcons();
+
+        // Re-run page scripts (news load, etc)
+        if (typeof window.loadNews === 'function') window.loadNews();
+        if (typeof window.loadContent === 'function') window.loadContent('ne');
+
+        // Dispatch custom event for other scripts
+        window.dispatchEvent(new CustomEvent('nsh:pagechange', { detail: { url } }));
+
+      } catch (err) {
+        // Fallback to normal navigation on error
+        progressBar.classList.remove('loading');
+        location.href = url;
+      } finally {
+        isNavigating = false;
+      }
+    }
+
+    // Intercept link clicks
+    document.addEventListener('click', (e) => {
+      const link = e.target.closest('a[href]');
+      if (!link) return;
+
+      const href = link.getAttribute('href');
+      if (!href || href.startsWith('#') || href.startsWith('javascript:')) return;
+      if (link.target === '_blank' || link.hasAttribute('download')) return;
+      if (!isInternalLink(href)) return;
+
+      // Skip if modifier keys pressed
+      if (e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
+
+      e.preventDefault();
+      loadPage(href);
+    }, { passive: false });
+
+    // Handle browser back/forward
+    window.addEventListener('popstate', (e) => {
+      if (e.state && e.state.url) {
+        loadPage(e.state.url, false);
+      }
+    });
+
+    // Set initial state
+    if (!history.state) {
+      history.replaceState({ url: location.href }, document.title, location.href);
+    }
+
+    // Make loadPage available globally for programmatic navigation
+    window.NSHNavigate = loadPage;
+  })();
 
   // ═════════════════════════ INSTALL APP PROMPT ═════════════════════════
   let deferredInstallPrompt = null;

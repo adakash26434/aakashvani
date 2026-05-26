@@ -291,29 +291,61 @@ if ($allItems === null) {
       try {
         $hash = md5($item['link']);
         // Check if already exists
-        $check = db()->prepare("SELECT id FROM tech_news WHERE url_hash=? OR slug=? LIMIT 1");
+        $check = db()->prepare("SELECT id, content FROM tech_news WHERE url_hash=? OR slug=? LIMIT 1");
         $check->execute([$hash, $slug]);
-        if (!$check->fetch()) {
+        $existing = $check->fetch();
+        
+        // Fetch full article content for storage
+        $fullContent = '';
+        $hasFullContent = false;
+        
+        // Only fetch if not already stored with substantial content
+        if (!$existing || mb_strlen(trim($existing['content'] ?? ''), 'UTF-8') < 300) {
+          // Try to fetch full article content
+          require_once __DIR__ . '/../includes/article-fetch.php';
+          if (function_exists('aakFetchArticle')) {
+            try {
+              $fetched = aakFetchArticle($item['link'], 21600);
+              $scraped = trim($fetched['plain'] ?? implode("\n\n", $fetched['paragraphs'] ?? []));
+              if (mb_strlen($scraped) > 300) {
+                $fullContent = $scraped;
+                $hasFullContent = true;
+              }
+            } catch (\Throwable $e) {}
+          }
+        }
+        
+        if (!$existing) {
           // Insert new article
           $pubDate = date('Y-m-d H:i:s', $item['pubDate'] ?: time());
           $excerpt = mb_substr($item['summary'], 0, 600);
+          // Use full content if fetched, otherwise use excerpt as fallback
+          $contentToStore = $fullContent ?: $excerpt;
+          
           db()->prepare("INSERT IGNORE INTO tech_news 
-            (title, slug, excerpt, content, category, source_name, original_url, url_hash, image_url, is_published, lang, scope, created_at, updated_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 1, 'ne', 'national', ?, ?)")
+            (title, slug, excerpt, content, category, source_name, original_url, url_hash, image_url, is_published, lang, scope, ai_processed, created_at, updated_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 1, 'ne', 'national', ?, ?, ?)")
             ->execute([
               mb_substr($item['title'], 0, 255),
               $slug,
               $excerpt,
-              $excerpt, // Will be expanded by AI later
+              $contentToStore,
               $item['cat'],
               $label,
               mb_substr($item['link'], 0, 999),
               $hash,
               $item['image'] ?? null,
+              $hasFullContent ? 1 : 0,
               $pubDate,
               $pubDate
             ]);
           $storedCount++;
+        } elseif ($hasFullContent && $existing) {
+          // Update existing article with full content if we now have it
+          try {
+            $up = db()->prepare("UPDATE tech_news SET content=?, ai_processed=1, updated_at=NOW() WHERE id=? AND (LENGTH(content) < 300 OR content IS NULL)");
+            $up->execute([$fullContent, $existing['id']]);
+          } catch (\Throwable $e) {}
         }
       } catch (Throwable $e) {
         // Continue even if DB insert fails

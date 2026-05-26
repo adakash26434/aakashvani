@@ -70,7 +70,7 @@ $todayQuote = $_quotes[$_qIdx];
             <div class="h-date ne"><?= isset($bsDateStr) ? $bsDateStr : date('l, j F Y') ?></div>
             <div class="h-title ne"><?= $tF('नमस्कार — आजको खबर','Namaste — Today at a glance') ?></div>
             <?php if($todayFest): ?>
-              <div class="ne" style="margin-top:4px;font-size:11.5px;font-weight:600;background:rgba(255,255,255,.22);display:inline-block;padding:3px 9px;border-radius:999px;border:1px solid rgba(255,255,255,.25)">🎉 <?= htmlspecialchars($todayFest,ENT_QUOTES,'UTF-8') ?></div>
+              <div class="ne" style="margin-top:4px;font-size:11.5px;font-weight:600;background:rgba(255,255,255,.22);display:inline-block;padding:3px 9px;border-radius:999px;border:1px solid rgba(255,255,255,.25)"><i data-lucide="party-popper" class="w-3.5 h-3.5 inline-block mr-1"></i> <?= htmlspecialchars($todayFest,ENT_QUOTES,'UTF-8') ?></div>
             <?php endif; ?>
           </div>
           <a href="/morning-brief.php" class="h-ico" title="<?= $tF('बिहानी ब्रिफ','Morning Brief') ?>" style="background:rgba(255,255,255,.25)">
@@ -217,15 +217,15 @@ $todayQuote = $_quotes[$_qIdx];
         </div>
         <div class="dpd-tiles" style="grid-template-columns:repeat(3,1fr)">
           <?php foreach([
-            ['/news.php?cat=politics','🏛️',$tF('राजनीति','Politics')],
-            ['/news.php?cat=economy','💰',$tF('अर्थ','Economy')],
-            ['/news.php?cat=sports','⚽',$tF('खेलकुद','Sports')],
-            ['/news.php?cat=entertainment','🎬',$tF('मनोरञ्जन','Entertainment')],
-            ['/news.php?cat=world','🌏',$tF('विश्व','World')],
-            ['/news.php?cat=technology','💻',$tF('प्रविधि','Tech')],
+            ['/news.php?cat=politics','<i data-lucide="landmark" class="w-5 h-5"></i>',$tF('राजनीति','Politics')],
+            ['/news.php?cat=economy','<i data-lucide="banknote" class="w-5 h-5"></i>',$tF('अर्थ','Economy')],
+            ['/news.php?cat=sports','<i data-lucide="trophy" class="w-5 h-5"></i>',$tF('खेलकुद','Sports')],
+            ['/news.php?cat=entertainment','<i data-lucide="film" class="w-5 h-5"></i>',$tF('मनोरञ्जन','Entertainment')],
+            ['/news.php?cat=world','<i data-lucide="globe" class="w-5 h-5"></i>',$tF('विश्व','World')],
+            ['/news.php?cat=technology','<i data-lucide="cpu" class="w-5 h-5"></i>',$tF('प्रविधि','Tech')],
           ] as $c): ?>
             <a href="<?= $c[0] ?>" class="dpd-tile" style="padding:10px 4px">
-              <span style="font-size:20px;line-height:1"><?= $c[1] ?></span>
+              <span style="line-height:1;color:#64748b"><?= $c[1] ?></span>
               <span class="lbl ne"><?= $c[2] ?></span>
             </a>
           <?php endforeach; ?>
@@ -253,8 +253,8 @@ $todayQuote = $_quotes[$_qIdx];
             ['https://khalti.com',           'K',  '#5c2d91','#7a3fbc', 'Khalti',      $tF('डिजिटल वालेट','Wallet'),     true],
             ['https://nagarikapp.gov.np',    'N',  '#dc2626','#7c2d12', 'Nagarik',     $tF('सरकारी सेवा','Gov'),         true],
             ['https://psc.gov.np',           'लो', '#0c4a6e','#0369a1', $tF('लोकसेवा','Lok Sewa'), $tF('परीक्षा · नतिजा','Exams'), true],
-            ['/utilities.php#fuel',          '⛽', '#ea580c','#c2410c', $tF('इन्धन','Fuel'),       $tF('NOC मूल्य','NOC Price'),    false],
-            ['/utilities.php#gold',          '🪙', '#ca8a04','#a16207', $tF('सुन/चाँदी','Gold'),   $tF('हल्लमार्क','Hallmark'),    false],
+            ['/utilities.php#fuel',          '<i data-lucide="fuel" class="w-4 h-4"></i>', '#ea580c','#c2410c', $tF('इन्धन','Fuel'),       $tF('NOC मूल्य','NOC Price'),    false],
+            ['/utilities.php#gold',          '<i data-lucide="coins" class="w-4 h-4"></i>', '#ca8a04','#a16207', $tF('सुन/चाँदी','Gold'),   $tF('हल्लमार्क','Hallmark'),    false],
           ];
           foreach($quickLinks as [$h,$ic,$c1,$c2,$t1,$t2,$ext]): ?>
             <a href="<?= htmlspecialchars($h,ENT_QUOTES) ?>"<?= $ext ? ' target="_blank" rel="noopener"' : '' ?> class="dpd-card" style="text-align:center;padding:10px 6px">
@@ -334,7 +334,8 @@ $todayQuote = $_quotes[$_qIdx];
 
         // ── Live weather + 3-day forecast (Open-Meteo — free, CORS-enabled) ──
         var WX_CODES={0:'सफा',1:'धमिलो',2:'आंशिक बादल',3:'बादल',45:'कुहिरो',48:'कुहिरो',51:'सिमसिम',53:'सिमसिम',55:'झरी',61:'पानी',63:'पानी',65:'भारी पानी',71:'हिउँ',73:'हिउँ',75:'भारी हिउँ',80:'पानी',81:'पानी',82:'भारी पानी',95:'चट्याङ',96:'चट्याङ',99:'चट्याङ'};
-        var WX_EMOJI={0:'☀️',1:'🌤️',2:'⛅',3:'☁️',45:'🌫️',48:'🌫️',51:'🌦️',53:'🌦️',55:'🌧️',61:'🌧️',63:'🌧️',65:'🌧️',71:'🌨️',73:'🌨️',75:'❄️',80:'🌦️',81:'🌧️',82:'⛈️',95:'⛈️',96:'⛈️',99:'⛈️'};
+        var WX_ICONS={0:'sun',1:'cloud-sun',2:'cloud-sun',3:'cloud',45:'cloud-fog',48:'cloud-fog',51:'cloud-drizzle',53:'cloud-drizzle',55:'cloud-rain',61:'cloud-rain',63:'cloud-rain',65:'cloud-rain',71:'snowflake',73:'snowflake',75:'snowflake',80:'cloud-drizzle',81:'cloud-rain',82:'cloud-lightning',95:'cloud-lightning',96:'cloud-lightning',99:'cloud-lightning'};
+        function getWeatherIcon(code){ var ic=WX_ICONS[code]||'thermometer'; return '<i data-lucide="'+ic+'" class="w-5 h-5 inline-block"></i>'; }
         fetch('https://api.open-meteo.com/v1/forecast?latitude=27.7172&longitude=85.3240&current=temperature_2m,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Asia%2FKathmandu&forecast_days=4')
           .then(r=>r.ok?r.json():null).then(d=>{
             if(!d) return;
@@ -357,12 +358,13 @@ $todayQuote = $_quotes[$_qIdx];
                   var pp=d.daily.precipitation_probability_max?d.daily.precipitation_probability_max[i]:null;
                   html+='<div class="dpd-card" style="text-align:center;padding:10px 6px;background:linear-gradient(135deg,#eff6ff,#dbeafe);border-color:#bfdbfe">'+
                     '<div class="ne" style="font-size:11px;font-weight:700;color:#1e3a8a">'+dn+'</div>'+
-                    '<div style="font-size:22px;line-height:1.1">'+(WX_EMOJI[c]||'🌡️')+'</div>'+
+                    '<div style="font-size:22px;line-height:1.1">'+getWeatherIcon(c)+'</div>'+
                     '<div style="font-size:12px;font-weight:700;color:#1e40af">'+hi+'°/'+lo+'°</div>'+
-                    (pp!==null?'<div class="sub" style="color:#2563eb">💧 '+pp+'%</div>':'')+
+                    (pp!==null?'<div class="sub" style="color:#2563eb"><i data-lucide="droplets" class="w-3 h-3 inline-block"></i> '+pp+'%</div>':'')+
                   '</div>';
                 }
                 fc.innerHTML=html;
+                if(window.lucide&&lucide.createIcons) lucide.createIcons();
               }
             }
           }).catch(()=>{

@@ -181,12 +181,11 @@ window.__chips = {
     (function(){
       var sc=document.getElementById('mr-stars');
       if(!sc)return;
-      var html='<style>@keyframes twink{0%,100%{opacity:.2;transform:scale(.7)}50%{opacity:1;transform:scale(1.3)}}.mr-star{position:absolute;border-radius:50%;background:white;}</style>';
+      sc.innerHTML='';
       for(var i=0;i<22;i++){
         var sz=[1.5,2,2.5,3][Math.floor(Math.random()*4)];
-        html+='<span class="mr-star" style="width:'+sz+'px;height:'+sz+'px;top:'+(Math.random()*100)+'%;left:'+(Math.random()*100)+'%;animation:twink '+(1.5+Math.random()*2.5).toFixed(1)+'s ease-in-out '+(Math.random()*2).toFixed(1)+'s infinite;opacity:.3"></span>';
+        sc.innerHTML+='<span class="mr-star" style="width:'+sz+'px;height:'+sz+'px;top:'+(Math.random()*100)+'%;left:'+(Math.random()*100)+'%;animation:twink '+(1.5+Math.random()*2.5).toFixed(1)+'s ease-in-out '+(Math.random()*2).toFixed(1)+'s infinite;opacity:.3"></span>';
       }
-      sc.innerHTML=html;
     })();
 
     /* Inject today's BS date */
@@ -221,7 +220,7 @@ window.__chips = {
     var syms=['♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓'];
     var names=['मेष','वृष','मिथुन','कर्कट','सिंह','कन्या','तुला','वृश्चिक','धनु','मकर','कुम्भ','मीन'];
     var html='<div class="rounded-3xl bg-gradient-to-br from-violet-50 to-indigo-50 border border-violet-100 p-4">'
-      +'<div class="flex items-center gap-2 mb-1"><span class="text-[20px]">✨</span><div class="text-[14px] font-extrabold text-violet-900 ne">मेरो राशिफल सेट गर्नुस्</div></div>'
+      +'<div class="flex items-center gap-2 mb-1"><i data-lucide="sparkles" class="w-5 h-5 text-violet-600"></i><div class="text-[14px] font-extrabold text-violet-900 ne">मेरो राशिफल सेट गर्नुस्</div></div>'
       +'<p class="text-[11.5px] text-slate-500 mb-3 ne leading-snug">एक पटक छान्नुभएपछि — हरेच दिन मुख्य पानामा <b>आफ्नो राशिफल</b> स्वतः देखिनेछ।</p>'
       +'<div class="grid grid-cols-6 gap-1.5">';
     syms.forEach(function(s,i){
@@ -428,10 +427,10 @@ window.__chips = {
       var img=n.image||n.thumbnail||n.enclosure||'';
       var nUrl = n.internalUrl || (n.slug ? '/news-detail.php?slug=' + encodeURIComponent(n.slug) : '/news-detail.php?url=' + encodeURIComponent(n.link || n.url || '') + '&src=' + encodeURIComponent(n.sourceLabel || ''));
       html+='<a href="'+esc(nUrl)+'" class="news-row">'+
-        '<div class="thumb">'+(img?'<img src="'+esc(img)+'" alt="" loading="lazy" onerror="this.closest(\'.thumb\').innerHTML=&quot;<div style=\\&quot;display:flex;width:100%;height:100%;align-items:center;justify-content:center;color:#0d9488\\&quot;>📰</div>&quot;">':'<div style="display:flex;width:100%;height:100%;align-items:center;justify-content:center;color:#0d9488">📰</div>')+'</div>'+
+        '<div class="thumb">'+(img?'<img src="'+esc(img)+'" alt="" loading="lazy" onerror="this.closest(\'.thumb\').innerHTML=&quot;<div style=\\&quot;display:flex;width:100%;height:100%;align-items:center;justify-content:center;color:#0d9488\\&quot;><i data-lucide=\"newspaper\" class=\"w-6 h-6\"></i></div>&quot;">':'<div style="display:flex;width:100%;height:100%;align-items:center;justify-content:center;color:#0d9488"><i data-lucide=\"newspaper\" class=\"w-6 h-6\"></i></div>')+'</div>'+
         '<div class="min-w-0 flex-1">'+
-          '<span class="inline-flex text-[10px] font-bold px-2 py-0.5 rounded-full bg-teal-50 text-teal-700">'+esc(n.sourceLabel||n.source||'News')+'</span>'+
-          '<h4 class="text-[13.5px] font-semibold text-ink leading-snug mt-1 lc2 ne">'+esc(n.title)+'</h4>'+
+          '<span class="badge badge-primary badge-sm">'+esc(n.sourceLabel||n.source||'News')+'</span>'+
+          '<h4 class="text-[13.5px] font-semibold text-ink leading-snug mt-1 line-clamp-2 ne">'+esc(n.title)+'</h4>'+
           '<div class="text-[11px] text-slate-400 mt-1.5 flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i>'+esc(timeAgo(n.timestamp||n.pubDate||0))+'</div>'+
         '</div></a>';
     });
@@ -474,7 +473,7 @@ window.__chips = {
           <span class="mkt-pfx"><?= $dispPfx ?></span><span class="mkt-cnt" data-target="<?= $rawVal ?>" data-dec="<?= $dec ?>">0</span>
         </div>
         <?php if($chg!==null): ?>
-          <div class="text-[10.5px] font-bold <?= $up?'text-emerald-600':'text-rose-600' ?>"><?= $up?'▲':'▼' ?> <?= abs((float)$chg) ?></div>
+          <div class="text-[10.5px] font-bold <?= $up?'text-emerald-600':'text-rose-600' ?>"><i data-lucide="<?= $up?'trending-up':'trending-down' ?>" class="w-3 h-3 inline-block"></i> <?= abs((float)$chg) ?></div>
         <?php endif; ?>
       </div>
     </a>
@@ -543,31 +542,7 @@ window.__chips = {
   <?php endforeach; ?>
 </section>
 
-<!-- ═══ GOV SERVICES QUICK ═══════════════════════════════════════════════════ -->
-<div class="sec-title">
-  <i data-lucide="landmark" class="w-4 h-4 text-brand-600"></i>
-  <span class="ne"><?= $t('सरकारी सेवा','Government Services') ?></span>
-  <a href="/gov-services.php" class="badge"><?= $t('सबै','All →') ?></a>
-</div>
-<section class="grid grid-cols-4 gap-2 mb-2">
-  <?php foreach([
-    ['/gov-services.php','book-open',   $t('राहदानी','Passport'),  'bg-i6'],
-    ['/gov-services.php','id-card',     $t('NID','National ID'),   'bg-i3'],
-    ['/gov-services.php','car',         $t('लाइसेन्स','License'),  'bg-i1'],
-    ['/gov-services.php','file-text',   $t('PAN/VAT','PAN/VAT'),   'bg-i8'],
-    ['/gov-services.php','user-check',  $t('नागरिकता','Citizenship'),'bg-i2'],
-    ['/gov-services.php','home',        $t('सम्पत्ति','Property'),  'bg-i4'],
-    ['/vehicle.php',     'car-front',   $t('सवारी','Vehicle'),     'bg-i5'],
-    ['/ssf.php',         'shield',      $t('SSF','SSF'),            'bg-i7'],
-  ] as [$h,$ic,$lb,$bg]): ?>
-    <a href="<?= $h ?>" class="tile">
-      <span class="ic <?= $bg ?>"><i data-lucide="<?= $ic ?>" class="w-[18px] h-[18px]"></i></span>
-      <span class="lbl ne"><?= $lb ?></span>
-    </a>
-  <?php endforeach; ?>
-</section>
-
-<!-- ═══ ALL SERVICES (extended grid) ═════════════════════════════════════════ -->
+<!-- ═══ ALL SERVICES (Category-wise balanced view) ═════════════════════════ -->
 <div id="all-services" class="sec-title">
   <i data-lucide="grid-3x3" class="w-4 h-4 text-slate-500"></i>
   <span class="ne"><?= $t('हाम्रा सबै सेवाहरू','All Services') ?></span>

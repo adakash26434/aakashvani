@@ -88,13 +88,6 @@ require_once __DIR__ . '/header.php';
   </section>
 </main>
 
-<style>
-.tab-btn.active{background:#fff;color:#0f172a;box-shadow:0 1px 3px rgba(0,0,0,.06)}
-.tab-btn{transition:all .15s}
-.sub-chip{flex-shrink:0;padding:5px 11px;border-radius:999px;font-size:11px;font-weight:600;background:#fff;color:#475569;border:1px solid #e2e8f0;cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center;gap:4px}
-.sub-chip.active{background:#0f172a;color:#fff;border-color:#0f172a}
-</style>
-
 <script>
 (function(){
   // Categorization config

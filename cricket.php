@@ -11,14 +11,14 @@ require_once __DIR__ . '/header.php';
 <!-- ── Hero ── -->
 <section class="px-4 pt-3 pb-2">
   <div class="rounded-2xl p-5 text-white shadow-app relative overflow-hidden" style="background:linear-gradient(135deg,#1a3a2a 0%,#166534 60%,#15803d 100%)">
-    <div class="absolute -right-4 -top-4 text-[110px] opacity-10 leading-none select-none">🏏</div>
+    <div class="absolute -right-4 -top-4 text-[110px] opacity-10 leading-none select-none"><i data-lucide="trophy" class="w-24 h-24"></i></div>
     <div class="text-[11px] opacity-80 flex items-center gap-2">
       क्रिकेट स्कोर
       <span id="ckt-live-badge" class="hidden items-center gap-1 bg-white/20 px-2 py-0.5 rounded-full text-[9.5px] font-bold">
         <span class="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse"></span> LIVE
       </span>
     </div>
-    <div class="text-[24px] font-extrabold leading-tight mt-0.5">🏏 Cricket</div>
+    <div class="text-[24px] font-extrabold leading-tight mt-0.5"><i data-lucide="trophy" class="w-6 h-6 inline-block mr-2"></i>Cricket</div>
     <div class="text-[12px] opacity-80 mt-1">Live Score · Results · Nepal · IPL</div>
   </div>
 </section>
@@ -27,9 +27,9 @@ require_once __DIR__ . '/header.php';
 <nav class="px-4 mb-3">
   <div class="flex gap-1 bg-slate-100 rounded-xl p-1 overflow-x-auto scrollbar-none">
     <?php foreach([
-      ['news',     '📰', 'समाचार'],
-      ['upcoming', '📅', 'आगामी'],
-      ['results',  '🏆', 'नतिजा'],
+      ['news',     '<i data-lucide="newspaper" class="w-3.5 h-3.5 inline-block"></i>', 'समाचार'],
+      ['upcoming', '<i data-lucide="calendar" class="w-3.5 h-3.5 inline-block"></i>', 'आगामी'],
+      ['results',  '<i data-lucide="trophy" class="w-3.5 h-3.5 inline-block"></i>', 'नतिजा'],
     ] as [$t,$ic,$lb]): ?>
     <button data-tab="<?= $t ?>"
       class="ckt-tab flex-shrink-0 text-[11.5px] font-semibold py-1.5 px-3 rounded-lg transition-colors text-slate-500 whitespace-nowrap">
@@ -47,7 +47,7 @@ require_once __DIR__ . '/header.php';
   </div>
   <div id="ckt-list" class="hidden space-y-3"></div>
   <div id="ckt-empty" class="py-16 text-center hidden">
-    <p class="text-4xl mb-3">🏏</p>
+    <div class="mb-3"><i data-lucide="trophy" class="w-12 h-12 text-slate-300 mx-auto"></i></div>
     <p class="text-[14px] font-semibold text-slate-700">अहिले कुनै डेटा भेटिएन</p>
     <p class="text-[12px] text-slate-400 mt-1">पछि फेरि हेर्नुस्</p>
   </div>

@@ -34,41 +34,6 @@ $_typeStyles = [
 // Track views (best-effort)
 foreach ($_notices as $n) { trackNoticeView((int) $n['id']); }
 ?>
-<style>
-  /* Banner ticker */
-  .notice-banner{position:sticky;top:0;z-index:9998;display:flex;align-items:center;gap:10px;padding:10px 16px;font-family:system-ui,-apple-system,'Noto Sans Devanagari',sans-serif;font-size:14px;border-bottom:1px solid rgba(0,0,0,.06)}
-  .notice-banner .ico{font-size:18px;flex-shrink:0}
-  .notice-banner .msg{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .notice-banner .msg b{margin-right:6px}
-  .notice-banner a{color:inherit;text-decoration:underline;margin-left:6px}
-  .notice-banner .x{background:none;border:none;color:inherit;cursor:pointer;font-size:18px;padding:0 4px;opacity:.7}
-  .notice-banner .x:hover{opacity:1}
-
-  /* Modal */
-  .notice-modal-bg{position:fixed;inset:0;background:rgba(15,23,42,.6);backdrop-filter:blur(4px);z-index:9999;display:none;align-items:center;justify-content:center;padding:16px;font-family:system-ui,-apple-system,'Noto Sans Devanagari',sans-serif;animation:nFade .25s ease}
-  .notice-modal-bg.show{display:flex}
-  @keyframes nFade{from{opacity:0}to{opacity:1}}
-  @keyframes nSlide{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
-  .notice-modal{background:#fff;border-radius:16px;max-width:520px;width:100%;max-height:90vh;overflow:auto;box-shadow:0 20px 60px -10px rgba(0,0,0,.4);animation:nSlide .3s ease}
-  .notice-modal .head{padding:20px 24px 12px;display:flex;align-items:flex-start;gap:14px;border-bottom:1px solid #f1f5f9}
-  .notice-modal .head .big-ico{font-size:32px;flex-shrink:0}
-  .notice-modal .head h3{margin:0;font-size:20px;color:#0f172a;line-height:1.3}
-  .notice-modal .head .type-pill{display:inline-block;font-size:11px;font-weight:700;padding:2px 10px;border-radius:20px;margin-top:6px;text-transform:uppercase;letter-spacing:.5px}
-  .notice-modal .body{padding:18px 24px;color:#334155;font-size:15px;line-height:1.7}
-  .notice-modal .body p{margin:0 0 10px}
-  .notice-modal .doc{display:flex;align-items:center;gap:12px;padding:12px 14px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;margin-top:14px;text-decoration:none;color:#0f172a}
-  .notice-modal .doc:hover{background:#f1f5f9;border-color:#94a3b8}
-  .notice-modal .doc .di{font-size:24px}
-  .notice-modal .doc .dn{flex:1;font-size:14px;font-weight:600}
-  .notice-modal .doc .ds{font-size:11px;color:#64748b}
-  .notice-modal .actions{padding:14px 24px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px;border-top:1px solid #f1f5f9}
-  .notice-modal .actions .left{display:flex;align-items:center;gap:6px;font-size:13px;color:#64748b}
-  .notice-modal .actions button,.notice-modal .actions a.btn{padding:9px 18px;border-radius:8px;font:inherit;font-size:14px;cursor:pointer;border:none;text-decoration:none;display:inline-block}
-  .notice-modal .actions .primary{background:#0f766e;color:#fff;font-weight:600}
-  .notice-modal .actions .primary:hover{background:#0d5d56}
-  .notice-modal .actions .ghost{background:#f1f5f9;color:#475569}
-  .notice-modal .actions .ghost:hover{background:#e2e8f0}
-</style>
 
 <?php /* ─── BANNER (pinned) ─── */
 foreach ($_pinned as $n):

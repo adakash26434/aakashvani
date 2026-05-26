@@ -149,93 +149,6 @@ $pageCanonical = $url;
 require_once __DIR__ . '/header.php';
 ?>
 
-<style>
-.art-wrap{padding:14px 14px 100px;max-width:760px;margin:0 auto}
-.art-back{display:inline-flex;align-items:center;gap:5px;color:#0d9488;font-weight:600;font-size:13px;text-decoration:none;margin-bottom:14px}
-
-/* ── Source attribution bar — always visible, always prominent ── */
-.art-srcbar{
-  display:flex;align-items:center;gap:12px;
-  background:#fff;border:2px solid var(--src-color,#0d9488);
-  border-radius:16px;padding:12px 14px;margin-bottom:16px;
-  box-shadow:0 2px 10px -4px rgba(0,0,0,.1);
-}
-.art-srcbar .logo{
-  width:40px;height:40px;border-radius:11px;color:#fff;
-  display:flex;align-items:center;justify-content:center;
-  font-weight:800;font-size:18px;flex-shrink:0;
-  background:var(--src-color,#0d9488);
-}
-.art-srcbar .meta{flex:1;min-width:0}
-.art-srcbar .name{font-size:14px;font-weight:800;color:#0b1220}
-.art-srcbar .name a{color:inherit;text-decoration:underline;text-underline-offset:2px}
-.art-srcbar .lic{font-size:11px;color:#64748b;margin-top:2px}
-
-.art-title{font-size:21px;font-weight:800;line-height:1.35;color:#0b1220;margin:0 0 10px}
-.art-meta{font-size:12px;color:#64748b;margin-bottom:14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.art-hero{width:100%;border-radius:14px;overflow:hidden;margin-bottom:16px;background:linear-gradient(135deg,#f0fdfa,#cffafe)}
-.art-hero img{width:100%;height:auto;display:block}
-
-/* ── AI Content Area ── */
-.art-ai-wrap{background:#fff;border:1px solid #e2e8f0;border-radius:16px;overflow:hidden;margin-bottom:16px}
-.art-ai-head{
-  display:flex;align-items:center;justify-content:space-between;gap:8px;
-  padding:10px 14px;background:linear-gradient(135deg,#f0fdfa,#e0f9f6);
-  border-bottom:1px solid #d1fae5;
-}
-.art-ai-head .label{font-size:11.5px;font-weight:700;color:#065f46;display:flex;align-items:center;gap:5px}
-.art-ai-head .src-badge{
-  font-size:10.5px;font-weight:700;
-  padding:3px 9px;border-radius:999px;color:#fff;
-  background:var(--src-color,#0d9488);
-  display:inline-flex;align-items:center;gap:4px;
-}
-.art-ai-body{padding:14px 16px;font-size:15px;line-height:1.85;color:#1e293b;font-family:'Hind Siliguri','Mukta',sans-serif;min-height:200px}
-.art-ai-body p{margin-bottom:1.1em}
-.art-ai-body h3{font-size:16px;font-weight:700;color:#0f172a;margin:1.4em 0 .5em}
-.art-ai-body .db-content{width:100%}
-.art-ai-body .excerpt-fallback{font-size:14px;color:#475569;font-style:italic;padding:12px;background:#f8fafc;border-radius:8px;border-left:3px solid #0d9488}
-.art-ai-body strong,.art-ai-body b{font-weight:700;color:#0f172a}
-.art-ai-footer{
-  display:flex;align-items:center;justify-content:space-between;gap:8px;
-  padding:10px 14px;background:#f8fafc;border-top:1px solid #e2e8f0;flex-wrap:wrap;
-}
-.art-ai-footer .src-note{font-size:11px;color:#475569;display:none;}
-.art-ai-footer .src-note a{color:var(--src-color,#0d9488);font-weight:700;text-decoration:underline}
-.art-ai-footer .read-full{
-  font-size:12px;font-weight:700;color:#fff;
-  background:var(--src-color,#0d9488);
-  padding:6px 12px;border-radius:9px;text-decoration:none;
-  display:inline-flex;align-items:center;gap:4px;
-}
-.art-ai-footer .read-full:hover{opacity:.88}
-
-/* ── Spinner ── */
-.art-spinner{
-  display:flex;align-items:center;justify-content:center;gap:10px;
-  padding:28px 16px;color:#475569;font-size:13px;
-}
-.art-spinner .spin{width:20px;height:20px;border:2px solid #d1fae5;border-top-color:#0d9488;border-radius:50%;animation:artSpin .7s linear infinite}
-@keyframes artSpin{to{transform:rotate(360deg)}}
-
-/* ── Lang toggle ── */
-.art-lang{display:flex;gap:6px;margin-bottom:12px}
-.art-lang button{padding:6px 14px;border-radius:999px;font-size:12px;font-weight:600;border:1px solid #e2e8f0;background:#fff;color:#475569;cursor:pointer;transition:all .15s}
-.art-lang button.active{background:#0d9488;color:#fff;border-color:#0d9488}
-
-/* ── CTA strip ── */
-.art-cta-strip{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
-.art-cta{display:inline-flex;align-items:center;justify-content:center;gap:5px;padding:11px 14px;border-radius:12px;font-weight:700;font-size:13px;text-decoration:none;border:1px solid transparent}
-.art-cta.primary{background:#0d9488;color:#fff}
-.art-cta.primary:hover{background:#0f766e}
-.art-cta.secondary{background:#fff;color:#0b1220;border-color:#e2e8f0}
-.art-cta.secondary:hover{background:#f8fafc}
-
-/* ── Legal ── */
-.art-legal{margin-top:16px;padding:12px 14px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;font-size:11px;color:#64748b;line-height:1.6}
-.art-legal a{color:#0d9488;font-weight:600}
-</style>
-
 <div class="art-wrap">
   <a href="/news.php" class="art-back ne"><i data-lucide="arrow-left" class="w-4 h-4"></i> समाचारमा फर्किनुहोस्</a>
 
@@ -379,8 +292,8 @@ require_once __DIR__ . '/header.php';
   function showExcerpt(lang) {
     if (_excerpt && _excerpt.length > 20) {
       var note = lang==='ne'
-        ? '<div class="excerpt-fallback">⚠ विस्तृत विवरण अहिले उपलब्ध छैन। यो '+esc(_srcName)+' बाट sync गरिएको सारांश हो। पूर्ण समाचार मूल स्रोतमा पढ्नुहोस्।</div>'
-        : '<div class="excerpt-fallback">⚠ Detailed content is currently unavailable. This is a summary from '+esc(_srcName)+'. Please read the full article from the original source.</div>';
+        ? '<div class="excerpt-fallback"><i data-lucide="alert-triangle" class="w-4 h-4 inline-block mr-1"></i> विस्तृत विवरण अहिले उपलब्ध छैन। यो '+esc(_srcName)+' बाट sync गरिएको सारांश हो। पूर्ण समाचार मूल स्रोतमा पढ्नुहोस्।</div>'
+        : '<div class="excerpt-fallback"><i data-lucide="alert-triangle" class="w-4 h-4 inline-block mr-1"></i> Detailed content is currently unavailable. This is a summary from '+esc(_srcName)+'. Please read the full article from the original source.</div>';
       return '<p class="leading-relaxed mb-4">' + esc(_excerpt) + '</p>' + note;
     }
     return '<div class="excerpt-fallback">'+(lang==='ne'?'समाचारको विस्तृत विवरण अहिले उपलब्ध छैन। मूल स्रोतमा पढ्नुहोस्।':'Detailed content is unavailable. Please read from the original source.')+'</div>';

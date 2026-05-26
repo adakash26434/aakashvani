@@ -84,16 +84,6 @@ foreach ($categories as $cat) {
   }
 }
 ?>
-<style>
-.scrollbar-hide::-webkit-scrollbar { display: none; }
-.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-.tool-card:active { transform: scale(0.95); }
-.category-section { animation: fadeIn 0.3s ease-out; }
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-</style>
 
 <main class="app-main">
   <!-- Header with Search -->

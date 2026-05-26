@@ -65,19 +65,6 @@ if ($slug) {
   </div>
 </div>
 
-<style>
-.prose-custom h1,.prose-custom h2,.prose-custom h3{color:#0f172a;margin-top:1.5em;margin-bottom:.75em;font-weight:700}
-.prose-custom h2{font-size:1.25rem;border-bottom:1px solid #e2e8f0;padding-bottom:.5em}
-.prose-custom h3{font-size:1.05rem;color:#14b8a6}
-.prose-custom p{color:#64748b;line-height:1.8;margin-bottom:1em}
-.prose-custom ul,.prose-custom ol{color:#64748b;line-height:1.8;padding-left:1.5em;margin-bottom:1em}
-.prose-custom li{margin-bottom:.4em}
-.prose-custom strong{color:#0f172a}
-.prose-custom blockquote{border-left:3px solid #0f766e;padding-left:1em;color:#64748b;font-style:italic;background:rgba(35,134,54,0.06);padding:1em;border-radius:0 .25rem .25rem 0;margin:1em 0}
-.prose-custom code{background:#f5f5f4;color:#14b8a6;padding:.15em .4em;border-radius:.25rem;font-size:.875em}
-.prose-custom pre{background:#f5f5f4;border:1px solid #e2e8f0;padding:1em;border-radius:.5rem;overflow-x:auto;margin-bottom:1em}
-</style>
-
 <?php
     include __DIR__ . '/footer.php';
     exit;

@@ -29,11 +29,11 @@ require_once __DIR__ . '/header.php';
 <nav class="px-4 mb-3">
   <div class="flex gap-1.5 bg-slate-100 rounded-xl p-1">
     <?php foreach([
-      ['all',      '📋', 'सबै'],
-      ['notice',   '🔔', 'सूचना'],
-      ['vacancy',  '💼', 'विज्ञापन'],
-      ['result',   '📊', 'नतिजा'],
-      ['syllabus', '📚', 'पाठ्यक्रम'],
+      ['all',      '<i data-lucide="layout-grid" class="w-3.5 h-3.5 inline-block"></i>', 'सबै'],
+      ['notice',   '<i data-lucide="bell" class="w-3.5 h-3.5 inline-block"></i>', 'सूचना'],
+      ['vacancy',  '<i data-lucide="briefcase" class="w-3.5 h-3.5 inline-block"></i>', 'विज्ञापन'],
+      ['result',   '<i data-lucide="bar-chart-2" class="w-3.5 h-3.5 inline-block"></i>', 'नतिजा'],
+      ['syllabus', '<i data-lucide="book-open" class="w-3.5 h-3.5 inline-block"></i>', 'पाठ्यक्रम'],
     ] as [$t,$ic,$lb]): ?>
     <button data-tab="<?= $t ?>"
       class="lk-tab flex-1 text-[11px] font-semibold py-1.5 rounded-lg transition-colors text-slate-500"
@@ -68,7 +68,7 @@ require_once __DIR__ . '/header.php';
   </div>
   <div id="lk-list" class="space-y-2 hidden"></div>
   <div id="lk-empty" class="py-16 text-center hidden">
-    <p class="text-4xl mb-3">📋</p>
+    <div class="mb-3"><i data-lucide="inbox" class="w-12 h-12 text-slate-300 mx-auto"></i></div>
     <p class="text-[14px] font-semibold text-slate-700 ne">कुनै सूचना भेटिएन</p>
     <p class="text-[12px] text-slate-400 mt-1">अर्को sync मा नया सूचनाहरू आउनेछन्।</p>
     <a href="https://www.psc.gov.np/en/notice" target="_blank"
@@ -99,14 +99,6 @@ require_once __DIR__ . '/header.php';
 
 <div class="pb-4"></div>
 </main>
-
-<style>
-.lk-tab.active { background:#fff; color:#0d9488; box-shadow:0 1px 4px rgba(0,0,0,.08); }
-.type-notice   { border-left-color:#0284c7; }
-.type-vacancy  { border-left-color:#16a34a; }
-.type-result   { border-left-color:#dc2626; }
-.type-syllabus { border-left-color:#7c3aed; }
-</style>
 
 <script>
 (function(){

@@ -50,26 +50,6 @@ function newsSourceFavicon(?string $sourceName, ?string $originalUrl = null): st
 include __DIR__ . '/header.php';
 ?>
 
-<style>
-/* ── Article body ── */
-.article-body { color:#1e293b; font-size:1.0625rem; line-height:1.9; font-family:'Hind Siliguri',sans-serif; }
-.article-body p { margin-bottom:1.3em; }
-.article-body h2,.article-body h3 { color:#0f172a; font-weight:700; margin:1.8em 0 .6em; }
-.article-body h2 { font-size:1.35rem; border-bottom:1px solid #e2e8f0; padding-bottom:.4em; }
-.article-body h3 { font-size:1.15rem; }
-.article-body strong,
-.article-body b    { color:#0f172a; font-weight:600; }
-.article-body a    { color:#0f766e; text-decoration:underline; text-underline-offset:3px; }
-.article-body blockquote {
-  border-left:3px solid #0f766e; padding:.9em 1.2em;
-  background:rgba(15,118,110,.07); margin:1.6em 0;
-  border-radius:0 8px 8px 0; color:#0f172a; font-style:italic;
-}
-.article-body ul,.article-body ol { padding-left:1.5em; margin-bottom:1.1em; }
-.article-body li { margin-bottom:.45em; }
-.article-body img { border-radius:8px; margin:1em 0; width:100%; }
-@media (min-width:768px){ .article-body { font-size:1.125rem; line-height:1.95; } }
-
 /* No-content fallback */
 .no-content-box {
   background:#f8fafc; border:1px dashed #cbd5e1;
@@ -264,23 +244,23 @@ include __DIR__ . '/header.php';
         <div class="flex items-center gap-2 flex-wrap">
           <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mr-1"><?= $t('सेयर गर्नुस्','Share') ?></span>
           <a href="https://www.facebook.com/sharer/sharer.php?u=<?= rawurlencode($pageUrl) ?>" target="_blank" rel="noopener"
-             class="share-btn" style="background:#1877f2;color:#fff;" data-tooltip="Facebook">
+             class="share-btn facebook" data-tooltip="Facebook">
             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
           </a>
           <a href="https://wa.me/?text=<?= rawurlencode($news['title'] . "\n" . $pageUrl) ?>" target="_blank" rel="noopener"
-             class="share-btn" style="background:#25d366;color:#fff;" data-tooltip="WhatsApp">
+             class="share-btn whatsapp" data-tooltip="WhatsApp">
             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
           </a>
           <a href="https://twitter.com/intent/tweet?text=<?= rawurlencode($news['title']) ?>&url=<?= rawurlencode($pageUrl) ?>" target="_blank" rel="noopener"
-             class="share-btn" style="background:#000;color:#fff;" data-tooltip="X / Twitter">
+             class="share-btn twitter" data-tooltip="X / Twitter">
             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.738-8.835L1.254 2.25H8.08l4.264 5.633 5.9-5.633zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
           </a>
           <a href="viber://forward?text=<?= rawurlencode($news['title'] . ' ' . $pageUrl) ?>"
-             class="share-btn" style="background:#7360f2;color:#fff;" data-tooltip="Viber">
+             class="share-btn viber" data-tooltip="Viber">
             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M11.398.002C9.473.028 5.141.344 3.068 2.303 1.685 3.687.862 5.785.717 8.623.571 11.46.512 16.64 5.21 18.08v2.417s-.032.984.611 1.186c.776.244 1.234-.499 1.976-1.293.407-.436.969-1.076 1.394-1.566 3.844.324 6.803-.417 7.141-.528.779-.256 5.188-.818 5.907-6.678.741-6.027-.356-9.834-2.332-11.526C18.062.488 15.04-.051 11.398.002z"/></svg>
           </a>
           <button onclick="copyLink()" id="copyBtn"
-                  class="share-btn" style="background:#f1f5f9;color:#64748b;border-color:#e2e8f0;" data-tooltip="<?= $t('लिंक कपी','Copy link') ?>">
+                  class="share-btn copy" data-tooltip="<?= $t('लिंक कपी','Copy link') ?>">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
           </button>
         </div>

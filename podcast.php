@@ -14,48 +14,6 @@ $pageDesc  = 'नेपाली पोडकास्ट, समाचार �
 if (function_exists('renderHeader')) renderHeader($pageTitle, $pageDesc);
 else echo "<!doctype html><html lang='ne'><head><meta charset='utf-8'><title>".htmlspecialchars($pageTitle)."</title><meta name='description' content='".htmlspecialchars($pageDesc)."'></head><body>";
 ?>
-<style>
-  .pc-wrap{max-width:1100px;margin:0 auto;padding:24px 16px;font-family:system-ui,-apple-system,'Noto Sans Devanagari',sans-serif}
-  .pc-hero{background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;border-radius:16px;padding:28px;margin-bottom:24px}
-  .pc-hero h1{margin:0 0 8px;font-size:28px;display:flex;align-items:center;gap:10px}
-  .pc-hero p{margin:0;opacity:.92;font-size:15px}
-  
-  .pc-player{position:sticky;top:8px;background:#0f172a;color:#fff;border-radius:14px;padding:16px;display:flex;align-items:center;gap:14px;z-index:10;box-shadow:0 10px 30px -10px rgba(15,23,42,.5);margin-bottom:24px}
-  .pc-player .now{flex:1;min-width:0}
-  .pc-player .now b{display:block;font-size:15px;margin-bottom:2px}
-  .pc-player .now span{font-size:12px;opacity:.7}
-  .pc-player audio{display:none}
-  .pc-player .ctrl{display:flex;gap:8px}
-  .pc-player button{background:#7c3aed;color:#fff;border:none;width:42px;height:42px;border-radius:50%;cursor:pointer;font-size:18px;transition:.2s}
-  .pc-player button:hover{background:#6d28d9}
-  
-  .pc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin-bottom:30px}
-  .pc-card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;transition:all .2s;cursor:pointer}
-  .pc-card:hover{transform:translateY(-4px);border-color:#7c3aed;box-shadow:0 12px 24px -8px rgba(124,58,237,.25)}
-  .pc-card.playing{background:#7c3aed;color:#fff;border-color:#7c3aed}
-  
-  .pc-img{width:100%;aspect-ratio:1;background:#f1f5f9 center/cover no-repeat;position:relative;display:flex;align-items:center;justify-content:center;font-size:48px}
-  .pc-badge{position:absolute;top:10px;left:10px;background:#7c3aed;color:#fff;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600}
-  
-  .pc-body{padding:12px}
-  .pc-body h3{margin:0 0 6px;font-size:15px;line-height:1.4;color:#0f172a}
-  .pc-card.playing h3{color:#fff}
-  .pc-body p{margin:0 0 8px;font-size:12px;color:#64748b;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-  .pc-card.playing p{color:#f3e8ff}
-  
-  .pc-meta{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:#64748b}
-  .pc-card.playing .pc-meta{color:#e9d5ff}
-  .pc-actions{display:flex;gap:4px;margin-top:8px}
-  .pc-actions button{flex:1;padding:6px;font-size:12px;border:1px solid #e5e7eb;border-radius:6px;background:#fff;color:#0f172a;cursor:pointer;transition:.2s}
-  .pc-actions button:hover{background:#f1f5f9}
-  .pc-card.playing .pc-actions button{border-color:#a855f7;background:#a855f7;color:#fff}
-  
-  .pc-section-title{font-size:18px;margin:24px 0 14px;color:#0f172a;display:flex;align-items:center;gap:8px;font-weight:600}
-  .pc-empty{text-align:center;padding:40px;color:#64748b}
-  .pc-offline-tip{background:#fef3c7;border:1px solid #fde68a;color:#78350f;padding:10px 14px;border-radius:10px;font-size:13px;margin-bottom:16px}
-  .pc-featured-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px;margin-bottom:30px}
-</style>
-
 <div class="pc-wrap">
   <div class="pc-hero">
     <h1>🎙️ पोडकास्ट</h1>
@@ -64,7 +22,7 @@ else echo "<!doctype html><html lang='ne'><head><meta charset='utf-8'><title>".h
 
   <!-- Sticky player -->
   <div class="pc-player" id="pcPlayer">
-    <div style="width:42px;height:42px;border-radius:8px;background:#7c3aed;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">🎙️</div>
+    <div class="pc-player-icon">🎙️</div>
     <div class="now">
       <b id="pcName">पोडकास्ट छान्नुहोस्</b>
       <span id="pcMeta">तल बाट कुनै पोडकास्ट सुरु गर्नुहोस्</span>
@@ -81,13 +39,13 @@ else echo "<!doctype html><html lang='ne'><head><meta charset='utf-8'><title>".h
   <!-- Featured section -->
   <h2 class="pc-section-title">⭐ विशेष पोडकास्ट</h2>
   <div id="pcFeatured" class="pc-featured-grid">
-    <p style="grid-column:1/-1;color:#999;text-align:center">उपलब्ध हुँदैछ...</p>
+    <p class="col-span-full text-sm text-slate-400 text-center">उपलब्ध हुँदैछ...</p>
   </div>
 
   <!-- All podcasts -->
   <h2 class="pc-section-title">📻 सबै पोडकास्टहरू</h2>
   <div id="pcGrid" class="pc-grid">
-    <p style="grid-column:1/-1;color:#999;text-align:center">लोड हुँदैछ...</p>
+    <p class="col-span-full text-sm text-slate-400 text-center">लोड हुँदैछ...</p>
   </div>
 </div>
 

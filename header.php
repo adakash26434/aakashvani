@@ -221,6 +221,7 @@ tailwind={config:{darkMode:'class',theme:{extend:{
 </script>
 <!-- Tailwind: fetchpriority=high so browser prioritises it over other CDN requests -->
 <script src="https://cdn.tailwindcss.com" fetchpriority="high"></script>
+<link rel="stylesheet" href="/assets/css/global.css"/>
 
 <!-- Alpine.js: pinned exact version (avoids version-resolution redirect on every load) -->
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"></script>

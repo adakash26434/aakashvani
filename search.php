@@ -68,7 +68,6 @@ if ($q !== '') {
 .hit-meta{font-size:11px;color:var(--muted-fg,#94a3b8);margin-top:3px}
 .empty{text-align:center;padding:30px 14px;color:var(--muted-fg,#64748b);font-size:14px}
 .chip{display:inline-block;background:rgba(15,118,110,.08);color:var(--primary,#0f766e);padding:2px 8px;border-radius:99px;font-size:10.5px;font-weight:600;margin-right:4px}
-</style>
 
 <div class="search-wrap">
   <form method="get" class="search-box" role="search">
@@ -80,15 +79,15 @@ if ($q !== '') {
   <?php if ($q === ''): ?>
     <div class="sec-title">लोकप्रिय खोजी</div>
     <?php foreach (['सुन','पेट्रोल','मौसम','IPO','Lok Sewa','भूकम्प','राशिफल','कर'] as $sug): ?>
-      <a class="chip" href="?q=<?=urlencode($sug)?>" style="text-decoration:none"><?=$sug?></a>
-    <?php endforeach; ?>
-  <?php else: ?>
-    <div class="sec-title">सेवा र पृष्ठहरू (<?=count($matches)?>)</div>
-    <?php if (!$matches): ?>
-      <div class="empty">कुनै सेवा मेल खाएन।</div>
-    <?php else: foreach ($matches as $m): ?>
-      <a class="hit" href="<?=htmlspecialchars($m['u'])?>">
-        <div class="hit-ico"><i data-lucide="layout-grid" style="width:18px;height:18px"></i></div>
+        <a class="chip" href="?q=<?=urlencode($sug)?>"><?=$sug?></a>
+      <?php endforeach; ?>
+    <?php else: ?>
+      <div class="sec-title">सेवा र पृष्ठहरू (<?=count($matches)?>)</div>
+      <?php if (!$matches): ?>
+        <div class="empty">कुनै सेवा मेल खाएन।</div>
+      <?php else: foreach ($matches as $m): ?>
+        <a class="hit" href="<?=htmlspecialchars($m['u'])?>">
+          <div class="hit-ico"><i data-lucide="layout-grid"></i></div>
         <div>
           <div class="hit-t"><?=htmlspecialchars($m['t'])?></div>
           <div class="hit-d"><?=htmlspecialchars($m['d'])?></div>

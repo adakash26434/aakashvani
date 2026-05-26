@@ -28,28 +28,6 @@ $sources = [
   ['name'=>'Tailwind CSS',        'cat'=>'Design',               'url'=>'https://tailwindcss.com',                 'usage'=>'CSS framework',                                                     'license'=>'MIT License'],
 ];
 ?>
-<style>
-.src-wrap{padding:18px 14px 100px;max-width:860px;margin:0 auto}
-.src-hero{background:linear-gradient(135deg,#0d9488,#0891b2);color:#fff;border-radius:18px;padding:22px;margin-bottom:18px}
-.src-hero h1{font-size:22px;margin:0 0 6px;font-weight:800}
-.src-hero p{font-size:13px;margin:0;opacity:.92;line-height:1.55}
-.src-grid{display:grid;gap:10px}
-.src-card{background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:14px;display:flex;gap:12px;align-items:flex-start}
-.src-card .num{flex-shrink:0;width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#f0fdfa,#cffafe);color:#0d9488;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px}
-.src-card .body{flex:1;min-width:0}
-.src-card .top{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px}
-.src-card h3{font-size:14px;font-weight:800;margin:0;color:#0b1220}
-.src-card .cat{font-size:10.5px;font-weight:700;color:#0f766e;background:#ccfbf1;padding:2px 8px;border-radius:999px}
-.src-card .usage{font-size:12.5px;color:#475569;line-height:1.55;margin-bottom:6px}
-.src-card .lic{font-size:10.5px;color:#94a3b8;display:flex;align-items:center;gap:5px}
-.src-card a.link{color:#0d9488;font-size:11.5px;font-weight:700;text-decoration:none}
-.src-card a.link:hover{text-decoration:underline}
-.legal-card{background:#fffbeb;border:1px solid #fde68a;border-radius:14px;padding:16px;margin-top:18px}
-.legal-card h2{font-size:15px;color:#92400e;margin:0 0 8px;display:flex;align-items:center;gap:6px}
-.legal-card p{font-size:12.5px;color:#78350f;line-height:1.65;margin:0 0 8px}
-.contact{margin-top:14px;padding:14px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;font-size:13px;color:#475569}
-.contact a{color:#0d9488;font-weight:600}
-</style>
 
 <div class="src-wrap">
   <div class="src-hero">

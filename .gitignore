@@ -21,6 +21,7 @@ vendor/
 
 # Build
 dist/
+public/
 
 # Logs
 *.log

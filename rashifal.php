@@ -23,15 +23,6 @@ $rashi = [
 $selected = isset($_GET['r']) ? max(0,min(11,(int)$_GET['r'])) : 0;
 $r = $rashi[$selected];
 ?>
-<style>
-/* ── Cosmic starfield animation ───────────────────────────────────────────── */
-@keyframes twinkle{0%,100%{opacity:.15;transform:scale(.6)}50%{opacity:1;transform:scale(1.4)}}
-@keyframes floatSym{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-8px) rotate(4deg)}}
-@keyframes energyFill{from{width:0}to{width:var(--e-pct)}}
-.rashi-star{position:absolute;border-radius:50%;background:#fff;pointer-events:none}
-.rashi-tile-active{background:rgba(124,58,237,.95)!important;color:#fff!important;box-shadow:0 4px 20px rgba(124,58,237,.45)!important;transform:scale(1.05)}
-.rashi-tile{transition:transform .18s,box-shadow .18s}
-</style>
 
 <main class="app-main">
   <!-- ── Cosmic Hero ─────────────────────────────────────────────────────── -->
