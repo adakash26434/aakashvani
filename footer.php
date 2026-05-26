@@ -502,9 +502,9 @@ $todayQuote = $_quotes[$_qIdx];
               box.innerHTML='<div style="background:#fff;border:1px solid #e6eaf2;border-radius:12px;padding:10px;font-size:12px;color:#94a3b8" class="ne">समाचार उपलब्ध छैन</div>';
               return;
             }
-            // Grid layout: 2 columns on all screen sizes
+            // Grid layout: 2 columns on desktop, 1 column on mobile
             box.style.display='grid';
-            box.style.gridTemplateColumns='repeat(2, 1fr)';
+            box.style.gridTemplateColumns = window.innerWidth >= 768 ? 'repeat(2, 1fr)' : '1fr';
             box.style.gap='10px';
             box.innerHTML = d.items.map(it=>{
               var thumb = it.image
@@ -580,6 +580,9 @@ function openInDetailPane(url) {
   // Check if detail pane exists (desktop view)
   var pane = document.getElementById('detail-pane');
   var isDesktop = window.innerWidth >= 1024 && pane;
+  
+  // Also check if we're in mobile viewport
+  var isMobile = window.innerWidth < 1024;
   
   if (isDesktop) {
     // Desktop: Open in detail pane
