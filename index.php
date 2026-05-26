@@ -140,6 +140,9 @@ window.__chips = {
       <a href="/nokari.php" onclick="return openInDetailPane('/nokari.php');" class="hero-icon-btn bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/20 rounded-xl py-2 text-center text-[11px] font-semibold flex flex-col items-center gap-1 transition-all" data-url="/nokari.php">
         <i data-lucide="briefcase" class="w-4 h-4"></i><span class="ne"><?= $t('नोकरी','Jobs') ?></span>
       </a>
+      <a href="/auction-notices.php" onclick="return openInDetailPane('/auction-notices.php');" class="hero-icon-btn bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/20 rounded-xl py-2 text-center text-[11px] font-semibold flex flex-col items-center gap-1 transition-all" data-url="/auction-notices.php">
+        <i data-lucide="gavel" class="w-4 h-4"></i><span class="ne"><?= $t('लिलामी','Auction') ?></span>
+      </a>
     </div>
   </div>
 </section>
