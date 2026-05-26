@@ -13,8 +13,9 @@
  */
 ?>
 <div class="aak-search" id="aakSearch">
-  <span class="aak-search-icon">🔎</span>
+  <i data-lucide="search" class="aak-search-icon" aria-hidden="true"></i>
   <input id="aakSearchInput" type="search" autocomplete="off" spellcheck="false"
+         aria-label="Search for radio, stories, places and more"
          placeholder="खोज्नुहोस् — रेडियो, कथा, घुम्ने ठाउँ... ( / दबाउनुहोस् )">
   <kbd class="aak-search-kbd">/</kbd>
   <div class="aak-search-drop" id="aakSearchDrop" role="listbox"></div>
@@ -47,10 +48,10 @@
       html += '<div class="aak-sr-group">'+groups[t]+'</div>';
       byType[t].forEach(function(it){
         html += '<a class="aak-sr-item" href="'+escapeHtml(it.url)+'">'+
-                '<span class="aak-sr-ico">'+escapeHtml(it.icon||'•')+'</span>'+
+                '<span class="aak-sr-ico" aria-hidden="true">'+escapeHtml(it.icon||'•')+'</span>'+
                 '<span class="aak-sr-txt"><div class="aak-sr-lbl">'+escapeHtml(it.label)+'</div>'+
                 (it.sub?'<div class="aak-sr-sub">'+escapeHtml(it.sub)+'</div>':'')+'</span>'+
-                '<span class="aak-sr-arrow">↗</span></a>';
+                '<span class="aak-sr-arrow" aria-hidden="true">↗</span><span class="sr-only">Open</span></a>';
       });
     });
     drop.innerHTML = html;

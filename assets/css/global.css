@@ -358,7 +358,7 @@
 /* Search widget */
 .aak-search { position: relative; display: flex; align-items: center; gap: 8px; width: 100%; max-width: 480px; background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 8px 12px; font-family: system-ui, -apple-system, 'Noto Sans Devanagari', sans-serif; transition: border-color .15s, box-shadow .15s; }
 .aak-search:focus-within { border-color: #0f766e; box-shadow: 0 0 0 3px rgba(15,118,110,.15); }
-.aak-search-icon { font-size: 16px; opacity: .6; }
+.aak-search-icon { width: 18px; height: 18px; color: #64748b; flex-shrink: 0; }
 .aak-search input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; font: inherit; font-size: 14px; color: #0f172a; }
 .aak-search input::placeholder { color: #94a3b8; font-size: 13px; }
 .aak-search-kbd { background: #f1f5f9; color: #64748b; border: 1px solid #e2e8f0; border-radius: 6px; padding: 2px 7px; font-size: 11px; font-family: ui-monospace, SFMono-Regular, monospace; }
@@ -570,6 +570,19 @@
   border-top-color: #0d9488;
   border-radius: 50%;
   animation: spinner-rotate 0.8s linear infinite;
+}
+
+/* Screen reader only - accessibility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }
 @keyframes spinner-rotate {
   to { transform: rotate(360deg); }
