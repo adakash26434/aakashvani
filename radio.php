@@ -4,13 +4,40 @@
  * Streams live via HTML5 audio. Podcasts cached by Service Worker for offline.
  */
 require_once __DIR__ . '/header.php';
+require_once __DIR__ . '/includes/functions.entertainment.php';
 
-// Fetch data from API
-$stationsData = @json_decode(@file_get_contents(__DIR__ . '/api/radio-stations.php'), true);
-$stations = $stationsData['ok'] ? ($stationsData['stations'] ?? []) : [];
+// Fetch data directly from functions
+$stations = getRadioStations(true);
+$podcasts = getRadioPodcasts(12);
 
-$podcastsData = @json_decode(@file_get_contents(__DIR__ . '/api/radio-podcasts.php'), true);
-$podcasts = $podcastsData['ok'] ? ($podcastsData['podcasts'] ?? []) : [];
+// If empty, use sample data
+if (empty($stations)) {
+    $stations = [
+        ['id'=>1,'name'=>'Radio Nepal','stream_url'=>'https://stream.zeno.fm/yn8s9y5y598uv','stream_type'=>'mp3','city'=>'Kathmandu','frequency'=>'103.0 FM','logo_path'=>'','status'=>'active','featured'=>1,'sort_order'=>1],
+        ['id'=>2,'name'=>'Kantipur FM','stream_url'=>'https://stream.zeno.fm/0r0xa792kwzuv','stream_type'=>'mp3','city'=>'Kathmandu','frequency'=>'96.6 FM','logo_path'=>'','status'=>'active','featured'=>1,'sort_order'=>2],
+        ['id'=>3,'name'=>'Image FM','stream_url'=>'https://stream.zeno.fm/f3wv6q5g2k8uv','stream_type'=>'mp3','city'=>'Kathmandu','frequency'=>'97.9 FM','logo_path'=>'','status'=>'active','featured'=>0,'sort_order'=>3],
+        ['id'=>4,'name'=>'Hits FM','stream_url'=>'https://stream.zeno.fm/s45x6y5g2k8uv','stream_type'=>'mp3','city'=>'Kathmandu','frequency'=>'91.2 FM','logo_path'=>'','status'=>'active','featured'=>0,'sort_order'=>4],
+        ['id'=>5,'name'=>'Kalika FM','stream_url'=>'https://stream.zeno.fm/6y8s9y5y598uv','stream_type'=>'mp3','city'=>'Pokhara','frequency'=>'95.2 FM','logo_path'=>'','status'=>'active','featured'=>0,'sort_order'=>5],
+        ['id'=>6,'name'=>'Radio Nagarik','stream_url'=>'https://stream.zeno.fm/2r0xa792kwzuv','stream_type'=>'mp3','city'=>'Kathmandu','frequency'=>'107.5 FM','logo_path'=>'','status'=>'active','featured'=>0,'sort_order'=>6],
+        ['id'=>7,'name'=>'Focal FM','stream_url'=>'https://stream.zeno.fm/7y8s9y5y598uv','stream_type'=>'mp3','city'=>'Kathmandu','frequency'=>'92.4 FM','logo_path'=>'','status'=>'active','featured'=>0,'sort_order'=>7],
+        ['id'=>8,'name'=>'Maitri FM','stream_url'=>'https://stream.zeno.fm/8r0xa792kwzuv','stream_type'=>'mp3','city'=>'Kathmandu','frequency'=>'106.6 FM','logo_path'=>'','status'=>'active','featured'=>0,'sort_order'=>8],
+        ['id'=>9,'name'=>'Nepal FM','stream_url'=>'https://stream.zeno.fm/9y8s9y5y598uv','stream_type'=>'mp3','city'=>'Kathmandu','frequency'=>'91.8 FM','logo_path'=>'','status'=>'active','featured'=>0,'sort_order'=>9],
+        ['id'=>10,'name'=>'Star FM','stream_url'=>'https://stream.zeno.fm/0r0xa792kwzuv','stream_type'=>'mp3','city'=>'Kathmandu','frequency'=>'94.0 FM','logo_path'=>'','status'=>'active','featured'=>0,'sort_order'=>10],
+        ['id'=>11,'name'=>'Radio Birgunj','stream_url'=>'https://stream.zeno.fm/1r0xa792kwzuv','stream_type'=>'mp3','city'=>'Birgunj','frequency'=>'94.6 FM','logo_path'=>'','status'=>'active','featured'=>0,'sort_order'=>11],
+        ['id'=>12,'name'=>'Radio Chitwan','stream_url'=>'https://stream.zeno.fm/2r0xa792kwzuv','stream_type'=>'mp3','city'=>'Chitwan','frequency'=>'92.0 FM','logo_path'=>'','status'=>'active','featured'=>0,'sort_order'=>12],
+        ['id'=>13,'name'=>'Radio Nepal News','stream_url'=>'https://stream.zeno.fm/3r0xa792kwzuv','stream_type'=>'mp3','city'=>'Kathmandu','frequency'=>'103.0 FM','logo_path'=>'','status'=>'active','featured'=>1,'sort_order'=>13],
+    ];
+}
+
+if (empty($podcasts)) {
+    $podcasts = [
+        ['id'=>1,'title'=>'नेपालको आर्थिक अवस्था','audio_url'=>'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3','cover_image'=>'','station_id'=>1,'station_name'=>'Radio Nepal','published_at'=>date('Y-m-d H:i:s',strtotime('-1 day')),'status'=>'published'],
+        ['id'=>2,'title'=>'शिक्षा प्रणाली सुधार','audio_url'=>'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3','cover_image'=>'','station_id'=>2,'station_name'=>'Kantipur FM','published_at'=>date('Y-m-d H:i:s',strtotime('-2 days')),'status'=>'published'],
+        ['id'=>3,'title'=>'स्वास्थ्य जागरण कार्यक्रम','audio_url'=>'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3','cover_image'=>'','station_id'=>3,'station_name'=>'Image FM','published_at'=>date('Y-m-d H:i:s',strtotime('-3 days')),'status'=>'published'],
+        ['id'=>4,'title'=>'कृषि तथा विकास','audio_url'=>'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3','cover_image'=>'','station_id'=>4,'station_name'=>'Hits FM','published_at'=>date('Y-m-d H:i:s',strtotime('-4 days')),'status'=>'published'],
+        ['id'=>5,'title'=>'पर्यटन प्रवर्द्धन','audio_url'=>'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3','cover_image'=>'','station_id'=>5,'station_name'=>'Kalika FM','published_at'=>date('Y-m-d H:i:s',strtotime('-5 days')),'status'=>'published'],
+    ];
+}
 
 $pageTitle = 'अनलाइन रेडियो | ' . SITE_NAME;
 $pageDesc  = 'नेपालका प्रमुख FM, समाचार र संगीत रेडियो लाइभ सुन्नुहोस्।';
