@@ -6,6 +6,7 @@
 header('Content-Type: application/json; charset=utf-8');
 require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../functions.php';
+require_once __DIR__ . '/../includes/functions.entertainment.php';
 
 try {
     // Try to get from database first

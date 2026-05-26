@@ -6,10 +6,10 @@
 require_once __DIR__ . '/header.php';
 
 // Fetch data from API
-$stationsData = @json_decode(@file_get_contents('https://' . $_SERVER['HTTP_HOST'] . '/api/radio-stations.php'), true);
+$stationsData = @json_decode(@file_get_contents(__DIR__ . '/api/radio-stations.php'), true);
 $stations = $stationsData['ok'] ? ($stationsData['stations'] ?? []) : [];
 
-$podcastsData = @json_decode(@file_get_contents('https://' . $_SERVER['HTTP_HOST'] . '/api/radio-podcasts.php'), true);
+$podcastsData = @json_decode(@file_get_contents(__DIR__ . '/api/radio-podcasts.php'), true);
 $podcasts = $podcastsData['ok'] ? ($podcastsData['podcasts'] ?? []) : [];
 
 $pageTitle = 'अनलाइन रेडियो | ' . SITE_NAME;
