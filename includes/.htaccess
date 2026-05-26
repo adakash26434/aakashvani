@@ -1,0 +1,2 @@
+# Includes are libraries — never served directly.
+Require all denied

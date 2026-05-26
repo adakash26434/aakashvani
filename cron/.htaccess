@@ -1,0 +1,2 @@
+# Deny web execution of cron scripts — invoke via cPanel cron / CLI only.
+Require all denied

@@ -1,0 +1,151 @@
+Options -Indexes
+DirectoryIndex index.php
+
+ErrorDocument 404 /404.php
+ErrorDocument 500 /404.php
+
+# ─── HTTPS redirect ───────────────────────────────────────────────────────────
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  RewriteCond %{HTTPS} !=on
+  RewriteCond %{HTTP_HOST} !^localhost [NC]
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  RewriteCond %{REQUEST_FILENAME}.php -f
+  RewriteRule ^(.+?)/?$ $1.php [L,QSA]
+
+  RewriteRule ^news/([^/]+)/?$ news-detail.php?slug=$1 [L,QSA]
+  RewriteRule ^tool/([^/]+)/?$ tool.php?slug=$1 [L,QSA]
+  RewriteRule ^$ index.php [L]
+</IfModule>
+
+<IfModule mod_dir.c>
+  FallbackResource /index.php
+</IfModule>
+
+# ─── GZIP / Deflate Compression ───────────────────────────────────────────────
+# Compresses HTML, CSS, JS, JSON, fonts before sending to browser.
+# Saves 60-80% transfer size — biggest speed win on shared hosting.
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html
+  AddOutputFilterByType DEFLATE text/plain
+  AddOutputFilterByType DEFLATE text/xml
+  AddOutputFilterByType DEFLATE text/css
+  AddOutputFilterByType DEFLATE text/javascript
+  AddOutputFilterByType DEFLATE application/javascript
+  AddOutputFilterByType DEFLATE application/x-javascript
+  AddOutputFilterByType DEFLATE application/json
+  AddOutputFilterByType DEFLATE application/xml
+  AddOutputFilterByType DEFLATE application/rss+xml
+  AddOutputFilterByType DEFLATE image/svg+xml
+  AddOutputFilterByType DEFLATE font/woff
+  AddOutputFilterByType DEFLATE font/woff2
+  AddOutputFilterByType DEFLATE application/font-woff
+  AddOutputFilterByType DEFLATE application/font-woff2
+
+  # Don't compress already-compressed files
+  SetEnvIfNoCase Request_URI \.(?:gif|jpe?g|png|webp|zip|gz|bz2|mp4|mp3)$ no-gzip dont-vary
+  Header append Vary Accept-Encoding env=!no-gzip
+</IfModule>
+
+# Fallback: mod_gzip for older Apache
+<IfModule mod_gzip.c>
+  mod_gzip_on       Yes
+  mod_gzip_dechunk  Yes
+  mod_gzip_item_include file      \.(html?|txt|css|js|php|pl)$
+  mod_gzip_item_include mime      ^text/.*
+  mod_gzip_item_include mime      ^application/x-javascript.*
+  mod_gzip_item_exclude mime      ^image/.*
+  mod_gzip_item_exclude rspheader ^Content-Encoding:.*gzip.*
+</IfModule>
+
+# ─── Browser Caching ──────────────────────────────────────────────────────────
+# Tells browsers how long to cache static files.
+# Repeat visitors load pages MUCH faster — files served from disk.
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresDefault                              "access plus 1 month"
+
+  # Images — 1 year (never change without new filename)
+  ExpiresByType image/jpeg                    "access plus 1 year"
+  ExpiresByType image/jpg                     "access plus 1 year"
+  ExpiresByType image/png                     "access plus 1 year"
+  ExpiresByType image/gif                     "access plus 1 year"
+  ExpiresByType image/webp                    "access plus 1 year"
+  ExpiresByType image/avif                    "access plus 1 year"
+  ExpiresByType image/x-icon                  "access plus 1 year"
+  ExpiresByType image/vnd.microsoft.icon      "access plus 1 year"
+
+  # SVG — 1 month
+  ExpiresByType image/svg+xml                 "access plus 1 month"
+
+  # Fonts — 1 year (immutable)
+  ExpiresByType font/woff                     "access plus 1 year"
+  ExpiresByType font/woff2                    "access plus 1 year"
+  ExpiresByType font/ttf                      "access plus 1 year"
+  ExpiresByType font/eot                      "access plus 1 year"
+  ExpiresByType application/font-woff         "access plus 1 year"
+  ExpiresByType application/font-woff2        "access plus 1 year"
+
+  # CSS / JS — 1 month
+  ExpiresByType text/css                      "access plus 1 month"
+  ExpiresByType text/javascript               "access plus 1 month"
+  ExpiresByType application/javascript        "access plus 1 month"
+  ExpiresByType application/x-javascript     "access plus 1 month"
+
+  # HTML / PHP — no cache (dynamic content)
+  ExpiresByType text/html                     "access plus 0 seconds"
+
+  # JSON API responses — short cache via PHP headers (don't cache here)
+  ExpiresByType application/json              "access plus 0 seconds"
+</IfModule>
+
+# ─── Cache-Control Headers ────────────────────────────────────────────────────
+<IfModule mod_headers.c>
+  # Static assets: immutable for 1 year
+  <FilesMatch "\.(ico|jpg|jpeg|png|gif|webp|avif|woff|woff2|ttf|eot|otf)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+    Header unset ETag
+  </FilesMatch>
+
+  # SVG — 1 month
+  <FilesMatch "\.svg$">
+    Header set Cache-Control "public, max-age=2592000"
+  </FilesMatch>
+
+  # CSS / JS — 1 month (versioned by query string when updated)
+  <FilesMatch "\.(css|js)$">
+    Header set Cache-Control "public, max-age=2592000"
+  </FilesMatch>
+
+  # PHP pages — no cache (server renders fresh each time)
+  <FilesMatch "\.php$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+    Header set Pragma "no-cache"
+  </FilesMatch>
+
+  # ── Security headers ──────────────────────────────────────────────────────
+  Header always set X-Content-Type-Options  "nosniff"
+  Header always set X-Frame-Options         "SAMEORIGIN"
+  Header always set Referrer-Policy         "strict-origin-when-cross-origin"
+  Header always set X-XSS-Protection        "1; mode=block"
+
+  # ── Connection keep-alive (reduces TCP handshake overhead) ────────────────
+  Header set Connection "keep-alive"
+
+  # ── ETag: disable for static files (already using Expires) ───────────────
+  FileETag None
+</IfModule>
+
+# ─── Keep-Alive ───────────────────────────────────────────────────────────────
+<IfModule mod_so.c>
+  KeepAlive On
+  MaxKeepAliveRequests 100
+  KeepAliveTimeout 5
+</IfModule>
