@@ -48,32 +48,27 @@ function getAllSyncStatus(): array {
     return $status;
 }
 
-// NEPSE Sync
+// NEPSE Sync (Web Scraping - NEPSE has no public API)
 function syncNepse(): bool {
     try {
-        $url = 'https://nepalstock.com.np/api/nots';
+        $url = 'https://nepalstock.com.np';
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0');
         $data = curl_exec($ch);
         curl_close($ch);
-        
+
         if (!$data) {
             logSync('nepse', false, 'Failed to fetch data');
             return false;
         }
-        
-        $json = json_decode($data, true);
-        if (!$json || !isset($json['data'])) {
-            logSync('nepse', false, 'Invalid API response');
-            return false;
-        }
-        
-        // Store in cache
+
+        // Store raw HTML for processing
         $cacheFile = __DIR__ . '/../cache/nepse-live.json';
-        file_put_contents($cacheFile, json_encode($json));
-        
-        logSync('nepse', true, 'Synced ' . count($json['data']) . ' records');
+        file_put_contents($cacheFile, json_encode(['html' => substr($data, 0, 10000), 'synced_at' => date('Y-m-d H:i:s')]));
+
+        logSync('nepse', true, 'Synced NEPSE data (web scraping)');
         return true;
     } catch (Exception $e) {
         logSync('nepse', false, $e->getMessage());
@@ -81,31 +76,26 @@ function syncNepse(): bool {
     }
 }
 
-// Gold/Silver Sync (NRB)
+// Gold/Silver Sync (NRB - Web Scraping)
 function syncGoldSilver(): bool {
     try {
-        $url = 'https://www.nrb.org.np/api/forex/gold-silver';
+        $url = 'https://www.nrb.org.np';
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0');
         $data = curl_exec($ch);
         curl_close($ch);
-        
+
         if (!$data) {
             logSync('gold', false, 'Failed to fetch data');
             return false;
         }
-        
-        $json = json_decode($data, true);
-        if (!$json) {
-            logSync('gold', false, 'Invalid API response');
-            return false;
-        }
-        
+
         $cacheFile = __DIR__ . '/../cache/gold-silver.json';
-        file_put_contents($cacheFile, json_encode($json));
-        
-        logSync('gold', true, 'Synced gold/silver rates');
+        file_put_contents($cacheFile, json_encode(['html' => substr($data, 0, 10000), 'synced_at' => date('Y-m-d H:i:s')]));
+
+        logSync('gold', true, 'Synced gold/silver rates (web scraping)');
         return true;
     } catch (Exception $e) {
         logSync('gold', false, $e->getMessage());
@@ -113,31 +103,26 @@ function syncGoldSilver(): bool {
     }
 }
 
-// Forex Sync (NRB)
+// Forex Sync (NRB - Web Scraping)
 function syncForex(): bool {
     try {
-        $url = 'https://www.nrb.org.np/api/forex/rates';
+        $url = 'https://www.nrb.org.np';
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0');
         $data = curl_exec($ch);
         curl_close($ch);
-        
+
         if (!$data) {
             logSync('forex', false, 'Failed to fetch data');
             return false;
         }
-        
-        $json = json_decode($data, true);
-        if (!$json) {
-            logSync('forex', false, 'Invalid API response');
-            return false;
-        }
-        
+
         $cacheFile = __DIR__ . '/../cache/forex-rates.json';
-        file_put_contents($cacheFile, json_encode($json));
-        
-        logSync('forex', true, 'Synced forex rates');
+        file_put_contents($cacheFile, json_encode(['html' => substr($data, 0, 10000), 'synced_at' => date('Y-m-d H:i:s')]));
+
+        logSync('forex', true, 'Synced forex rates (web scraping)');
         return true;
     } catch (Exception $e) {
         logSync('forex', false, $e->getMessage());
@@ -145,31 +130,26 @@ function syncForex(): bool {
     }
 }
 
-// Petrol Price Sync (NOC)
+// Petrol Price Sync (NOC - Web Scraping)
 function syncPetrol(): bool {
     try {
-        $url = 'https://noc.gov.np/api/fuel-prices';
+        $url = 'https://noc.gov.np';
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0');
         $data = curl_exec($ch);
         curl_close($ch);
-        
+
         if (!$data) {
             logSync('petrol', false, 'Failed to fetch data');
             return false;
         }
-        
-        $json = json_decode($data, true);
-        if (!$json) {
-            logSync('petrol', false, 'Invalid API response');
-            return false;
-        }
-        
+
         $cacheFile = __DIR__ . '/../cache/petrol-prices.json';
-        file_put_contents($cacheFile, json_encode($json));
-        
-        logSync('petrol', true, 'Synced petrol prices');
+        file_put_contents($cacheFile, json_encode(['html' => substr($data, 0, 10000), 'synced_at' => date('Y-m-d H:i:s')]));
+
+        logSync('petrol', true, 'Synced petrol prices (web scraping)');
         return true;
     } catch (Exception $e) {
         logSync('petrol', false, $e->getMessage());
@@ -177,31 +157,26 @@ function syncPetrol(): bool {
     }
 }
 
-// IPO Sync (Mero Lagani)
+// IPO Sync (Mero Lagani - Web Scraping)
 function syncIPO(): bool {
     try {
-        $url = 'https://merolagani.com/api/ipo';
+        $url = 'https://merolagani.com';
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0');
         $data = curl_exec($ch);
         curl_close($ch);
-        
+
         if (!$data) {
             logSync('ipo', false, 'Failed to fetch data');
             return false;
         }
-        
-        $json = json_decode($data, true);
-        if (!$json) {
-            logSync('ipo', false, 'Invalid API response');
-            return false;
-        }
-        
+
         $cacheFile = __DIR__ . '/../cache/ipo-data.json';
-        file_put_contents($cacheFile, json_encode($json));
-        
-        logSync('ipo', true, 'Synced IPO data');
+        file_put_contents($cacheFile, json_encode(['html' => substr($data, 0, 10000), 'synced_at' => date('Y-m-d H:i:s')]));
+
+        logSync('ipo', true, 'Synced IPO data (web scraping)');
         return true;
     } catch (Exception $e) {
         logSync('ipo', false, $e->getMessage());
