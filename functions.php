@@ -96,6 +96,52 @@ function h(string $s): string {
     return htmlspecialchars($s, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 }
 
+// ─── API Response Helpers ─────────────────────────────────────────────────────
+/**
+ * Send consistent JSON success response
+ */
+function apiSuccess(array $data = [], string $message = ''): void {
+    header('Content-Type: application/json; charset=utf-8');
+    $response = ['ok' => true];
+    if ($message) $response['message'] = $message;
+    echo json_encode(array_merge($response, $data), JSON_UNESCAPED_UNICODE);
+    exit;
+}
+
+/**
+ * Send consistent JSON error response
+ */
+function apiError(string $message, int $code = 400, array $extra = []): void {
+    header('Content-Type: application/json; charset=utf-8');
+    http_response_code($code);
+    $response = ['ok' => false, 'error' => $message, 'code' => $code];
+    echo json_encode(array_merge($response, $extra), JSON_UNESCAPED_UNICODE);
+    exit;
+}
+
+/**
+ * Fetch URL with timeout and error handling
+ */
+function fetchUrl(string $url, int $timeout = 10, array $headers = []): ?string {
+    $ctx = stream_context_create([
+        'http' => [
+            'timeout' => $timeout,
+            'header' => implode("\r\n", array_merge([
+                'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+            ], $headers)),
+            'follow_location' => true,
+            'max_redirects' => 3,
+        ],
+        'ssl' => [
+            'verify_peer' => false,
+            'verify_peer_name' => false,
+        ]
+    ]);
+    
+    $result = @file_get_contents($url, false, $ctx);
+    return $result !== false ? $result : null;
+}
+
 /**
  * Market source badge helper for utilities.php
  */

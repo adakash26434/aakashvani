@@ -607,3 +607,112 @@
   .safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════════
+ * Mobile Touch Targets - Minimum 44px for accessibility
+ * ═══════════════════════════════════════════════════════════════════════════════ */
+@media (pointer: coarse), (max-width: 768px) {
+  /* Ensure all interactive elements have minimum 44px touch target */
+  button, .btn, [role="button"],
+  a.aak-sr-item, .news-chip, .news-src,
+  .aak-nav-tab, .dpd-tab, .aak-segment-btn {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Increase padding on small touch targets */
+  .aak-nav-tab { padding: 10px 14px; }
+  .news-chip { padding: 10px 16px; }
+  .news-src { padding: 8px 14px; }
+  
+  /* Form inputs - larger touch areas */
+  input[type="text"], input[type="search"], input[type="email"],
+  input[type="password"], input[type="number"],
+  select, textarea {
+    min-height: 44px;
+    font-size: 16px; /* Prevent iOS zoom on focus */
+  }
+  
+  /* Close buttons and small icons */
+  .aak-close-btn, .modal-close, .drawer-close {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Cards and list items - full width tap targets */
+  .news-card, .job-card, .ss-card, .pc-card,
+  .vn-card, .radio-card {
+    position: relative;
+  }
+  
+  /* Radio player controls */
+  .rp-controls button {
+    min-width: 48px;
+    min-height: 48px;
+  }
+  
+  /* Tab bar items */
+  .aak-tab-item {
+    min-height: 44px;
+    padding: 8px 12px;
+  }
+  
+  /* Menu links in navigation */
+  .nav-link {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+  
+  /* Checkbox and radio - larger touch targets */
+  input[type="checkbox"], input[type="radio"] {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+/* ─── SMOOTH SCROLLING ──────────────────────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .skeleton, .loading-spinner {
+    animation: none !important;
+  }
+}
+
+/* ─── FOCUS VISIBLE FOR KEYBOARD NAVIGATION ────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid #0d9488;
+  outline-offset: 2px;
+}
+
+/* Remove outline for mouse users, keep for keyboard */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Skip link for keyboard accessibility */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: #0d9488;
+  color: #fff;
+  padding: 8px 16px;
+  text-decoration: none;
+  z-index: 10000;
+  border-radius: 0 0 8px 0;
+}
+.skip-link:focus {
+  top: 0;
+}
