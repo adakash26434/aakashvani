@@ -1149,6 +1149,42 @@ function ensureCabinetDecisionsTable(): void {
     $done = true;
 }
 
+function ensureGovernmentTendersTable(): void {
+    static $done = false;
+    if ($done) return;
+    $ai = dbAI();
+    db()->exec("CREATE TABLE IF NOT EXISTS government_tenders (
+        id                  $ai,
+        title               VARCHAR(500) NOT NULL,
+        title_ne            VARCHAR(500) NOT NULL,
+        ministry            VARCHAR(500) NOT NULL,
+        ministry_ne         VARCHAR(500) NOT NULL,
+        department          VARCHAR(500) NOT NULL,
+        department_ne       VARCHAR(500) NOT NULL,
+        category            VARCHAR(100) NOT NULL,
+        category_ne         VARCHAR(100) NOT NULL,
+        location            VARCHAR(200) NOT NULL,
+        location_ne         VARCHAR(200) NOT NULL,
+        deadline            DATE NOT NULL,
+        deadline_ne         VARCHAR(50) NOT NULL,
+        estimated_cost      VARCHAR(100) NOT NULL,
+        status              VARCHAR(50) NOT NULL,
+        status_ne           VARCHAR(50) NOT NULL,
+        published_date      DATE NOT NULL,
+        published_date_ne   VARCHAR(50) NOT NULL,
+        description         TEXT,
+        description_ne      TEXT,
+        documents           TEXT,
+        link                VARCHAR(500) NOT NULL,
+        created_at          DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        updated_at          DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+    )" . dbCharset());
+    dbIndex('idx_tenders_deadline', 'government_tenders', 'deadline');
+    dbIndex('idx_tenders_category', 'government_tenders', 'category');
+    dbIndex('idx_tenders_ministry', 'government_tenders', 'ministry');
+    $done = true;
+}
+
 function getPublishedGuides(?string $category = null, int $limit = 20, int $offset = 0): array {
     ensureGuideTable();
     $sql = 'SELECT * FROM ai_guides WHERE is_published = 1';

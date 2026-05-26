@@ -16,6 +16,7 @@ function ensureAll(): void {
     ensureGuideTable();
     ensureContactDirectoryTable();
     ensureCabinetDecisionsTable();
+    ensureGovernmentTendersTable();
 }
 ensureAll();
 
@@ -128,7 +129,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $db->prepare('UPDATE cabinet_decisions SET date=?,date_np=?,title=?,title_ne=?,category=?,category_ne=?,summary=?,summary_ne=?,details=?,details_ne=? WHERE id=?')->execute([$_POST['date'],$_POST['date_np'],$_POST['title'],$_POST['title_ne'],$_POST['category'],$_POST['category_ne'],$_POST['summary'],$_POST['summary_ne'],$_POST['details'],$_POST['details_ne'],(int)$_POST['id']]);
         flash('Decision updated.'); header('Location: /admin/dashboard.php?tab=decisions'); exit;
     }
-    if ($action === 'delete_decision') { $db->prepare('DELETE FROM cabinet_decisions WHERE id=?')->execute([(int)$_POST['id']]); flash('Deleted.'); header('Location: /admin/dashboard.php?tab=decisions'); exit; }
+    if ($action === 'delete_decision') { $db->prepare('DELETE FROM cabinet_decisions WHERE id=?')->execute([(int)$_POST['id']]); flash('Deleted.'); header('Location: /admin/dashboard.php?tab=decisions'); exit;
+    }
+
+    // ── Government Tenders ───────────────────────────────────────────────────────
+    if ($action === 'add_tender') {
+        $db->prepare('INSERT INTO government_tenders (title,title_ne,ministry,ministry_ne,department,department_ne,category,category_ne,location,location_ne,deadline,deadline_ne,estimated_cost,status,status_ne,published_date,published_date_ne,description,description_ne,documents,link) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)')->execute([$_POST['title'],$_POST['title_ne'],$_POST['ministry'],$_POST['ministry_ne'],$_POST['department'],$_POST['department_ne'],$_POST['category'],$_POST['category_ne'],$_POST['location'],$_POST['location_ne'],$_POST['deadline'],$_POST['deadline_ne'],$_POST['estimated_cost'],$_POST['status'],$_POST['status_ne'],$_POST['published_date'],$_POST['published_date_ne'],$_POST['description'],$_POST['description_ne'],$_POST['documents'],$_POST['link']]);
+        flash('Tender added.'); header('Location: /admin/dashboard.php?tab=tenders'); exit;
+    }
+    if ($action === 'edit_tender') {
+        $db->prepare('UPDATE government_tenders SET title=?,title_ne=?,ministry=?,ministry_ne=?,department=?,department_ne=?,category=?,category_ne=?,location=?,location_ne=?,deadline=?,deadline_ne=?,estimated_cost=?,status=?,status_ne=?,published_date=?,published_date_ne=?,description=?,description_ne=?,documents=?,link=? WHERE id=?')->execute([$_POST['title'],$_POST['title_ne'],$_POST['ministry'],$_POST['ministry_ne'],$_POST['department'],$_POST['department_ne'],$_POST['category'],$_POST['category_ne'],$_POST['location'],$_POST['location_ne'],$_POST['deadline'],$_POST['deadline_ne'],$_POST['estimated_cost'],$_POST['status'],$_POST['status_ne'],$_POST['published_date'],$_POST['published_date_ne'],$_POST['description'],$_POST['description_ne'],$_POST['documents'],$_POST['link'],(int)$_POST['id']]);
+        flash('Tender updated.'); header('Location: /admin/dashboard.php?tab=tenders'); exit;
+    }
+    if ($action === 'delete_tender') { $db->prepare('DELETE FROM government_tenders WHERE id=?')->execute([(int)$_POST['id']]); flash('Deleted.'); header('Location: /admin/dashboard.php?tab=tenders'); exit;
+    }
 }
 
 // ─── Load Data ────────────────────────────────────────────────────────────────
@@ -141,6 +155,7 @@ $guides      = $db->query('SELECT id,title,category,icon,level,is_published,crea
 $alertItems  = $db->query('SELECT * FROM alerts ORDER BY created_at DESC LIMIT 200')->fetchAll();
 $contacts    = $db->query('SELECT * FROM contact_directory ORDER BY name ASC')->fetchAll();
 $decisions   = $db->query('SELECT * FROM cabinet_decisions ORDER BY date DESC')->fetchAll();
+$tenders     = $db->query('SELECT * FROM government_tenders ORDER BY deadline DESC')->fetchAll();
 $unread      = count(array_filter($messages, fn($m) => !$m['is_read']));
 $activeAlerts = count(array_filter($alertItems, fn($a) => $a['is_active']));
 
@@ -152,6 +167,7 @@ $editGuide  = isset($_GET['edit_guide'])  ? $db->query('SELECT * FROM ai_guides 
 $editAlert  = isset($_GET['edit_alert'])  ? $db->query('SELECT * FROM alerts WHERE id='.(int)$_GET['edit_alert'])->fetch() : null;
 $editContact = isset($_GET['edit_contact']) ? $db->query('SELECT * FROM contact_directory WHERE id='.(int)$_GET['edit_contact'])->fetch() : null;
 $editDecision = isset($_GET['edit_decision']) ? $db->query('SELECT * FROM cabinet_decisions WHERE id='.(int)$_GET['edit_decision'])->fetch() : null;
+$editTender = isset($_GET['edit_tender']) ? $db->query('SELECT * FROM government_tenders WHERE id='.(int)$_GET['edit_tender'])->fetch() : null;
 
 // ─── Field Helpers ────────────────────────────────────────────────────────────
 function adField(string $name, string $label, string $type = 'text', $value = '', string $ph = '', string $hint = ''): void {
@@ -241,6 +257,7 @@ $navItems = [
   ['guides','bot','AI Guides',count($guides)],
   ['contacts','phone','Contact Directory',count($contacts)],
   ['decisions','scroll-text','Cabinet Decisions',count($decisions)],
+  ['tenders','file-text','Government Tenders',count($tenders)],
   ['messages','message-circle','Messages',$unread>0?"$unread unread":''],
 ];
 ?>
@@ -340,6 +357,7 @@ $navItems = [
         ['bot','Guides',count($guides),'guides'],
         ['phone','Contacts',count($contacts),'contacts'],
         ['scroll-text','Decisions',count($decisions),'decisions'],
+        ['file-text','Tenders',count($tenders),'tenders'],
         ['message-circle','Messages',$unread?:count($messages),'messages'],
       ] as [$ico,$label,$val,$key]): ?>
       <a href="?tab=<?= $key ?>" class="stat <?= $tab===$key?'active':'' ?>">
@@ -851,6 +869,57 @@ $navItems = [
       </form>
     </div>
     <?php endif; ?>
+
+    <!-- ═══════════ GOVERNMENT TENDERS TAB ════════════════════════════════════ -->
+    <?php elseif ($tab === 'tenders'): ?>
+    <div class="flex justify-between items-center mb-5">
+      <h2 class="section-title"><i data-lucide="file-text" class="ic"></i> Government Tenders</h2>
+      <button onclick="document.getElementById('modal-add-tender').classList.add('open')" class="px-4 py-2 text-xs font-bold btn-p" style="border-radius:8px;"><i data-lucide="plus" class="ic-sm"></i> New Tender</button>
+    </div>
+    <div class="space-y-3">
+      <?php foreach ($tenders as $t): ?>
+      <div class="bg-[#ffffff] border border-[#e2e8f0] rounded p-4 flex items-start gap-4">
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2 mb-1 flex-wrap">
+            <span class="text-[10px] border border-[#e2e8f0] px-2 py-0.5 rounded text-[#64748b] font-mono uppercase"><?= htmlspecialchars($t['category']) ?></span>
+            <span class="text-[10px] border border-[#e2e8f0] px-2 py-0.5 rounded text-[#64748b] font-mono uppercase"><?= htmlspecialchars($t['ministry']) ?></span>
+            <span class="text-[10px] text-[#64748b] font-mono"><?= htmlspecialchars($t['deadline_ne']) ?></span>
+          </div>
+          <h3 class="font-bold text-[#0f172a] text-sm"><?= htmlspecialchars($t['title']) ?> <span class="text-[#64748b] ne"><?= htmlspecialchars($t['title_ne']) ?></span></h3>
+          <p class="text-xs text-[#64748b] mt-1"><?= htmlspecialchars($t['estimated_cost']) ?> • <?= htmlspecialchars($t['location']) ?></p>
+        </div>
+        <div class="flex gap-2 shrink-0">
+          <a href="?tab=tenders&edit_tender=<?= $t['id'] ?>" class="text-xs text-[#64748b] hover:text-[#14b8a6] font-mono">Edit</a>
+          <form method="POST" onsubmit="return confirm('Delete?')"><input type="hidden" name="action" value="delete_tender"/><input type="hidden" name="id" value="<?= $t['id'] ?>"/><button type="submit" class="text-xs text-[#ef4444] font-mono">Del</button></form>
+        </div>
+      </div>
+      <?php endforeach; ?>
+    </div>
+    <?php if ($editTender): ?>
+    <div class="mt-6 bg-[#ffffff] border border-[#0f766e]/40 rounded p-6">
+      <h3 class="text-base font-bold uppercase tracking-wider text-[#14b8a6] mb-5">Editing: <?= htmlspecialchars($editTender['title']) ?></h3>
+      <form method="POST" class="space-y-4">
+        <input type="hidden" name="action" value="edit_tender"/><input type="hidden" name="id" value="<?= $editTender['id'] ?>"/>
+        <div class="grid grid-cols-2 gap-4">
+          <?php adField('title','Title (English)','text',$editTender['title']); adField('title_ne','Title (Nepali)','text',$editTender['title_ne']); ?>
+          <?php adField('ministry','Ministry (English)','text',$editTender['ministry']); adField('ministry_ne','Ministry (Nepali)','text',$editTender['ministry_ne']); ?>
+          <?php adField('department','Department (English)','text',$editTender['department']); adField('department_ne','Department (Nepali)','text',$editTender['department_ne']); ?>
+          <?php adField('category','Category (English)','text',$editTender['category']); adField('category_ne','Category (Nepali)','text',$editTender['category_ne']); ?>
+          <?php adField('location','Location (English)','text',$editTender['location']); adField('location_ne','Location (Nepali)','text',$editTender['location_ne']); ?>
+          <?php adField('deadline','Deadline (YYYY-MM-DD)','date',$editTender['deadline']); adField('deadline_ne','Deadline (Nepali)','text',$editTender['deadline_ne']); ?>
+          <?php adField('published_date','Published Date (YYYY-MM-DD)','date',$editTender['published_date']); adField('published_date_ne','Published Date (Nepali)','text',$editTender['published_date_ne']); ?>
+        </div>
+        <?php adField('estimated_cost','Estimated Cost','text',$editTender['estimated_cost']); ?>
+        <?php adField('status','Status (English)','text',$editTender['status']); ?>
+        <?php adField('status_ne','Status (Nepali)','text',$editTender['status_ne']); ?>
+        <?php adField('description','Description (English)','textarea',$editTender['description']??''); ?>
+        <?php adField('description_ne','Description (Nepali)','textarea',$editTender['description_ne']??''); ?>
+        <?php adField('documents','Documents (comma separated)','text',$editTender['documents']??''); ?>
+        <?php adField('link','Link','text',$editTender['link']); ?>
+        <div class="flex gap-3"><button type="submit" class="flex-1 py-2.5 btn-p rounded font-bold uppercase text-sm">Update</button><a href="?tab=tenders" class="flex-1 py-2.5 text-center btn-o rounded font-bold uppercase text-sm">Cancel</a></div>
+      </form>
+    </div>
+    <?php endif; ?>
     <?php endif; ?>
 
   </div><!-- /max-w -->
@@ -993,6 +1062,30 @@ $navItems = [
     <?php adField('details','Details (English, JSON array)','textarea','[]'); ?>
     <?php adField('details_ne','Details (Nepali, JSON array)','textarea','[]'); ?>
     <button type="submit" class="w-full py-2.5 btn-p rounded font-bold uppercase text-sm">Add Decision</button>
+  </form>
+</div></div>
+
+<!-- Add Tender -->
+<div id="modal-add-tender" class="modal"><div class="bg-[#ffffff] border border-[#e2e8f0] rounded w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6">
+  <div class="flex justify-between items-center mb-5"><h3 class="font-bold uppercase tracking-wider text-[#0f172a]">New Government Tender</h3><button onclick="this.closest('.modal').classList.remove('open')" class="text-[#64748b] text-2xl leading-none">&times;</button></div>
+  <form method="POST" class="space-y-4"><input type="hidden" name="action" value="add_tender"/>
+    <div class="grid grid-cols-2 gap-4">
+      <?php adField('title','Title (English)','text',''); adField('title_ne','Title (Nepali)','text',''); ?>
+      <?php adField('ministry','Ministry (English)','text',''); adField('ministry_ne','Ministry (Nepali)','text',''); ?>
+      <?php adField('department','Department (English)','text',''); adField('department_ne','Department (Nepali)','text',''); ?>
+      <?php adField('category','Category (English)','text','construction'); adField('category_ne','Category (Nepali)','text','निर्माण'); ?>
+      <?php adField('location','Location (English)','text',''); adField('location_ne','Location (Nepali)','text',''); ?>
+      <?php adField('deadline','Deadline (YYYY-MM-DD)','date',''); adField('deadline_ne','Deadline (Nepali)','text',''); ?>
+      <?php adField('published_date','Published Date (YYYY-MM-DD)','date',''); adField('published_date_ne','Published Date (Nepali)','text',''); ?>
+    </div>
+    <?php adField('estimated_cost','Estimated Cost','text',''); ?>
+    <?php adField('status','Status (English)','text','Open'); ?>
+    <?php adField('status_ne','Status (Nepali)','text','खुला'); ?>
+    <?php adField('description','Description (English)','textarea',''); ?>
+    <?php adField('description_ne','Description (Nepali)','textarea',''); ?>
+    <?php adField('documents','Documents (comma separated)','text',''); ?>
+    <?php adField('link','Link','text',''); ?>
+    <button type="submit" class="w-full py-2.5 btn-p rounded font-bold uppercase text-sm">Add Tender</button>
   </form>
 </div></div>
 
