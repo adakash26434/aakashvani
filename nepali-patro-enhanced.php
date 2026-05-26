@@ -264,10 +264,69 @@ $selectedSpecial = getSpecialDay($selectedDate, $currentMonth, $selectedPanchang
   <!-- Main Calendar Card -->
   <div class="bg-gradient-to-br from-teal-600 to-emerald-700 rounded-3xl p-6 text-white shadow-xl shadow-teal-200 mb-6">
     
-    <!-- Date Display -->
-    <div class="text-center mb-6">
-      <div class="text-6xl font-bold ne"><?= $selectedDate ?> <?= $nepaliMonths[$currentMonth] ?></div>
-      <div class="text-xl text-teal-100 ne"><?= $weekDays[date('l')] ?> • <?= $currentYear ?> BS</div>
+    <!-- Month Navigation -->
+    <div class="flex justify-between items-center mb-6">
+      <a href="?month=<?= $currentMonth == 1 ? 12 : $currentMonth - 1 ?>&year=<?= $currentMonth == 1 ? $currentYear - 1 : $currentYear ?>&date=<?= $selectedDate ?>" class="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors">
+        <i data-lucide="chevron-left" class="w-6 h-6"></i>
+      </a>
+      <div class="text-center">
+        <div class="text-2xl font-bold ne"><?= $nepaliMonths[$currentMonth] ?> <?= $currentYear ?></div>
+        <a href="?month=<?= $todayBS['month'] ?>&year=<?= $todayBS['year'] ?>&date=<?= $todayBS['day'] ?>" class="text-sm text-teal-200 hover:text-white underline">आज</a>
+      </div>
+      <a href="?month=<?= $currentMonth == 12 ? 1 : $currentMonth + 1 ?>&year=<?= $currentMonth == 12 ? $currentYear + 1 : $currentYear ?>&date=<?= $selectedDate ?>" class="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors">
+        <i data-lucide="chevron-right" class="w-6 h-6"></i>
+      </a>
+    </div>
+
+    <!-- Calendar Grid -->
+    <div class="bg-white/10 rounded-2xl p-4 mb-6">
+      <!-- Weekday Headers -->
+      <div class="grid grid-cols-7 gap-1 mb-2">
+        <?php foreach(['आइत','सोम','मंगल','बुध','बिहि','शुक्र','शनि'] as $day): ?>
+          <div class="text-center text-xs font-semibold text-teal-100 py-2"><?= $day ?></div>
+        <?php endforeach; ?>
+      </div>
+      
+      <!-- Days Grid -->
+      <div class="grid grid-cols-7 gap-1">
+        <?php
+        // Get days in month (simplified - Nepali months vary)
+        $daysInMonth = [0,31,32,31,32,31,30,30,30,29,30,29,30,30][$currentMonth] ?? 30;
+        
+        // Start day offset (simplified)
+        $startDay = ($currentMonth + $currentYear) % 7;
+        
+        // Empty cells before first day
+        for($i = 0; $i < $startDay; $i++): ?>
+          <div class="aspect-square"></div>
+        <?php endfor;
+        
+        // Days
+        for($day = 1; $day <= $daysInMonth; $day++):
+          $isSelected = $day == $selectedDate;
+          $isToday = $day == $todayBS['day'] && $currentMonth == $todayBS['month'] && $currentYear == $todayBS['year'];
+          $dayPanchang = calculatePanchang($day, $currentMonth, $currentYear);
+          $dayFestival = getFestivals($currentMonth, $day);
+        ?>
+          <a href="?month=<?= $currentMonth ?>&year=<?= $currentYear ?>&date=<?= $day ?>" 
+             class="aspect-square rounded-lg flex flex-col items-center justify-center transition-all
+                    <?= $isSelected ? 'bg-white text-teal-700 font-bold' : 'hover:bg-white/20' ?>
+                    <?= $isToday ? 'ring-2 ring-amber-300' : '' ?>">
+            <span class="text-sm"><?= $day ?></span>
+            <?php if($dayFestival): ?>
+              <span class="w-1.5 h-1.5 rounded-full bg-rose-400 mt-1"></span>
+            <?php elseif($dayPanchang['tithi'] == 'एकादशी' || $dayPanchang['tithi'] == 'पूर्णिमा/अमावस्या'): ?>
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-400 mt-1"></span>
+            <?php endif; ?>
+          </a>
+        <?php endfor; ?>
+      </div>
+    </div>
+
+    <!-- Selected Date Display -->
+    <div class="text-center mb-4">
+      <div class="text-5xl font-bold ne"><?= $selectedDate ?></div>
+      <div class="text-lg text-teal-100 ne"><?= $weekDays[date('l')] ?></div>
       <div class="mt-2 inline-flex items-center gap-2 bg-white/20 px-4 py-2 rounded-full">
         <i data-lucide="calendar" class="w-4 h-4"></i>
         <span><?= date('d F Y') ?> AD</span>
@@ -275,39 +334,28 @@ $selectedSpecial = getSpecialDay($selectedDate, $currentMonth, $selectedPanchang
     </div>
 
     <!-- Sunrise/Sunset -->
-    <div class="flex justify-center gap-6 mb-6">
-      <div class="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-xl">
-        <i data-lucide="sunrise" class="w-5 h-5 text-amber-300"></i>
-        <div>
-          <div class="text-xs text-teal-100 ne">सूर्योदय</div>
+    <div class="flex justify-center gap-4">
+      <div class="flex items-center gap-2 bg-white/10 px-3 py-2 rounded-xl">
+        <i data-lucide="sunrise" class="w-4 h-4 text-amber-300"></i>
+        <div class="text-xs">
+          <div class="text-teal-100 ne">सूर्योदय</div>
           <div class="font-semibold">5:08 AM</div>
         </div>
       </div>
-      <div class="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-xl">
-        <i data-lucide="sunset" class="w-5 h-5 text-orange-300"></i>
-        <div>
-          <div class="text-xs text-teal-100 ne">सूर्यास्त</div>
+      <div class="flex items-center gap-2 bg-white/10 px-3 py-2 rounded-xl">
+        <i data-lucide="sunset" class="w-4 h-4 text-orange-300"></i>
+        <div class="text-xs">
+          <div class="text-teal-100 ne">सूर्यास्त</div>
           <div class="font-semibold">6:53 PM</div>
         </div>
       </div>
-      <div class="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-xl">
-        <i data-lucide="moon" class="w-5 h-5 text-yellow-300"></i>
-        <div>
-          <div class="text-xs text-teal-100 ne">चन्द्रमा</div>
+      <div class="flex items-center gap-2 bg-white/10 px-3 py-2 rounded-xl">
+        <i data-lucide="moon" class="w-4 h-4 text-yellow-300"></i>
+        <div class="text-xs">
+          <div class="text-teal-100 ne">चन्द्रमा</div>
           <div class="font-semibold"><?= $selectedPanchang['paksha'] ?></div>
         </div>
       </div>
-    </div>
-
-    <!-- Navigation -->
-    <div class="flex justify-between items-center">
-      <a href="?month=<?= $currentMonth == 1 ? 12 : $currentMonth - 1 ?>&year=<?= $currentMonth == 1 ? $currentYear - 1 : $currentYear ?>" class="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors">
-        <i data-lucide="chevron-left" class="w-6 h-6"></i>
-      </a>
-      <div class="text-lg font-semibold ne"><?= $nepaliMonths[$currentMonth] ?> <?= $currentYear ?></div>
-      <a href="?month=<?= $currentMonth == 12 ? 1 : $currentMonth + 1 ?>&year=<?= $currentMonth == 12 ? $currentYear + 1 : $currentYear ?>" class="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors">
-        <i data-lucide="chevron-right" class="w-6 h-6"></i>
-      </a>
     </div>
   </div>
 
