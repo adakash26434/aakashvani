@@ -142,6 +142,91 @@ function fetchUrl(string $url, int $timeout = 10, array $headers = []): ?string 
     return $result !== false ? $result : null;
 }
 
+// ─── Security Headers ─────────────────────────────────────────────────────────
+/**
+ * Send recommended security headers
+ */
+function sendSecurityHeaders(): void {
+    // Prevent XSS attacks
+    header("X-Content-Type-Options: nosniff");
+    header("X-Frame-Options: SAMEORIGIN");
+    header("X-XSS-Protection: 1; mode=block");
+    header("Referrer-Policy: strict-origin-when-cross-origin");
+    
+    // Content Security Policy (flexible for now)
+    $csp = "default-src 'self'; " .
+           "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com https://cdn.jsdelivr.net; " .
+           "style-src 'self' 'unsafe-inline' https://unpkg.com https://fonts.googleapis.com; " .
+           "img-src 'self' data: https: blob:; " .
+           "font-src 'self' https://fonts.gstatic.com; " .
+           "connect-src 'self' https:; " .
+           "frame-ancestors 'self';";
+    header("Content-Security-Policy: " . $csp);
+    
+    // Permissions Policy
+    header("Permissions-Policy: geolocation=(self), microphone=(), camera=()");
+}
+
+// ─── Rate Limiting ────────────────────────────────────────────────────────────
+/**
+ * Simple rate limiting using file-based storage
+ * Returns true if allowed, false if rate limited
+ */
+function checkRateLimit(string $key, int $maxRequests = 60, int $windowSeconds = 60): bool {
+    $dir = __DIR__ . '/data/ratelimit/';
+    if (!is_dir($dir)) @mkdir($dir, 0755, true);
+    
+    $file = $dir . md5($key) . '.json';
+    $now = time();
+    $windowStart = $now - $windowSeconds;
+    
+    $requests = [];
+    if (file_exists($file)) {
+        $data = @json_decode(@file_get_contents($file), true);
+        if (is_array($data)) {
+            // Keep only requests within window
+            $requests = array_filter($data, fn($t) => $t > $windowStart);
+        }
+    }
+    
+    if (count($requests) >= $maxRequests) {
+        return false; // Rate limited
+    }
+    
+    $requests[] = $now;
+    @file_put_contents($file, json_encode(array_slice($requests, -$maxRequests)), LOCK_EX);
+    
+    return true;
+}
+
+/**
+ * Get rate limit status for display
+ */
+function getRateLimitStatus(string $key, int $maxRequests = 60, int $windowSeconds = 60): array {
+    $dir = __DIR__ . '/data/ratelimit/';
+    $file = $dir . md5($key) . '.json';
+    $now = time();
+    $windowStart = $now - $windowSeconds;
+    
+    $requests = [];
+    if (file_exists($file)) {
+        $data = @json_decode(@file_get_contents($file), true);
+        if (is_array($data)) {
+            $requests = array_filter($data, fn($t) => $t > $windowStart);
+        }
+    }
+    
+    $remaining = max(0, $maxRequests - count($requests));
+    $resetAt = count($requests) > 0 ? min($requests) + $windowSeconds : $now;
+    
+    return [
+        'limit' => $maxRequests,
+        'remaining' => $remaining,
+        'reset' => $resetAt,
+        'window' => $windowSeconds
+    ];
+}
+
 /**
  * Market source badge helper for utilities.php
  */
