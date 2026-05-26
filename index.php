@@ -122,7 +122,7 @@ window.__chips = {
       <a href="/news.php" onclick="return openInDetailPane('/news.php');" class="hero-icon-btn bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/20 rounded-xl py-2 text-center text-[11px] font-semibold flex flex-col items-center gap-1 transition-all" data-url="/news.php">
         <i data-lucide="newspaper" class="w-4 h-4"></i><span class="ne"><?= $t('समाचार','News') ?></span>
       </a>
-      <a href="/nepali-patro-enhanced.php" onclick="return openInDetailPane('/nepali-patro-enhanced.php');" class="hero-icon-btn bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/20 rounded-xl py-2 text-center text-[11px] font-semibold flex flex-col items-center gap-1 transition-all" data-url="/nepali-patro-enhanced.php">
+      <a href="/nepali-patro.php" onclick="return openInDetailPane('/nepali-patro.php');" class="hero-icon-btn bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/20 rounded-xl py-2 text-center text-[11px] font-semibold flex flex-col items-center gap-1 transition-all" data-url="/nepali-patro.php">
         <i data-lucide="calendar-days" class="w-4 h-4"></i><span class="ne"><?= $t('पात्रो','Patro') ?></span>
       </a>
       <a href="/rashifal.php" onclick="return openInDetailPane('/rashifal.php');" class="hero-icon-btn bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/20 rounded-xl py-2 text-center text-[11px] font-semibold flex flex-col items-center gap-1 transition-all" data-url="/rashifal.php">
