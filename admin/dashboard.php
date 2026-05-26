@@ -1,6 +1,7 @@
 <?php
 require_once dirname(__DIR__) . '/config.php';
 require_once dirname(__DIR__) . '/functions.php';
+require_once dirname(__DIR__) . '/includes/sync-functions.php';
 requireAdmin();
 require_once dirname(__DIR__) . '/includes/bs-date.php';
 
@@ -142,6 +143,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         flash('Tender updated.'); header('Location: /admin/dashboard.php?tab=tenders'); exit;
     }
     if ($action === 'delete_tender') { $db->prepare('DELETE FROM government_tenders WHERE id=?')->execute([(int)$_POST['id']]); flash('Deleted.'); header('Location: /admin/dashboard.php?tab=tenders'); exit;
+    }
+
+    // ── Sync All ───────────────────────────────────────────────────────────────
+    if ($action === 'sync_all') {
+        $results = syncAll();
+        $success = count(array_filter($results));
+        $total = count($results);
+        flash("Synced $success/$total sources successfully."); header('Location: /admin/dashboard.php'); exit;
     }
 }
 
