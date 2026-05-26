@@ -167,8 +167,81 @@ If you want further enhancements:
 
 1. **Replace remaining inline styles** in other pages using the new CSS classes
 2. **Add category filters** to home page news sections
-3. **Implement service worker** for offline reading of full articles
-4. **Add dark mode** toggle using CSS variables
+3. **Add dark mode** toggle using CSS variables
+
+---
+
+## Additional Improvements (May 26, 2026 - Evening)
+
+### 7. Admin Cache Clear Utility
+**File:** `/admin/clear-cache.php`
+
+**Features:**
+- One-click cache clearing for all APIs
+- Shows cache statistics (file count, total size)
+- Safe confirmation before clearing
+- Clears: news, market, weather, alerts, cricket, rashifal caches
+
+---
+
+### 8. Accessibility (A11y) Improvements
+**Files:** Multiple
+
+**Changes:**
+- Search widget: Added `aria-label`, `aria-hidden` for decorative icons
+- News images: Proper `alt` text with article titles
+- Added `.sr-only` class for screen reader only content
+- Skip link CSS for keyboard navigation
+- Focus-visible styles for keyboard users
+
+---
+
+### 9. Mobile Touch Target Improvements
+**File:** `/assets/css/global.css`
+
+**Changes:**
+- Minimum 44px touch targets for all interactive elements
+- 16px font size on inputs (prevents iOS zoom)
+- Larger radio player controls (48px)
+- Larger checkboxes (24px)
+- Full-width tap targets for cards
+
+---
+
+### 10. Loading States & Animations
+**File:** `/assets/css/global.css`
+
+**Added:**
+- `.skeleton` classes with shimmer animation
+- `.loading-spinner` with rotate animation
+- `.loading-container` for centered loading states
+- `prefers-reduced-motion` support for accessibility
+
+---
+
+### 11. API Helper Functions
+**File:** `/functions.php`
+
+**Added:**
+- `apiSuccess()` - Consistent JSON success responses
+- `apiError()` - Consistent JSON error responses  
+- `fetchUrl()` - URL fetching with timeout handling
+- `sendSecurityHeaders()` - Security headers (XSS, CSP, etc.)
+- `checkRateLimit()` - Rate limiting protection
+- `getRateLimitStatus()` - Rate limit info for display
+
+---
+
+### 12. Security Improvements
+**File:** `/functions.php`
+
+**Added Headers:**
+- `X-Content-Type-Options: nosniff`
+- `X-Frame-Options: SAMEORIGIN`
+- `X-XSS-Protection: 1; mode=block`
+- `Referrer-Policy: strict-origin-when-cross-origin`
+- `Content-Security-Policy` (flexible CSP)
+- `Permissions-Policy` (geolocation, microphone, camera)
 
 ---
 
