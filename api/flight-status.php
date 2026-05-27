@@ -20,6 +20,16 @@ $airports = [
     'VNKT' => ['name' => 'Tribhuvan International', 'city' => 'Kathmandu', 'code' => 'KTM'],
     'VNKL' => ['name' => 'Pokhara International', 'city' => 'Pokhara', 'code' => 'PKR'],
     'VNRC' => ['name' => 'Gautam Buddha International', 'city' => 'Bhairahawa', 'code' => 'BWA'],
+    'VNBP' => ['name' => 'Bhairahawa Airport', 'city' => 'Bhairahawa', 'code' => 'BWA'],
+    'VNSK' => ['name' => 'Simara Airport', 'city' => 'Simara', 'code' => 'SIF'],
+    'VNPK' => ['name' => 'Pokhara Airport', 'city' => 'Pokhara', 'code' => 'PKR'],
+    'VNJP' => ['name' => 'Janakpur Airport', 'city' => 'Janakpur', 'code' => 'JRK'],
+    'VNTJ' => ['name' => 'Taplejung Airport', 'city' => 'Taplejung', 'code' => 'TPJ'],
+    'VNPL' => ['name' => 'Palangtar Airport', 'city' => 'Palangtar', 'code' => 'GLR'],
+    'VNSR' => ['name' => 'Surkhet Airport', 'city' => 'Surkhet', 'code' => 'SKH'],
+    'VNDC' => ['name' => 'Dhangadhi Airport', 'city' => 'Dhangadhi', 'code' => 'DHI'],
+    'VNBK' => ['name' => 'Bajhang Airport', 'city' => 'Bajhang', 'code' => 'BJH'],
+    'VNMT' => ['name' => 'Mountain Airport', 'city' => 'Mountain', 'code' => 'MNT'],
 ];
 
 $airportInfo = $airports[$airport] ?? $airports['VNKT'];
@@ -103,41 +113,75 @@ function fetchFlightAwareFlights(string $airport, string $type, string $apiKey):
 }
 
 function getSampleFlights(string $airport, string $type): array {
-    $airlines = ['Nepal Airlines', 'Buddha Air', 'Yeti Airlines', 'Himalaya Airlines', 'Shree Airlines'];
-    $destinations = ['DEL', 'BOM', 'DXB', 'SIN', 'BKK', 'KUL', 'HKG', 'DOH', 'ISB', 'DAC'];
-    $origins = ['DEL', 'BOM', 'DXB', 'SIN', 'BKK', 'KUL', 'HKG', 'DOH', 'ISB', 'DAC'];
-    $statuses = ['On Time', 'Delayed', 'Departed', 'En Route', 'Landed', 'Cancelled'];
+    // Nepal domestic airports
+    $domesticAirports = ['VNKT', 'VNKL', 'VNRC', 'VNBP', 'VNSK', 'VNPK', 'VNJP', 'VNTJ', 'VNPL', 'VNSR', 'VNDC', 'VNBK'];
+    
+    // International destinations
+    $internationalDestinations = ['DEL', 'BOM', 'DXB', 'SIN', 'BKK', 'KUL', 'HKG', 'DOH', 'ISB', 'DAC', 'CMB', 'KTM'];
+    
+    // Domestic routes for major airports
+    $domesticRoutes = [
+        'VNKT' => ['VNKL', 'VNRC', 'VNSK', 'VNPK', 'VNJP', 'VNSR', 'VNDC'],
+        'VNKL' => ['VNKT', 'VNRC', 'VNSK', 'VNSR'],
+        'VNRC' => ['VNKT', 'VNKL', 'VNSK'],
+        'VNSK' => ['VNKT', 'VNKL', 'VNRC'],
+    ];
+    
+    $airlines = ['Nepal Airlines', 'Buddha Air', 'Yeti Airlines', 'Himalaya Airlines', 'Shree Airlines', 'Simrik Airlines', 'Saurya Airlines'];
+    $statuses = ['On Time', 'Delayed', 'Departed', 'En Route', 'Landed', 'Cancelled', 'Boarding', 'Gate Open'];
     
     $flights = [];
-    $count = 10;
+    $count = 15;
     
     for ($i = 0; $i < $count; $i++) {
         $airline = $airlines[array_rand($airlines)];
         $flightNum = rand(100, 999);
         $flight = $airline . ' ' . $flightNum;
         
+        // Mix of domestic and international flights (60% domestic, 40% international)
+        $isDomestic = (rand(1, 10) <= 6);
+        
         if ($type === 'departures') {
-            $dest = $destinations[array_rand($destinations)];
+            if ($isDomestic && isset($domesticRoutes[$airport])) {
+                $dest = $domesticRoutes[$airport][array_rand($domesticRoutes[$airport])];
+            } elseif ($isDomestic) {
+                $dest = $domesticAirports[array_rand($domesticAirports)];
+            } else {
+                $dest = $internationalDestinations[array_rand($internationalDestinations)];
+            }
+            
             $flights[] = [
                 'flight' => $flight,
                 'airline' => $airline,
                 'destination' => $dest,
                 'origin' => $airport,
-                'scheduled' => date('H:i', strtotime('+' . ($i * 15) . ' minutes')),
+                'scheduled' => date('H:i', strtotime('+' . ($i * 12) . ' minutes')),
                 'status' => $statuses[array_rand($statuses)],
             ];
         } else {
-            $orig = $origins[array_rand($origins)];
+            if ($isDomestic && isset($domesticRoutes[$airport])) {
+                $orig = $domesticRoutes[$airport][array_rand($domesticRoutes[$airport])];
+            } elseif ($isDomestic) {
+                $orig = $domesticAirports[array_rand($domesticAirports)];
+            } else {
+                $orig = $internationalDestinations[array_rand($internationalDestinations)];
+            }
+            
             $flights[] = [
                 'flight' => $flight,
                 'airline' => $airline,
                 'destination' => $airport,
                 'origin' => $orig,
-                'scheduled' => date('H:i', strtotime('+' . ($i * 15) . ' minutes')),
+                'scheduled' => date('H:i', strtotime('+' . ($i * 12) . ' minutes')),
                 'status' => $statuses[array_rand($statuses)],
             ];
         }
     }
+    
+    // Sort by scheduled time
+    usort($flights, function($a, $b) {
+        return strtotime($a['scheduled']) - strtotime($b['scheduled']);
+    });
     
     return $flights;
 }

@@ -146,6 +146,9 @@ $pageDesc = 'नेपालका विमानस्थलहरूको �
     <button class="fs-airport-btn active" data-airport="VNKT">काठमाडौं (KTM)</button>
     <button class="fs-airport-btn" data-airport="VNKL">पोखरा (PKR)</button>
     <button class="fs-airport-btn" data-airport="VNRC">भैरहवा (BWA)</button>
+    <button class="fs-airport-btn" data-airport="VNSK">सिमरा (SIF)</button>
+    <button class="fs-airport-btn" data-airport="VNDC">धनगढी (DHI)</button>
+    <button class="fs-airport-btn" data-airport="VNSR">सुर्खेत (SKH)</button>
   </div>
 
   <div class="fs-type-toggle">
@@ -256,13 +259,32 @@ document.querySelectorAll('.fs-type-btn').forEach(btn => {
 });
 
 // Nepal airport codes for domestic flights
-const nepalAirports = ['VNKT', 'VNKL', 'VNRC', 'VNBP', 'VNSK', 'VNPK', 'VNJP', 'VNTJ', 'VNPL', 'VNSR', 'VNRC', 'VNDC', 'VNBK', 'VNRC'];
+const nepalAirports = ['VNKT', 'VNKL', 'VNRC', 'VNBP', 'VNSK', 'VNPK', 'VNJP', 'VNTJ', 'VNPL', 'VNSR', 'VNDC', 'VNBK', 'VNMT'];
 
 function isDomesticFlight(origin, destination) {
   return nepalAirports.includes(origin) && nepalAirports.includes(destination);
 }
 
+// Auto-refresh every 2 minutes
+let autoRefreshInterval;
+
+function startAutoRefresh() {
+  if (autoRefreshInterval) clearInterval(autoRefreshInterval);
+  autoRefreshInterval = setInterval(() => {
+    loadFlights();
+  }, 120000); // 2 minutes
+}
+
+function stopAutoRefresh() {
+  if (autoRefreshInterval) {
+    clearInterval(autoRefreshInterval);
+    autoRefreshInterval = null;
+  }
+}
+
+// Initial load and start auto-refresh
 loadFlights();
+startAutoRefresh();
 </script>
 
 <?php require_once __DIR__ . '/footer.php'; ?>
