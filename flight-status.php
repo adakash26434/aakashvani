@@ -153,6 +153,12 @@ $pageDesc = 'नेपालका विमानस्थलहरूको �
     <button class="fs-type-btn" data-type="arrivals">Arrivals</button>
   </div>
 
+  <div class="fs-type-toggle">
+    <button class="fs-type-btn active" data-route="all">All Flights</button>
+    <button class="fs-type-btn" data-route="domestic">Domestic</button>
+    <button class="fs-type-btn" data-route="international">International</button>
+  </div>
+
   <div id="fs-flights">
     <div class="fs-loading">
       <i data-lucide="loader-2" class="w-6 h-6 animate-spin mx-auto mb-2"></i>
@@ -164,6 +170,7 @@ $pageDesc = 'नेपालका विमानस्थलहरूको �
 <script>
 let currentAirport = 'VNKT';
 let currentType = 'departures';
+let currentRoute = 'all';
 
 function loadFlights() {
   const container = document.getElementById('fs-flights');
@@ -178,12 +185,27 @@ function loadFlights() {
         return;
       }
       
+      // Filter by route type
+      let flights = data.flights;
+      if (currentRoute === 'domestic') {
+        flights = flights.filter(f => isDomesticFlight(f.origin, f.destination));
+      } else if (currentRoute === 'international') {
+        flights = flights.filter(f => !isDomesticFlight(f.origin, f.destination));
+      }
+      
+      if (flights.length === 0) {
+        container.innerHTML = '<div class="fs-empty"><i data-lucide="plane" class="w-8 h-8 mx-auto mb-2"></i><p>No flights available for this filter</p></div>';
+        lucide.createIcons();
+        return;
+      }
+      
       let html = '';
-      data.flights.forEach(f => {
+      flights.forEach(f => {
         const statusClass = 'status-' + (f.status?.toLowerCase().replace(' ', '-') || 'ontime');
         const route = currentType === 'departures' 
           ? `${f.origin} → ${f.destination}` 
           : `${f.origin} → ${f.destination}`;
+        const isDomestic = isDomesticFlight(f.origin, f.destination);
         
         html += `
           <div class="fs-flight-card">
@@ -193,7 +215,7 @@ function loadFlights() {
             <div class="fs-flight-info">
               <div class="fs-flight-number">${f.flight}</div>
               <div class="fs-flight-airline">${f.airline}</div>
-              <div class="fs-flight-route">${route}</div>
+              <div class="fs-flight-route">${route} <span class="text-xs ${isDomestic ? 'text-green-600' : 'text-blue-600'}">(${isDomestic ? 'Domestic' : 'International'})</span></div>
             </div>
             <div class="fs-flight-time">
               <div class="fs-flight-scheduled">${f.scheduled}</div>
@@ -224,10 +246,21 @@ document.querySelectorAll('.fs-type-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.fs-type-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    currentType = btn.dataset.type;
+    if (btn.dataset.type) {
+      currentType = btn.dataset.type;
+    } else if (btn.dataset.route) {
+      currentRoute = btn.dataset.route;
+    }
     loadFlights();
   });
 });
+
+// Nepal airport codes for domestic flights
+const nepalAirports = ['VNKT', 'VNKL', 'VNRC', 'VNBP', 'VNSK', 'VNPK', 'VNJP', 'VNTJ', 'VNPL', 'VNSR', 'VNRC', 'VNDC', 'VNBK', 'VNRC'];
+
+function isDomesticFlight(origin, destination) {
+  return nepalAirports.includes(origin) && nepalAirports.includes(destination);
+}
 
 loadFlights();
 </script>
