@@ -763,8 +763,8 @@ $pwaShortName = defined('PWA_SHORT_NAME') ? PWA_SHORT_NAME : 'नेपाली
 </div>
 
 <!-- Scroll to Top Button (Mobile) -->
-<button id="scroll-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" 
-  style="display:none;position:fixed;bottom:calc(100px + env(safe-area-inset-bottom,0px));right:16px;
+<button id="scroll-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})"
+  style="display:none;position:fixed;bottom:calc(100px + env(safe-area-inset-bottom,0px));left:16px;
   width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#0f766e,#14b8a6);
   color:#fff;border:none;box-shadow:0 4px 20px rgba(15,118,110,.4);cursor:pointer;z-index:9997;
   align-items:center;justify-content:center;transition:all 0.3s ease;opacity:0;transform:scale(0.8)">
@@ -772,8 +772,8 @@ $pwaShortName = defined('PWA_SHORT_NAME') ? PWA_SHORT_NAME : 'नेपाली
 </button>
 
 <!-- Auto-Scroll Timer Button (Mobile) -->
-<button id="auto-scroll-btn" onclick="toggleAutoScroll()" 
-  style="display:none;position:fixed;bottom:calc(100px + env(safe-area-inset-bottom,0px));left:16px;
+<button id="auto-scroll-btn" onclick="toggleAutoScroll()"
+  style="display:none;position:fixed;bottom:calc(160px + env(safe-area-inset-bottom,0px));left:16px;
   width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#8b5cf6);
   color:#fff;border:none;box-shadow:0 4px 20px rgba(99,102,241,.4);cursor:pointer;z-index:9997;
   align-items:center;justify-content:center;transition:all 0.3s ease;opacity:0;transform:scale(0.8)">
@@ -781,8 +781,8 @@ $pwaShortName = defined('PWA_SHORT_NAME') ? PWA_SHORT_NAME : 'नेपाली
 </button>
 
 <!-- Text-to-Speech Button (Mobile) -->
-<button id="tts-btn" onclick="toggleTTS()" 
-  style="display:none;position:fixed;bottom:calc(160px + env(safe-area-inset-bottom,0px));left:16px;
+<button id="tts-btn" onclick="toggleTTS()"
+  style="display:none;position:fixed;bottom:calc(220px + env(safe-area-inset-bottom,0px));left:16px;
   width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#f59e0b,#f97316);
   color:#fff;border:none;box-shadow:0 4px 20px rgba(245,158,11,.4);cursor:pointer;z-index:9997;
   align-items:center;justify-content:center;transition:all 0.3s ease;opacity:0;transform:scale(0.8)">
@@ -790,8 +790,8 @@ $pwaShortName = defined('PWA_SHORT_NAME') ? PWA_SHORT_NAME : 'नेपाली
 </button>
 
 <!-- Tilt Scroll Toggle Button (Mobile) -->
-<button id="tilt-scroll-btn" onclick="toggleOrientationScroll()" 
-  style="display:none;position:fixed;bottom:calc(220px + env(safe-area-inset-bottom,0px));left:16px;
+<button id="tilt-scroll-btn" onclick="toggleOrientationScroll()"
+  style="display:none;position:fixed;bottom:calc(280px + env(safe-area-inset-bottom,0px));left:16px;
   width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#64748b,#94a3b8);
   color:#fff;border:none;box-shadow:0 4px 20px rgba(100,116,139,.4);cursor:pointer;z-index:9997;
   align-items:center;justify-content:center;transition:all 0.3s ease;opacity:0;transform:scale(0.8)">
@@ -799,22 +799,22 @@ $pwaShortName = defined('PWA_SHORT_NAME') ? PWA_SHORT_NAME : 'नेपाली
 </button>
 
 <!-- Auto-Scroll Speed Control (Mobile) -->
-<div id="auto-scroll-speed" style="display:none;position:fixed;bottom:calc(280px + env(safe-area-inset-bottom,0px));left:16px;
+<div id="auto-scroll-speed" style="display:none;position:fixed;bottom:calc(340px + env(safe-area-inset-bottom,0px));left:16px;
   background:#fff;border:1px solid #e6eaf2;border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,.15);
   padding:12px;z-index:9998;min-width:140px">
   <div style="font-size:11px;font-weight:700;color:#0b1220;margin-bottom:8px" class="ne">Scroll Speed</div>
   <div style="display:flex;gap:6px">
-    <button onclick="setScrollSpeed(1)" class="speed-btn" data-speed="1" 
+    <button onclick="setScrollSpeed(1)" class="speed-btn" data-speed="1"
       style="flex:1;padding:6px;border:1px solid #e6eaf2;border-radius:8px;background:#f8fafc;font-size:10px;font-weight:600;color:#64748b;cursor:pointer">Slow</button>
-    <button onclick="setScrollSpeed(2)" class="speed-btn" data-speed="2" 
+    <button onclick="setScrollSpeed(2)" class="speed-btn" data-speed="2"
       style="flex:1;padding:6px;border:1px solid #e6eaf2;border-radius:8px;background:#f8fafc;font-size:10px;font-weight:600;color:#64748b;cursor:pointer">Med</button>
-    <button onclick="setScrollSpeed(3)" class="speed-btn" data-speed="3" 
+    <button onclick="setScrollSpeed(3)" class="speed-btn" data-speed="3"
       style="flex:1;padding:6px;border:1px solid #e6eaf2;border-radius:8px;background:#f8fafc;font-size:10px;font-weight:600;color:#64748b;cursor:pointer">Fast</button>
   </div>
 </div>
 
 <!-- TTS Control Panel (Mobile) -->
-<div id="tts-panel" style="display:none;position:fixed;bottom:calc(280px + env(safe-area-inset-bottom,0px));left:16px;
+<div id="tts-panel" style="display:none;position:fixed;bottom:calc(400px + env(safe-area-inset-bottom,0px));left:16px;
   background:#fff;border:1px solid #e6eaf2;border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,.15);
   padding:12px;z-index:9998;min-width:160px">
   <div style="font-size:11px;font-weight:700;color:#0b1220;margin-bottom:8px" class="ne">📖 Read Aloud</div>
