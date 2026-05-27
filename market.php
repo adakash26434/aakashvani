@@ -103,6 +103,62 @@ include __DIR__ . '/header.php';
       </div>
     </div>
     
+    <!-- Technical Indicators -->
+    <?php if (!empty($nepse['indicators'])): ?>
+    <div class="mt-4 pt-4 border-t border-slate-100">
+      <div class="text-xs font-semibold text-slate-700 mb-2"><?= $t('तकनीकी संकेत', 'Technical Indicators') ?></div>
+      <div class="grid grid-cols-2 gap-2 text-xs">
+        <div class="flex justify-between p-2 bg-slate-50 rounded-lg">
+          <span class="text-slate-500"><?= $t('ट्रेन्ड', 'Trend') ?></span>
+          <span class="font-semibold <?= ($nepse['indicators']['trend'] ?? '') === 'uptrend' ? 'text-emerald-600' : (($nepse['indicators']['trend'] ?? '') === 'downtrend' ? 'text-red-600' : 'text-slate-700') ?>">
+            <?= $t(ucfirst($nepse['indicators']['trend'] ?? 'sideways'), ucfirst($nepse['indicators']['trend'] ?? 'sideways')) ?>
+          </span>
+        </div>
+        <div class="flex justify-between p-2 bg-slate-50 rounded-lg">
+          <span class="text-slate-500"><?= $t('RSI', 'RSI') ?></span>
+          <span class="font-semibold <?= ($nepse['indicators']['rsi_signal'] ?? '') === 'overbought' ? 'text-red-600' : (($nepse['indicators']['rsi_signal'] ?? '') === 'oversold' ? 'text-emerald-600' : 'text-slate-700') ?>">
+            <?= number_format($nepse['indicators']['rsi'] ?? 50, 2) ?> (<?= $t($nepse['indicators']['rsi_signal'] ?? 'neutral', $nepse['indicators']['rsi_signal'] ?? 'neutral') ?>)
+          </span>
+        </div>
+        <div class="flex justify-between p-2 bg-slate-50 rounded-lg">
+          <span class="text-slate-500"><?= $t('सपोर्ट', 'Support') ?></span>
+          <span class="font-semibold text-slate-700"><?= number_format($nepse['indicators']['support'] ?? 0, 2) ?></span>
+        </div>
+        <div class="flex justify-between p-2 bg-slate-50 rounded-lg">
+          <span class="text-slate-500"><?= $t('रेजिस्टेन्स', 'Resistance') ?></span>
+          <span class="font-semibold text-slate-700"><?= number_format($nepse['indicators']['resistance'] ?? 0, 2) ?></span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Forecast -->
+    <?php if (!empty($nepse['forecast'])): ?>
+    <div class="mt-4 pt-4 border-t border-slate-100">
+      <div class="text-xs font-semibold text-slate-700 mb-2"><?= $t('भविष्यवाणी', 'Forecast') ?></div>
+      <div class="p-3 bg-gradient-to-r from-sky-50 to-blue-50 rounded-xl">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs text-slate-500"><?= $t('भोलिको अनुमान', 'Next Day Estimate') ?></span>
+          <span class="text-xs px-2 py-0.5 rounded-full bg-slate-200 text-slate-600"><?= $t('विश्वास', 'Confidence') ?>: <?= $t($nepse['forecast']['next_day']['confidence'] ?? 'low', $nepse['forecast']['next_day']['confidence'] ?? 'low') ?></span>
+        </div>
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="text-lg font-bold text-slate-900"><?= number_format($nepse['forecast']['next_day']['index'] ?? $nepse['index'], 2) ?></div>
+            <div class="text-xs <?= ($nepse['forecast']['next_day']['direction'] ?? '') === 'up' ? 'text-emerald-600' : (($nepse['forecast']['next_day']['direction'] ?? '') === 'down' ? 'text-red-600' : 'text-slate-500') ?>">
+              <?= ($nepse['forecast']['next_day']['direction'] ?? '') === 'up' ? '▲' : (($nepse['forecast']['next_day']['direction'] ?? '') === 'down' ? '▼' : '→') ?> <?= number_format($nepse['forecast']['next_day']['change_percent'] ?? 0, 2) ?>%
+            </div>
+          </div>
+          <div class="text-right">
+            <div class="text-xs text-slate-500"><?= $t('सिफारिस', 'Recommendation') ?></div>
+            <div class="text-sm font-bold <?= ($nepse['forecast']['recommendation'] ?? '') === 'buy' ? 'text-emerald-600' : (($nepse['forecast']['recommendation'] ?? '') === 'sell' ? 'text-red-600' : 'text-slate-700') ?>">
+              <?= $t(ucfirst($nepse['forecast']['recommendation'] ?? 'hold'), ucfirst($nepse['forecast']['recommendation'] ?? 'hold')) ?>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <?php endif; ?>
+    <?php endif; ?>
+    
     <div class="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
       <span><?= $t('स्रोत', 'Source') ?>: <?= h($nepse['source'] ?? 'NEPSE') ?></span>
       <span><?= $t('अपडेट', 'Updated') ?>: <?= $nepse['updated_at'] ?? date('H:i') ?></span>

@@ -487,10 +487,17 @@ function getNepseData(): array {
     // Method 1: Merolagani (primary) - detailed scrape
     $merolagani = scrapeNepseDetailedFromMerolagani();
     if ($merolagani && isset($merolagani['index'])) {
+        $index = $merolagani['index'];
+        $change = $merolagani['change'] ?? 0;
+        $changePercent = $merolagani['changePercent'] ?? 0;
+        
+        // Calculate technical indicators
+        $indicators = calculateTechnicalIndicators($index, $change, $changePercent);
+        
         $data = [
-            'index'          => $merolagani['index'],
-            'change'         => $merolagani['change'] ?? 0,
-            'changePercent'  => $merolagani['changePercent'] ?? 0,
+            'index'          => $index,
+            'change'         => $change,
+            'changePercent'  => $changePercent,
             'turnover'       => $merolagani['turnover'] ?? 0,
             'tradedShares'   => $merolagani['tradedShares'] ?? 0,
             'transactions'   => $merolagani['transactions'] ?? 0,
@@ -502,6 +509,9 @@ function getNepseData(): array {
             'updatedAt'      => date('Y-m-d H:i'),
             'source'         => $merolagani['source'],
             'marketStatus'   => getMarketStatus(),
+            'indicators'     => $indicators,
+            'trend'          => $indicators['trend'],
+            'forecast'       => generateSimpleForecast($index, $change, $indicators),
         ];
         writeCache('nepse', $data);
         return $data;
@@ -667,6 +677,101 @@ function getMarketStatus(): string {
     }
     
     return 'closed';
+}
+
+// ── TECHNICAL INDICATORS & FORECAST ─────────────────────────────────────────────
+function calculateTechnicalIndicators(float $index, float $change, float $changePercent): array {
+    // Simple momentum indicator based on change
+    $momentum = $changePercent > 0 ? 'bullish' : ($changePercent < 0 ? 'bearish' : 'neutral');
+    
+    // Trend strength based on change magnitude
+    $strength = abs($changePercent) > 1 ? 'strong' : (abs($changePercent) > 0.5 ? 'moderate' : 'weak');
+    
+    // Support/Resistance estimation (simplified)
+    $support = round($index * 0.98, 2);
+    $resistance = round($index * 1.02, 2);
+    
+    // RSI-like indicator (simplified)
+    $rsi = 50 + ($changePercent * 10);
+    $rsi = max(0, min(100, $rsi));
+    
+    // MACD-like signal (simplified)
+    $macd = $changePercent > 0 ? 'positive' : 'negative';
+    
+    // Overall trend
+    $trend = $changePercent > 0.5 ? 'uptrend' : ($changePercent < -0.5 ? 'downtrend' : 'sideways');
+    
+    return [
+        'momentum' => $momentum,
+        'strength' => $strength,
+        'support' => $support,
+        'resistance' => $resistance,
+        'rsi' => round($rsi, 2),
+        'rsi_signal' => $rsi > 70 ? 'overbought' : ($rsi < 30 ? 'oversold' : 'neutral'),
+        'macd' => $macd,
+        'trend' => $trend,
+        'sentiment' => $changePercent > 0 ? 'positive' : 'negative',
+    ];
+}
+
+function generateSimpleForecast(float $index, float $change, array $indicators): array {
+    // Simple forecast based on current trend and indicators
+    $trend = $indicators['trend'];
+    $momentum = $indicators['momentum'];
+    $rsi = $indicators['rsi'];
+    
+    // Forecast for next day
+    $forecastChange = 0;
+    $confidence = 'low';
+    
+    if ($trend === 'uptrend' && $momentum === 'bullish' && $rsi < 70) {
+        $forecastChange = $index * 0.005; // 0.5% potential gain
+        $confidence = 'moderate';
+    } elseif ($trend === 'downtrend' && $momentum === 'bearish' && $rsi > 30) {
+        $forecastChange = -$index * 0.005; // 0.5% potential loss
+        $confidence = 'moderate';
+    } elseif ($rsi > 70) {
+        $forecastChange = -$index * 0.003; // Correction likely
+        $confidence = 'moderate';
+    } elseif ($rsi < 30) {
+        $forecastChange = $index * 0.003; // Rebound likely
+        $confidence = 'moderate';
+    }
+    
+    $forecastIndex = $index + $forecastChange;
+    $forecastPercent = ($forecastChange / $index) * 100;
+    
+    return [
+        'next_day' => [
+            'index' => round($forecastIndex, 2),
+            'change' => round($forecastChange, 2),
+            'change_percent' => round($forecastPercent, 2),
+            'direction' => $forecastChange > 0 ? 'up' : ($forecastChange < 0 ? 'down' : 'flat'),
+            'confidence' => $confidence,
+        ],
+        'support' => $indicators['support'],
+        'resistance' => $indicators['resistance'],
+        'recommendation' => getRecommendation($indicators),
+    ];
+}
+
+function getRecommendation(array $indicators): string {
+    $trend = $indicators['trend'];
+    $momentum = $indicators['momentum'];
+    $rsi = $indicators['rsi'];
+    $rsiSignal = $indicators['rsi_signal'];
+    
+    if ($rsiSignal === 'overbought') {
+        return 'sell';
+    } elseif ($rsiSignal === 'oversold') {
+        return 'buy';
+    } elseif ($trend === 'uptrend' && $momentum === 'bullish') {
+        return 'hold';
+    } elseif ($trend === 'downtrend' && $momentum === 'bearish') {
+        return 'wait';
+    }
+    
+    return 'hold';
 }
 
 // ── ROUTE ─────────────────────────────────────────────────────────────────────
