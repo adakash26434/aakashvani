@@ -42,6 +42,7 @@ if (empty($podcasts)) {
 $pageTitle = 'अनलाइन रेडियो | ' . SITE_NAME;
 $pageDesc  = 'नेपालका प्रमुख FM, समाचार र संगीत रेडियो लाइभ सुन्नुहोस्।';
 ?>
+<main class="app-main">
 <div class="rd-wrap">
   <div class="rd-hero">
     <div class="flex items-center justify-between">
@@ -104,6 +105,7 @@ $pageDesc  = 'नेपालका प्रमुख FM, समाचार �
     </div>
   <?php endforeach; endif; ?>
 </div>
+</main>
 
 <script>
 const audio = document.getElementById('rdAudio');
