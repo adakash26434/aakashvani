@@ -302,25 +302,170 @@ window.__chips = {
 </section>
 <?php endif; ?>
 
-<!-- ═══ SERVICES TILE GRID (Nagarik-style) ═════════════════════════════════════ -->
+<!-- ═══ SERVICES TILE GRID (Grouped by Category) ═════════════════════════════════════ -->
+
+<!-- News & Media -->
 <div class="sec-title">
-  <i data-lucide="layout-grid" class="w-4 h-4 text-brand-600"></i>
-  <span class="ne"><?= $t('मुख्य सेवाहरू','Services') ?></span>
-  <a href="#all-services" class="badge"><?= $t('सबै हेर्नुस्','View all') ?></a>
+  <i data-lucide="newspaper" class="w-4 h-4 text-blue-600"></i>
+  <span class="ne"><?= $t('समाचार र मिडिया','News & Media') ?></span>
 </div>
-<section class="grid grid-cols-4 gap-2">
+<section class="grid grid-cols-4 gap-2 mb-4">
   <?php
-  $tiles=[
-    ['/news.php',         'newspaper',     $t('समाचार','News'),       'bg-i1'],
-    ['/nepali-patro.php', 'calendar-days', $t('पात्रो','Patro'),     'bg-i3'],
-    ['/rashifal.php',     'sparkles',      $t('राशिफल','Rashifal'),  'bg-i4'],
-    ['/ipo-tracker.php',  'trending-up',   'NEPSE',                  'bg-i2'],
-    ['/tools.php',        'wrench',        $t('टूलहरू','Tools'),     'bg-i5'],
-    ['/gov-services.php', 'landmark',      $t('सरकारी','Gov'),       'bg-i7'],
-    ['/tax-calculator.php','receipt',      $t('कर','Tax'),           'bg-i8'],
-    ['/emergency.php',    'phone-call',    $t('आपतकाल','SOS'),       'bg-i6'],
+  $newsTiles=[
+    ['/news.php',         'newspaper',     $t('समाचार','News'),       'bg-blue-100 text-blue-700'],
+    ['/stories.php',      'book-open',     $t('कथा','Stories'),     'bg-pink-100 text-pink-700'],
+    ['/podcast.php',      'mic',          $t('पोडकास्ट','Podcast'),  'bg-purple-100 text-purple-700'],
+    ['/radio.php',        'radio',        $t('रेडियो','Radio'),     'bg-indigo-100 text-indigo-700'],
   ];
-  foreach($tiles as [$h,$ic,$lb,$bg]): ?>
+  foreach($newsTiles as [$h,$ic,$lb,$bg]): ?>
+    <a href="<?= $h ?>" class="tile">
+      <span class="ic <?= $bg ?>"><i data-lucide="<?= $ic ?>" class="w-[18px] h-[18px]"></i></span>
+      <span class="lbl ne"><?= $lb ?></span>
+    </a>
+  <?php endforeach; ?>
+</section>
+
+<!-- Patro & Rashifal -->
+<div class="sec-title">
+  <i data-lucide="calendar-days" class="w-4 h-4 text-amber-600"></i>
+  <span class="ne"><?= $t('पात्रो र राशिफल','Patro & Rashifal') ?></span>
+</div>
+<section class="grid grid-cols-4 gap-2 mb-4">
+  <?php
+  $patroTiles=[
+    ['/nepali-patro.php', 'calendar-days', $t('पात्रो','Patro'),     'bg-amber-100 text-amber-700'],
+    ['/rashifal.php',     'sparkles',      $t('राशिफल','Rashifal'),  'bg-violet-100 text-violet-700'],
+    ['/kundali-milan.php','heart',         $t('कुण्डली','Kundali'),   'bg-rose-100 text-rose-700'],
+    ['/festival-calendar.php', 'calendar',  $t('त्योहार','Festivals'), 'bg-orange-100 text-orange-700'],
+  ];
+  foreach($patroTiles as [$h,$ic,$lb,$bg]): ?>
+    <a href="<?= $h ?>" class="tile">
+      <span class="ic <?= $bg ?>"><i data-lucide="<?= $ic ?>" class="w-[18px] h-[18px]"></i></span>
+      <span class="lbl ne"><?= $lb ?></span>
+    </a>
+  <?php endforeach; ?>
+</section>
+
+<!-- Market & Finance -->
+<div class="sec-title">
+  <i data-lucide="trending-up" class="w-4 h-4 text-emerald-600"></i>
+  <span class="ne"><?= $t('बजार र वित्त','Market & Finance') ?></span>
+</div>
+<section class="grid grid-cols-4 gap-2 mb-4">
+  <?php
+  $marketTiles=[
+    ['/ipo-tracker.php',    'trending-up',   'NEPSE',                  'bg-emerald-100 text-emerald-700'],
+    ['/ipo-bulk-check.php', 'search-check',  'BOLD',                   'bg-teal-100 text-teal-700'],
+    ['/market.php',          'bar-chart-2',  $t('बजार','Market'),      'bg-green-100 text-green-700'],
+    ['/gold-price.php',      'gem',          $t('सुन','Gold'),         'bg-yellow-100 text-yellow-700'],
+    ['/currency-converter.php', 'dollar-sign', $t('फरेक्स','Forex'),  'bg-blue-100 text-blue-700'],
+    ['/tax-calculator.php',  'receipt',       $t('कर','Tax'),           'bg-slate-100 text-slate-700'],
+  ];
+  foreach($marketTiles as [$h,$ic,$lb,$bg]): ?>
+    <a href="<?= $h ?>" class="tile">
+      <span class="ic <?= $bg ?>"><i data-lucide="<?= $ic ?>" class="w-[18px] h-[18px]"></i></span>
+      <span class="lbl ne"><?= $lb ?></span>
+    </a>
+  <?php endforeach; ?>
+</section>
+
+<!-- Government Services -->
+<div class="sec-title">
+  <i data-lucide="landmark" class="w-4 h-4 text-red-600"></i>
+  <span class="ne"><?= $t('सरकारी सेवा','Government Services') ?></span>
+</div>
+<section class="grid grid-cols-4 gap-2 mb-4">
+  <?php
+  $govTiles=[
+    ['/gov-services.php',      'landmark',      $t('सेवा','Gov'),           'bg-red-100 text-red-700'],
+    ['/loksewa.php',           'briefcase',     $t('लोकसेवा','Loksewa'),    'bg-orange-100 text-orange-700'],
+    ['/notices.php',           'file-text',     $t('सूचना','Notices'),       'bg-amber-100 text-amber-700'],
+    ['/government-tenders.php','gavel',         $t('टेन्डर','Tender'),       'bg-yellow-100 text-yellow-700'],
+  ];
+  foreach($govTiles as [$h,$ic,$lb,$bg]): ?>
+    <a href="<?= $h ?>" class="tile">
+      <span class="ic <?= $bg ?>"><i data-lucide="<?= $ic ?>" class="w-[18px] h-[18px]"></i></span>
+      <span class="lbl ne"><?= $lb ?></span>
+    </a>
+  <?php endforeach; ?>
+</section>
+
+<!-- Tools & Utilities -->
+<div class="sec-title">
+  <i data-lucide="wrench" class="w-4 h-4 text-slate-600"></i>
+  <span class="ne"><?= $t('उपकरण र उपयोगिता','Tools & Utilities') ?></span>
+</div>
+<section class="grid grid-cols-4 gap-2 mb-4">
+  <?php
+  $toolsTiles=[
+    ['/tools.php',           'wrench',        $t('टूलहरू','Tools'),       'bg-slate-100 text-slate-700'],
+    ['/utilities.php',       'bar-chart-2',   $t('उपयोगी','Utils'),       'bg-gray-100 text-gray-700'],
+    ['/unit-converter.php',  'calculator',    $t('एकाइ','Unit'),         'bg-blue-100 text-blue-700'],
+    ['/bmi-calculator.php',  'activity',      $t('BMI','BMI'),           'bg-green-100 text-green-700'],
+    ['/pdf-convert.php',     'file-text',     $t('PDF','PDF'),           'bg-red-100 text-red-700'],
+    ['/downloads.php',       'download',      $t('डाउनलोड','Downloads'),  'bg-indigo-100 text-indigo-700'],
+  ];
+  foreach($toolsTiles as [$h,$ic,$lb,$bg]): ?>
+    <a href="<?= $h ?>" class="tile">
+      <span class="ic <?= $bg ?>"><i data-lucide="<?= $ic ?>" class="w-[18px] h-[18px]"></i></span>
+      <span class="lbl ne"><?= $lb ?></span>
+    </a>
+  <?php endforeach; ?>
+</section>
+
+<!-- Health & Emergency -->
+<div class="sec-title">
+  <i data-lucide="heart-pulse" class="w-4 h-4 text-rose-600"></i>
+  <span class="ne"><?= $t('स्वास्थ्य र आपतकाल','Health & Emergency') ?></span>
+</div>
+<section class="grid grid-cols-4 gap-2 mb-4">
+  <?php
+  $healthTiles=[
+    ['/emergency.php',    'phone-call',    $t('आपतकाल','SOS'),         'bg-rose-100 text-rose-700'],
+    ['/hospitals.php',    'heart-pulse',   $t('अस्पताल','Hospital'),    'bg-pink-100 text-pink-700'],
+    ['/nea-bill.php',     'zap',           $t('बिजुली','Electricity'),  'bg-yellow-100 text-yellow-700'],
+  ];
+  foreach($healthTiles as [$h,$ic,$lb,$bg]): ?>
+    <a href="<?= $h ?>" class="tile">
+      <span class="ic <?= $bg ?>"><i data-lucide="<?= $ic ?>" class="w-[18px] h-[18px]"></i></span>
+      <span class="lbl ne"><?= $lb ?></span>
+    </a>
+  <?php endforeach; ?>
+</section>
+
+<!-- Transport & Travel -->
+<div class="sec-title">
+  <i data-lucide="bus" class="w-4 h-4 text-cyan-600"></i>
+  <span class="ne"><?= $t('यातायात र यात्रा','Transport & Travel') ?></span>
+</div>
+<section class="grid grid-cols-4 gap-2 mb-4">
+  <?php
+  $transportTiles=[
+    ['/transportation.php', 'bus',           $t('यातायात','Bus'),         'bg-cyan-100 text-cyan-700'],
+    ['/flight-status.php', 'plane',         $t('उडान','Flight'),         'bg-sky-100 text-sky-700'],
+    ['/weather.php',       'cloud-sun',     $t('मौसम','Weather'),       'bg-blue-100 text-blue-700'],
+  ];
+  foreach($transportTiles as [$h,$ic,$lb,$bg]): ?>
+    <a href="<?= $h ?>" class="tile">
+      <span class="ic <?= $bg ?>"><i data-lucide="<?= $ic ?>" class="w-[18px] h-[18px]"></i></span>
+      <span class="lbl ne"><?= $lb ?></span>
+    </a>
+  <?php endforeach; ?>
+</section>
+
+<!-- Education & Jobs -->
+<div class="sec-title">
+  <i data-lucide="graduation-cap" class="w-4 h-4 text-purple-600"></i>
+  <span class="ne"><?= $t('शिक्षा र रोजगार','Education & Jobs') ?></span>
+</div>
+<section class="grid grid-cols-4 gap-2 mb-4">
+  <?php
+  $eduTiles=[
+    ['/nokari.php',         'briefcase',     $t('नोकरी','Jobs'),          'bg-purple-100 text-purple-700'],
+    ['/exam-results.php',  'graduation-cap',$t('परीक्षा','Exam'),        'bg-violet-100 text-violet-700'],
+    ['/auction-notices.php','gavel',        $t('लिलामी','Auction'),      'bg-orange-100 text-orange-700'],
+  ];
+  foreach($eduTiles as [$h,$ic,$lb,$bg]): ?>
     <a href="<?= $h ?>" class="tile">
       <span class="ic <?= $bg ?>"><i data-lucide="<?= $ic ?>" class="w-[18px] h-[18px]"></i></span>
       <span class="lbl ne"><?= $lb ?></span>
