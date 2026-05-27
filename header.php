@@ -254,6 +254,61 @@ if ($_ga4Id && !$EMBED):
   --brand:#0d9488;--brand-2:#14b8a6;--brand-deep:#0f766e;
   --ink:#0b1220;--muted:#64748b;--page:#f4f6fb;--surface:#fff;--line:#e6eaf2;
   --shadow-app:0 1px 2px rgba(11,18,32,.04),0 8px 24px -12px rgba(11,18,32,.10);
+}
+/* Dark Mode Colors */
+.dark{
+  --brand:#2dd4bf;--brand-2:#5eead4;--brand-deep:#14b8a6;
+  --ink:#f1f5f9;--muted:#94a3b8;--page:#0f172a;--surface:#1e293b;--line:#334155;
+  --shadow-app:0 1px 2px rgba(0,0,0,.3),0 8px 24px -12px rgba(0,0,0,.4);
+}
+.dark body{
+  background-color:var(--page);
+  color:var(--ink);
+}
+.dark .app-card,
+.dark .app-shell{
+  background-color:var(--surface);
+  border-color:var(--line);
+}
+.dark .bar-btn{
+  background-color:var(--surface);
+  color:var(--ink);
+}
+.dark .bar-search{
+  background-color:var(--surface);
+  border-color:var(--line);
+}
+.dark .bar-search input{
+  background-color:transparent;
+  color:var(--ink);
+}
+.dark .chip{
+  background-color:var(--surface);
+  border-color:var(--line);
+  color:var(--ink);
+}
+.dark .bg-white{
+  background-color:var(--surface) !important;
+}
+.dark .bg-slate-50{
+  background-color:var(--page) !important;
+}
+.dark .text-slate-900,
+.dark .text-ink{
+  color:var(--ink) !important;
+}
+.dark .text-slate-500,
+.dark .text-muted{
+  color:var(--muted) !important;
+}
+.dark .border-slate-100,
+.dark .border-line{
+  border-color:var(--line) !important;
+}
+.dark .shadow-app{
+  box-shadow:var(--shadow-app);
+}
+:root{
   --col:460px; /* phone-column width on desktop */
   --safe-top:env(safe-area-inset-top,0px);
   --safe-bottom:env(safe-area-inset-bottom,0px);
@@ -682,6 +737,10 @@ $_flash = getFlash();
       <i data-lucide="bell" class="w-[18px] h-[18px]"></i>
       <span class="dot"></span>
     </a>
+
+    <button id="dark-mode-toggle" class="bar-btn" aria-label="Toggle Dark Mode" onclick="toggleDarkMode()">
+      <i data-lucide="moon" id="dark-mode-icon" class="w-[18px] h-[18px]"></i>
+    </button>
 
     <?php if($cu): ?>
       <a href="/dashboard.php" class="bar-btn" style="background:#fff;color:#0f766e" aria-label="Account">

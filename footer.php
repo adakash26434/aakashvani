@@ -654,6 +654,65 @@ function NSH_closePane() {
 <!-- Page transitions + swipe navigation (loaded async) -->
 <script src="/assets/js/swipe-nav.js" defer></script>
 
+<!-- Dark Mode Toggle -->
+<script>
+(function(){
+  // Check for saved preference or system preference
+  function getDarkModePreference(){
+    var saved = localStorage.getItem('darkMode');
+    if(saved !== null) return saved === 'true';
+    
+    // Check system preference
+    if(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches){
+      return true;
+    }
+    
+    return false;
+  }
+  
+  // Apply dark mode
+  function applyDarkMode(isDark){
+    if(isDark){
+      document.documentElement.classList.add('dark');
+      document.body.classList.add('dark');
+      var icon = document.getElementById('dark-mode-icon');
+      if(icon){
+        icon.setAttribute('data-lucide', 'sun');
+        if(window.lucide) lucide.createIcons();
+      }
+    } else {
+      document.documentElement.classList.remove('dark');
+      document.body.classList.remove('dark');
+      var icon = document.getElementById('dark-mode-icon');
+      if(icon){
+        icon.setAttribute('data-lucide', 'moon');
+        if(window.lucide) lucide.createIcons();
+      }
+    }
+  }
+  
+  // Toggle dark mode
+  window.toggleDarkMode = function(){
+    var isDark = !document.documentElement.classList.contains('dark');
+    localStorage.setItem('darkMode', isDark);
+    applyDarkMode(isDark);
+  };
+  
+  // Initialize dark mode
+  var isDark = getDarkModePreference();
+  applyDarkMode(isDark);
+  
+  // Listen for system preference changes
+  if(window.matchMedia){
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e){
+      if(localStorage.getItem('darkMode') === null){
+        applyDarkMode(e.matches);
+      }
+    });
+  }
+})();
+</script>
+
 <!-- PWA helpers (needed early for install prompt — not deferred) -->
 <script>
 function pwaInstall(){
