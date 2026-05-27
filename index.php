@@ -616,8 +616,8 @@ $serviceGroups = [
     ['/downloads.php',    'download',      $t('डाउनलोड','Files'),     'bg-i5'],
     ['/directory.php',    'book-user',     $t('निर्देशिका','Directory'),'bg-i2'],
     ['/offers.php',       'tag',           $t('अफर','Offers'),        'bg-i4'],
-    ['/ai-guides.php',    'bot',           'AI Guides',               'bg-i2'],
-    ['/ai-chat.php',      'message-circle',$t('AI च्याट','AI Chat'),  'bg-i6'],
+    ['/ai-guides.php',    'sparkles',      'AI Guides',               'bg-i2'],
+    ['/ai-chat.php',      'message-square',$t('AI च्याट','AI Chat'),  'bg-i6'],
     ['/help.php',         'life-buoy',     $t('सहयोग','Help'),         'bg-i7'],
   ]],
   [$t('मनोरञ्जन र प्रेरणा','Media & Inspiration'), 'sparkles', 'text-rose-600', [
