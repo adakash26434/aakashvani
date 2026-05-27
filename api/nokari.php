@@ -128,7 +128,45 @@ $feeds = [
     ['https://kumarijob.com/feed/', 'KumariJob', 'bg-rose-100 text-rose-700'],
     ['https://jobaxle.com/feed/', 'JobAxle', 'bg-amber-100 text-amber-700'],
     ['https://govnepal.com/feed/', 'GovNepal', 'bg-teal-100 text-teal-700'],
+    ['https://www.merojob.com/jobs/feed', 'MeroJob Jobs', 'bg-blue-100 text-blue-700'],
+    ['https://kantipurjob.com/feed/', 'KantipurJob', 'bg-orange-100 text-orange-700'],
 ];
+
+/* ── Fallback sample jobs ── */
+function getSampleJobs(): array {
+    $positions = [
+        ['Software Developer', 'IT', 'Kathmandu', 'रु 50,000 - 80,000'],
+        ['Marketing Manager', 'Marketing', 'Lalitpur', 'रु 40,000 - 60,000'],
+        ['Accountant', 'Finance', 'Kathmandu', 'रु 35,000 - 50,000'],
+        ['Civil Engineer', 'Engineering', 'Pokhara', 'रु 45,000 - 70,000'],
+        ['Teacher', 'Teaching', 'Bhaktapur', 'रु 25,000 - 40,000'],
+        ['HR Officer', 'Admin', 'Kathmandu', 'रु 30,000 - 45,000'],
+        ['Sales Executive', 'Marketing', 'Kathmandu', 'रु 25,000 - 40,000'],
+        ['Graphic Designer', 'IT', 'Lalitpur', 'रु 30,000 - 50,000'],
+        ['Nurse', 'Health', 'Kathmandu', 'रु 35,000 - 55,000'],
+        ['Admin Assistant', 'Admin', 'Kathmandu', 'रु 20,000 - 30,000'],
+    ];
+    
+    $companies = ['ABC Company', 'XYZ Corp', 'Tech Solutions', 'Global Services', 'Nepal Ventures', 'Smart Tech', 'Prime Group'];
+    
+    $jobs = [];
+    foreach ($positions as $i => $pos) {
+        $daysAgo = rand(0, 7);
+        $jobs[] = [
+            'title' => $pos[0],
+            'link' => '#',
+            'summary' => $pos[0] . ' needed for ' . $companies[array_rand($companies)] . '. ' . $pos[3] . ' per month.',
+            'source' => 'Sample',
+            'sourceCls' => 'bg-slate-100 text-slate-700',
+            'ts' => time() - ($daysAgo * 86400),
+            'ago' => $daysAgo === 0 ? 'भर्खर' : $daysAgo . ' दिन अघि',
+            'category' => strtolower($pos[1]),
+            'image' => null,
+        ];
+    }
+    
+    return $jobs;
+}
 
 $cacheFile = "$cacheDir/nokari_all.json";
 $cacheTtl  = 1800;
@@ -141,14 +179,27 @@ if (is_file($cacheFile) && (time() - filemtime($cacheFile) < $cacheTtl)) {
 
 if (!$allItems) {
     $allItems = [];
+    $errors = [];
     foreach ($feeds as [$url, $src, $cls]) {
-        $raw = job_get($url, 6);
-        if ($raw) {
-            $items = parseRSSJobs($raw, $src, $cls);
-            $allItems = array_merge($allItems, $items);
+        try {
+            $raw = job_get($url, 6);
+            if ($raw) {
+                $items = parseRSSJobs($raw, $src, $cls);
+                $allItems = array_merge($allItems, $items);
+            } else {
+                $errors[] = "$src: No data received";
+            }
+        } catch (Exception $e) {
+            $errors[] = "$src: " . $e->getMessage();
         }
     }
     usort($allItems, fn($a,$b)=>$b['ts']<=>$a['ts']);
+    
+    // If no data from any source, use fallback
+    if (empty($allItems)) {
+        $allItems = getSampleJobs();
+    }
+    
     if (!empty($allItems)) @file_put_contents($cacheFile, json_encode($allItems, JSON_UNESCAPED_UNICODE));
 }
 
@@ -164,4 +215,6 @@ echo json_encode([
     'cat'    => $cat,
     'items'  => array_values(array_slice($allItems, 0, $limit)),
     'ts'     => time(),
+    'errors' => $errors ?? [],
+    'sources' => count($feeds),
 ], JSON_UNESCAPED_UNICODE);
