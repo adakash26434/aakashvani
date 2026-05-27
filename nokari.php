@@ -12,9 +12,15 @@ require_once __DIR__ . '/header.php';
 <section class="px-4 pt-3 pb-2">
   <div class="rounded-2xl p-5 text-white shadow-app relative overflow-hidden" style="background:linear-gradient(135deg,#1e3a5f 0%,#1d4ed8 60%,#2563eb 100%)">
     <div class="absolute -right-4 -top-4 text-[110px] opacity-10 leading-none select-none">💼</div>
-    <div class="text-[11px] opacity-80">निजी क्षेत्र जागिर</div>
+    <div class="flex items-center gap-2">
+      <div class="text-[11px] opacity-80">निजी क्षेत्र जागिर</div>
+      <span class="flex items-center gap-1 text-[10px] bg-white/20 px-2 py-0.5 rounded-full">
+        <span class="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span>
+        Live
+      </span>
+    </div>
     <div class="text-[24px] font-extrabold leading-tight mt-0.5">नोकरी खोज्नुस्</div>
-    <div class="text-[12px] opacity-80 mt-1">MeroJob · HamroJob · FroxJob · KumariJob — Live</div>
+    <div class="text-[12px] opacity-80 mt-1">MeroJob · HamroJob · FroxJob · KumariJob</div>
     <div class="mt-3">
       <a href="/loksewa.php" class="inline-flex items-center gap-1 bg-white/20 hover:bg-white/30 text-white text-[11px] font-semibold px-3 py-1.5 rounded-full border border-white/20">
         🏛 सरकारी जागिर → लोकसेवा

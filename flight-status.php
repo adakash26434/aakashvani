@@ -138,7 +138,13 @@ $pageDesc = 'नेपालका विमानस्थलहरूको �
     <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-teal-500 to-cyan-500 flex items-center justify-center mx-auto mb-4">
       <i data-lucide="plane" class="w-8 h-8 text-white"></i>
     </div>
-    <h1 class="text-2xl font-bold text-gray-900 ne">Flight Status</h1>
+    <div class="flex items-center justify-center gap-2 mb-2">
+      <h1 class="text-2xl font-bold text-gray-900 ne">Flight Status</h1>
+      <span class="flex items-center gap-1 text-[10px] bg-green-100 text-green-700 font-semibold px-2 py-1 rounded-full">
+        <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+        Live
+      </span>
+    </div>
     <p class="text-gray-500">नेपालका विमानस्थलहरूको वास्तविक समय उडान स्थिति</p>
   </div>
 

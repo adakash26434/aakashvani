@@ -39,7 +39,13 @@ $brief = [
   <section class="px-4 pt-3">
     <div class="rounded-2xl p-5 text-white shadow-app bg-gradient-to-br from-orange-500 via-amber-500 to-yellow-500 relative overflow-hidden">
       <i data-lucide="sunrise" class="absolute -right-4 -bottom-4 w-32 h-32 opacity-20"></i>
-      <div class="text-[11px] opacity-90"><?= $tH('बिहानी ब्रिफ','Morning Brief') ?></div>
+      <div class="flex items-center gap-2">
+        <div class="text-[11px] opacity-90"><?= $tH('बिहानी ब्रिफ','Morning Brief') ?></div>
+        <span class="flex items-center gap-1 text-[10px] bg-white/20 px-2 py-0.5 rounded-full">
+          <span class="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span>
+          Live
+        </span>
+      </div>
       <div class="text-[24px] font-extrabold leading-tight"><?= $tH('शुभ प्रभात','Good Morning') ?> 🌅</div>
       <div class="text-[12px] opacity-90 mt-1"><?= htmlspecialchars($brief['date']) ?></div>
     </div>

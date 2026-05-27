@@ -11,14 +11,20 @@ require_once __DIR__ . '/header.php';
 
 <!-- Header -->
 <section class="px-4 pt-4 pb-2">
-  <div class="flex items-center gap-2 mb-1">
-    <span class="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center flex-shrink-0">
-      <i data-lucide="dollar-sign" class="w-5 h-5"></i>
-    </span>
-    <div>
-      <h1 class="text-[18px] font-bold text-slate-900 leading-tight">Currency Converter</h1>
-      <p class="text-[11px] text-slate-500">मुद्रा रूपान्तरण गर्नुस्</p>
+  <div class="flex items-center justify-between mb-1">
+    <div class="flex items-center gap-2">
+      <span class="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center flex-shrink-0">
+        <i data-lucide="dollar-sign" class="w-5 h-5"></i>
+      </span>
+      <div>
+        <h1 class="text-[18px] font-bold text-slate-900 leading-tight">Currency Converter</h1>
+        <p class="text-[11px] text-slate-500">मुद्रा रूपान्तरण गर्नुस्</p>
+      </div>
     </div>
+    <span class="flex items-center gap-1 text-[10px] bg-green-100 text-green-700 font-semibold px-2 py-1 rounded-full">
+      <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+      Live
+    </span>
   </div>
 </section>
 
