@@ -703,5 +703,49 @@ $pwaShortName = defined('PWA_SHORT_NAME') ? PWA_SHORT_NAME : 'नेपाली
   </div>
 </div>
 
+<!-- Scroll to Top Button (Mobile) -->
+<button id="scroll-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" 
+  style="display:none;position:fixed;bottom:calc(100px + env(safe-area-inset-bottom,0px));right:16px;
+  width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#0f766e,#14b8a6);
+  color:#fff;border:none;box-shadow:0 4px 20px rgba(15,118,110,.4);cursor:pointer;z-index:9997;
+  align-items:center;justify-content:center;transition:all 0.3s ease;opacity:0;transform:scale(0.8)">
+  <i data-lucide="chevron-up" style="width:24px;height:24px"></i>
+</button>
+
+<script>
+(function(){
+  var scrollBtn = document.getElementById('scroll-to-top');
+  if(!scrollBtn) return;
+  
+  var lastScrollTop = 0;
+  var scrollThreshold = 200;
+  
+  function handleScroll(){
+    var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    
+    if(scrollTop > scrollThreshold){
+      scrollBtn.style.display = 'flex';
+      setTimeout(function(){
+        scrollBtn.style.opacity = '1';
+        scrollBtn.style.transform = 'scale(1)';
+      }, 10);
+    } else {
+      scrollBtn.style.opacity = '0';
+      scrollBtn.style.transform = 'scale(0.8)';
+      setTimeout(function(){
+        if(window.pageYOffset <= scrollThreshold){
+          scrollBtn.style.display = 'none';
+        }
+      }, 300);
+    }
+    
+    lastScrollTop = scrollTop;
+  }
+  
+  window.addEventListener('scroll', handleScroll, {passive: true});
+  handleScroll();
+})();
+</script>
+
 </body>
 </html>
