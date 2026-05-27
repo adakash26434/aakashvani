@@ -561,8 +561,12 @@ body.embed-mode .max-w-5xl{max-width:100% !important;padding-left:8px !important
   min-height:88px;
 }
 .tile:hover{transform:translateY(-2px);box-shadow:var(--shadow-app);border-color:#d6dbe6}
-.tile .ic{width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff}
-.tile .lbl{font-size:11.5px;font-weight:600;color:#334155;line-height:1.25}
+.tile .ic{
+  width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+  color:#fff;flex-shrink:0;
+}
+.tile .ic i{width:20px;height:20px;stroke-width:2}
+.tile .lbl{font-size:11.5px;font-weight:600;color:#334155;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
 
 /* Tile color variants — single saturated bg, white icon */
 .bg-i1{background:linear-gradient(135deg,#0d9488,#14b8a6)}
