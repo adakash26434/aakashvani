@@ -264,14 +264,14 @@ window.__chips = {
 <section class="grid grid-cols-4 gap-2 mb-4">
   <?php
   $newsTiles=[
-    ['/news.php',         'newspaper',     $t('समाचार','News'),       'bg-blue-100 text-blue-700'],
-    ['/stories.php',      'book-open',     $t('कथा','Stories'),     'bg-pink-100 text-pink-700'],
-    ['/podcast.php',      'mic',          $t('पोडकास्ट','Podcast'),  'bg-purple-100 text-purple-700'],
-    ['/radio.php',        'radio',        $t('रेडियो','Radio'),     'bg-indigo-100 text-indigo-700'],
+    ['/news.php',         'newspaper',     $t('समाचार','News'),       'bg-i2'],
+    ['/stories.php',      'book-open',     $t('कथा','Stories'),     'bg-i4'],
+    ['/podcast.php',      'mic',          $t('पोडकास्ट','Podcast'),  'bg-i5'],
+    ['/radio.php',        'radio',        $t('रेडियो','Radio'),     'bg-i1'],
   ];
   foreach($newsTiles as [$h,$ic,$lb,$bg]): ?>
     <a href="<?= $h ?>" class="tile">
-      <span class="ic <?= $bg ?>"><i data-lucide="<?= $ic ?>" class="w-[18px] h-[18px]"></i></span>
+      <span class="ic <?= $bg ?>"><i data-lucide="<?= $ic ?>"></i></span>
       <span class="lbl ne"><?= $lb ?></span>
     </a>
   <?php endforeach; ?>
@@ -285,14 +285,14 @@ window.__chips = {
 <section class="grid grid-cols-4 gap-2 mb-4">
   <?php
   $patroTiles=[
-    ['/nepali-patro.php', 'calendar-days', $t('पात्रो','Patro'),     'bg-amber-100 text-amber-700'],
-    ['/rashifal.php',     'sparkles',      $t('राशिफल','Rashifal'),  'bg-violet-100 text-violet-700'],
-    ['/kundali-milan.php','heart',         $t('कुण्डली','Kundali'),   'bg-rose-100 text-rose-700'],
-    ['/festival-calendar.php', 'calendar',  $t('त्योहार','Festivals'), 'bg-orange-100 text-orange-700'],
+    ['/nepali-patro.php', 'calendar-days', $t('पात्रो','Patro'),     'bg-i3'],
+    ['/rashifal.php',     'sparkles',      $t('राशिफल','Rashifal'),  'bg-i4'],
+    ['/kundali-milan.php','heart',         $t('कुण्डली','Kundali'),   'bg-i4'],
+    ['/festival-calendar.php', 'calendar',  $t('त्योहार','Festivals'), 'bg-i3'],
   ];
   foreach($patroTiles as [$h,$ic,$lb,$bg]): ?>
     <a href="<?= $h ?>" class="tile">
-      <span class="ic <?= $bg ?>"><i data-lucide="<?= $ic ?>" class="w-[18px] h-[18px]"></i></span>
+      <span class="ic <?= $bg ?>"><i data-lucide="<?= $ic ?>"></i></span>
       <span class="lbl ne"><?= $lb ?></span>
     </a>
   <?php endforeach; ?>
