@@ -146,16 +146,16 @@ window.__chips = {
   if(saved!==null&&saved>=0&&saved<12){
     var r=RASHIS[saved];
     /* ── Personal card ─────────────────────────────────────── */
-    wrap.innerHTML='<div class="rounded-3xl overflow-hidden relative" style="background:radial-gradient(140% 120% at 5% 5%,#7c3aed 0%,#4338ca 48%,#1e1b4b 100%);box-shadow:0 16px 40px -14px rgba(99,54,210,.55)">'
+    wrap.innerHTML='<div class="rounded-3xl overflow-hidden relative" style="background:radial-gradient(140% 120% at 5% 5%,#0e7490 0%,#1e3a5f 48%,#0f172a 100%);box-shadow:0 16px 40px -14px rgba(14,116,144,.55)">'
       +'<div class="p-4 relative z-10">'
         +'<div class="absolute inset-0 z-0 pointer-events-none" id="mr-stars"></div>'
         +'<div class="relative z-10">'
           +'<div class="flex items-center gap-2 mb-3">'
-            +'<span class="text-[10.5px] font-bold text-white bg-white/15 backdrop-blur-sm border border-white/20 px-2.5 py-0.5 rounded-full flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-violet-300 animate-pulse inline-block"></span>मेरो राशिफल</span>'
+            +'<span class="text-[10.5px] font-bold text-white bg-white/15 backdrop-blur-sm border border-white/20 px-2.5 py-0.5 rounded-full flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-cyan-300 animate-pulse inline-block"></span>मेरो राशिफल</span>'
             +'<span class="ml-auto text-[10px] text-white/60 ne" id="mr-bs-date"></span>'
           +'</div>'
           +'<div class="flex items-center gap-4">'
-            +'<span class="text-[52px] leading-none select-none" style="text-shadow:0 0 40px rgba(255,255,255,.3)">'+r[1]+'</span>'
+            +'<span class="text-[52px] leading-none select-none" style="text-shadow:0 0 40px rgba(165,243,252,.35)">'+r[1]+'</span>'
             +'<div class="min-w-0 flex-1">'
               +'<div class="text-[22px] font-extrabold text-white leading-tight ne">'+r[0]+' <span class="text-[13px] font-normal text-white/60">'+r[2]+'</span></div>'
               +'<div class="flex flex-wrap gap-1.5 mt-1.5">'

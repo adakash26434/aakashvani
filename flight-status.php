@@ -211,9 +211,9 @@ function loadFlights() {
       let html = '';
       flights.forEach(f => {
         const statusClass = 'status-' + (f.status?.toLowerCase().replace(' ', '-') || 'ontime');
-        const route = currentType === 'departures' 
-          ? `${f.origin} → ${f.destination}` 
-          : `${f.origin} → ${f.destination}`;
+        const originName = getAirportName(f.origin);
+        const destName = getAirportName(f.destination);
+        const route = `${originName} → ${destName}`;
         const isDomestic = isDomesticFlight(f.origin, f.destination);
         
         html += `
@@ -266,6 +266,39 @@ document.querySelectorAll('.fs-type-btn').forEach(btn => {
 
 // Nepal airport codes for domestic flights
 const nepalAirports = ['VNKT', 'VNKL', 'VNRC', 'VNBP', 'VNSK', 'VNPK', 'VNJP', 'VNTJ', 'VNPL', 'VNSR', 'VNDC', 'VNBK', 'VNMT'];
+
+// Airport code to city name mapping
+const airportNames = {
+  'VNKT': 'काठमाडौं',
+  'VNKL': 'पोखरा',
+  'VNRC': 'भैरहवा',
+  'VNBP': 'भैरहवा',
+  'VNSK': 'सिमरा',
+  'VNPK': 'पोखरा',
+  'VNJP': 'जनकपुर',
+  'VNTJ': 'ताप्लेजुङ',
+  'VNPL': 'पाल्पा',
+  'VNSR': 'सुर्खेत',
+  'VNDC': 'धनगढी',
+  'VNBK': 'बझाङ',
+  'VNMT': 'माउन्टेन',
+  'DEL': 'दिल्ली',
+  'BOM': 'मुम्बई',
+  'DXB': 'दुबई',
+  'SIN': 'सिंगापुर',
+  'BKK': 'बैंकक',
+  'KUL': 'कुआलालम्पुर',
+  'HKG': 'हङकङ',
+  'DOH': 'दोहा',
+  'ISB': 'इस्लामाबाद',
+  'DAC': 'ढाका',
+  'CMB': 'कोलम्बो',
+  'KTM': 'काठमाडौं'
+};
+
+function getAirportName(code) {
+  return airportNames[code] || code;
+}
 
 function isDomesticFlight(origin, destination) {
   return nepalAirports.includes(origin) && nepalAirports.includes(destination);
