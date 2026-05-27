@@ -789,8 +789,17 @@ $pwaShortName = defined('PWA_SHORT_NAME') ? PWA_SHORT_NAME : 'नेपाली
   <i data-lucide="volume-2" id="tts-icon" style="width:24px;height:24px"></i>
 </button>
 
+<!-- Tilt Scroll Toggle Button (Mobile) -->
+<button id="tilt-scroll-btn" onclick="toggleOrientationScroll()" 
+  style="display:none;position:fixed;bottom:calc(220px + env(safe-area-inset-bottom,0px));left:16px;
+  width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#64748b,#94a3b8);
+  color:#fff;border:none;box-shadow:0 4px 20px rgba(100,116,139,.4);cursor:pointer;z-index:9997;
+  align-items:center;justify-content:center;transition:all 0.3s ease;opacity:0;transform:scale(0.8)">
+  <i data-lucide="smartphone" style="width:24px;height:24px"></i>
+</button>
+
 <!-- Auto-Scroll Speed Control (Mobile) -->
-<div id="auto-scroll-speed" style="display:none;position:fixed;bottom:calc(220px + env(safe-area-inset-bottom,0px));left:16px;
+<div id="auto-scroll-speed" style="display:none;position:fixed;bottom:calc(280px + env(safe-area-inset-bottom,0px));left:16px;
   background:#fff;border:1px solid #e6eaf2;border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,.15);
   padding:12px;z-index:9998;min-width:140px">
   <div style="font-size:11px;font-weight:700;color:#0b1220;margin-bottom:8px" class="ne">Scroll Speed</div>
@@ -805,7 +814,7 @@ $pwaShortName = defined('PWA_SHORT_NAME') ? PWA_SHORT_NAME : 'नेपाली
 </div>
 
 <!-- TTS Control Panel (Mobile) -->
-<div id="tts-panel" style="display:none;position:fixed;bottom:calc(220px + env(safe-area-inset-bottom,0px));left:16px;
+<div id="tts-panel" style="display:none;position:fixed;bottom:calc(280px + env(safe-area-inset-bottom,0px));left:16px;
   background:#fff;border:1px solid #e6eaf2;border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,.15);
   padding:12px;z-index:9998;min-width:160px">
   <div style="font-size:11px;font-weight:700;color:#0b1220;margin-bottom:8px" class="ne">📖 Read Aloud</div>
@@ -832,6 +841,7 @@ $pwaShortName = defined('PWA_SHORT_NAME') ? PWA_SHORT_NAME : 'नेपाली
   var ttsIcon = document.getElementById('tts-icon');
   var ttsPanel = document.getElementById('tts-panel');
   var ttsStatus = document.getElementById('tts-status');
+  var tiltScrollBtn = document.getElementById('tilt-scroll-btn');
   if(!scrollBtn || !autoScrollBtn) return;
   
   var lastScrollTop = 0;
@@ -844,6 +854,7 @@ $pwaShortName = defined('PWA_SHORT_NAME') ? PWA_SHORT_NAME : 'नेपाली
       scrollBtn.style.display = 'flex';
       autoScrollBtn.style.display = 'flex';
       ttsBtn.style.display = 'flex';
+      if(tiltScrollBtn) tiltScrollBtn.style.display = 'flex';
       setTimeout(function(){
         scrollBtn.style.opacity = '1';
         scrollBtn.style.transform = 'scale(1)';
@@ -851,6 +862,10 @@ $pwaShortName = defined('PWA_SHORT_NAME') ? PWA_SHORT_NAME : 'नेपाली
         autoScrollBtn.style.transform = 'scale(1)';
         ttsBtn.style.opacity = '1';
         ttsBtn.style.transform = 'scale(1)';
+        if(tiltScrollBtn){
+          tiltScrollBtn.style.opacity = '1';
+          tiltScrollBtn.style.transform = 'scale(1)';
+        }
       }, 10);
     } else {
       scrollBtn.style.opacity = '0';
@@ -859,11 +874,16 @@ $pwaShortName = defined('PWA_SHORT_NAME') ? PWA_SHORT_NAME : 'नेपाली
       autoScrollBtn.style.transform = 'scale(0.8)';
       ttsBtn.style.opacity = '0';
       ttsBtn.style.transform = 'scale(0.8)';
+      if(tiltScrollBtn){
+        tiltScrollBtn.style.opacity = '0';
+        tiltScrollBtn.style.transform = 'scale(0.8)';
+      }
       setTimeout(function(){
         if(window.pageYOffset <= scrollThreshold){
           scrollBtn.style.display = 'none';
           autoScrollBtn.style.display = 'none';
           ttsBtn.style.display = 'none';
+          if(tiltScrollBtn) tiltScrollBtn.style.display = 'none';
         }
       }, 300);
     }
@@ -1110,8 +1130,26 @@ $pwaShortName = defined('PWA_SHORT_NAME') ? PWA_SHORT_NAME : 'नेपाली
   var lastBeta = null;
   var scrollVelocity = 0;
   var scrollAnimationFrame = null;
-  var tiltThreshold = 5; // Minimum tilt angle to trigger scroll
-  var maxScrollSpeed = 8; // Maximum scroll speed
+  var tiltThreshold = 8; // Minimum tilt angle to trigger scroll
+  var maxScrollSpeed = 6; // Maximum scroll speed
+  
+  function toggleOrientationScroll(){
+    orientationEnabled = !orientationEnabled;
+    var btn = document.getElementById('tilt-scroll-btn');
+    if(btn){
+      if(orientationEnabled){
+        btn.classList.add('bg-emerald-600');
+        btn.classList.remove('bg-slate-200');
+        btn.innerHTML = '<i data-lucide="smartphone" class="w-4 h-4"></i>';
+        if(window.lucide) lucide.createIcons();
+      } else {
+        btn.classList.remove('bg-emerald-600');
+        btn.classList.add('bg-slate-200');
+        btn.innerHTML = '<i data-lucide="smartphone" class="w-4 h-4"></i>';
+        if(window.lucide) lucide.createIcons();
+      }
+    }
+  }
   
   function handleOrientation(event){
     // Only on mobile devices
@@ -1120,15 +1158,10 @@ $pwaShortName = defined('PWA_SHORT_NAME') ? PWA_SHORT_NAME : 'नेपाली
     var beta = event.beta; // Front-to-back tilt (-180 to 180)
     if(beta === null || isNaN(beta)) return;
     
-    // Enable only if user has explicitly enabled (optional, for now auto-enable on mobile)
-    if(!orientationEnabled && window.innerWidth < 768){
-      orientationEnabled = true;
-    }
-    
     if(!orientationEnabled) return;
     
-    // Calculate tilt from neutral position (assuming neutral is around 0-30 degrees when holding phone)
-    var neutralAngle = 20;
+    // Calculate tilt from neutral position (assuming neutral is around 45 degrees when holding phone upright)
+    var neutralAngle = 45;
     var tilt = beta - neutralAngle;
     
     // Ignore small tilts
@@ -1138,8 +1171,8 @@ $pwaShortName = defined('PWA_SHORT_NAME') ? PWA_SHORT_NAME : 'नेपाली
     }
     
     // Calculate scroll velocity based on tilt
-    // Positive tilt (phone top tilted up) = scroll up
-    // Negative tilt (phone top tilted down) = scroll down
+    // Positive tilt (phone top tilted forward/down) = scroll down
+    // Negative tilt (phone top tilted backward/up) = scroll up
     var normalizedTilt = Math.max(-45, Math.min(45, tilt));
     scrollVelocity = (normalizedTilt / 45) * maxScrollSpeed;
   }
@@ -1147,7 +1180,7 @@ $pwaShortName = defined('PWA_SHORT_NAME') ? PWA_SHORT_NAME : 'नेपाली
   function autoScroll(){
     if(Math.abs(scrollVelocity) > 0.1){
       window.scrollBy({
-        top: -scrollVelocity, // Negative because tilting up should scroll up
+        top: scrollVelocity, // Positive = scroll down, Negative = scroll up
         behavior: 'auto'
       });
     }
@@ -1170,6 +1203,20 @@ $pwaShortName = defined('PWA_SHORT_NAME') ? PWA_SHORT_NAME : 'नेपाली
       scrollVelocity = 0;
     }, 100);
   }, {passive: true});
+  
+  // Click outside to disable
+  document.addEventListener('click', function(e){
+    var btn = document.getElementById('tilt-scroll-btn');
+    if(btn && !btn.contains(e.target) && orientationEnabled){
+      // Don't disable if clicking on scroll buttons or other controls
+      if(!e.target.closest('.bar-btn') && !e.target.closest('.floating-btn')){
+        toggleOrientationScroll();
+      }
+    }
+  });
+  
+  // Expose toggle function globally
+  window.toggleOrientationScroll = toggleOrientationScroll;
 })();
 </script>
 
