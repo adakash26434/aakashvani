@@ -104,7 +104,7 @@ window.__chips = {
   <div class="rounded-3xl overflow-hidden relative text-white p-5"
        style="background:radial-gradient(120% 100% at 0% 0%,#0d9488 0%,#0f766e 40%,#115e59 100%);box-shadow:0 20px 50px -16px rgba(13,148,136,.6)">
     <div class="flex items-start justify-between gap-3">
-      <div class="min-w-0">
+      <div class="min-w-0 flex-1">
         <div class="text-[12px] opacity-85 ne font-medium"><?= htmlspecialchars($bsDateStr,ENT_QUOTES,'UTF-8') ?></div>
         <h1 class="text-[20px] font-extrabold leading-tight mt-1 ne">
           <?= $t('स्वागत छ','Welcome to') ?> <span class="text-amber-200">आकाशवाणी</span>
@@ -112,6 +112,14 @@ window.__chips = {
         <p class="text-[12.5px] opacity-90 ne mt-1 leading-relaxed">
           <?= $t('समाचार, बजार, पात्रो, सरकारी सेवा — सबै एकै App मा।','News, market, patro, gov services — all in one app.') ?>
         </p>
+        <div class="flex gap-2 mt-3">
+          <a href="/nepal-aaja.php" class="inline-flex items-center gap-1.5 bg-white/20 hover:bg-white/30 text-white text-[11px] font-semibold px-3 py-1.5 rounded-full border border-white/20 transition-colors">
+            <i data-lucide="sunrise" class="w-3.5 h-3.5"></i> <?= $t('बिहानी ब्रिफ','Morning Brief') ?>
+          </a>
+          <a href="/alerts.php" class="inline-flex items-center gap-1.5 bg-white/20 hover:bg-white/30 text-white text-[11px] font-semibold px-3 py-1.5 rounded-full border border-white/20 transition-colors">
+            <i data-lucide="bell" class="w-3.5 h-3.5"></i> <?= $t('अलर्ट','Alerts') ?>
+          </a>
+        </div>
       </div>
       <div class="flex-shrink-0 w-14 h-14 rounded-2xl bg-white/15 backdrop-blur-sm border border-white/20 flex items-center justify-center">
         <span class="text-2xl">🇳🇵</span>
@@ -639,12 +647,12 @@ window.__chips = {
 <?php endif; ?>
 
 <!-- ═══ TODAY'S RASHIFAL ════════════════════════════���════════════════════════ -->
-<div class="sec-title">
+<div class="sec-title" id="rashifal-grid-title">
   <i data-lucide="sparkles" class="icon-md text-pink-500"></i>
   <span class="ne"><?= $t('आजको राशिफल','Today\'s Rashifal') ?></span>
   <a href="/rashifal.php" class="badge"><?= $t('विस्तृत','Full →') ?></a>
 </div>
-<section class="app-card p-3">
+<section class="app-card p-3" id="rashifal-grid-section">
   <div class="grid grid-cols-6 gap-1.5">
     <?php
     $rashiList=[['मेष','♈'],['वृष','♉'],['मिथुन','♊'],['कर्कट','♋'],['सिंह','♌'],['कन्या','♍'],['तुला','♎'],['वृश्चिक','♏'],['धनु','♐'],['मकर','♑'],['कुम्भ','♒'],['मीन','♓']];
@@ -680,78 +688,45 @@ window.__chips = {
   <?php endforeach; ?>
 </section>
 
-<!-- ═══ ALL SERVICES (Category-wise balanced view) ═════════════════════════ -->
-<div id="all-services" class="sec-title">
+<!-- ═══ MORE SERVICES ═══════════════════════════════════════════════════════ -->
+<div class="sec-title mt-4">
   <i data-lucide="grid-3x3" class="icon-md text-slate-500"></i>
-  <span class="ne"><?= $t('हाम्रा सबै सेवाहरू','All Services') ?></span>
-  <span class="badge ne"><?= $t('वर्ग अनुसार','By category') ?></span>
+  <span class="ne"><?= $t('थप सेवाहरू','More Services') ?></span>
+  <a href="/tools.php" class="badge"><?= $t('सबै हेर्नुस्','View All →') ?></a>
 </div>
-
-<?php
-/* Grouped services — easier to scan, easier to find */
-$serviceGroups = [
-  [$t('समाचार र जानकारी','News & Info'), 'newspaper', 'text-rose-600', [
-    ['/news.php',         'newspaper',     $t('समाचार','News'),       'bg-i1'],
-    ['/morning-brief.php','sunrise',       $t('बिहानी','Morning'),    'bg-i3'],
-    ['/notices.php',      'bell-ring',     $t('सूचना','Notices'),     'bg-i4'],
-    ['/alerts.php',       'bell',          $t('अलर्ट','Alerts'),      'bg-i6'],
-  ]],
-  [$t('पात्रो र राशिफल','Patro & Rashifal'), 'calendar-days', 'text-indigo-600', [
-    ['/nepali-patro.php', 'calendar-days', $t('पात्रो','Patro'),      'bg-i3'],
-    ['/rashifal.php',     'sparkles',      $t('राशिफल','Rashifal'),   'bg-i4'],
-  ]],
-  [$t('बजार र वित्त','Market & Finance'), 'trending-up', 'text-emerald-600', [
-    ['/ipo-tracker.php',  'trending-up',   'IPO',                     'bg-i2'],
-    ['/ipo-bulk-check.php','scan-line',    $t('BOLD Check','BOLD'),   'bg-i6'],
-    ['/utilities.php',    'bar-chart-2',   $t('बजार','Market'),       'bg-i7'],
-    ['/tax-calculator.php','receipt',      $t('कर','Tax'),            'bg-i8'],
-  ]],
-  [$t('सरकारी सेवा','Government'), 'landmark', 'text-teal-700', [
-    ['/gov-services.php', 'landmark',      $t('सरकारी','Gov'),        'bg-i7'],
-    ['/loksewa.php',      'briefcase',     $t('लोकसेवा','Loksewa'),   'bg-i6'],
-    ['/ssf.php',          'shield',        'SSF',                     'bg-i7'],
-    ['/vehicle.php',      'car-front',     $t('सवारी','Vehicle'),     'bg-i5'],
-  ]],
-  [$t('टूल र उपयोगिता','Tools & Utilities'), 'wrench', 'text-violet-600', [
-    ['/tools.php',        'wrench',        $t('टूलहरू','Tools'),      'bg-i5'],
-    ['/tax-calculator.php','receipt',      $t('कर','Tax'),            'bg-i8'],
-    ['/downloads.php',    'download',      $t('डाउनलोड','Files'),     'bg-i5'],
-    ['/directory.php',    'book-user',     $t('निर्देशिका','Directory'),'bg-i2'],
-    ['/offers.php',       'tag',           $t('अफर','Offers'),        'bg-i4'],
-    ['/ai-guides.php',    'sparkles',      'AI Guides',               'bg-i2'],
+<section class="grid grid-cols-4 gap-2 mb-4">
+  <?php
+  $moreTiles=[
     ['/ai-chat.php',      'message-square',$t('AI च्याट','AI Chat'),  'bg-i6'],
+    ['/visit-nepal.php',  'map-pin',       $t('घुम्ने ठाउँ','Visit'),  'bg-i7'],
+    ['/directory.php',    'book-user',     $t('निर्देशिका','Directory'),'bg-i2'],
     ['/help.php',         'life-buoy',     $t('सहयोग','Help'),         'bg-i7'],
-  ]],
-  [$t('मनोरञ्जन र प्रेरणा','Media & Inspiration'), 'sparkles', 'text-rose-600', [
-    ['/radio.php',          'radio',         $t('रेडियो','Radio'),         'bg-i1'],
-    ['/podcast.php',        'podcast',       $t('पोडकास्ट','Podcast'),      'bg-i2'],
-    ['/visit-place.php',    'camera',        $t('फोटोग्राफी','Photography'),'bg-i3'],
-    ['/success-stories.php','trophy',        $t('सफलता कथा','Success'),    'bg-i4'],
-    ['/story.php',          'book-open',     $t('कथा','Story'),            'bg-i6'],
-    ['/visit-nepal.php',    'map-pin',       $t('घुम्ने ठाउँ','Visit'),    'bg-i7'],
-  ]],
-];
-?>
-
-<?php foreach($serviceGroups as [$gTitle, $gIcon, $gColor, $gItems]): ?>
-  <div class="flex items-center gap-2 mt-3 mb-2 px-1">
-    <i data-lucide="<?= $gIcon ?>" class="w-3.5 h-3.5 <?= $gColor ?>"></i>
-    <span class="text-[12px] font-bold text-slate-700 ne"><?= $gTitle ?></span>
-    <span class="flex-1 h-px bg-slate-200"></span>
-    <span class="text-[10px] text-slate-400 font-semibold"><?= count($gItems) ?></span>
-  </div>
-  <section class="grid grid-cols-4 gap-2">
-    <?php foreach($gItems as [$h,$ic,$lb,$bg]): ?>
-      <a href="<?= $h ?>" class="tile">
-        <span class="ic <?= $bg ?>"><i data-lucide="<?= $ic ?>" class="w-[18px] h-[18px]"></i></span>
-        <span class="lbl ne"><?= $lb ?></span>
-      </a>
-    <?php endforeach; ?>
-  </section>
-<?php endforeach; ?>
+  ];
+  foreach($moreTiles as [$h,$ic,$lb,$bg]): ?>
+    <a href="<?= $h ?>" class="tile">
+      <span class="ic <?= $bg ?>"><i data-lucide="<?= $ic ?>"></i></span>
+      <span class="lbl ne"><?= $lb ?></span>
+    </a>
+  <?php endforeach; ?>
+</section>
 <div class="mb-6"></div>
 
 
 <script type="application/ld+json"><?= $jsonLd ?></script>
+
+<!-- Hide rashifal grid if personalized rashifal is shown -->
+<script>
+(function(){
+  try {
+    var saved = localStorage.getItem('nsh_fav_rashi');
+    if (saved !== null && saved >= 0 && saved < 12) {
+      var gridTitle = document.getElementById('rashifal-grid-title');
+      var gridSection = document.getElementById('rashifal-grid-section');
+      if (gridTitle) gridTitle.style.display = 'none';
+      if (gridSection) gridSection.style.display = 'none';
+    }
+  } catch(_) {}
+})();
+</script>
 
 <?php include __DIR__ . '/footer.php'; ?>
