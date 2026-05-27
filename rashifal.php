@@ -46,15 +46,15 @@ $type = isset($_GET['type']) ? $_GET['type'] : 'daily';
           <div class="flex items-center gap-2">
             <!-- Period Toggle -->
             <div class="flex bg-white/10 rounded-full p-0.5">
-              <a href="?r=<?= $selected ?>&type=daily" class="px-2.5 py-0.5 rounded-full text-[10px] font-semibold transition-colors <?= $type === 'daily' ? 'bg-white text-violet-900' : 'text-white/70 hover:text-white' ?>">
+              <button onclick="changeType('daily')" id="btn-daily" class="type-btn px-2.5 py-0.5 rounded-full text-[10px] font-semibold transition-colors <?= $type === 'daily' ? 'bg-white text-violet-900' : 'text-white/70 hover:text-white' ?>">
                 <?= $tH('दैनिक','Daily') ?>
-              </a>
-              <a href="?r=<?= $selected ?>&type=monthly" class="px-2.5 py-0.5 rounded-full text-[10px] font-semibold transition-colors <?= $type === 'monthly' ? 'bg-white text-violet-900' : 'text-white/70 hover:text-white' ?>">
+              </button>
+              <button onclick="changeType('monthly')" id="btn-monthly" class="type-btn px-2.5 py-0.5 rounded-full text-[10px] font-semibold transition-colors <?= $type === 'monthly' ? 'bg-white text-violet-900' : 'text-white/70 hover:text-white' ?>">
                 <?= $tH('मासिक','Monthly') ?>
-              </a>
-              <a href="?r=<?= $selected ?>&type=yearly" class="px-2.5 py-0.5 rounded-full text-[10px] font-semibold transition-colors <?= $type === 'yearly' ? 'bg-white text-violet-900' : 'text-white/70 hover:text-white' ?>">
+              </button>
+              <button onclick="changeType('yearly')" id="btn-yearly" class="type-btn px-2.5 py-0.5 rounded-full text-[10px] font-semibold transition-colors <?= $type === 'yearly' ? 'bg-white text-violet-900' : 'text-white/70 hover:text-white' ?>">
                 <?= $tH('वार्षिक','Yearly') ?>
-              </a>
+              </button>
             </div>
             <button id="fav-btn" type="button"
                     class="bg-white/15 hover:bg-white/30 border border-white/20 rounded-full px-3 py-1 text-[11px] font-semibold flex items-center gap-1.5 transition-colors">
@@ -418,14 +418,34 @@ $type = isset($_GET['type']) ? $_GET['type'] : 'daily';
     setEnergy(energy);
   }
 
+  var currentType = '<?= $type ?>';
+
+  function changeType(newType) {
+    currentType = newType;
+    
+    // Update button states
+    document.querySelectorAll('.type-btn').forEach(function(btn) {
+      btn.classList.remove('bg-white', 'text-violet-900');
+      btn.classList.add('text-white/70', 'hover:text-white');
+    });
+    
+    var activeBtn = document.getElementById('btn-' + newType);
+    if(activeBtn) {
+      activeBtn.classList.remove('text-white/70', 'hover:text-white');
+      activeBtn.classList.add('bg-white', 'text-violet-900');
+    }
+    
+    // Reload data with new type
+    loadLive(sel);
+  }
+
   function loadLive(idx){
     document.querySelectorAll('[data-cat]').forEach(function(p){p.textContent='लोड हुँदैछ…';});
     setText('lucky-num','…'); setText('lucky-time','…');
     var dot=document.getElementById('lucky-color-dot');if(dot)dot.style.background='#e2e8f0';
     var lbl=document.getElementById('lucky-color-txt');if(lbl)lbl.textContent='…';
 
-    var type = '<?= $type ?>';
-    fetch('/api/rashifal.php?rashi='+idx+'&lang=ne&type='+type)
+    fetch('/api/rashifal.php?rashi='+idx+'&lang=ne&type='+currentType)
       .then(function(r){return r.json();})
       .then(function(d){applyData(d,idx);})
       .catch(function(){
