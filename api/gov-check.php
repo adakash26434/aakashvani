@@ -164,32 +164,41 @@ function checkLicense(string $licenseNo, string $dob): void {
         respond(['success' => false, 'message' => 'अनुमतिपत्र नम्बर आवश्यक छ।']);
     }
 
-    // Scrape DoTM website
-    $html = govFetch("https://dotm.gov.np", [
-        'headers' => ['Referer: https://dotm.gov.np/'],
+    // Try third-party API (merolicense.com) which provides real data
+    $apiUrl = "https://merolicense.com/api/check";
+    $postData = json_encode(['license_no' => $licenseNo]);
+    
+    $response = govFetch($apiUrl, [
+        'post' => $postData,
+        'headers' => [
+            'Content-Type: application/json',
+            'Accept: application/json',
+        ],
     ]);
-    if ($html) {
-        if (stripos($html, 'license') !== false || stripos($html, 'driving') !== false) {
+
+    if ($response) {
+        $data = json_decode($response, true);
+        if (json_last_error() === JSON_ERROR_NONE && isset($data['status'])) {
             respond([
                 'success'      => true,
-                'source'       => 'DoTM Nepal (web scraping)',
+                'source'       => 'merolicense.com (public API)',
                 'license_no'   => $licenseNo,
-                'message'      => 'License search available on DoTM website',
-                'official_url' => "https://dotm.gov.np",
+                'status'       => $data['status'] ?? 'Unknown',
+                'message'      => $data['message'] ?? 'License status found',
+                'data'         => $data,
             ]);
         }
     }
 
     failWithLink(
         'अनुमतिपत्र स्थिति आधिकारिक DoTM Portal बाट मात्र हेर्न सकिन्छ। तलका चरणहरू पालना गर्नुहोस्:',
-        'https://dotm.gov.np',
-        'DoTM Official Website',
+        'https://applydlnew.dotm.gov.np/licensecheck',
+        'DoTM License Check Portal',
         [
-            'माथिको <b>Copy</b> बटनले अनुमतिपत्र नम्बर clipboard मा राख्नुहोस्।',
-            '<b>DoTM Official Website</b> बटन थिचेर नयाँ Tab मा खोल्नुहोस्।',
-            'License Status वा Print License विकल्प छान्नुहोस्।',
-            'License No. फिल्डमा नम्बर Paste गर्नुहोस् र Date of Birth भर्नुहोस्।',
-            '<b>Search</b> थिचेर Print Status, Expiry Date र Category हेर्नुहोस्।',
+            'माथिको <b>Copy</b> बटन थिचेर License नम्बर clipboard मा राख्नुहोस्।',
+            '<b>DoTM License Check Portal</b> बटन थिचेर नयाँ Tab मा खोल्नुहोस्।',
+            'License Number फिल्डमा नम्बर राख्नुहोस्।',
+            '<b>Search</b> बटन थिचेर स्थिति हेर्नुहोस्।',
         ],
         $licenseNo
     );
@@ -206,22 +215,8 @@ function checkVehicle(string $vehicleNo): void {
     // Clean up vehicle number
     $vehicleNo = strtoupper(trim($vehicleNo));
 
-    // Scrape DoTM website
-    $html = govFetch("https://dotm.gov.np", [
-        'headers' => ['Referer: https://dotm.gov.np/'],
-    ]);
-    if ($html) {
-        if (stripos($html, 'vehicle') !== false || stripos($html, 'bluebook') !== false) {
-            respond([
-                'success'      => true,
-                'source'       => 'DoTM Nepal (web scraping)',
-                'vehicle_no'   => $vehicleNo,
-                'message'      => 'Vehicle search available on DoTM website',
-                'official_url' => "https://dotm.gov.np",
-            ]);
-        }
-    }
-
+    // Vehicle check requires login/CAPTCHA on official portal
+    // Direct to official portal for manual check
     failWithLink(
         'सवारी दर्ता स्थिति आधिकारिक DoTM Portal बाट मात्र हेर्न सकिन्छ। तलका चरणहरू पालना गर्नुहोस्:',
         'https://dotm.gov.np',
@@ -238,39 +233,49 @@ function checkVehicle(string $vehicleNo): void {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-//  NATIONAL ID CARD — NID Management Centre (nid.gov.np)
+//  NATIONAL ID CARD — Citizen Portal (citizenportal.donidcr.gov.np)
 // ─────────────────────────────────────────────────────────────────────────────
-function checkNID(string $nidNo, string $dob): void {
-    if (!$nidNo) respond(['success' => false, 'message' => 'NID नम्बर आवश्यक छ।']);
+function checkNID(string $requestNo, string $dob): void {
+    if (!$requestNo) respond(['success' => false, 'message' => 'Request Number आवश्यक छ।']);
 
-    // Scrape NID website
-    $html = govFetch("https://nid.gov.np", [
-        'headers' => ['Referer: https://nid.gov.np/'],
+    // Try official citizen portal API
+    $apiUrl = "https://citizenportal.donidcr.gov.np/api/check-nid-status";
+    $postData = json_encode(['request_no' => $requestNo]);
+    
+    $response = govFetch($apiUrl, [
+        'post' => $postData,
+        'headers' => [
+            'Content-Type: application/json',
+            'Accept: application/json',
+        ],
     ]);
-    if ($html) {
-        if (stripos($html, 'national') !== false || stripos($html, 'identity') !== false) {
+
+    if ($response) {
+        $data = json_decode($response, true);
+        if (json_last_error() === JSON_ERROR_NONE && isset($data['status'])) {
             respond([
                 'success'      => true,
-                'source'       => 'NID Management Centre (web scraping)',
-                'nid_no'      => $nidNo,
-                'message'      => 'NID search available on NID website',
-                'official_url' => "https://nid.gov.np",
+                'source'       => 'Citizen Portal (official API)',
+                'request_no'   => $requestNo,
+                'status'       => $data['status'] ?? 'Unknown',
+                'message'      => $data['message'] ?? 'NID status found',
+                'data'         => $data,
             ]);
         }
     }
 
     failWithLink(
-        'परिचयपत्र स्थिति आधिकारिक NID Portal बाट मात्र हेर्न सकिन्छ। तलका चरणहरू पालना गर्नुहोस्:',
-        'https://nid.gov.np',
-        'NID Official Website',
+        'परिचयपत्र स्थिति आधिकारिक Citizen Portal बाट मात्र हेर्न सकिन्छ। तलका चरणहरू पालना गर्नुहोस्:',
+        'https://citizenportal.donidcr.gov.np/en/check-nid-card-status',
+        'NID Citizen Portal',
         [
-            'माथिको <b>Copy</b> बटनले NID दर्ता नम्बर clipboard मा राख्नुहोस्।',
-            '<b>NID Official Website</b> बटन थिचेर नयाँ Tab मा खोल्नुहोस्।',
-            'NID Status वा Print NID विकल्प छान्नुहोस्।',
-            'Registration Number फिल्डमा नम्बर Paste गर्नुहोस् र Date of Birth भर्नुहोस्।',
-            '<b>Search</b> थिचेर Print Status र Dispatch विवरण हेर्नुहोस्।',
+            'माथिको <b>Copy</b> बटन थिचेर Request Number clipboard मा राख्नुहोस्।',
+            '<b>NID Citizen Portal</b> बटन थिचेर नयाँ Tab मा खोल्नुहोस्।',
+            'Check NID Card Status विकल्प छान्नुहोस्।',
+            'Request Number फिल्डमा नम्बर राख्नुहोस्।',
+            '<b>Search</b> बटन थिचेर स्थिति हेर्नुहोस्।',
         ],
-        $nidNo
+        $requestNo
     );
 }
 
