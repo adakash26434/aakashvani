@@ -3,25 +3,25 @@
  * Health Tips - Daily health advice and wellness tips
  * Covers nutrition, exercise, mental health, and more
  */
-$pageTitle = 'Health Tips | आकाशवाणी';
-$pageDesc  = 'Daily health tips and wellness advice for a healthy lifestyle.';
+$pageTitle = 'स्वास्थ्य सुझाव | आकाशवाणी';
+$pageDesc  = 'दैनिक स्वास्थ्य सुझाव र स्वस्थ जीवनशैलीको लागि।';
 require_once __DIR__ . '/header.php';
 ?>
 <main class="app-main ht-wrap">
 
 <!-- Header -->
 <section class="ht-hero">
-  <h1><i data-lucide="heart-pulse" class="w-6 h-6"></i>Health Tips</h1>
-  <p>स्वास्थ्य सुझावहरू</p>
+  <h1><i data-lucide="heart-pulse" class="w-6 h-6"></i>स्वास्थ्य सुझाव</h1>
+  <p>दैनिक स्वास्थ्य सुझावहरू</p>
 </section>
 
 <!-- Daily Tip Card -->
 <section class="ht-daily">
   <div class="flex items-center gap-2 mb-2">
     <i data-lucide="sun" class="w-5 h-5"></i>
-    <p class="text-[12px] font-bold">Today's Tip</p>
+    <p class="text-[12px] font-bold">आजको सुझाव</p>
   </div>
-  <p class="text-[16px] font-bold leading-relaxed" id="daily-tip">Loading...</p>
+  <p class="text-[16px] font-bold leading-relaxed" id="daily-tip">लोड हुँदैछ...</p>
 </section>
 
 <!-- Category Tabs -->
@@ -39,19 +39,19 @@ require_once __DIR__ . '/header.php';
 
 <!-- Quick Health Check -->
 <section class="ft-card">
-  <p class="text-[12px] font-bold text-slate-600 uppercase tracking-wide mb-3">Quick Health Check</p>
+  <p class="text-[12px] font-bold text-slate-600 uppercase tracking-wide mb-3">द्रुत स्वास्थ्य जाँच</p>
   <div class="space-y-2">
     <div class="ft-stat">
-      <span class="text-[13px] font-semibold text-slate-700">Water Intake</span>
-      <span class="text-[11px] text-teal-600 font-bold">8 glasses/day</span>
+      <span class="text-[13px] font-semibold text-slate-700">पानी पिउने</span>
+      <span class="text-[11px] text-teal-600 font-bold">८ गिलास/दिन</span>
     </div>
     <div class="ft-stat">
-      <span class="text-[13px] font-semibold text-slate-700">Sleep</span>
-      <span class="text-[11px] text-teal-600 font-bold">7-9 hours</span>
+      <span class="text-[13px] font-semibold text-slate-700">निद्रा</span>
+      <span class="text-[11px] text-teal-600 font-bold">७-९ घण्टा</span>
     </div>
     <div class="ft-stat">
-      <span class="text-[13px] font-semibold text-slate-700">Steps</span>
-      <span class="text-[11px] text-teal-600 font-bold">10,000/day</span>
+      <span class="text-[13px] font-semibold text-slate-700">चाल</span>
+      <span class="text-[11px] text-teal-600 font-bold">१०,०००/दिन</span>
     </div>
   </div>
 </section>
@@ -62,8 +62,8 @@ require_once __DIR__ . '/header.php';
     <div class="flex items-start gap-3">
       <i data-lucide="info" class="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5"></i>
       <div class="text-[11px] text-blue-800">
-        <p class="font-semibold mb-1">Disclaimer</p>
-        <p>These tips are for general information only. Please consult a healthcare professional for medical advice.</p>
+        <p class="font-semibold mb-1">अस्वीकरण</p>
+        <p>यी सुझावहरू सामान्य जानकारीका लागि मात्र हुन्। चिकित्सकीय सल्लाहका लागि स्वास्थ्य व्यवसायीसँग सम्पर्क गर्नुहोस्।</p>
       </div>
     </div>
   </div>
@@ -75,22 +75,22 @@ require_once __DIR__ . '/header.php';
 <script>
 (function(){
   var healthTips = [
-    { category: 'nutrition', title: 'Drink More Water', desc: 'Stay hydrated by drinking at least 8 glasses of water daily. Water helps maintain body temperature, lubricate joints, and transport nutrients.', icon: 'droplets', color: 'bg-blue-100 text-blue-700' },
-    { category: 'nutrition', title: 'Eat More Vegetables', desc: 'Include a variety of colorful vegetables in your diet. They provide essential vitamins, minerals, and fiber.', icon: 'carrot', color: 'bg-orange-100 text-orange-700' },
-    { category: 'nutrition', title: 'Reduce Sugar Intake', desc: 'Limit added sugars in your diet. Excess sugar can lead to weight gain, diabetes, and heart disease.', icon: 'candy-off', color: 'bg-pink-100 text-pink-700' },
-    { category: 'nutrition', title: 'Eat Protein at Every Meal', desc: 'Protein helps build and repair tissues. Include lean meats, eggs, dairy, beans, or nuts in each meal.', icon: 'beef', color: 'bg-red-100 text-red-700' },
-    { category: 'exercise', title: 'Walk 30 Minutes Daily', desc: 'Regular walking improves cardiovascular health, strengthens bones, and boosts mood.', icon: 'footprints', color: 'bg-green-100 text-green-700' },
-    { category: 'exercise', title: 'Strength Training', desc: 'Include resistance exercises twice a week to build muscle mass and increase metabolism.', icon: 'dumbbell', color: 'bg-purple-100 text-purple-700' },
-    { category: 'exercise', title: 'Stretch Regularly', desc: 'Stretching improves flexibility, reduces muscle tension, and prevents injuries.', icon: 'stretch-horizontal', color: 'bg-teal-100 text-teal-700' },
-    { category: 'exercise', title: 'Take Breaks from Sitting', desc: 'Stand up and move every 30 minutes to reduce the risk of chronic diseases.', icon: 'armchair', color: 'bg-amber-100 text-amber-700' },
-    { category: 'mental', title: 'Practice Mindfulness', desc: 'Spend 10 minutes daily in meditation or deep breathing to reduce stress and improve focus.', icon: 'brain', color: 'bg-violet-100 text-violet-700' },
-    { category: 'mental', title: 'Connect with Others', desc: 'Social connections improve mental health. Spend time with friends and family regularly.', icon: 'users', color: 'bg-pink-100 text-pink-700' },
-    { category: 'mental', title: 'Limit Screen Time', desc: 'Reduce time on electronic devices, especially before bed, to improve sleep and mental clarity.', icon: 'smartphone', color: 'bg-slate-100 text-slate-700' },
-    { category: 'mental', title: 'Practice Gratitude', desc: 'Write down three things you are grateful for each day to boost happiness and reduce stress.', icon: 'heart', color: 'bg-rose-100 text-rose-700' },
-    { category: 'sleep', title: 'Stick to a Sleep Schedule', desc: 'Go to bed and wake up at the same time every day, even on weekends, to regulate your body clock.', icon: 'clock', color: 'bg-indigo-100 text-indigo-700' },
-    { category: 'sleep', title: 'Create a Bedtime Routine', desc: 'Develop relaxing pre-sleep activities like reading or taking a warm bath to signal your body it is time to sleep.', icon: 'moon', color: 'bg-blue-100 text-blue-700' },
-    { category: 'sleep', title: 'Avoid Caffeine Before Bed', desc: 'Stop consuming caffeine at least 6 hours before bedtime to improve sleep quality.', icon: 'coffee', color: 'bg-amber-100 text-amber-700' },
-    { category: 'sleep', title: 'Keep Your Room Cool', desc: 'Maintain a bedroom temperature between 60-67°F (15-19°C) for optimal sleep.', icon: 'thermometer', color: 'bg-cyan-100 text-cyan-700' },
+    { category: 'nutrition', title: 'बढी पानी पिउनुहोस्', desc: 'दिनमा कम्तिमा ८ गिलास पानी पिएर हाइड्रेटेड रहनुहोस्। पानीले शरीरको तापक्रम मर्मत गर्छ, जोर्नीहरूलाई चिक्नयो दिन्छ र पोषक तत्वहरू वितरण गर्छ।', icon: 'droplets', color: 'bg-blue-100 text-blue-700' },
+    { category: 'nutrition', title: 'बढी तरकारी खानुहोस्', desc: 'आफ्नो खानेमा विभिन्न रंगीन तरकारीहरू समावेश गर्नुहोस्। तिनीहरूले आवश्यक भिटामिन, खनिज र फाइबर प्रदान गर्छन्।', icon: 'carrot', color: 'bg-orange-100 text-orange-700' },
+    { category: 'nutrition', title: 'चिनी कम गर्नुहोस्', desc: 'आफ्नो खानेमा थपिएको चिनी सीमित गर्नुहोस्। अत्यधिक चिनीले वजन बढाउन, मधुमेह र हृदय रोग हुन सक्छ।', icon: 'candy-off', color: 'bg-pink-100 text-pink-700' },
+    { category: 'nutrition', title: 'हरेक खानामा प्रोटिन खानुहोस्', desc: 'प्रोटिनले ऊतकहरू निर्माण र मर्मत गर्न मद्दत गर्छ। हरेक खानामा दुबौ मासु, अण्डा, डेयरी, दाल वा नट्स समावेश गर्नुहोस्।', icon: 'beef', color: 'bg-red-100 text-red-700' },
+    { category: 'exercise', title: 'दैनिक ३० मिनेट हिँड्नुहोस्', desc: 'नियमित हिँड्दाले हृदय स्वास्थ्य सुधार्छ, हाडहरूलाई मजबुत बनाउँछ र मनोवृत्ति बढाउँछ।', icon: 'footprints', color: 'bg-green-100 text-green-700' },
+    { category: 'exercise', title: 'शक्ति प्रशिक्षण', desc: 'मांसपेशी द्रव्यमान निर्माण गर्न र चयापचय बढाउन हप्तामा दुई पटक प्रतिरोध व्यायाम समावेश गर्नुहोस्।', icon: 'dumbbell', color: 'bg-purple-100 text-purple-700' },
+    { category: 'exercise', title: 'नियमित तनाव खुल्नुहोस्', desc: 'तनावले लचिलता सुधार्छ, मांसपेशी तनाव कम गर्छ र चोटपटक रोक्छ।', icon: 'stretch-horizontal', color: 'bg-teal-100 text-teal-700' },
+    { category: 'exercise', title: 'बस्नुबाट ब्रेक लिनुहोस्', desc: 'दीर्घकालीन रोगको जोखिम कम गर्न हरेक ३० मिनेटमा उठेर हिँड्नुहोस्।', icon: 'armchair', color: 'bg-amber-100 text-amber-700' },
+    { category: 'mental', title: 'ध्यान अभ्यास गर्नुहोस्', desc: 'तनाव कम गर्न र ध्यान केन्द्रित गर्न दिनमा १० मिनेट ध्यान वा गहिरो सास फेर्नुहोस्।', icon: 'brain', color: 'bg-violet-100 text-violet-700' },
+    { category: 'mental', title: 'अरूसँग जोड्नुहोस्', desc: 'सामाजिक सम्बन्धले मानसिक स्वास्थ्य सुधार्छ। नियमित रूपमा साथीहरू र परिवारसँग समय बिताउनुहोस्।', icon: 'users', color: 'bg-pink-100 text-pink-700' },
+    { category: 'mental', title: 'स्क्रिन समय सीमित गर्नुहोस्', desc: 'निद्रा र मानसिक स्पष्टता सुधार्न विशेष गरी सुत्नुअघि इलेक्ट्रोनिक उपकरणहरूमा समय कम गर्नुहोस्।', icon: 'smartphone', color: 'bg-slate-100 text-slate-700' },
+    { category: 'mental', title: 'कृतज्ञता अभ्यास गर्नुहोस्', desc: 'खुशी बढाउन र तनाव कम गर्न दिनमा तपाईं कृतज्ञ छन् तीन चीजहरू लेख्नुहोस्।', icon: 'heart', color: 'bg-rose-100 text-rose-700' },
+    { category: 'sleep', title: 'निद्रा अनुसूची पालन गर्नुहोस्', desc: 'शरीरको घडी नियमित गर्न हप्तामा पनि बिहान उठ्ने र सुत्ने समय एउटै राख्नुहोस्।', icon: 'clock', color: 'bg-indigo-100 text-indigo-700' },
+    { category: 'sleep', title: 'सुत्ने अनुसूची बनाउनुहोस्', desc: 'पढ्ने वा गरम पानी मा नुहाउने जस्ता आरामदायक पूर्व-निद्रा गतिविधिहरू विकास गर्नुहोस्।', icon: 'moon', color: 'bg-blue-100 text-blue-700' },
+    { category: 'sleep', title: 'सुत्नुअघि क्याफिन टार्नुहोस्', desc: 'निद्राको गुणस्तर सुधार्न सुत्नुभन्दा कम्तिमा ६ घण्टा अघि क्याफिन खपत रोक्नुहोस्।', icon: 'coffee', color: 'bg-amber-100 text-amber-700' },
+    { category: 'sleep', title: 'कोठा चिसो राख्नुहोस्', desc: 'उत्तम निद्राको लागि शयनकोठाको तापक्रम ६०-६७°F (१५-१९°C) को बीचमा राख्नुहोस्।', icon: 'thermometer', color: 'bg-cyan-100 text-cyan-700' },
   ];
   
   // Show random daily tip
