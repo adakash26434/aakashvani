@@ -1043,13 +1043,25 @@ $pwaShortName = defined('PWA_SHORT_NAME') ? PWA_SHORT_NAME : 'नेपाली
     ttsUtterance.pitch = 1;
     ttsUtterance.volume = 1;
     
+    // Set language to Nepali
+    ttsUtterance.lang = 'ne-NP';
+    
     // Try to get Nepali voice if available
     var voices = ttsSynth.getVoices();
     var nepaliVoice = voices.find(function(v){
-      return v.lang === 'ne-NP' || v.lang === 'ne';
+      return v.lang === 'ne-NP' || v.lang === 'ne' || v.lang === 'ne-N';
     });
     if(nepaliVoice){
       ttsUtterance.voice = nepaliVoice;
+    } else {
+      // Fallback to Hindi voice if Nepali not available
+      var hindiVoice = voices.find(function(v){
+        return v.lang === 'hi-IN' || v.lang === 'hi';
+      });
+      if(hindiVoice){
+        ttsUtterance.voice = hindiVoice;
+        ttsUtterance.lang = 'hi-IN';
+      }
     }
     
     // Event handlers
@@ -1088,13 +1100,25 @@ $pwaShortName = defined('PWA_SHORT_NAME') ? PWA_SHORT_NAME : 'नेपाली
   }
   
   function getVisibleText(){
-    // Get main content area
+    // Get main content area only
     var mainContent = document.querySelector('main, .app-main, article, .content');
-    if(!mainContent) mainContent = document.body;
+    if(!mainContent) return '';
     
-    // Get text, excluding scripts, styles, nav, footer
+    // Clone to avoid modifying original
     var clone = mainContent.cloneNode(true);
-    var excludeSelectors = ['script', 'style', 'nav', 'footer', 'button', '.ad', '.advertisement'];
+    
+    // Exclude navigation, buttons, headers, footers, etc.
+    var excludeSelectors = [
+      'script', 'style', 'nav', 'footer', 'header',
+      'button', '.btn', '.bar-btn', '.tile', '.chip',
+      '.sec-title', '.badge', '.pill', '.tab',
+      '.ad', '.advertisement', '.sidebar',
+      '.hero-icon-btn', '.floating-btn',
+      'input', 'select', 'textarea',
+      '.ai-fab-wrap', '#ai-fab-wrap',
+      '.search', '.filter', '.pagination'
+    ];
+    
     excludeSelectors.forEach(function(sel){
       var elements = clone.querySelectorAll(sel);
       elements.forEach(function(el){
@@ -1102,12 +1126,23 @@ $pwaShortName = defined('PWA_SHORT_NAME') ? PWA_SHORT_NAME : 'नेपाली
       });
     });
     
+    // Also remove elements with specific classes
+    var excludeClasses = ['navigation', 'menu', 'toolbar', 'controls', 'actions'];
+    excludeClasses.forEach(function(cls){
+      var elements = clone.querySelectorAll('.' + cls);
+      elements.forEach(function(el){
+        el.remove();
+      });
+    });
+    
     // Get clean text
     var text = clone.innerText || clone.textContent;
-    // Clean up extra whitespace
-    text = text.replace(/\s+/g, ' ').trim();
+    
+    // Clean up extra whitespace and newlines
+    text = text.replace(/\n\s*\n/g, '\n').replace(/\s+/g, ' ').trim();
+    
     // Limit to reasonable length (prevent very long reads)
-    text = text.substring(0, 10000);
+    text = text.substring(0, 5000);
     
     return text;
   }
