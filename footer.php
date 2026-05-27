@@ -530,36 +530,47 @@ $todayQuote = $_quotes[$_qIdx];
 
 <!-- ═══ APP FOOTER (compact, lives inside phone column) ════════════════════════ -->
 <footer class="app-shell" style="padding-top:8px;padding-bottom:0">
-  <div class="app-card" style="padding:18px 16px">
-    <div class="flex items-center gap-2 mb-3">
-      <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-700 to-brand-500 text-white flex items-center justify-center font-extrabold">आ</div>
-      <div>
-        <div class="text-[14px] font-bold text-ink ne">आकाशवाणी<span class="text-slate-400 font-normal text-[11px]"> by आकाश अधिकारी</span></div>
-        <div class="text-[11px] text-slate-500 ne"><?= $tF('सूचनाको खुला आकाश','सूचनाको खुला आकाश') ?></div>
+  <div class="app-card" style="padding:20px 16px;background:linear-gradient(135deg,#f8fafc 0%,#f1f5f9 100%)">
+    <!-- Brand Section -->
+    <div class="flex items-center gap-3 mb-4">
+      <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-teal-600 to-cyan-500 text-white flex items-center justify-center font-extrabold text-xl shadow-lg shadow-teal-500/20">आ</div>
+      <div class="flex-1">
+        <div class="text-[15px] font-bold text-slate-900 ne leading-tight">आकाशवाणी</div>
+        <div class="text-[11px] text-slate-500 ne mt-0.5">by आकाश अधिकारी</div>
+        <div class="text-[10px] text-teal-600 font-medium ne mt-1 flex items-center gap-1">
+          <i data-lucide="radio" class="w-3 h-3"></i>
+          <?= $tF('सूचनाको खुला आकाश','सूचनाको खुला आकाश') ?>
+        </div>
       </div>
     </div>
 
-    <!-- Icon link grid removed — bottom navigation already exposes these shortcuts -->
+    <!-- Quick Links -->
+    <div class="grid grid-cols-2 gap-2 mb-4">
+      <a href="/sources.php" class="flex items-center gap-2 px-3 py-2 bg-white rounded-xl border border-slate-200 hover:border-teal-300 hover:bg-teal-50 transition-all group">
+        <i data-lucide="book-marked" class="w-4 h-4 text-slate-500 group-hover:text-teal-600 transition-colors"></i>
+        <span class="text-[11px] font-medium text-slate-700 ne group-hover:text-teal-700 transition-colors">Sources</span>
+      </a>
+      <a href="/sources.php#legal" class="flex items-center gap-2 px-3 py-2 bg-white rounded-xl border border-slate-200 hover:border-teal-300 hover:bg-teal-50 transition-all group">
+        <i data-lucide="scale" class="w-4 h-4 text-slate-500 group-hover:text-teal-600 transition-colors"></i>
+        <span class="text-[11px] font-medium text-slate-700 ne group-hover:text-teal-700 transition-colors">कानूनी नीति</span>
+      </a>
+    </div>
 
-
-    <div class="mt-4 pt-3 border-t border-line flex items-center justify-between text-[11px] text-slate-400">
-      <div>© <?= date('Y') ?> <?= htmlspecialchars(defined('SITE_NAME')?SITE_NAME:'आकाशवाणी',ENT_QUOTES,'UTF-8') ?></div>
-      <a href="?lang=<?= $lang==='ne'?'en':'ne' ?>" class="px-3 py-1.5 bg-brand-50 text-brand-700 rounded-lg font-semibold hover:bg-brand-100 transition-colors flex items-center gap-1.5">
+    <!-- Bottom Bar -->
+    <div class="pt-3 border-t border-slate-200 flex items-center justify-between">
+      <div class="text-[10.5px] text-slate-400 ne">
+        © <?= date('Y') ?> <?= htmlspecialchars(defined('SITE_NAME')?SITE_NAME:'आकाशवाणी',ENT_QUOTES,'UTF-8') ?>
+      </div>
+      <a href="?lang=<?= $lang==='ne'?'en':'ne' ?>" class="px-3 py-1.5 bg-gradient-to-r from-teal-500 to-cyan-500 text-white rounded-lg font-semibold text-[11px] hover:from-teal-600 hover:to-cyan-600 transition-all flex items-center gap-1.5 shadow-md shadow-teal-500/20">
         <i data-lucide="globe" class="w-3.5 h-3.5"></i>
         <?= $lang==='ne'?'EN':'नेपा' ?>
       </a>
     </div>
 
-    <div class="mt-2 flex items-center gap-3 text-[11px] text-slate-500 flex-wrap">
-      <a href="/sources.php" class="hover:text-brand-700 ne flex items-center gap-1"><i data-lucide="book-marked" class="w-3 h-3"></i> Sources &amp; Attribution</a>
-      <span class="opacity-40">·</span>
-      <a href="/sources.php#legal" class="hover:text-brand-700 ne flex items-center gap-1"><i data-lucide="scale" class="w-3 h-3"></i> कानूनी नीति</a>
-    </div>
-
     <!-- AI Sync badge (admin only) -->
     <div id="footer-sync" class="hidden mt-3">
-      <div class="inline-flex items-center gap-2 bg-brand-50 border border-brand-200 rounded-lg px-3 py-1.5 text-[11px] text-brand-700">
-        <span class="w-1.5 h-1.5 rounded-full bg-brand-500 animate-pulse"></span>
+      <div class="inline-flex items-center gap-2 bg-teal-50 border border-teal-200 rounded-lg px-3 py-1.5 text-[11px] text-teal-700">
+        <span class="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse"></span>
         <span id="footer-sync-txt">AI Sync active</span>
       </div>
     </div>
