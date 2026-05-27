@@ -1,5 +1,67 @@
 /* Shared app utilities and repeated UI helpers */
+
+/* Design System - Unified Sizes */
+/* Icon Sizes */
+.icon-xs { width: 14px; height: 14px; }
+.icon-sm { width: 16px; height: 16px; }
+.icon-md { width: 20px; height: 20px; }
+.icon-lg { width: 24px; height: 24px; }
+.icon-xl { width: 32px; height: 32px; }
+.icon-2xl { width: 40px; height: 40px; }
+.icon-3xl { width: 48px; height: 48px; }
+
+/* Text Sizes */
+.text-xs { font-size: 10px; }
+.text-sm { font-size: 11px; }
+.text-base { font-size: 12px; }
+.text-md { font-size: 13px; }
+.text-lg { font-size: 14px; }
+.text-xl { font-size: 16px; }
+.text-2xl { font-size: 18px; }
+.text-3xl { font-size: 20px; }
+.text-4xl { font-size: 24px; }
+.text-5xl { font-size: 28px; }
+
+/* Spacing */
+.space-1 { gap: 4px; }
+.space-2 { gap: 8px; }
+.space-3 { gap: 12px; }
+.space-4 { gap: 16px; }
+.space-5 { gap: 20px; }
+
+/* Padding */
+.p-xs { padding: 8px; }
+.p-sm { padding: 12px; }
+.p-md { padding: 16px; }
+.p-lg { padding: 20px; }
+.p-xl { padding: 24px; }
+
+/* Margin */
+.m-xs { margin: 8px; }
+.m-sm { margin: 12px; }
+.m-md { margin: 16px; }
+.m-lg { margin: 20px; }
+.m-xl { margin: 24px; }
+
+.mb-xs { margin-bottom: 8px; }
+.mb-sm { margin-bottom: 12px; }
+.mb-md { margin-bottom: 16px; }
+.mb-lg { margin-bottom: 20px; }
+.mb-xl { margin-bottom: 24px; }
+
+.mt-xs { margin-top: 8px; }
+.mt-sm { margin-top: 12px; }
+.mt-md { margin-top: 16px; }
+.mt-lg { margin-top: 20px; }
+.mt-xl { margin-top: 24px; }
+
 .badge-green { background: rgba(35, 134, 54, .15); border: 1px solid rgba(46, 160, 67, .4); color: #14b8a6; padding: .15rem .6rem; border-radius: .25rem; font-size: .7rem; font-family: 'Space Mono', monospace; }
+
+/* Unified Section Title */
+.sec-title { display: flex; align-items: center; gap: 8px; margin: 18px 4px 10px; font-size: 13.5px; font-weight: 700; color: var(--ink, #0f172a); letter-spacing: -0.01em; }
+.sec-title i { width: 16px; height: 16px; flex-shrink: 0; }
+.sec-title .badge { margin-left: auto; font-size: 11px; color: var(--brand-deep, #0d9488); font-weight: 600; }
+.sec-title span { font-weight: 700; }
 .badge-orange { background: rgba(210, 90, 0, .15); border: 1px solid rgba(210, 90, 0, .4); color: #f59e0b; padding: .15rem .6rem; border-radius: .25rem; font-size: .7rem; font-family: 'Space Mono', monospace; }
 .badge-blue { background: rgba(31, 111, 235, .15); border: 1px solid rgba(31, 111, 235, .4); color: #0ea5e9; padding: .15rem .6rem; border-radius: .25rem; font-size: .7rem; font-family: 'Space Mono', monospace; }
 .badge-gray { background: #f5f5f4; border: 1px solid #e2e8f0; color: #64748b; padding: .15rem .6rem; border-radius: .25rem; font-size: .7rem; font-family: 'Space Mono', monospace; }

@@ -52,7 +52,7 @@ include __DIR__ . '/header.php';
 <!-- NEPSE Section -->
 <section id="nepse" class="mt-4 fade-up">
   <div class="sec-title">
-    <i data-lucide="trending-up" class="w-4 h-4 text-blue-600"></i>
+    <i data-lucide="trending-up" class="icon-md text-blue-600"></i>
     <span class="font-bold">NEPSE Index</span>
     <?php if (($nepse['market_status']['status'] ?? '') === 'open'): ?>
       <span class="ml-auto text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-semibold"><?= $t('खुला', 'Open') ?></span>
@@ -169,7 +169,7 @@ include __DIR__ . '/header.php';
     <i data-lucide="cloud-off" class="w-12 h-12 mx-auto text-slate-300 mb-3"></i>
     <p class="text-sm text-slate-500 ne"><?= h($nepse['note'] ?? $t('NEPSE डाटा उपलब्ध छैन', 'NEPSE data unavailable')) ?></p>
     <a href="https://nepalstock.com.np" target="_blank" class="inline-flex items-center gap-1 mt-2 text-sm text-sky-600">
-      <?= $t('NEPSE वेबसाइट हेर्नुस्', 'Visit NEPSE website') ?> <i data-lucide="external-link" class="w-4 h-4"></i>
+      <?= $t('NEPSE वेबसाइट हेर्नुस्', 'Visit NEPSE website') ?> <i data-lucide="external-link" class="icon-md"></i>
     </a>
   </div>
   <?php endif; ?>
@@ -187,7 +187,7 @@ include __DIR__ . '/header.php';
 <!-- Gold & Silver Section -->
 <section id="gold" class="mt-6 fade-up">
   <div class="sec-title">
-    <i data-lucide="gem" class="w-4 h-4 text-amber-500"></i>
+    <i data-lucide="gem" class="icon-md text-amber-500"></i>
     <span class="font-bold ne"><?= $t('सुनचाँदी भाउ', 'Gold & Silver Price') ?></span>
   </div>
   
@@ -261,7 +261,7 @@ include __DIR__ . '/header.php';
 <!-- Forex Section -->
 <section id="forex" class="mt-6 fade-up">
   <div class="sec-title">
-    <i data-lucide="currency" class="w-4 h-4 text-emerald-500"></i>
+    <i data-lucide="currency" class="icon-md text-emerald-500"></i>
     <span class="font-bold ne"><?= $t('विनिमय दर', 'Exchange Rates') ?></span>
   </div>
   
@@ -321,7 +321,7 @@ include __DIR__ . '/header.php';
 <!-- Fuel Section -->
 <section id="fuel" class="mt-6 mb-8 fade-up">
   <div class="sec-title">
-    <i data-lucide="fuel" class="w-4 h-4 text-orange-500"></i>
+    <i data-lucide="fuel" class="icon-md text-orange-500"></i>
     <span class="font-bold ne"><?= $t('इन्धन मूल्य', 'Fuel Prices') ?></span>
   </div>
   
