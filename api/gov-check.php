@@ -164,32 +164,6 @@ function checkLicense(string $licenseNo, string $dob): void {
         respond(['success' => false, 'message' => 'अनुमतिपत्र नम्बर आवश्यक छ।']);
     }
 
-    // Try third-party API (merolicense.com) which provides real data
-    $apiUrl = "https://merolicense.com/api/check";
-    $postData = json_encode(['license_no' => $licenseNo]);
-    
-    $response = govFetch($apiUrl, [
-        'post' => $postData,
-        'headers' => [
-            'Content-Type: application/json',
-            'Accept: application/json',
-        ],
-    ]);
-
-    if ($response) {
-        $data = json_decode($response, true);
-        if (json_last_error() === JSON_ERROR_NONE && isset($data['status'])) {
-            respond([
-                'success'      => true,
-                'source'       => 'merolicense.com (public API)',
-                'license_no'   => $licenseNo,
-                'status'       => $data['status'] ?? 'Unknown',
-                'message'      => $data['message'] ?? 'License status found',
-                'data'         => $data,
-            ]);
-        }
-    }
-
     failWithLink(
         'अनुमतिपत्र स्थिति आधिकारिक DoTM Portal बाट मात्र हेर्न सकिन्छ। तलका चरणहरू पालना गर्नुहोस्:',
         'https://applydlnew.dotm.gov.np/licensecheck',
@@ -237,32 +211,6 @@ function checkVehicle(string $vehicleNo): void {
 // ─────────────────────────────────────────────────────────────────────────────
 function checkNID(string $requestNo, string $dob): void {
     if (!$requestNo) respond(['success' => false, 'message' => 'Request Number आवश्यक छ।']);
-
-    // Try official citizen portal API
-    $apiUrl = "https://citizenportal.donidcr.gov.np/api/check-nid-status";
-    $postData = json_encode(['request_no' => $requestNo]);
-    
-    $response = govFetch($apiUrl, [
-        'post' => $postData,
-        'headers' => [
-            'Content-Type: application/json',
-            'Accept: application/json',
-        ],
-    ]);
-
-    if ($response) {
-        $data = json_decode($response, true);
-        if (json_last_error() === JSON_ERROR_NONE && isset($data['status'])) {
-            respond([
-                'success'      => true,
-                'source'       => 'Citizen Portal (official API)',
-                'request_no'   => $requestNo,
-                'status'       => $data['status'] ?? 'Unknown',
-                'message'      => $data['message'] ?? 'NID status found',
-                'data'         => $data,
-            ]);
-        }
-    }
 
     failWithLink(
         'परिचयपत्र स्थिति आधिकारिक Citizen Portal बाट मात्र हेर्न सकिन्छ। तलका चरणहरू पालना गर्नुहोस्:',
