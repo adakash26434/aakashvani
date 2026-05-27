@@ -712,10 +712,37 @@ $pwaShortName = defined('PWA_SHORT_NAME') ? PWA_SHORT_NAME : 'नेपाली
   <i data-lucide="chevron-up" style="width:24px;height:24px"></i>
 </button>
 
+<!-- Auto-Scroll Timer Button (Mobile) -->
+<button id="auto-scroll-btn" onclick="toggleAutoScroll()" 
+  style="display:none;position:fixed;bottom:calc(100px + env(safe-area-inset-bottom,0px));left:16px;
+  width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#8b5cf6);
+  color:#fff;border:none;box-shadow:0 4px 20px rgba(99,102,241,.4);cursor:pointer;z-index:9997;
+  align-items:center;justify-content:center;transition:all 0.3s ease;opacity:0;transform:scale(0.8)">
+  <i data-lucide="play" id="auto-scroll-icon" style="width:24px;height:24px"></i>
+</button>
+
+<!-- Auto-Scroll Speed Control (Mobile) -->
+<div id="auto-scroll-speed" style="display:none;position:fixed;bottom:calc(160px + env(safe-area-inset-bottom,0px));left:16px;
+  background:#fff;border:1px solid #e6eaf2;border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,.15);
+  padding:12px;z-index:9998;min-width:140px">
+  <div style="font-size:11px;font-weight:700;color:#0b1220;margin-bottom:8px" class="ne">Scroll Speed</div>
+  <div style="display:flex;gap:6px">
+    <button onclick="setScrollSpeed(1)" class="speed-btn" data-speed="1" 
+      style="flex:1;padding:6px;border:1px solid #e6eaf2;border-radius:8px;background:#f8fafc;font-size:10px;font-weight:600;color:#64748b;cursor:pointer">Slow</button>
+    <button onclick="setScrollSpeed(2)" class="speed-btn" data-speed="2" 
+      style="flex:1;padding:6px;border:1px solid #e6eaf2;border-radius:8px;background:#f8fafc;font-size:10px;font-weight:600;color:#64748b;cursor:pointer">Med</button>
+    <button onclick="setScrollSpeed(3)" class="speed-btn" data-speed="3" 
+      style="flex:1;padding:6px;border:1px solid #e6eaf2;border-radius:8px;background:#f8fafc;font-size:10px;font-weight:600;color:#64748b;cursor:pointer">Fast</button>
+  </div>
+</div>
+
 <script>
 (function(){
   var scrollBtn = document.getElementById('scroll-to-top');
-  if(!scrollBtn) return;
+  var autoScrollBtn = document.getElementById('auto-scroll-btn');
+  var autoScrollIcon = document.getElementById('auto-scroll-icon');
+  var autoScrollSpeedPanel = document.getElementById('auto-scroll-speed');
+  if(!scrollBtn || !autoScrollBtn) return;
   
   var lastScrollTop = 0;
   var scrollThreshold = 200;
@@ -725,16 +752,22 @@ $pwaShortName = defined('PWA_SHORT_NAME') ? PWA_SHORT_NAME : 'नेपाली
     
     if(scrollTop > scrollThreshold){
       scrollBtn.style.display = 'flex';
+      autoScrollBtn.style.display = 'flex';
       setTimeout(function(){
         scrollBtn.style.opacity = '1';
         scrollBtn.style.transform = 'scale(1)';
+        autoScrollBtn.style.opacity = '1';
+        autoScrollBtn.style.transform = 'scale(1)';
       }, 10);
     } else {
       scrollBtn.style.opacity = '0';
       scrollBtn.style.transform = 'scale(0.8)';
+      autoScrollBtn.style.opacity = '0';
+      autoScrollBtn.style.transform = 'scale(0.8)';
       setTimeout(function(){
         if(window.pageYOffset <= scrollThreshold){
           scrollBtn.style.display = 'none';
+          autoScrollBtn.style.display = 'none';
         }
       }, 300);
     }
@@ -744,6 +777,80 @@ $pwaShortName = defined('PWA_SHORT_NAME') ? PWA_SHORT_NAME : 'नेपाली
   
   window.addEventListener('scroll', handleScroll, {passive: true});
   handleScroll();
+  
+  // ── Auto-Scroll Timer ───────────────────────────────────────────────────
+  var autoScrollActive = false;
+  var autoScrollInterval = null;
+  var scrollSpeed = 2; // 1=slow, 2=medium, 3=fast
+  var scrollSpeeds = {1: 1, 2: 2, 3: 4}; // pixels per tick
+  
+  window.toggleAutoScroll = function(){
+    autoScrollActive = !autoScrollActive;
+    
+    if(autoScrollActive){
+      // Start auto-scroll
+      autoScrollIcon.setAttribute('data-lucide', 'pause');
+      if(window.lucide) lucide.createIcons();
+      autoScrollBtn.style.background = 'linear-gradient(135deg,#dc2626,#ef4444)';
+      autoScrollSpeedPanel.style.display = 'block';
+      startAutoScroll();
+    } else {
+      // Stop auto-scroll
+      autoScrollIcon.setAttribute('data-lucide', 'play');
+      if(window.lucide) lucide.createIcons();
+      autoScrollBtn.style.background = 'linear-gradient(135deg,#6366f1,#8b5cf6)';
+      autoScrollSpeedPanel.style.display = 'none';
+      stopAutoScroll();
+    }
+  };
+  
+  window.setScrollSpeed = function(speed){
+    scrollSpeed = speed;
+    // Update button styles
+    document.querySelectorAll('.speed-btn').forEach(function(btn){
+      if(parseInt(btn.dataset.speed) === speed){
+        btn.style.background = '#0f766e';
+        btn.style.color = '#fff';
+        btn.style.borderColor = '#0f766e';
+      } else {
+        btn.style.background = '#f8fafc';
+        btn.style.color = '#64748b';
+        btn.style.borderColor = '#e6eaf2';
+      }
+    });
+  };
+  
+  function startAutoScroll(){
+    if(autoScrollInterval) clearInterval(autoScrollInterval);
+    autoScrollInterval = setInterval(function(){
+      window.scrollBy({
+        top: scrollSpeeds[scrollSpeed],
+        behavior: 'auto'
+      });
+    }, 50); // 20 ticks per second
+  }
+  
+  function stopAutoScroll(){
+    if(autoScrollInterval){
+      clearInterval(autoScrollInterval);
+      autoScrollInterval = null;
+    }
+  }
+  
+  // Initialize speed button styles
+  setScrollSpeed(2);
+  
+  // Stop auto-scroll when user manually scrolls
+  var manualScrollTimeout;
+  window.addEventListener('scroll', function(){
+    if(autoScrollActive){
+      clearTimeout(manualScrollTimeout);
+      manualScrollTimeout = setTimeout(function(){
+        // Optionally pause auto-scroll on manual interaction
+        // toggleAutoScroll();
+      }, 500);
+    }
+  }, {passive: true});
   
   // ── Device Orientation Auto-Scroll (Mobile Tilt) ─────────────────────
   var orientationEnabled = false;
