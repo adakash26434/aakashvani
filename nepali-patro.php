@@ -330,7 +330,7 @@ $selectedSpecial = getSpecialDay($selectedDate, $currentMonth, $selectedPanchang
     <!-- Selected Date Display -->
     <div class="text-center mb-4">
       <div class="text-5xl font-bold ne"><?= $selectedDate ?></div>
-      <div class="text-lg text-teal-100 ne"><?= $weekDays[date('l')] ?></div>
+      <div class="text-lg text-teal-100 ne"><?= $todayBS['weekday'] ?></div>
       <div class="mt-2 inline-flex items-center gap-2 bg-white/20 px-4 py-2 rounded-full">
         <i data-lucide="calendar" class="w-4 h-4"></i>
         <span><?= date('d F Y') ?> AD</span>

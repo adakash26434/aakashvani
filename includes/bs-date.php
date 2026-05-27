@@ -88,6 +88,23 @@ function bsDate(string $adStr, bool $withTime = false, bool $nepaliDigits = true
 }
 
 /**
+ * Get today's BS date as an array.
+ * Returns ['year' => bsY, 'month' => bsM, 'day' => bsD, 'weekday' => nepaliDayName]
+ */
+function getTodayBS(): array {
+    global $_NSH_BS_DAYS;
+    $now = new DateTime('now', new DateTimeZone('Asia/Kathmandu'));
+    $bs = adToBs((int)$now->format('Y'), (int)$now->format('n'), (int)$now->format('j'));
+    if (!$bs) {
+        return ['year' => 2083, 'month' => 1, 'day' => 1, 'weekday' => 'आइतबार'];
+    }
+    [$bsY, $bsM, $bsD] = $bs;
+    $weekdayIndex = (int)$now->format('w');
+    $weekday = $_NSH_BS_DAYS[$weekdayIndex] ?? 'आइतबार';
+    return ['year' => $bsY, 'month' => $bsM, 'day' => $bsD, 'weekday' => $weekday];
+}
+
+/**
  * Return BS date string for use as placeholder/display value of a date input.
  * Format: "२०८२-०२-०५" (Y-M-D in Nepali digits)
  */
