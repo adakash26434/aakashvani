@@ -7,24 +7,16 @@ $pageTitle = 'Dictionary | आकाशवाणी';
 $pageDesc  = 'Nepali-English dictionary with word meanings and definitions.';
 require_once __DIR__ . '/header.php';
 ?>
-<main class="app-main">
+<main class="app-main dict-wrap">
 
 <!-- Header -->
-<section class="px-4 pt-4 pb-2">
-  <div class="flex items-center gap-2 mb-1">
-    <span class="w-9 h-9 rounded-xl bg-indigo-500 text-white flex items-center justify-center flex-shrink-0">
-      <i data-lucide="book" class="w-5 h-5"></i>
-    </span>
-    <div>
-      <h1 class="text-[18px] font-bold text-slate-900 leading-tight">Dictionary</h1>
-      <p class="text-[11px] text-slate-500">शब्दकोश - नेपाली-English</p>
-    </div>
-  </div>
+<section class="dict-hero">
+  <h1><i data-lucide="book" class="w-6 h-6"></i>Dictionary</h1>
+  <p>शब्दकोश - नेपाली-English</p>
 </section>
 
 <!-- Search Card -->
-<section class="px-4 mb-4">
-  <div class="bg-white rounded-2xl border border-slate-100 shadow-app p-4">
+<section class="dict-card">
     
     <!-- Language Toggle -->
     <div class="flex gap-2 mb-3">
@@ -52,8 +44,7 @@ require_once __DIR__ . '/header.php';
 </section>
 
 <!-- Result Card -->
-<section class="px-4 mb-4" id="result-section" style="display:none">
-  <div class="bg-white rounded-2xl border border-slate-100 shadow-app p-4">
+<section class="dict-card dict-result" id="result-section">
     <div class="flex items-center justify-between mb-3">
       <p class="text-[12px] font-bold text-slate-600 uppercase tracking-wide">Result</p>
       <button onclick="playPronunciation()" class="text-[10px] text-indigo-600 font-semibold flex items-center gap-1">
@@ -245,7 +236,7 @@ require_once __DIR__ . '/header.php';
     }).join('');
     
     document.getElementById('meanings').innerHTML = meaningsHTML;
-    document.getElementById('result-section').style.display = 'block';
+    document.getElementById('result-section').classList.add('show');
     
     if(window.lucide) lucide.createIcons();
   }

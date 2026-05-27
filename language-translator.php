@@ -7,24 +7,16 @@ $pageTitle = 'Language Translator | आकाशवाणी';
 $pageDesc  = 'Translate text between Nepali, English, Hindi, and other languages.';
 require_once __DIR__ . '/header.php';
 ?>
-<main class="app-main">
+<main class="app-main lt-wrap">
 
 <!-- Header -->
-<section class="px-4 pt-4 pb-2">
-  <div class="flex items-center gap-2 mb-1">
-    <span class="w-9 h-9 rounded-xl bg-purple-500 text-white flex items-center justify-center flex-shrink-0">
-      <i data-lucide="languages" class="w-5 h-5"></i>
-    </span>
-    <div>
-      <h1 class="text-[18px] font-bold text-slate-900 leading-tight">Language Translator</h1>
-      <p class="text-[11px] text-slate-500">भाषा अनुवाद गर्नुस्</p>
-    </div>
-  </div>
+<section class="lt-hero">
+  <h1><i data-lucide="languages" class="w-6 h-6"></i>Language Translator</h1>
+  <p>भाषा अनुवाद गर्नुस्</p>
 </section>
 
 <!-- Translator Card -->
-<section class="px-4 mb-4">
-  <div class="bg-white rounded-2xl border border-slate-100 shadow-app p-4">
+<section class="lt-card">
     
     <!-- From Language -->
     <div class="mb-3">
@@ -92,8 +84,7 @@ require_once __DIR__ . '/header.php';
 </section>
 
 <!-- Result Card -->
-<section class="px-4 mb-4" id="result-section" style="display:none">
-  <div class="bg-white rounded-2xl border border-slate-100 shadow-app p-4">
+<section class="lt-card lt-result" id="result-section">
     <div class="flex items-center justify-between mb-3">
       <p class="text-[12px] font-bold text-slate-600 uppercase tracking-wide">Translation</p>
       <button onclick="copyResult()" class="text-[10px] text-purple-600 font-semibold flex items-center gap-1">
@@ -159,7 +150,7 @@ require_once __DIR__ . '/header.php';
   window.clearText = function(){
     document.getElementById('input-text').value = '';
     document.getElementById('char-count').textContent = '0 characters';
-    document.getElementById('result-section').style.display = 'none';
+    document.getElementById('result-section').classList.remove('show');
   };
   
   window.translateText = function(){
@@ -200,7 +191,7 @@ require_once __DIR__ . '/header.php';
   
   function showResult(text){
     document.getElementById('result-text').textContent = text;
-    document.getElementById('result-section').style.display = 'block';
+    document.getElementById('result-section').classList.add('show');
   }
   
   window.copyResult = function(){

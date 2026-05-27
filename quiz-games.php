@@ -7,50 +7,40 @@ $pageTitle = 'Quiz & Games | आकाशवाणी';
 $pageDesc  = 'Play educational quizzes and games - general knowledge, brain teasers.';
 require_once __DIR__ . '/header.php';
 ?>
-<main class="app-main">
+<main class="app-main quiz-wrap">
 
 <!-- Header -->
-<section class="px-4 pt-4 pb-2">
-  <div class="flex items-center gap-2 mb-1">
-    <span class="w-9 h-9 rounded-xl bg-pink-500 text-white flex items-center justify-center flex-shrink-0">
-      <i data-lucide="gamepad-2" class="w-5 h-5"></i>
-    </span>
-    <div>
-      <h1 class="text-[18px] font-bold text-slate-900 leading-tight">Quiz & Games</h1>
-      <p class="text-[11px] text-slate-500">ज्ञान परीक्षा र खेलहरू</p>
-    </div>
-  </div>
+<section class="quiz-hero">
+  <h1><i data-lucide="gamepad-2" class="w-6 h-6"></i>Quiz & Games</h1>
+  <p>ज्ञान परीक्षा र खेलहरू</p>
 </section>
 
 <!-- Game Selection -->
-<section class="px-4 mb-4">
-  <div class="grid grid-cols-2 gap-3">
-    <div onclick="startQuiz('general')" class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-4 text-white cursor-pointer hover:scale-[1.02] transition-transform">
-      <i data-lucide="brain" class="w-8 h-8 mb-2"></i>
-      <p class="text-[14px] font-bold">General Knowledge</p>
-      <p class="text-[10px] opacity-80">सामान्य ज्ञान</p>
-    </div>
-    <div onclick="startQuiz('nepal')" class="bg-gradient-to-br from-red-500 to-red-600 rounded-2xl p-4 text-white cursor-pointer hover:scale-[1.02] transition-transform">
-      <i data-lucide="mountain" class="w-8 h-8 mb-2"></i>
-      <p class="text-[14px] font-bold">Nepal Quiz</p>
-      <p class="text-[10px] opacity-80">नेपाल बारे</p>
-    </div>
-    <div onclick="startQuiz('science')" class="bg-gradient-to-br from-green-500 to-green-600 rounded-2xl p-4 text-white cursor-pointer hover:scale-[1.02] transition-transform">
-      <i data-lucide="flask-conical" class="w-8 h-8 mb-2"></i>
-      <p class="text-[14px] font-bold">Science</p>
-      <p class="text-[10px] opacity-80">विज्ञान</p>
-    </div>
-    <div onclick="startQuiz('history')" class="bg-gradient-to-br from-amber-500 to-amber-600 rounded-2xl p-4 text-white cursor-pointer hover:scale-[1.02] transition-transform">
-      <i data-lucide="scroll" class="w-8 h-8 mb-2"></i>
-      <p class="text-[14px] font-bold">History</p>
-      <p class="text-[10px] opacity-80">इतिहास</p>
-    </div>
+<section class="grid grid-cols-2 gap-3 mb-4">
+  <div onclick="startQuiz('general')" class="quiz-card">
+    <i data-lucide="brain" class="w-8 h-8 mb-2"></i>
+    <p class="text-[14px] font-bold">General Knowledge</p>
+    <p class="text-[10px] opacity-80">सामान्य ज्ञान</p>
+  </div>
+  <div onclick="startQuiz('nepal')" class="quiz-card" style="background: linear-gradient(135deg,#ef4444,#dc2626)">
+    <i data-lucide="mountain" class="w-8 h-8 mb-2"></i>
+    <p class="text-[14px] font-bold">Nepal Quiz</p>
+    <p class="text-[10px] opacity-80">नेपाल बारे</p>
+  </div>
+  <div onclick="startQuiz('science')" class="quiz-card" style="background: linear-gradient(135deg,#22c55e,#16a34a)">
+    <i data-lucide="flask-conical" class="w-8 h-8 mb-2"></i>
+    <p class="text-[14px] font-bold">Science</p>
+    <p class="text-[10px] opacity-80">विज्ञान</p>
+  </div>
+  <div onclick="startQuiz('history')" class="quiz-card" style="background: linear-gradient(135deg,#f59e0b,#d97706)">
+    <i data-lucide="scroll" class="w-8 h-8 mb-2"></i>
+    <p class="text-[14px] font-bold">History</p>
+    <p class="text-[10px] opacity-80">इतिहास</p>
   </div>
 </section>
 
 <!-- Quiz Section -->
-<section class="px-4 mb-4" id="quiz-section" style="display:none">
-  <div class="bg-white rounded-2xl border border-slate-100 shadow-app p-4">
+<section class="quiz-question" id="quiz-section">
     
     <!-- Progress -->
     <div class="flex items-center justify-between mb-3">

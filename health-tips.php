@@ -7,76 +7,51 @@ $pageTitle = 'Health Tips | आकाशवाणी';
 $pageDesc  = 'Daily health tips and wellness advice for a healthy lifestyle.';
 require_once __DIR__ . '/header.php';
 ?>
-<main class="app-main">
+<main class="app-main ht-wrap">
 
 <!-- Header -->
-<section class="px-4 pt-4 pb-2">
-  <div class="flex items-center gap-2 mb-1">
-    <span class="w-9 h-9 rounded-xl bg-teal-500 text-white flex items-center justify-center flex-shrink-0">
-      <i data-lucide="heart-pulse" class="w-5 h-5"></i>
-    </span>
-    <div>
-      <h1 class="text-[18px] font-bold text-slate-900 leading-tight">Health Tips</h1>
-      <p class="text-[11px] text-slate-500">स्वास्थ्य सुझावहरू</p>
-    </div>
-  </div>
+<section class="ht-hero">
+  <h1><i data-lucide="heart-pulse" class="w-6 h-6"></i>Health Tips</h1>
+  <p>स्वास्थ्य सुझावहरू</p>
 </section>
 
 <!-- Daily Tip Card -->
-<section class="px-4 mb-4">
-  <div class="bg-gradient-to-br from-teal-500 to-emerald-600 rounded-2xl p-4 text-white">
-    <div class="flex items-center gap-2 mb-2">
-      <i data-lucide="sun" class="w-5 h-5"></i>
-      <p class="text-[12px] font-bold">Today's Tip</p>
-    </div>
-    <p class="text-[16px] font-bold leading-relaxed" id="daily-tip">Loading...</p>
+<section class="ht-daily">
+  <div class="flex items-center gap-2 mb-2">
+    <i data-lucide="sun" class="w-5 h-5"></i>
+    <p class="text-[12px] font-bold">Today's Tip</p>
   </div>
+  <p class="text-[16px] font-bold leading-relaxed" id="daily-tip">Loading...</p>
 </section>
 
 <!-- Category Tabs -->
-<section class="px-4 mb-4">
-  <div class="flex gap-2 overflow-x-auto no-sb pb-2">
-    <button onclick="filterTips('all')" class="tip-cat-btn active flex-shrink-0 px-4 py-2 rounded-full text-[12px] font-semibold bg-teal-100 text-teal-700 border border-teal-200">
-      सबै
-    </button>
-    <button onclick="filterTips('nutrition')" class="tip-cat-btn flex-shrink-0 px-4 py-2 rounded-full text-[12px] font-semibold bg-slate-100 text-slate-600 border border-slate-200">
-      पोषण
-    </button>
-    <button onclick="filterTips('exercise')" class="tip-cat-btn flex-shrink-0 px-4 py-2 rounded-full text-[12px] font-semibold bg-slate-100 text-slate-600 border border-slate-200">
-      व्यायाम
-    </button>
-    <button onclick="filterTips('mental')" class="tip-cat-btn flex-shrink-0 px-4 py-2 rounded-full text-[12px] font-semibold bg-slate-100 text-slate-600 border border-slate-200">
-      मानसिक
-    </button>
-    <button onclick="filterTips('sleep')" class="tip-cat-btn flex-shrink-0 px-4 py-2 rounded-full text-[12px] font-semibold bg-slate-100 text-slate-600 border border-slate-200">
-      निद्रा
-    </button>
-  </div>
+<section class="flex gap-2 overflow-x-auto no-sb pb-2 mb-4">
+  <button onclick="filterTips('all')" class="ht-cat-btn active">सबै</button>
+  <button onclick="filterTips('nutrition')" class="ht-cat-btn">पोषण</button>
+  <button onclick="filterTips('exercise')" class="ht-cat-btn">व्यायाम</button>
+  <button onclick="filterTips('mental')" class="ht-cat-btn">मानसिक</button>
+  <button onclick="filterTips('sleep')" class="ht-cat-btn">निद्रा</button>
 </section>
 
 <!-- Tips List -->
-<section class="px-4 mb-4">
-  <div class="space-y-3" id="tips-list">
-  </div>
+<section class="space-y-3 mb-4" id="tips-list">
 </section>
 
 <!-- Quick Health Check -->
-<section class="px-4 mb-4">
-  <div class="bg-white rounded-2xl border border-slate-100 shadow-app p-4">
-    <p class="text-[12px] font-bold text-slate-600 uppercase tracking-wide mb-3">Quick Health Check</p>
-    <div class="space-y-2">
-      <div class="flex items-center justify-between p-3 bg-slate-50 rounded-xl">
-        <span class="text-[13px] font-semibold text-slate-700">Water Intake</span>
-        <span class="text-[11px] text-teal-600 font-bold">8 glasses/day</span>
-      </div>
-      <div class="flex items-center justify-between p-3 bg-slate-50 rounded-xl">
-        <span class="text-[13px] font-semibold text-slate-700">Sleep</span>
-        <span class="text-[11px] text-teal-600 font-bold">7-9 hours</span>
-      </div>
-      <div class="flex items-center justify-between p-3 bg-slate-50 rounded-xl">
-        <span class="text-[13px] font-semibold text-slate-700">Steps</span>
-        <span class="text-[11px] text-teal-600 font-bold">10,000/day</span>
-      </div>
+<section class="ft-card">
+  <p class="text-[12px] font-bold text-slate-600 uppercase tracking-wide mb-3">Quick Health Check</p>
+  <div class="space-y-2">
+    <div class="ft-stat">
+      <span class="text-[13px] font-semibold text-slate-700">Water Intake</span>
+      <span class="text-[11px] text-teal-600 font-bold">8 glasses/day</span>
+    </div>
+    <div class="ft-stat">
+      <span class="text-[13px] font-semibold text-slate-700">Sleep</span>
+      <span class="text-[11px] text-teal-600 font-bold">7-9 hours</span>
+    </div>
+    <div class="ft-stat">
+      <span class="text-[13px] font-semibold text-slate-700">Steps</span>
+      <span class="text-[11px] text-teal-600 font-bold">10,000/day</span>
     </div>
   </div>
 </section>

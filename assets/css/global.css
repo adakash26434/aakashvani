@@ -248,6 +248,75 @@
 .share-btn.viber { background:#7360f2; color:#fff; }
 .share-btn.copy { background:#f1f5f9; color:#64748b; border-color:#e2e8f0; }
 
+/* New Features - Unified Styles */
+/* Language Translator */
+.lt-wrap { max-width: 760px; margin: 0 auto; padding: 14px 16px 100px; }
+.lt-hero { background: linear-gradient(135deg,#7c3aed,#a855f7); color: #fff; border-radius: 16px; padding: 28px; margin-bottom: 24px; }
+.lt-hero h1 { margin: 0 0 8px; font-size: 28px; display: flex; align-items: center; gap: 10px; }
+.lt-hero p { margin: 0; opacity: .92; }
+.lt-card { background: #fff; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,.08); padding: 16px; margin-bottom: 16px; }
+.lt-result { display: none; }
+.lt-result.show { display: block; }
+.lt-phrase { display: flex; align-items: center; justify-content: space-between; padding: 12px; background: #f8fafc; border-radius: 12px; cursor: pointer; transition: background .2s; }
+.lt-phrase:hover { background: #f1f5f9; }
+
+/* Dictionary */
+.dict-wrap { max-width: 760px; margin: 0 auto; padding: 14px 16px 100px; }
+.dict-hero { background: linear-gradient(135deg,#4f46e5,#6366f1); color: #fff; border-radius: 16px; padding: 28px; margin-bottom: 24px; }
+.dict-hero h1 { margin: 0 0 8px; font-size: 28px; display: flex; align-items: center; gap: 10px; }
+.dict-hero p { margin: 0; opacity: .92; }
+.dict-card { background: #fff; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,.08); padding: 16px; margin-bottom: 16px; }
+.dict-result { display: none; }
+.dict-result.show { display: block; }
+.dict-word { display: flex; align-items: center; justify-content: space-between; padding: 12px; background: #f8fafc; border-radius: 12px; cursor: pointer; transition: background .2s; }
+.dict-word:hover { background: #f1f5f9; }
+
+/* Quiz & Games */
+.quiz-wrap { max-width: 760px; margin: 0 auto; padding: 14px 16px 100px; }
+.quiz-hero { background: linear-gradient(135deg,#ec4899,#f43f5e); color: #fff; border-radius: 16px; padding: 28px; margin-bottom: 24px; }
+.quiz-hero h1 { margin: 0 0 8px; font-size: 28px; display: flex; align-items: center; gap: 10px; }
+.quiz-hero p { margin: 0; opacity: .92; }
+.quiz-card { background: linear-gradient(135deg,#3b82f6,#2563eb); border-radius: 16px; padding: 16px; color: #fff; cursor: pointer; transition: transform .2s; }
+.quiz-card:hover { transform: scale(1.02); }
+.quiz-question { background: #fff; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,.08); padding: 20px; margin-bottom: 16px; display: none; }
+.quiz-question.show { display: block; }
+.quiz-option { padding: 14px; background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 12px; margin-bottom: 10px; cursor: pointer; transition: all .2s; }
+.quiz-option:hover { border-color: #6366f1; background: #eef2ff; }
+.quiz-option.correct { background: #dcfce7; border-color: #22c55e; }
+.quiz-option.wrong { background: #fee2e2; border-color: #ef4444; }
+
+/* Health Tips */
+.ht-wrap { max-width: 760px; margin: 0 auto; padding: 14px 16px 100px; }
+.ht-hero { background: linear-gradient(135deg,#14b8a6,#0d9488); color: #fff; border-radius: 16px; padding: 28px; margin-bottom: 24px; }
+.ht-hero h1 { margin: 0 0 8px; font-size: 28px; display: flex; align-items: center; gap: 10px; }
+.ht-hero p { margin: 0; opacity: .92; }
+.ht-daily { background: linear-gradient(135deg,#14b8a6,#0d9488); border-radius: 16px; padding: 16px; color: #fff; margin-bottom: 16px; }
+.ht-tip { background: #fff; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,.08); padding: 14px; margin-bottom: 12px; }
+.ht-cat-btn { padding: 8px 16px; border-radius: 999px; font-size: 12px; font-weight: 600; background: #f8fafc; color: #64748b; border: 1px solid #e2e8f0; cursor: pointer; white-space: nowrap; transition: all .2s; }
+.ht-cat-btn:hover { background: #f1f5f9; }
+.ht-cat-btn.active { background: #14b8a6; color: #fff; border-color: #14b8a6; }
+
+/* Fitness Tracker */
+.ft-wrap { max-width: 760px; margin: 0 auto; padding: 14px 16px 100px; }
+.ft-hero { background: linear-gradient(135deg,#f97316,#ea580c); color: #fff; border-radius: 16px; padding: 28px; margin-bottom: 24px; }
+.ft-hero h1 { margin: 0 0 8px; font-size: 28px; display: flex; align-items: center; gap: 10px; }
+.ft-hero p { margin: 0; opacity: .92; }
+.ft-card { background: #fff; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,.08); padding: 16px; margin-bottom: 16px; }
+.ft-stat { display: flex; align-items: center; justify-content: space-between; padding: 12px; background: #f8fafc; border-radius: 12px; margin-bottom: 8px; }
+.ft-progress { height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden; margin-top: 8px; }
+.ft-progress-bar { height: 100%; background: linear-gradient(90deg,#14b8a6,#0d9488); border-radius: 4px; transition: width .3s; }
+.ft-btn { padding: 10px 16px; background: #f97316; color: #fff; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; transition: all .2s; }
+.ft-btn:hover { background: #ea580c; }
+
+/* Dark mode for new features */
+.dark .lt-card, .dark .dict-card, .dark .quiz-question, .dark .ht-tip, .dark .ft-card { background: var(--surface); border-color: var(--line); }
+.dark .lt-phrase, .dark .dict-word, .dark .quiz-option, .dark .ht-cat-btn, .dark .ft-stat { background: var(--page); border-color: var(--line); color: var(--ink); }
+.dark .lt-phrase:hover, .dark .dict-word:hover, .dark .quiz-option:hover, .dark .ht-cat-btn:hover, .dark .ft-stat:hover { background: var(--line); }
+.dark .ht-cat-btn.active { background: #14b8a6; color: #fff; border-color: #14b8a6; }
+.dark .quiz-option.correct { background: rgba(34,197,94,.2); border-color: #22c55e; }
+.dark .quiz-option.wrong { background: rgba(239,68,68,.2); border-color: #ef4444; }
+.dark .ft-progress { background: var(--line); }
+
 /* Success stories page */
 .ss-wrap { max-width: 1200px; margin: 0 auto; padding: 24px 16px; font-family: system-ui, -apple-system, 'Noto Sans Devanagari', sans-serif; }
 .ss-hero { background: linear-gradient(135deg,#0f766e,#0891b2); color: #fff; border-radius: 16px; padding: 28px; margin-bottom: 24px; }
