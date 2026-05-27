@@ -744,6 +744,72 @@ $pwaShortName = defined('PWA_SHORT_NAME') ? PWA_SHORT_NAME : 'नेपाली
   
   window.addEventListener('scroll', handleScroll, {passive: true});
   handleScroll();
+  
+  // ── Device Orientation Auto-Scroll (Mobile Tilt) ─────────────────────
+  var orientationEnabled = false;
+  var lastBeta = null;
+  var scrollVelocity = 0;
+  var scrollAnimationFrame = null;
+  var tiltThreshold = 5; // Minimum tilt angle to trigger scroll
+  var maxScrollSpeed = 8; // Maximum scroll speed
+  
+  function handleOrientation(event){
+    // Only on mobile devices
+    if(!window.DeviceOrientationEvent || !event.beta) return;
+    
+    var beta = event.beta; // Front-to-back tilt (-180 to 180)
+    if(beta === null || isNaN(beta)) return;
+    
+    // Enable only if user has explicitly enabled (optional, for now auto-enable on mobile)
+    if(!orientationEnabled && window.innerWidth < 768){
+      orientationEnabled = true;
+    }
+    
+    if(!orientationEnabled) return;
+    
+    // Calculate tilt from neutral position (assuming neutral is around 0-30 degrees when holding phone)
+    var neutralAngle = 20;
+    var tilt = beta - neutralAngle;
+    
+    // Ignore small tilts
+    if(Math.abs(tilt) < tiltThreshold){
+      scrollVelocity = 0;
+      return;
+    }
+    
+    // Calculate scroll velocity based on tilt
+    // Positive tilt (phone top tilted up) = scroll up
+    // Negative tilt (phone top tilted down) = scroll down
+    var normalizedTilt = Math.max(-45, Math.min(45, tilt));
+    scrollVelocity = (normalizedTilt / 45) * maxScrollSpeed;
+  }
+  
+  function autoScroll(){
+    if(Math.abs(scrollVelocity) > 0.1){
+      window.scrollBy({
+        top: -scrollVelocity, // Negative because tilting up should scroll up
+        behavior: 'auto'
+      });
+    }
+    scrollAnimationFrame = requestAnimationFrame(autoScroll);
+  }
+  
+  // Start auto-scroll loop
+  autoScroll();
+  
+  // Listen for device orientation
+  if(window.DeviceOrientationEvent){
+    window.addEventListener('deviceorientation', handleOrientation, {passive: true});
+  }
+  
+  // Reset velocity when orientation events stop
+  var orientationTimeout;
+  window.addEventListener('deviceorientation', function(){
+    clearTimeout(orientationTimeout);
+    orientationTimeout = setTimeout(function(){
+      scrollVelocity = 0;
+    }, 100);
+  }, {passive: true});
 })();
 </script>
 
