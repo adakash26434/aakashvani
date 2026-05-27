@@ -212,13 +212,20 @@ require_once __DIR__ . '/header.php';
           fitnessData = parsed;
         }
       }
-    } catch(e){}
+    } catch(e){
+      console.error('Error loading fitness data:', e);
+    }
     updateUI();
   }
   
   function saveData(){
-    fitnessData.date = new Date().toDateString();
-    localStorage.setItem('fitnessData', JSON.stringify(fitnessData));
+    try{
+      fitnessData.date = new Date().toDateString();
+      localStorage.setItem('fitnessData', JSON.stringify(fitnessData));
+    } catch(e){
+      console.error('Error saving fitness data:', e);
+      alert('Failed to save data. Storage may be full or disabled.');
+    }
   }
   
   function updateUI(){

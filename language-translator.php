@@ -205,9 +205,26 @@ require_once __DIR__ . '/header.php';
   
   window.copyResult = function(){
     var text = document.getElementById('result-text').textContent;
-    navigator.clipboard.writeText(text).then(function(){
-      alert('Copied to clipboard!');
-    });
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(function(){
+        alert('Copied to clipboard!');
+      }).catch(function(){
+        alert('Failed to copy. Please copy manually.');
+      });
+    } else {
+      // Fallback for older browsers
+      var textarea = document.createElement('textarea');
+      textarea.value = text;
+      document.body.appendChild(textarea);
+      textarea.select();
+      try{
+        document.execCommand('copy');
+        alert('Copied to clipboard!');
+      } catch(e){
+        alert('Failed to copy. Please copy manually.');
+      }
+      document.body.removeChild(textarea);
+    }
   };
   
   window.quickTranslate = function(text, from, to){

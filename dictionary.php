@@ -253,8 +253,11 @@ require_once __DIR__ . '/header.php';
   window.playPronunciation = function(){
     var word = document.getElementById('word-text').textContent;
     if('speechSynthesis' in window){
+      window.speechSynthesis.cancel(); // Cancel any ongoing speech
       var utterance = new SpeechSynthesisUtterance(word);
       utterance.lang = currentLang === 'ne-en' ? 'ne-NP' : 'en-US';
+      utterance.rate = 1;
+      utterance.pitch = 1;
       window.speechSynthesis.speak(utterance);
     } else {
       alert('Text-to-speech not supported');

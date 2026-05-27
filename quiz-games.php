@@ -264,7 +264,11 @@ require_once __DIR__ . '/header.php';
   }
   
   // Initialize high scores
-  updateHighScores();
+  try{
+    updateHighScores();
+  } catch(e){
+    console.error('Error loading high scores:', e);
+  }
 })();
 </script>
 
