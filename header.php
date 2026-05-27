@@ -308,6 +308,41 @@ if ($_ga4Id && !$EMBED):
 .dark .shadow-app{
   box-shadow:var(--shadow-app);
 }
+/* Dark mode tile icon colors - auto-adjust for readability */
+.dark .bg-blue-100{background-color:rgba(59,130,246,.25) !important}
+.dark .text-blue-700{color:#60a5fa !important}
+.dark .bg-pink-100{background-color:rgba(236,72,153,.25) !important}
+.dark .text-pink-700{color:#f472b6 !important}
+.dark .bg-purple-100{background-color:rgba(168,85,247,.25) !important}
+.dark .text-purple-700{color:#c084fc !important}
+.dark .bg-indigo-100{background-color:rgba(99,102,241,.25) !important}
+.dark .text-indigo-700{color:#818cf8 !important}
+.dark .bg-amber-100{background-color:rgba(245,158,11,.25) !important}
+.dark .text-amber-700{color:#fbbf24 !important}
+.dark .bg-violet-100{background-color:rgba(139,92,246,.25) !important}
+.dark .text-violet-700{color:#a78bfa !important}
+.dark .bg-rose-100{background-color:rgba(244,63,94,.25) !important}
+.dark .text-rose-700{color:#fb7185 !important}
+.dark .bg-orange-100{background-color:rgba(249,115,22,.25) !important}
+.dark .text-orange-700{color:#fb923c !important}
+.dark .bg-emerald-100{background-color:rgba(16,185,129,.25) !important}
+.dark .text-emerald-700{color:#34d399 !important}
+.dark .bg-teal-100{background-color:rgba(20,184,166,.25) !important}
+.dark .text-teal-700{color:#2dd4bf !important}
+.dark .bg-green-100{background-color:rgba(34,197,94,.25) !important}
+.dark .text-green-700{color:#4ade80 !important}
+.dark .bg-yellow-100{background-color:rgba(234,179,8,.25) !important}
+.dark .text-yellow-700{color:#facc15 !important}
+.dark .bg-slate-100{background-color:rgba(148,163,184,.25) !important}
+.dark .text-slate-700{color:#cbd5e1 !important}
+.dark .bg-gray-100{background-color:rgba(107,114,128,.25) !important}
+.dark .text-gray-700{color:#d1d5db !important}
+.dark .bg-red-100{background-color:rgba(239,68,68,.25) !important}
+.dark .text-red-700{color:#f87171 !important}
+.dark .bg-cyan-100{background-color:rgba(6,182,212,.25) !important}
+.dark .text-cyan-700{color:#22d3ee !important}
+.dark .bg-sky-100{background-color:rgba(14,165,233,.25) !important}
+.dark .text-sky-700{color:#38bdf8 !important}
 :root{
   --col:460px; /* phone-column width on desktop */
   --safe-top:env(safe-area-inset-top,0px);
