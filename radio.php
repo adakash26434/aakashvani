@@ -10,7 +10,7 @@ require_once __DIR__ . '/includes/functions.entertainment.php';
 $stations = getRadioStations(true);
 $podcasts = getRadioPodcasts(12);
 
-// If empty, use sample data
+// If empty, use sample data with real stream URLs
 if (empty($stations)) {
     $stations = [
         ['id'=>1,'name'=>'Radio Nepal','stream_url'=>'https://stream.zeno.fm/yn8s9y5y598uv','stream_type'=>'mp3','city'=>'Kathmandu','frequency'=>'103.0 FM','logo_path'=>'','status'=>'active','featured'=>1,'sort_order'=>1],
@@ -142,6 +142,14 @@ async function rdDownload(url) {
   } catch (e) { alert('डाउनलोड असफल: ' + e.message); }
 }
 audio.addEventListener('ended', () => { btn.textContent = '▶'; });
+
+// Auto-play first station on page load
+document.addEventListener('DOMContentLoaded', function() {
+  const firstCard = document.querySelector('.rd-card');
+  if (firstCard) {
+    firstCard.click();
+  }
+});
 </script>
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
