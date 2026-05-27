@@ -44,7 +44,13 @@ $pageDesc  = 'नेपालका प्रमुख FM, समाचार �
 ?>
 <div class="rd-wrap">
   <div class="rd-hero">
-    <h1><i data-lucide="radio" class="w-6 h-6 inline-block mr-2"></i>अनलाइन रेडियो</h1>
+    <div class="flex items-center justify-between">
+      <h1><i data-lucide="radio" class="w-6 h-6 inline-block mr-2"></i>अनलाइन रेडियो</h1>
+      <span class="flex items-center gap-1 text-[10px] bg-red-100 text-red-700 font-semibold px-2 py-1 rounded-full">
+        <span class="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span>
+        Live
+      </span>
+    </div>
     <p>नेपालका लाइभ FM र समाचार रेडियो। पोडकास्टहरू अफलाइन सुन्न डाउनलोड गर्न सकिन्छ।</p>
   </div>
 
