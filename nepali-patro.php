@@ -4,7 +4,11 @@
  * Includes: Panchang, Subh/Asubh times, Rashifal, Festivals, Holidays
  */
 
-require_once __DIR__ . '/header.php';
+$embedMode = isset($_GET['embed']) && $_GET['embed'] === '1';
+
+if (!$embedMode) {
+    require_once __DIR__ . '/header.php';
+}
 require_once __DIR__ . '/includes/bs-date.php'; // Nepali date functions
 
 // Get current Nepali date
@@ -525,4 +529,4 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-<?php require_once __DIR__ . '/footer.php'; ?>
+<?php if (!$embedMode) require_once __DIR__ . '/footer.php'; ?>
