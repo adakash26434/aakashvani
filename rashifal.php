@@ -2,7 +2,7 @@
 /**
  * rashifal.php v12 — App-style daily Rashifal, LIVE from /api/rashifal.php
  * Features: AI/intelligent rashifal, favorite-rashi personalization (localStorage),
- *           weekly/monthly toggle, lucky strip, 5 category readings.
+ *           daily/monthly/yearly toggle, lucky strip, 5 category readings.
  */
 require_once __DIR__ . '/header.php';
 
@@ -22,6 +22,7 @@ $rashi = [
 ];
 $selected = isset($_GET['r']) ? max(0,min(11,(int)$_GET['r'])) : 0;
 $r = $rashi[$selected];
+$type = isset($_GET['type']) ? $_GET['type'] : 'daily';
 ?>
 
 <main class="app-main">
@@ -42,11 +43,25 @@ $r = $rashi[$selected];
               <span class="w-1.5 h-1.5 rounded-full bg-emerald-300 animate-pulse"></span> LIVE
             </span>
           </div>
-          <button id="fav-btn" type="button"
-                  class="bg-white/15 hover:bg-white/30 border border-white/20 rounded-full px-3 py-1 text-[11px] font-semibold flex items-center gap-1.5 transition-colors">
-            <i data-lucide="star" class="w-3.5 h-3.5"></i>
-            <span id="fav-lbl"><?= $tH('मनपर्ने','Save') ?></span>
-          </button>
+          <div class="flex items-center gap-2">
+            <!-- Period Toggle -->
+            <div class="flex bg-white/10 rounded-full p-0.5">
+              <a href="?r=<?= $selected ?>&type=daily" class="px-2.5 py-0.5 rounded-full text-[10px] font-semibold transition-colors <?= $type === 'daily' ? 'bg-white text-violet-900' : 'text-white/70 hover:text-white' ?>">
+                <?= $tH('दैनिक','Daily') ?>
+              </a>
+              <a href="?r=<?= $selected ?>&type=monthly" class="px-2.5 py-0.5 rounded-full text-[10px] font-semibold transition-colors <?= $type === 'monthly' ? 'bg-white text-violet-900' : 'text-white/70 hover:text-white' ?>">
+                <?= $tH('मासिक','Monthly') ?>
+              </a>
+              <a href="?r=<?= $selected ?>&type=yearly" class="px-2.5 py-0.5 rounded-full text-[10px] font-semibold transition-colors <?= $type === 'yearly' ? 'bg-white text-violet-900' : 'text-white/70 hover:text-white' ?>">
+                <?= $tH('वार्षिक','Yearly') ?>
+              </a>
+            </div>
+            <button id="fav-btn" type="button"
+                    class="bg-white/15 hover:bg-white/30 border border-white/20 rounded-full px-3 py-1 text-[11px] font-semibold flex items-center gap-1.5 transition-colors">
+              <i data-lucide="star" class="w-3.5 h-3.5"></i>
+              <span id="fav-lbl"><?= $tH('मनपर्ने','Save') ?></span>
+            </button>
+          </div>
         </div>
 
         <!-- Main rashi display -->
@@ -409,7 +424,8 @@ $r = $rashi[$selected];
     var dot=document.getElementById('lucky-color-dot');if(dot)dot.style.background='#e2e8f0';
     var lbl=document.getElementById('lucky-color-txt');if(lbl)lbl.textContent='…';
 
-    fetch('/api/rashifal.php?rashi='+idx+'&lang=ne')
+    var type = '<?= $type ?>';
+    fetch('/api/rashifal.php?rashi='+idx+'&lang=ne&type='+type)
       .then(function(r){return r.json();})
       .then(function(d){applyData(d,idx);})
       .catch(function(){
