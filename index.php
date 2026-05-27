@@ -266,7 +266,7 @@ window.__chips = {
 
 <!-- News & Media -->
 <div class="sec-title">
-  <i data-lucide="newspaper" class="icon-md text-blue-600"></i>
+  <i data-lucide="newspaper" class="icon-md text-blue-600" style="stroke-width:1.5px"></i>
   <span class="ne"><?= $t('समाचार र मिडिया','News & Media') ?></span>
 </div>
 <section class="grid grid-cols-4 gap-2 mb-4">
@@ -287,7 +287,7 @@ window.__chips = {
 
 <!-- Patro & Rashifal -->
 <div class="sec-title">
-  <i data-lucide="calendar-days" class="icon-md text-amber-600"></i>
+  <i data-lucide="calendar-days" class="icon-md text-amber-600" style="stroke-width:1.5px"></i>
   <span class="ne"><?= $t('पात्रो र राशिफल','Patro & Rashifal') ?></span>
 </div>
 <section class="grid grid-cols-4 gap-2 mb-4">
@@ -308,7 +308,7 @@ window.__chips = {
 
 <!-- Market & Finance -->
 <div class="sec-title">
-  <i data-lucide="trending-up" class="icon-md text-emerald-600"></i>
+  <i data-lucide="trending-up" class="icon-md text-emerald-600" style="stroke-width:1.5px"></i>
   <span class="ne"><?= $t('बजार र वित्त','Market & Finance') ?></span>
 </div>
 <section class="grid grid-cols-4 gap-2 mb-4">
@@ -331,7 +331,7 @@ window.__chips = {
 
 <!-- Government Services -->
 <div class="sec-title">
-  <i data-lucide="landmark" class="icon-md text-red-600"></i>
+  <i data-lucide="landmark" class="icon-md text-red-600" style="stroke-width:1.5px"></i>
   <span class="ne"><?= $t('सरकारी सेवा','Government Services') ?></span>
 </div>
 <section class="grid grid-cols-4 gap-2 mb-4">
@@ -352,7 +352,7 @@ window.__chips = {
 
 <!-- Tools & Utilities -->
 <div class="sec-title">
-  <i data-lucide="wrench" class="icon-md text-slate-600"></i>
+  <i data-lucide="wrench" class="icon-md text-slate-600" style="stroke-width:1.5px"></i>
   <span class="ne"><?= $t('उपकरण र उपयोगिता','Tools & Utilities') ?></span>
 </div>
 <section class="grid grid-cols-4 gap-2 mb-4">
@@ -377,7 +377,7 @@ window.__chips = {
 
 <!-- Health & Emergency -->
 <div class="sec-title">
-  <i data-lucide="heart-pulse" class="icon-md text-rose-600"></i>
+  <i data-lucide="heart-pulse" class="icon-md text-rose-600" style="stroke-width:1.5px"></i>
   <span class="ne"><?= $t('स्वास्थ्य र आपतकाल','Health & Emergency') ?></span>
 </div>
 <section class="grid grid-cols-4 gap-2 mb-4">
@@ -399,7 +399,7 @@ window.__chips = {
 
 <!-- Transport & Travel -->
 <div class="sec-title">
-  <i data-lucide="bus" class="icon-md text-cyan-600"></i>
+  <i data-lucide="bus" class="icon-md text-cyan-600" style="stroke-width:1.5px"></i>
   <span class="ne"><?= $t('यातायात र यात्रा','Transport & Travel') ?></span>
 </div>
 <section class="grid grid-cols-4 gap-2 mb-4">
@@ -419,7 +419,7 @@ window.__chips = {
 
 <!-- Education & Jobs -->
 <div class="sec-title">
-  <i data-lucide="graduation-cap" class="icon-md text-purple-600"></i>
+  <i data-lucide="graduation-cap" class="icon-md text-purple-600" style="stroke-width:1.5px"></i>
   <span class="ne"><?= $t('शिक्षा र रोजगार','Education & Jobs') ?></span>
 </div>
 <section class="grid grid-cols-4 gap-2 mb-4">
@@ -439,7 +439,7 @@ window.__chips = {
 </section>
 
 <div class="sec-title">
-  <i data-lucide="sparkles" class="icon-md text-amber-500"></i>
+  <i data-lucide="sparkles" class="icon-md text-amber-500" style="stroke-width:1.5px"></i>
   <span class="ne"><?= $t('नेपाल आज','Nepal Today') ?></span>
   <span class="badge inline-flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span><?= $t('स्मार्ट','Smart') ?></span>
 </div>
@@ -447,7 +447,7 @@ window.__chips = {
   <div class="rounded-2xl p-3 text-white bg-gradient-to-br from-slate-900 via-teal-900 to-emerald-800">
     <div class="flex items-start gap-3">
       <div class="w-11 h-11 rounded-2xl bg-white/15 border border-white/20 flex items-center justify-center flex-shrink-0">
-        <i data-lucide="radar" class="w-5 h-5"></i>
+        <i data-lucide="radar" class="w-5 h-5" style="stroke-width:1.5px"></i>
       </div>
       <div class="min-w-0 flex-1">
         <div class="text-[11px] text-white/90 font-medium ne"><?= htmlspecialchars($bsDateStr, ENT_QUOTES, 'UTF-8') ?></div>
@@ -464,7 +464,7 @@ window.__chips = {
       ['/news.php', 'newspaper', $t('समाचार','News'), 'लोड हुँदै…', 'teal'],
     ] as $na): ?>
       <a href="<?= $na[0] ?>" class="rounded-2xl border border-slate-100 bg-slate-50 hover:bg-white p-2.5 flex items-center gap-2 transition-colors">
-        <span class="w-9 h-9 rounded-xl bg-<?= $na[4] ?>-100 text-<?= $na[4] ?>-700 flex items-center justify-center flex-shrink-0"><i data-lucide="<?= $na[1] ?>" class="w-4 h-4"></i></span>
+        <span class="w-9 h-9 rounded-xl bg-<?= $na[4] ?>-100 text-<?= $na[4] ?>-700 flex items-center justify-center flex-shrink-0"><i data-lucide="<?= $na[1] ?>" class="w-4 h-4" style="stroke-width:1.5px"></i></span>
         <span class="min-w-0">
           <span class="block text-[11px] font-bold text-slate-900 ne"><?= $na[2] ?></span>
           <span class="block text-[10px] text-slate-500 truncate ne" data-na-label="<?= htmlspecialchars($na[2], ENT_QUOTES) ?>"><?= $na[3] ?></span>
@@ -473,9 +473,9 @@ window.__chips = {
     <?php endforeach; ?>
   </div>
   <div class="grid grid-cols-3 gap-2 mt-2">
-    <a href="/rashifal.php" class="rounded-xl bg-violet-50 text-violet-800 px-2 py-2 text-center text-[11px] font-bold ne"><i data-lucide="sparkles" class="w-3.5 h-3.5 inline-block"></i> <?= $t('राशिफल','Rashi') ?></a>
-    <a href="/nepali-patro.php" class="rounded-xl bg-indigo-50 text-indigo-800 px-2 py-2 text-center text-[11px] font-bold ne"><i data-lucide="calendar-days" class="w-3.5 h-3.5 inline-block"></i> <?= $t('पात्रो','Patro') ?></a>
-    <a href="/gov-services.php" class="rounded-xl bg-emerald-50 text-emerald-800 px-2 py-2 text-center text-[11px] font-bold ne"><i data-lucide="landmark" class="w-3.5 h-3.5 inline-block"></i> <?= $t('सेवा','Gov') ?></a>
+    <a href="/rashifal.php" class="rounded-xl bg-violet-50 text-violet-800 px-2 py-2 text-center text-[11px] font-bold ne"><i data-lucide="sparkles" class="w-3.5 h-3.5 inline-block" style="stroke-width:1.5px"></i> <?= $t('राशिफल','Rashi') ?></a>
+    <a href="/nepali-patro.php" class="rounded-xl bg-indigo-50 text-indigo-800 px-2 py-2 text-center text-[11px] font-bold ne"><i data-lucide="calendar-days" class="w-3.5 h-3.5 inline-block" style="stroke-width:1.5px"></i> <?= $t('पात्रो','Patro') ?></a>
+    <a href="/gov-services.php" class="rounded-xl bg-emerald-50 text-emerald-800 px-2 py-2 text-center text-[11px] font-bold ne"><i data-lucide="landmark" class="w-3.5 h-3.5 inline-block" style="stroke-width:1.5px"></i> <?= $t('सेवा','Gov') ?></a>
   </div>
 </section>
 <script>
@@ -525,7 +525,7 @@ window.__chips = {
      /news.php (RSS-powered) सँग पूर्ण मेल खाँदैनथ्यो। अब दुवै एउटै single
      source — /api/news-rss.php बाट hydrate। -->
 <div class="sec-title">
-  <i data-lucide="newspaper" class="icon-md text-brand-600"></i>
+  <i data-lucide="newspaper" class="icon-md text-brand-600" style="stroke-width:1.5px"></i>
   <span class="ne"><?= $t('ताजा समाचार','Latest News') ?></span>
   <a href="/news.php" class="badge"><?= $t('सबै','All →') ?></a>
 </div>
@@ -592,7 +592,7 @@ window.__chips = {
 <!-- ═══ MARKET SUMMARY CARD (animated counters) ══════════════════════════════ -->
 <?php if($nepseIdx||$goldFine||$petrolP||$usdRate): ?>
 <div class="sec-title">
-  <i data-lucide="bar-chart-2" class="icon-md text-brand-600"></i>
+  <i data-lucide="bar-chart-2" class="icon-md text-brand-600" style="stroke-width:1.5px"></i>
   <span class="ne"><?= $t('बजार सारांश','Today\'s Market') ?></span>
   <span class="badge inline-flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>Live</span>
 </div>
@@ -611,7 +611,7 @@ window.__chips = {
   ?>
     <a href="<?= $href ?>" class="app-card p-3 flex items-center gap-3">
       <div class="w-11 h-11 rounded-xl bg-gradient-to-br <?= $grad ?> text-white flex items-center justify-center flex-shrink-0">
-        <i data-lucide="<?= $ic ?>" class="w-5 h-5"></i>
+        <i data-lucide="<?= $ic ?>" class="w-5 h-5" style="stroke-width:1.5px"></i>
       </div>
       <div class="min-w-0">
         <div class="text-[11px] text-slate-500 font-medium ne"><?= $lbl ?></div>
@@ -619,7 +619,7 @@ window.__chips = {
           <span class="mkt-pfx"><?= $dispPfx ?></span><span class="mkt-cnt" data-target="<?= $rawVal ?>" data-dec="<?= $dec ?>">0</span>
         </div>
         <?php if($chg!==null): ?>
-          <div class="text-[10.5px] font-bold <?= $up?'text-emerald-600':'text-rose-600' ?>"><i data-lucide="<?= $up?'trending-up':'trending-down' ?>" class="w-3 h-3 inline-block"></i> <?= abs((float)$chg) ?></div>
+          <div class="text-[10.5px] font-bold <?= $up?'text-emerald-600':'text-rose-600' ?>"><i data-lucide="<?= $up?'trending-up':'trending-down' ?>" class="w-3 h-3 inline-block" style="stroke-width:1.5px"></i> <?= abs((float)$chg) ?></div>
         <?php endif; ?>
       </div>
     </a>
@@ -648,7 +648,7 @@ window.__chips = {
 
 <!-- ═══ TODAY'S RASHIFAL ════════════════════════════���════════════════════════ -->
 <div class="sec-title" id="rashifal-grid-title">
-  <i data-lucide="sparkles" class="icon-md text-pink-500"></i>
+  <i data-lucide="sparkles" class="icon-md text-pink-500" style="stroke-width:1.5px"></i>
   <span class="ne"><?= $t('आजको राशिफल','Today\'s Rashifal') ?></span>
   <a href="/rashifal.php" class="badge"><?= $t('विस्तृत','Full →') ?></a>
 </div>
@@ -667,7 +667,7 @@ window.__chips = {
 
 <!-- ═══ EMERGENCY NUMBERS ═════════════════════════════════════════════════════ -->
 <div class="sec-title">
-  <i data-lucide="phone-call" class="icon-md text-rose-600"></i>
+  <i data-lucide="phone-call" class="icon-md text-rose-600" style="stroke-width:1.5px"></i>
   <span class="ne"><?= $t('आपतकालीन नम्बर','Emergency') ?></span>
   <a href="/emergency.php" class="badge"><?= $t('सबै','All →') ?></a>
 </div>
@@ -680,7 +680,7 @@ window.__chips = {
   ] as [$name,$num,$ic,$grad]): ?>
     <a href="tel:<?= $num ?>" class="app-card p-2.5 flex flex-col items-center gap-1.5 text-center">
       <div class="w-10 h-10 rounded-xl bg-gradient-to-br <?= $grad ?> text-white flex items-center justify-center">
-        <i data-lucide="<?= $ic ?>" class="w-[18px] h-[18px]"></i>
+        <i data-lucide="<?= $ic ?>" class="w-[18px] h-[18px]" style="stroke-width:1.5px"></i>
       </div>
       <div class="text-[10.5px] font-semibold text-slate-500"><?= $name ?></div>
       <div class="text-[15px] font-extrabold text-ink leading-none"><?= $num ?></div>
@@ -690,7 +690,7 @@ window.__chips = {
 
 <!-- ═══ MORE SERVICES ═══════════════════════════════════════════════════════ -->
 <div class="sec-title mt-4">
-  <i data-lucide="grid-3x3" class="icon-md text-slate-500"></i>
+  <i data-lucide="grid-3x3" class="icon-md text-slate-500" style="stroke-width:1.5px"></i>
   <span class="ne"><?= $t('थप सेवाहरू','More Services') ?></span>
   <a href="/tools.php" class="badge"><?= $t('सबै हेर्नुस्','View All →') ?></a>
 </div>
