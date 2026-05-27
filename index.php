@@ -117,54 +117,6 @@ window.__chips = {
         <span class="text-2xl">🇳🇵</span>
       </div>
     </div>
-
-    <div class="mt-3 grid grid-cols-6 gap-2">
-      <a href="/news.php" onclick="return openInDetailPane('/news.php');" class="hero-icon-btn bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/20 rounded-xl py-2 text-center text-[11px] font-semibold flex flex-col items-center gap-1 transition-all" data-url="/news.php">
-        <i data-lucide="newspaper" class="w-4 h-4"></i><span class="ne"><?= $t('समाचार','News') ?></span>
-      </a>
-      <a href="/nepali-patro.php" onclick="return openInDetailPane('/nepali-patro.php');" class="hero-icon-btn bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/20 rounded-xl py-2 text-center text-[11px] font-semibold flex flex-col items-center gap-1 transition-all" data-url="/nepali-patro.php">
-        <i data-lucide="calendar-days" class="w-4 h-4"></i><span class="ne"><?= $t('पात्रो','Patro') ?></span>
-      </a>
-      <a href="/rashifal.php" onclick="return openInDetailPane('/rashifal.php');" class="hero-icon-btn bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/20 rounded-xl py-2 text-center text-[11px] font-semibold flex flex-col items-center gap-1 transition-all" data-url="/rashifal.php">
-        <i data-lucide="sparkles" class="w-4 h-4"></i><span class="ne"><?= $t('राशिफल','Rashi') ?></span>
-      </a>
-      <a href="/cricket.php" onclick="return openInDetailPane('/cricket.php');" class="hero-icon-btn bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/20 rounded-xl py-2 text-center text-[11px] font-semibold flex flex-col items-center gap-1 transition-all" data-url="/cricket.php">
-        <i data-lucide="trophy" class="w-4 h-4"></i><span class="ne"><?= $t('क्रिकेट','Cricket') ?></span>
-      </a>
-      <a href="/weather.php" onclick="return openInDetailPane('/weather.php');" class="hero-icon-btn bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/20 rounded-xl py-2 text-center text-[11px] font-semibold flex flex-col items-center gap-1 transition-all" data-url="/weather.php">
-        <i data-lucide="cloud-sun" class="w-4 h-4"></i><span class="ne"><?= $t('मौसम','Weather') ?></span>
-      </a>
-      <a href="/transportation.php" onclick="return openInDetailPane('/transportation.php');" class="hero-icon-btn bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/20 rounded-xl py-2 text-center text-[11px] font-semibold flex flex-col items-center gap-1 transition-all" data-url="/transportation.php">
-        <i data-lucide="bus" class="w-4 h-4"></i><span class="ne"><?= $t('यातायात','Bus') ?></span>
-      </a>
-      <a href="/nokari.php" onclick="return openInDetailPane('/nokari.php');" class="hero-icon-btn bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/20 rounded-xl py-2 text-center text-[11px] font-semibold flex flex-col items-center gap-1 transition-all" data-url="/nokari.php">
-        <i data-lucide="briefcase" class="w-4 h-4"></i><span class="ne"><?= $t('नोकरी','Jobs') ?></span>
-      </a>
-      <a href="/auction-notices.php" onclick="return openInDetailPane('/auction-notices.php');" class="hero-icon-btn bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/20 rounded-xl py-2 text-center text-[11px] font-semibold flex flex-col items-center gap-1 transition-all" data-url="/auction-notices.php">
-        <i data-lucide="gavel" class="w-4 h-4"></i><span class="ne"><?= $t('लिलामी','Auction') ?></span>
-      </a>
-      <a href="/kundali-milan.php" onclick="return openInDetailPane('/kundali-milan.php');" class="hero-icon-btn bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/20 rounded-xl py-2 text-center text-[11px] font-semibold flex flex-col items-center gap-1 transition-all" data-url="/kundali-milan.php">
-        <i data-lucide="heart" class="w-4 h-4"></i><span class="ne"><?= $t('कुण्डली','Kundali') ?></span>
-      </a>
-      <a href="/flight-status.php" onclick="return openInDetailPane('/flight-status.php');" class="hero-icon-btn bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/20 rounded-xl py-2 text-center text-[11px] font-semibold flex flex-col items-center gap-1 transition-all" data-url="/flight-status.php">
-        <i data-lucide="plane" class="w-4 h-4"></i><span class="ne"><?= $t('उडान','Flight') ?></span>
-      </a>
-      <a href="/nea-bill.php" onclick="return openInDetailPane('/nea-bill.php');" class="hero-icon-btn bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/20 rounded-xl py-2 text-center text-[11px] font-semibold flex flex-col items-center gap-1 transition-all" data-url="/nea-bill.php">
-        <i data-lucide="zap" class="w-4 h-4"></i><span class="ne"><?= $t('बिजुली','Electricity') ?></span>
-      </a>
-      <a href="/hospitals.php" onclick="return openInDetailPane('/hospitals.php');" class="hero-icon-btn bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/20 rounded-xl py-2 text-center text-[11px] font-semibold flex flex-col items-center gap-1 transition-all" data-url="/hospitals.php">
-        <i data-lucide="heart-pulse" class="w-4 h-4"></i><span class="ne"><?= $t('अस्पताल','Hospital') ?></span>
-      </a>
-      <a href="/exam-results.php" onclick="return openInDetailPane('/exam-results.php');" class="hero-icon-btn bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/20 rounded-xl py-2 text-center text-[11px] font-semibold flex flex-col items-center gap-1 transition-all" data-url="/exam-results.php">
-        <i data-lucide="graduation-cap" class="w-4 h-4"></i><span class="ne"><?= $t('परीक्षा','Exam') ?></span>
-      </a>
-      <a href="/government-tenders.php" onclick="return openInDetailPane('/government-tenders.php');" class="hero-icon-btn bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/20 rounded-xl py-2 text-center text-[11px] font-semibold flex flex-col items-center gap-1 transition-all" data-url="/government-tenders.php">
-        <i data-lucide="file-text" class="w-4 h-4"></i><span class="ne"><?= $t('टेन्डर','Tender') ?></span>
-      </a>
-      <a href="/stories.php" onclick="return openInDetailPane('/stories.php');" class="hero-icon-btn bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/20 rounded-xl py-2 text-center text-[11px] font-semibold flex flex-col items-center gap-1 transition-all" data-url="/stories.php">
-        <i data-lucide="book-open" class="w-4 h-4"></i><span class="ne"><?= $t('कथा','Stories') ?></span>
-      </a>
-    </div>
   </div>
 </section>
 
