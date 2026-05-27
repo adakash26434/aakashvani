@@ -721,8 +721,17 @@ $pwaShortName = defined('PWA_SHORT_NAME') ? PWA_SHORT_NAME : 'नेपाली
   <i data-lucide="play" id="auto-scroll-icon" style="width:24px;height:24px"></i>
 </button>
 
+<!-- Text-to-Speech Button (Mobile) -->
+<button id="tts-btn" onclick="toggleTTS()" 
+  style="display:none;position:fixed;bottom:calc(160px + env(safe-area-inset-bottom,0px));left:16px;
+  width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#f59e0b,#f97316);
+  color:#fff;border:none;box-shadow:0 4px 20px rgba(245,158,11,.4);cursor:pointer;z-index:9997;
+  align-items:center;justify-content:center;transition:all 0.3s ease;opacity:0;transform:scale(0.8)">
+  <i data-lucide="volume-2" id="tts-icon" style="width:24px;height:24px"></i>
+</button>
+
 <!-- Auto-Scroll Speed Control (Mobile) -->
-<div id="auto-scroll-speed" style="display:none;position:fixed;bottom:calc(160px + env(safe-area-inset-bottom,0px));left:16px;
+<div id="auto-scroll-speed" style="display:none;position:fixed;bottom:calc(220px + env(safe-area-inset-bottom,0px));left:16px;
   background:#fff;border:1px solid #e6eaf2;border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,.15);
   padding:12px;z-index:9998;min-width:140px">
   <div style="font-size:11px;font-weight:700;color:#0b1220;margin-bottom:8px" class="ne">Scroll Speed</div>
@@ -736,12 +745,34 @@ $pwaShortName = defined('PWA_SHORT_NAME') ? PWA_SHORT_NAME : 'नेपाली
   </div>
 </div>
 
+<!-- TTS Control Panel (Mobile) -->
+<div id="tts-panel" style="display:none;position:fixed;bottom:calc(220px + env(safe-area-inset-bottom,0px));left:16px;
+  background:#fff;border:1px solid #e6eaf2;border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,.15);
+  padding:12px;z-index:9998;min-width:160px">
+  <div style="font-size:11px;font-weight:700;color:#0b1220;margin-bottom:8px" class="ne">📖 Read Aloud</div>
+  <div style="display:flex;gap:6px;margin-bottom:8px">
+    <button onclick="setTTSSpeed(0.75)" class="tts-speed-btn" data-speed="0.75" 
+      style="flex:1;padding:6px;border:1px solid #e6eaf2;border-radius:8px;background:#f8fafc;font-size:10px;font-weight:600;color:#64748b;cursor:pointer">0.75x</button>
+    <button onclick="setTTSSpeed(1)" class="tts-speed-btn" data-speed="1" 
+      style="flex:1;padding:6px;border:1px solid #e6eaf2;border-radius:8px;background:#f8fafc;font-size:10px;font-weight:600;color:#64748b;cursor:pointer">1x</button>
+    <button onclick="setTTSSpeed(1.25)" class="tts-speed-btn" data-speed="1.25" 
+      style="flex:1;padding:6px;border:1px solid #e6eaf2;border-radius:8px;background:#f8fafc;font-size:10px;font-weight:600;color:#64748b;cursor:pointer">1.25x</button>
+    <button onclick="setTTSSpeed(1.5)" class="tts-speed-btn" data-speed="1.5" 
+      style="flex:1;padding:6px;border:1px solid #e6eaf2;border-radius:8px;background:#f8fafc;font-size:10px;font-weight:600;color:#64748b;cursor:pointer">1.5x</button>
+  </div>
+  <div style="font-size:10px;color:#64748b" class="ne" id="tts-status">Ready to read</div>
+</div>
+
 <script>
 (function(){
   var scrollBtn = document.getElementById('scroll-to-top');
   var autoScrollBtn = document.getElementById('auto-scroll-btn');
   var autoScrollIcon = document.getElementById('auto-scroll-icon');
   var autoScrollSpeedPanel = document.getElementById('auto-scroll-speed');
+  var ttsBtn = document.getElementById('tts-btn');
+  var ttsIcon = document.getElementById('tts-icon');
+  var ttsPanel = document.getElementById('tts-panel');
+  var ttsStatus = document.getElementById('tts-status');
   if(!scrollBtn || !autoScrollBtn) return;
   
   var lastScrollTop = 0;
@@ -753,21 +784,27 @@ $pwaShortName = defined('PWA_SHORT_NAME') ? PWA_SHORT_NAME : 'नेपाली
     if(scrollTop > scrollThreshold){
       scrollBtn.style.display = 'flex';
       autoScrollBtn.style.display = 'flex';
+      ttsBtn.style.display = 'flex';
       setTimeout(function(){
         scrollBtn.style.opacity = '1';
         scrollBtn.style.transform = 'scale(1)';
         autoScrollBtn.style.opacity = '1';
         autoScrollBtn.style.transform = 'scale(1)';
+        ttsBtn.style.opacity = '1';
+        ttsBtn.style.transform = 'scale(1)';
       }, 10);
     } else {
       scrollBtn.style.opacity = '0';
       scrollBtn.style.transform = 'scale(0.8)';
       autoScrollBtn.style.opacity = '0';
       autoScrollBtn.style.transform = 'scale(0.8)';
+      ttsBtn.style.opacity = '0';
+      ttsBtn.style.transform = 'scale(0.8)';
       setTimeout(function(){
         if(window.pageYOffset <= scrollThreshold){
           scrollBtn.style.display = 'none';
           autoScrollBtn.style.display = 'none';
+          ttsBtn.style.display = 'none';
         }
       }, 300);
     }
@@ -793,6 +830,7 @@ $pwaShortName = defined('PWA_SHORT_NAME') ? PWA_SHORT_NAME : 'नेपाली
       if(window.lucide) lucide.createIcons();
       autoScrollBtn.style.background = 'linear-gradient(135deg,#dc2626,#ef4444)';
       autoScrollSpeedPanel.style.display = 'block';
+      ttsPanel.style.display = 'none';
       startAutoScroll();
     } else {
       // Stop auto-scroll
@@ -851,6 +889,162 @@ $pwaShortName = defined('PWA_SHORT_NAME') ? PWA_SHORT_NAME : 'नेपाली
       }, 500);
     }
   }, {passive: true});
+  
+  // ── Text-to-Speech (TTS) ───────────────────────────────────────────────
+  var ttsActive = false;
+  var ttsUtterance = null;
+  var ttsSynth = window.speechSynthesis;
+  var ttsSpeed = 1;
+  var ttsPaused = false;
+  
+  window.toggleTTS = function(){
+    if(!ttsSynth){
+      if(ttsStatus) ttsStatus.textContent = 'TTS not supported';
+      return;
+    }
+    
+    if(ttsActive && !ttsPaused){
+      // Pause TTS
+      ttsSynth.pause();
+      ttsPaused = true;
+      ttsIcon.setAttribute('data-lucide', 'play');
+      if(window.lucide) lucide.createIcons();
+      ttsBtn.style.background = 'linear-gradient(135deg,#6366f1,#8b5cf6)';
+      if(ttsStatus) ttsStatus.textContent = 'Paused';
+    } else if(ttsPaused){
+      // Resume TTS
+      ttsSynth.resume();
+      ttsPaused = false;
+      ttsIcon.setAttribute('data-lucide', 'pause');
+      if(window.lucide) lucide.createIcons();
+      ttsBtn.style.background = 'linear-gradient(135deg,#dc2626,#ef4444)';
+      if(ttsStatus) ttsStatus.textContent = 'Reading...';
+    } else {
+      // Start TTS
+      startTTS();
+    }
+  };
+  
+  window.setTTSSpeed = function(speed){
+    ttsSpeed = speed;
+    // Update button styles
+    document.querySelectorAll('.tts-speed-btn').forEach(function(btn){
+      if(parseFloat(btn.dataset.speed) === speed){
+        btn.style.background = '#0f766e';
+        btn.style.color = '#fff';
+        btn.style.borderColor = '#0f766e';
+      } else {
+        btn.style.background = '#f8fafc';
+        btn.style.color = '#64748b';
+        btn.style.borderColor = '#e6eaf2';
+      }
+    });
+    
+    // Update speed if currently speaking
+    if(ttsActive && ttsSynth.speaking){
+      ttsSynth.cancel();
+      startTTS();
+    }
+  };
+  
+  function startTTS(){
+    // Get visible text content
+    var textContent = getVisibleText();
+    if(!textContent){
+      if(ttsStatus) ttsStatus.textContent = 'No text to read';
+      return;
+    }
+    
+    // Cancel any ongoing speech
+    ttsSynth.cancel();
+    
+    // Create utterance
+    ttsUtterance = new SpeechSynthesisUtterance(textContent);
+    ttsUtterance.rate = ttsSpeed;
+    ttsUtterance.pitch = 1;
+    ttsUtterance.volume = 1;
+    
+    // Try to get Nepali voice if available
+    var voices = ttsSynth.getVoices();
+    var nepaliVoice = voices.find(function(v){
+      return v.lang === 'ne-NP' || v.lang === 'ne';
+    });
+    if(nepaliVoice){
+      ttsUtterance.voice = nepaliVoice;
+    }
+    
+    // Event handlers
+    ttsUtterance.onstart = function(){
+      ttsActive = true;
+      ttsPaused = false;
+      ttsIcon.setAttribute('data-lucide', 'pause');
+      if(window.lucide) lucide.createIcons();
+      ttsBtn.style.background = 'linear-gradient(135deg,#dc2626,#ef4444)';
+      ttsPanel.style.display = 'block';
+      autoScrollSpeedPanel.style.display = 'none';
+      if(ttsStatus) ttsStatus.textContent = 'Reading...';
+    };
+    
+    ttsUtterance.onend = function(){
+      ttsActive = false;
+      ttsPaused = false;
+      ttsIcon.setAttribute('data-lucide', 'volume-2');
+      if(window.lucide) lucide.createIcons();
+      ttsBtn.style.background = 'linear-gradient(135deg,#f59e0b,#f97316)';
+      ttsPanel.style.display = 'none';
+      if(ttsStatus) ttsStatus.textContent = 'Finished';
+    };
+    
+    ttsUtterance.onerror = function(event){
+      ttsActive = false;
+      ttsPaused = false;
+      ttsIcon.setAttribute('data-lucide', 'volume-2');
+      if(window.lucide) lucide.createIcons();
+      ttsBtn.style.background = 'linear-gradient(135deg,#f59e0b,#f97316)';
+      if(ttsStatus) ttsStatus.textContent = 'Error: ' + event.error;
+    };
+    
+    // Speak
+    ttsSynth.speak(ttsUtterance);
+  }
+  
+  function getVisibleText(){
+    // Get main content area
+    var mainContent = document.querySelector('main, .app-main, article, .content');
+    if(!mainContent) mainContent = document.body;
+    
+    // Get text, excluding scripts, styles, nav, footer
+    var clone = mainContent.cloneNode(true);
+    var excludeSelectors = ['script', 'style', 'nav', 'footer', 'button', '.ad', '.advertisement'];
+    excludeSelectors.forEach(function(sel){
+      var elements = clone.querySelectorAll(sel);
+      elements.forEach(function(el){
+        el.remove();
+      });
+    });
+    
+    // Get clean text
+    var text = clone.innerText || clone.textContent;
+    // Clean up extra whitespace
+    text = text.replace(/\s+/g, ' ').trim();
+    // Limit to reasonable length (prevent very long reads)
+    text = text.substring(0, 10000);
+    
+    return text;
+  }
+  
+  // Initialize TTS speed button styles
+  setTTSSpeed(1);
+  
+  // Load voices
+  if(ttsSynth){
+    ttsSynth.onvoiceschanged = function(){
+      var voices = ttsSynth.getVoices();
+      if(ttsStatus && voices.length > 0){
+        ttsStatus.textContent = voices.length + ' voices available';
+      }
+    };
+  }
   
   // ── Device Orientation Auto-Scroll (Mobile Tilt) ─────────────────────
   var orientationEnabled = false;
