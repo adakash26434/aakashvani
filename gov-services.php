@@ -9,16 +9,16 @@ require_once __DIR__ . '/header.php';
 // खोल्छ, या api/gov-services.php को rich info modal trigger गर्छ।
 // data-svc = api/gov-services.php को key; data-check = gov-check.php को type.
 $svc = [
-  ['नागरिकता','Citizenship','citizenship','user-check','sky',null],
+  ['नागरिकता','Citizenship','citizenship','user-check','sky','citizenship'],
   ['राहदानी','Passport','passport','book-open','indigo','passport'],
   ['सवारी इजाजत','License','driving_license','car','emerald','license'],
   ['PAN/VAT','PAN/VAT','pan_vat','file-text','amber','pan'],
-  ['सम्पत्ति कर','Property Tax','property_tax','home','rose',null],
-  ['विद्यालय','Education','education','graduation-cap','violet',null],
-  ['स्वास्थ्य बीमा','Health Ins.','health_insurance','heart-pulse','red',null],
+  ['सम्पत्ति कर','Property Tax','property_tax','home','rose','property'],
+  ['विद्यालय','Education','education','graduation-cap','violet','education'],
+  ['स्वास्थ्य बीमा','Health Ins.','health_insurance','heart-pulse','red','health'],
   ['राष्ट्रिय परिचयपत्र','National ID','national_id','id-card','teal','nid'],
   ['सवारी दर्ता','Vehicle','vehicle','car-front','orange','vehicle'],
-  ['सामाजिक सुरक्षा','Social Sec.','social_security','shield','teal',null],
+  ['सामाजिक सुरक्षा','Social Sec.','social_security','shield','teal','social'],
 ];
 
 $contacts = [

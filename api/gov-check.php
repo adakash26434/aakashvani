@@ -267,6 +267,82 @@ function checkCitizenship(string $citizenshipNo): void {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+//  PROPERTY TAX — Local Government Portal
+// ─────────────────────────────────────────────────────────────────────────────
+function checkProperty(string $propertyNo): void {
+    failWithLink(
+        'सम्पत्ति कर विवरण आधिकारिक Local Government Portal बाट मात्र हेर्न सकिन्छ। तलका चरणहरू पालना गर्नुहोस्:',
+        'https://ltms.gov.np/',
+        'Land Tax Management System',
+        [
+            'माथिको <b>Copy</b> बटन थिचेर Property Number clipboard मा राख्नुहोस्।',
+            '<b>Land Tax Management System</b> बटन थिचेर नयाँ Tab मा खोल्नुहोस्।',
+            'Property Tax वा Land Revenue विकल्प छान्नुहोस्।',
+            'Property No. फिल्डमा नम्बर राख्नुहोस्।',
+            '<b>Search</b> बटन थिचेर कर विवरण हेर्नुहोस्।',
+        ],
+        $propertyNo
+    );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+//  EDUCATION — Ministry of Education Portal
+// ─────────────────────────────────────────────────────────────────────────────
+function checkEducation(string $studentId): void {
+    failWithLink(
+        'शैक्षिक विवरण आधिकारिक Education Portal बाट मात्र हेर्न सकिन्छ। तलका चरणहरू पालना गर्नुहोस्:',
+        'https://moe.gov.np/',
+        'Ministry of Education',
+        [
+            'माथिको <b>Copy</b> बटन थिचेर Student ID clipboard मा राख्नुहोस्।',
+            '<b>Ministry of Education</b> बटन थिचेर नयाँ Tab मा खोल्नुहोस्।',
+            'Student Services वा Education Portal विकल्प छान्नुहोस्।',
+            'Student ID फिल्डमा नम्बर राख्नुहोस्।',
+            '<b>Search</b> बटन थिचेर विवरण हेर्नुहोस्।',
+        ],
+        $studentId
+    );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+//  HEALTH INSURANCE — Health Insurance Board Portal
+// ─────────────────────────────────────────────────────────────────────────────
+function checkHealth(string $policyNo): void {
+    failWithLink(
+        'स्वास्थ्य बीमा विवरण आधिकारिक Health Insurance Board Portal बाट मात्र हेर्न सकिन्छ। तलका चरणहरू पालना गर्नुहोस्:',
+        'https://hib.gov.np/',
+        'Health Insurance Board',
+        [
+            'माथिको <b>Copy</b> बटन थिचेर Policy Number clipboard मा राख्नुहोस्।',
+            '<b>Health Insurance Board</b> बटन थिचेर नयाँ Tab मा खोल्नुहोस्।',
+            'Policy Status वा Insurance Check विकल्प छान्नुहोस्।',
+            'Policy No. फिल्डमा नम्बर राख्नुहोस्।',
+            '<b>Search</b> बटन थिचेर बीमा विवरण हेर्नुहोस्।',
+        ],
+        $policyNo
+    );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+//  SOCIAL SECURITY — Social Security Fund Portal
+// ─────────────────────────────────────────────────────────────────────────────
+function checkSocial(string $ssnNo): void {
+    failWithLink(
+        'सामाजिक सुरक्षा विवरण आधिकारिक Social Security Fund Portal बाट मात्र हेर्न सकिन्छ। तलका चरणहरू पालना गर्नुहोस्:',
+        'https://ssf.gov.np/',
+        'Social Security Fund',
+        [
+            'माथिको <b>Copy</b> बटन थिचेर SSN Number clipboard मा राख्नुहोस्।',
+            '<b>Social Security Fund</b> बटन थिचेर नयाँ Tab मा खोल्नुहोस्।',
+            'Social Security Status वा Contribution Check विकल्प छान्नुहोस्।',
+            'SSN No. फिल्डमा नम्बर राख्नुहोस्।',
+            '<b>Search</b> बटन थिचेर सुरक्षा विवरण हेर्नुहोस्।',
+        ],
+        $ssnNo
+    );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 //  HTML parsers
 // ─────────────────────────────────────────────────────────────────────────────
 function parseDotmResult(string $html, string $type): ?array {
@@ -360,6 +436,18 @@ try {
             break;
         case 'citizenship':
             checkCitizenship($number);
+            break;
+        case 'property':
+            checkProperty($number);
+            break;
+        case 'education':
+            checkEducation($number);
+            break;
+        case 'health':
+            checkHealth($number);
+            break;
+        case 'social':
+            checkSocial($number);
             break;
         default:
             echo json_encode(['success' => false, 'message' => 'Unknown service type: ' . $type]);
