@@ -252,13 +252,13 @@ if ($_ga4Id && !$EMBED):
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --brand:#0d9488;--brand-2:#14b8a6;--brand-deep:#0f766e;
-  --ink:#0b1220;--muted:#64748b;--page:#f4f6fb;--surface:#fff;--line:#e6eaf2;
+  --ink:#1e293b;--muted:#64748b;--page:#f8fafc;--surface:#ffffff;--line:#e2e8f0;
   --shadow-app:0 1px 2px rgba(11,18,32,.04),0 8px 24px -12px rgba(11,18,32,.10);
 }
 /* Dark Mode Colors */
 .dark{
   --brand:#2dd4bf;--brand-2:#5eead4;--brand-deep:#14b8a6;
-  --ink:#f1f5f9;--muted:#94a3b8;--page:#0f172a;--surface:#1e293b;--line:#334155;
+  --ink:#f8fafc;--muted:#cbd5e1;--page:#0f172a;--surface:#1e293b;--line:#334155;
   --shadow-app:0 1px 2px rgba(0,0,0,.3),0 8px 24px -12px rgba(0,0,0,.4);
 }
 .dark body{

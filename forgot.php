@@ -8,7 +8,7 @@ $sent = isset($_GET['sent']);
     <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-app mb-3">
       <i data-lucide="key-round" class="w-8 h-8 text-white"></i>
     </div>
-    <h1 class="text-[22px] font-extrabold text-slate-900"><?= $tH('पासवर्ड बिर्सनुभयो?','Forgot password?') ?></h1>
+    <h1 class="text-[22px] font-extrabold text-slate-800"><?= $tH('पासवर्ड बिर्सनुभयो?','Forgot password?') ?></h1>
     <p class="text-[12px] text-slate-500 mt-1 px-4"><?= $tH('इमेलमा रिसेट लिङ्क पठाइनेछ','We\'ll email you a reset link') ?></p>
   </section>
   <section class="px-5 mt-5">

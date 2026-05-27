@@ -15,7 +15,7 @@ require_once __DIR__ . '/header.php';
       <i data-lucide="tag" class="w-5 h-5"></i>
     </span>
     <div>
-      <h1 class="text-[18px] font-bold text-slate-900 leading-tight">अफर / डिल</h1>
+      <h1 class="text-[18px] font-bold text-slate-800 leading-tight">अफर / डिल</h1>
       <p class="text-[11px] text-slate-500">ISP प्याकेज · Daraz छुट · Cashback · Travel</p>
     </div>
     <span class="ml-auto text-[10px] bg-rose-100 text-rose-600 font-bold px-2 py-1 rounded-full animate-pulse">
@@ -27,7 +27,7 @@ require_once __DIR__ . '/header.php';
   <div class="relative">
     <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none"></i>
     <input id="of-search" type="search" placeholder="कम्पनी वा अफर खोज्नुस्…"
-      class="w-full pl-9 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white text-[13px] text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-rose-400"
+      class="w-full pl-9 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white text-[13px] text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-rose-400"
       autocomplete="off" />
   </div>
 </section>
@@ -65,7 +65,7 @@ require_once __DIR__ . '/header.php';
       ] as [$co,$pr,$pl,$bg]): ?>
       <div class="bg-white rounded-xl p-2 text-center border border-slate-100">
         <span class="inline-block <?= $bg ?> text-white text-[9px] font-bold px-2 py-0.5 rounded-full mb-1"><?= $co ?></span>
-        <p class="text-[15px] font-black text-slate-900 leading-none"><?= $pr ?></p>
+        <p class="text-[15px] font-black text-slate-800 leading-none"><?= $pr ?></p>
         <p class="text-[9px] text-slate-400 mt-0.5"><?= $pl ?></p>
       </div>
       <?php endforeach; ?>
@@ -87,7 +87,7 @@ require_once __DIR__ . '/header.php';
   <div id="of-list" class="grid grid-cols-1 gap-2 hidden"></div>
   <div id="of-empty" class="py-12 text-center hidden">
     <p class="text-4xl mb-2">🏷️</p>
-    <p class="text-[14px] font-semibold text-slate-700">कुनै अफर भेटिएन</p>
+    <p class="text-[14px] font-semibold text-slate-600">कुनै अफर भेटिएन</p>
   </div>
 </section>
 
@@ -155,7 +155,7 @@ require_once __DIR__ . '/header.php';
     var disc = o.discount_pct > 0 ? '<span class="text-[11px] font-black text-rose-600 bg-rose-50 border border-rose-200 px-2 py-0.5 rounded-full">' + esc(o.discount_pct) + '% छुट</span>' : '';
     var badge = o.badge ? '<span class="text-[9px] font-bold bg-amber-400 text-white px-1.5 py-0.5 rounded-full">' + esc(o.badge) + '</span>' : '';
     var valid = o.valid_until ? '<span class="text-[10px] text-slate-400">⏰ ' + esc(o.valid_until) + '</span>' : '';
-    var price = o.price ? '<span class="text-[15px] font-black text-slate-900">' + esc(o.price) + '</span>' : '';
+    var price = o.price ? '<span class="text-[15px] font-black text-slate-800">' + esc(o.price) + '</span>' : '';
     var oldPr = o.old_price ? '<span class="text-[11px] text-slate-400 line-through">' + esc(o.old_price) + '</span>' : '';
 
     return '<a href="' + esc(o.url || '#') + '" target="_blank" rel="noopener"'
@@ -168,7 +168,7 @@ require_once __DIR__ . '/header.php';
           + badge
           + disc
         + '</div>'
-        + '<p class="text-[13px] font-bold text-slate-800 leading-snug mb-1">' + esc(o.title) + '</p>'
+        + '<p class="text-[13px] font-bold text-slate-700 leading-snug mb-1">' + esc(o.title) + '</p>'
         + (o.summary ? '<p class="text-[11px] text-slate-500 leading-relaxed line-clamp-2 mb-1">' + esc(o.summary) + '</p>' : '')
         + '<div class="flex items-center gap-2 flex-wrap">'
           + price + oldPr + valid
