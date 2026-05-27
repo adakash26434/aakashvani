@@ -104,7 +104,13 @@ function ip_parse_sharesansar(array $data): array {
         $announce = $row['announcement_link'] ?? '';
         $eligible = $row['right_eligibility_link'] ?? '';
 
+        // Generate a unique ID from symbol and date
+        $id = md5($symbol . $open . $close);
+        $companyShareId = $row['id'] ?? $id;
+
         $out[] = [
+            'id'          => $id,
+            'companyShareId' => $companyShareId,
             'name'        => $name,
             'symbol'      => $symbol,
             'sector'      => ip_clean($row['displayable_share_type'] ?? ''),
@@ -119,6 +125,7 @@ function ip_parse_sharesansar(array $data): array {
             'announceUrl' => $announce ?: '',
             'eligibleUrl' => $eligible ?: '',
             'companyUrl'  => ip_href($co['symbol'] ?? ''),
+            'status'      => ($open && $close) ? (($open <= date('Y-m-d') && $close >= date('Y-m-d')) ? 'Active' : 'Closed') : 'Unknown',
         ];
     }
     return $out;
@@ -133,7 +140,10 @@ function ip_parse_merolagani(array $rows): array {
         if (preg_match('/<td[^>]*>([^<]+)<\/td>/is', $row, $matches)) {
             $name = ip_clean($matches[1]);
             if ($name) {
+                $id = md5($name . time());
                 $out[] = [
+                    'id' => $id,
+                    'companyShareId' => $id,
                     'name' => $name,
                     'symbol' => '',
                     'sector' => 'Unknown',
@@ -148,6 +158,7 @@ function ip_parse_merolagani(array $rows): array {
                     'announceUrl' => '',
                     'eligibleUrl' => '',
                     'companyUrl' => '',
+                    'status' => 'Unknown',
                 ];
             }
         }
@@ -225,19 +236,23 @@ if (!$data['available']) {
     }
     
     // Fallback to sample data if no cache available
+    $sampleActive = [
+        ['id' => md5('NICL' . date('Y-m-d')), 'companyShareId' => md5('NICL' . date('Y-m-d')), 'name' => 'Nepal Insurance Company Limited', 'symbol' => 'NICL', 'sector' => 'Non-Life Insurance', 'shares' => '4,000,000', 'price' => 'Rs. 205.00', 'openDate' => date('Y-m-d'), 'closeDate' => date('Y-m-d', strtotime('+7 days')), 'manager' => 'NIBL Capital', 'status' => 'Active'],
+        ['id' => md5('NRML' . date('Y-m-d')), 'companyShareId' => md5('NRML' . date('Y-m-d')), 'name' => 'Nepal Republic Media Limited', 'symbol' => 'NRML', 'sector' => 'Media', 'shares' => '2,500,000', 'price' => 'Rs. 100.00', 'openDate' => date('Y-m-d'), 'closeDate' => date('Y-m-d', strtotime('+5 days')), 'manager' => 'Global IME Capital', 'status' => 'Active'],
+    ];
+    $sampleUpcoming = [
+        ['id' => md5('MBBL' . date('Y-m-d', strtotime('+10 days'))), 'companyShareId' => md5('MBBL' . date('Y-m-d', strtotime('+10 days'))), 'name' => 'Muktinath Bikas Bank Limited', 'symbol' => 'MBBL', 'sector' => 'Development Bank', 'shares' => '5,000,000', 'price' => 'Rs. 110.00', 'openDate' => date('Y-m-d', strtotime('+10 days')), 'closeDate' => date('Y-m-d', strtotime('+15 days')), 'manager' => 'NMB Capital', 'status' => 'Upcoming'],
+    ];
+    $sampleClosed = [
+        ['id' => md5('CHCL' . date('Y-m-d', strtotime('-30 days'))), 'companyShareId' => md5('CHCL' . date('Y-m-d', strtotime('-30 days'))), 'name' => 'Chilime Hydropower Company Limited', 'symbol' => 'CHCL', 'sector' => 'Hydropower', 'shares' => '10,000,000', 'price' => 'Rs. 85.00', 'openDate' => date('Y-m-d', strtotime('-30 days')), 'closeDate' => date('Y-m-d', strtotime('-25 days')), 'manager' => 'Nabil Investment', 'status' => 'Closed'],
+    ];
+    
     $data = [
         'available' => true,
-        'active' => [
-            ['name' => 'Nepal Insurance Company Limited', 'symbol' => 'NICL', 'sector' => 'Non-Life Insurance', 'shares' => '4,000,000', 'price' => 'Rs. 205.00', 'openDate' => date('Y-m-d'), 'closeDate' => date('Y-m-d', strtotime('+7 days')), 'manager' => 'NIBL Capital'],
-            ['name' => 'Nepal Republic Media Limited', 'symbol' => 'NRML', 'sector' => 'Media', 'shares' => '2,500,000', 'price' => 'Rs. 100.00', 'openDate' => date('Y-m-d'), 'closeDate' => date('Y-m-d', strtotime('+5 days')), 'manager' => 'Global IME Capital'],
-        ],
-        'upcoming' => [
-            ['name' => 'Muktinath Bikas Bank Limited', 'symbol' => 'MBBL', 'sector' => 'Development Bank', 'shares' => '5,000,000', 'price' => 'Rs. 110.00', 'openDate' => date('Y-m-d', strtotime('+10 days')), 'closeDate' => date('Y-m-d', strtotime('+15 days')), 'manager' => 'NMB Capital'],
-        ],
-        'closed' => [
-            ['name' => 'Chilime Hydropower Company Limited', 'symbol' => 'CHCL', 'sector' => 'Hydropower', 'shares' => '10,000,000', 'price' => 'Rs. 85.00', 'openDate' => date('Y-m-d', strtotime('-30 days')), 'closeDate' => date('Y-m-d', strtotime('-25 days')), 'manager' => 'Nabil Investment'],
-        ],
-        'ipo' => ['active' => [], 'upcoming' => [], 'closed' => []],
+        'active' => $sampleActive,
+        'upcoming' => $sampleUpcoming,
+        'closed' => $sampleClosed,
+        'ipo' => ['active' => $sampleActive, 'upcoming' => $sampleUpcoming, 'closed' => $sampleClosed],
         'fpo' => ['active' => [], 'upcoming' => [], 'closed' => []],
         'right' => ['active' => [], 'upcoming' => [], 'closed' => []],
         'mutual' => ['active' => [], 'upcoming' => [], 'closed' => []],
