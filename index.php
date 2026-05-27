@@ -402,8 +402,10 @@ window.__chips = {
     ['/utilities.php',       'bar-chart-2',   $t('उपयोगी','Utils'),       'bg-gray-100 text-gray-700'],
     ['/unit-converter.php',  'calculator',    $t('एकाइ','Unit'),         'bg-blue-100 text-blue-700'],
     ['/bmi-calculator.php',  'activity',      $t('BMI','BMI'),           'bg-green-100 text-green-700'],
+    ['/language-translator.php', 'languages', $t('अनुवाद','Translate'),  'bg-purple-100 text-purple-700'],
+    ['/dictionary.php',     'book',          $t('शब्दकोश','Dict'),      'bg-indigo-100 text-indigo-700'],
     ['/pdf-convert.php',     'file-text',     $t('PDF','PDF'),           'bg-red-100 text-red-700'],
-    ['/downloads.php',       'download',      $t('डाउनलोड','Downloads'),  'bg-indigo-100 text-indigo-700'],
+    ['/downloads.php',       'download',      $t('डाउनलोड','Downloads'),  'bg-cyan-100 text-cyan-700'],
   ];
   foreach($toolsTiles as [$h,$ic,$lb,$bg]): ?>
     <a href="<?= $h ?>" class="tile">
@@ -424,6 +426,8 @@ window.__chips = {
     ['/emergency.php',    'phone-call',    $t('आपतकाल','SOS'),         'bg-rose-100 text-rose-700'],
     ['/hospitals.php',    'heart-pulse',   $t('अस्पताल','Hospital'),    'bg-pink-100 text-pink-700'],
     ['/nea-bill.php',     'zap',           $t('बिजुली','Electricity'),  'bg-yellow-100 text-yellow-700'],
+    ['/health-tips.php',  'heart',         $t('स्वास्थ्य','Health'),     'bg-teal-100 text-teal-700'],
+    ['/fitness-tracker.php', 'activity',    $t('फिटनेस','Fitness'),     'bg-orange-100 text-orange-700'],
   ];
   foreach($healthTiles as [$h,$ic,$lb,$bg]): ?>
     <a href="<?= $h ?>" class="tile">
@@ -464,6 +468,7 @@ window.__chips = {
     ['/nokari.php',         'briefcase',     $t('नोकरी','Jobs'),          'bg-purple-100 text-purple-700'],
     ['/exam-results.php',  'graduation-cap',$t('परीक्षा','Exam'),        'bg-violet-100 text-violet-700'],
     ['/auction-notices.php','gavel',        $t('लिलामी','Auction'),      'bg-orange-100 text-orange-700'],
+    ['/quiz-games.php',    'gamepad-2',     $t('खेल','Quiz'),           'bg-pink-100 text-pink-700'],
   ];
   foreach($eduTiles as [$h,$ic,$lb,$bg]): ?>
     <a href="<?= $h ?>" class="tile">
