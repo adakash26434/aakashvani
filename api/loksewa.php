@@ -173,6 +173,10 @@ function lk_collect_live2(int $limit = 40): array {
         ['Ratopati',          'https://ratopati.com/feed',                             'https://ratopati.com'],
         ['Annapurna Post',    'https://www.annapurnapost.com/feed',                    'https://www.annapurnapost.com'],
         ['Himalkhabar',       'https://himalkhabar.com/feed',                          'https://himalkhabar.com'],
+        ['Setopati',          'https://setopati.com/feed',                             'https://setopati.com'],
+        ['Nagarik',           'https://nagariknews.nagariknetwork.com/feed',           'https://nagariknews.nagariknetwork.com'],
+        ['Kathmandu Post',    'https://kathmandupost.com/feed',                        'https://kathmandupost.com'],
+        ['The Rising Nepal',  'https://risingnepaldaily.com/feed',                     'https://risingnepaldaily.com'],
     ];
     foreach ($feeds as [$src, $feedUrl, $srcUrl]) {
         foreach (lk_parse_rss2(lk_fetch2($feedUrl, 6), $src, $srcUrl) as $it) {
@@ -198,10 +202,16 @@ function lk_collect_live2(int $limit = 40): array {
     return $out;
 }
 
-// Loksewa keywords for RSS filtering
+// Loksewa keywords for RSS filtering - expanded for better coverage
 $lkKw = ['लोकसेवा','lok sewa','loksewa','psc','आयोग','vacancy','रिक्त','दरखास्त','भर्ना','विज्ञापन','job','जागिर','bigyapan',
           'result','नतिजा','नाम निकाल','उत्तीर्ण','सिफारिस','मेरिट','syllabus','पाठ्यक्रम','exam','परीक्षा','interview',
-          'सरकारी','government job','civil service','निजामती','kharidar','खरिदार','teacher','शिक्षक','police','प्रहरी'];
+          'सरकारी','government job','civil service','निजामती','kharidar','खरिदार','teacher','शिक्षक','police','प्रहरी',
+          'nepal army','नेपाली सेना','armed police','सशस्त्र प्रहरी','nepal police','health assistant','स्वास्थ्य सहायक',
+          'staff nurse','फार्मासिस्ट','pharmacist','lab technician','प्राविधिक','medical officer','डाक्टर','doctor',
+          'engineer','इन्जिनियर','subba','सुब्बा','section officer','सेक्सन अफिसर','na su','ना.सु.',
+          'judicial service','न्यायिक सेवा','bank service','बैंक सेवा','insurance','बीमा','cooperative','सहकारी',
+          'public service commission','लोक सेवा आयोग','province','प्रदेश','local level','स्थानीय तह','municipality','नगरपालिका',
+          'rural municipality','गाउँपालिका','ward','वडा','office','कार्यालय','recruitment','भर्ती','appointment','नियुक्ति'];
 
 $db = lk_db2();
 $items = [];
