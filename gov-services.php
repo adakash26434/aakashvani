@@ -17,7 +17,11 @@ $services=[
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?=$t('सरकारी सेवा','Government Services')?> | आकाशवाणी</title>
+    <title><?=$t('सरकारी सेवा','Government Services')?> | आकाशवाणी<meta property="og:title" content="<?= $t('आकाशवाणी', 'Aakashvani') ?>">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    </title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/app.css">
     <style>

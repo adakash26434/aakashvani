@@ -27,8 +27,13 @@ $monthDays = [31, 31, 31, 32, 31, 30, 30, 29, 30, 29, 30, 30];
 <html lang="<?= $isNepali ? 'ne' : 'en' ?>">
 <head>
     <meta charset="UTF-8">
+    <meta property="og:title" content="<?= $t('आकाशवाणी - Nepal Information Portal', 'Aakashvani - Nepal Information Portal') ?>">
+    <meta property="og:description" content="<?= $t('नेपालको सबैभन्दा विश्वसनीय सूचना प्लेटफर्म।', 'Nepal's most trusted information platform.') ?>">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $nepaliMonths[$month] ?> <?= $year ?> | <?= $t('पात्रो', 'Calendar') ?> | आकाशवाणी</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet">

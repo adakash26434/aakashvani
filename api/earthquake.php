@@ -3,11 +3,24 @@
  * Earthquake API - Real-time seismic data for Nepal and surrounding region
  * Uses USGS Earthquake Catalog API
  */
+require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/../functions.php';
+require_once __DIR__ . '/../includes/error-logger.php';
+require_once __DIR__ . '/../includes/http.php';
 
-// CORS headers
+// Security headers
+sendSecurityHeaders();
 header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
 header('Cache-Control: public, max-age=300'); // 5 minute cache
+
+// Rate limiting
+$rateKey = 'eq:' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown');
+if (!checkRateLimit($rateKey, 60, 60)) {
+    http_response_code(429);
+    echo json_encode(['ok' => false, 'error' => 'Rate limit exceeded']);
+    exit;
+}
 
 // Nepal region boundaries
 $NEPAL_BOUNDS = [

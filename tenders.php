@@ -11,8 +11,13 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
 <html lang="<?= $isNepali ? 'ne' : 'en' ?>">
 <head>
     <meta charset="UTF-8">
+    <meta property="og:title" content="<?= $t('आकाशवाणी - Nepal Information Portal', 'Aakashvani - Nepal Information Portal') ?>">
+    <meta property="og:description" content="<?= $t('नेपालको सबैभन्दा विश्वसनीय सूचना प्लेटफर्म।', 'Nepal's most trusted information platform.') ?>">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $t('सरकारी टेन्डर', 'Government Tenders') ?> | <?= $t('आकाशवाणी', 'Aakashvani') ?></title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/app.css">
     <style>

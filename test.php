@@ -14,6 +14,7 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Design System Test | आकाशवाणी</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="stylesheet" href="/assets/css/app.css">
     <style>
         .test-container { max-width: 1000px; margin: 40px auto; padding: 20px; }

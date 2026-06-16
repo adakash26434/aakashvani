@@ -13,6 +13,7 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $t('दर्ता', 'Register') ?> | <?= $t('आकाशवाणी', 'Aakashvani') ?></title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/app.css">
     <style>
@@ -29,6 +30,15 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
         .btn-primary:hover { background: var(--primary-600); transform: translateY(-1px); }
         .auth-footer { text-align: center; margin-top: var(--space-6); font-size: 0.875rem; color: var(--dark-500); }
         .auth-footer a { color: var(--primary); font-weight: 600; text-decoration: none; }
+    </style>
+
+    <style>
+        /* Responsive */
+        @media (max-width: 480px) {
+            .login-page, .auth-page { padding: var(--space-4); }
+            .login-card, .auth-card { padding: var(--space-6); }
+            .login-logo .brand-logo { width: 48px; height: 48px; font-size: 1.5rem; }
+        }
     </style>
 </head>
 <body>
