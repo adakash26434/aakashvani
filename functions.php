@@ -1,0 +1,154 @@
+<?php
+/**
+ * आकाशवाणी - Functions
+ * Database Query Functions
+ */
+
+// Get Published News
+if (!function_exists('getPublishedNews')) {
+    function getPublishedNews($category = null, $source = null, $limit = 20, $offset = 0) {
+        $pdo = getDB();
+        if (!$pdo) return [];
+        
+        $where = "WHERE status = 'published'";
+        $params = [];
+        
+        if ($category) {
+            $where .= " AND category = ?";
+            $params[] = $category;
+        }
+        if ($source) {
+            $where .= " AND source = ?";
+            $params[] = $source;
+        }
+        
+        $sql = "SELECT id, title, slug, summary, content, image, category, source, source_name, published_at, view_count 
+                FROM news 
+                $where 
+                ORDER BY published_at DESC 
+                LIMIT ? OFFSET ?";
+        $params[] = $limit;
+        $params[] = $offset;
+        
+        try {
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute($params);
+            return $stmt->fetchAll();
+        } catch (PDOException $e) {
+            return [];
+        }
+    }
+}
+
+// Get News by Slug
+if (!function_exists('getNewsBySlug')) {
+    function getNewsBySlug($slug) {
+        $pdo = getDB();
+        if (!$pdo) return null;
+        
+        try {
+            $stmt = $pdo->prepare("SELECT * FROM news WHERE slug = ? AND status = 'published'");
+            $stmt->execute([$slug]);
+            return $stmt->fetch() ?: null;
+        } catch (PDOException $e) {
+            return null;
+        }
+    }
+}
+
+// Get Related News
+if (!function_exists('getRelatedNews')) {
+    function getRelatedNews($id = 0, $category = '', $limit = 4) {
+        $pdo = getDB();
+        if (!$pdo) return [];
+        
+        try {
+            $stmt = $pdo->prepare("
+                SELECT id, title, slug, image, category, published_at 
+                FROM news 
+                WHERE status = 'published' AND id != ? AND category = ?
+                ORDER BY published_at DESC 
+                LIMIT ?
+            ");
+            $stmt->execute([$id, $category, $limit]);
+            return $stmt->fetchAll();
+        } catch (PDOException $e) {
+            return [];
+        }
+    }
+}
+
+// Get Categories
+if (!function_exists('getCategories')) {
+    function getCategories() {
+        $pdo = getDB();
+        if (!$pdo) return [];
+        
+        try {
+            $stmt = $pdo->query("SELECT DISTINCT category FROM news WHERE status = 'published' ORDER BY category");
+            return $stmt->fetchAll(PDO::FETCH_COLUMN);
+        } catch (PDOException $e) {
+            return [];
+        }
+    }
+}
+
+// Get Market Data (from cache)
+if (!function_exists('getMarketData')) {
+    function getMarketData() {
+        $cacheFile = __DIR__ . '/data/cache/market.json';
+        if (file_exists($cacheFile) && (time() - filemtime($cacheFile)) < 300) {
+            return json_decode(file_get_contents($cacheFile), true) ?: [];
+        }
+        return [];
+    }
+}
+
+// Get IPO List (from cache)
+if (!function_exists('getIPOList')) {
+    function getIPOList() {
+        $cacheFile = __DIR__ . '/data/cache/ipo-list.json';
+        if (file_exists($cacheFile) && (time() - filemtime($cacheFile)) < 600) {
+            return json_decode(file_get_contents($cacheFile), true) ?: [];
+        }
+        return [];
+    }
+}
+
+// Update View Count
+if (!function_exists('incrementViewCount')) {
+    function incrementViewCount($newsId) {
+        $pdo = getDB();
+        if (!$pdo) return false;
+        
+        try {
+            $stmt = $pdo->prepare("UPDATE news SET view_count = view_count + 1 WHERE id = ?");
+            return $stmt->execute([$newsId]);
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+}
+
+// Search News
+if (!function_exists('searchNews')) {
+    function searchNews($query, $limit = 20) {
+        $pdo = getDB();
+        if (!$pdo) return [];
+        
+        try {
+            $stmt = $pdo->prepare("
+                SELECT id, title, slug, image, category, published_at 
+                FROM news 
+                WHERE status = 'published' AND (title LIKE ? OR content LIKE ?)
+                ORDER BY published_at DESC 
+                LIMIT ?
+            ");
+            $search = '%' . $query . '%';
+            $stmt->execute([$search, $search, $limit]);
+            return $stmt->fetchAll();
+        } catch (PDOException $e) {
+            return [];
+        }
+    }
+}
