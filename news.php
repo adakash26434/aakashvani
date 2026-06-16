@@ -14,14 +14,46 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
 $category = isset($_GET['category']) ? sanitize($_GET['category']) : null;
 $news = getPublishedNews($category, null, 20, 0);
 
-// Sample data fallback
+// Try to fetch from news API when DB is empty
 if (empty($news)) {
-    $news = [
-        ['slug' => 'nepal-politics-update', 'title' => 'प्रधानमन्त्रीको नयाँ घोषणा', 'image' => 'https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?w=600&h=400&fit=crop', 'category' => 'politics', 'source_name' => 'आकाशवाणी', 'published_at' => date('Y-m-d H:i:s')],
-        ['slug' => 'nepal-economy', 'title' => 'नेपाली अर्थतन्त्रको स्थिति', 'image' => 'https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=600&h=400&fit=crop', 'category' => 'economy', 'source_name' => 'आकाशवाणी', 'published_at' => date('Y-m-d H:i:s')],
-        ['slug' => 'nepal-sports', 'title' => 'नेपाली खेलकुदको नयाँ सफलता', 'image' => 'https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=600&h=400&fit=crop', 'category' => 'sports', 'source_name' => 'आकाशवाणी', 'published_at' => date('Y-m-d H:i:s')],
-        ['slug' => 'nepal-tech', 'title' => 'नेपालमा प्रविधिको विकास', 'image' => 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=600&h=400&fit=crop', 'category' => 'technology', 'source_name' => 'आकाशवाणी', 'published_at' => date('Y-m-d H:i:s')],
-    ];
+    $cacheFile = __DIR__ . '/data/cache/news-home.json';
+    if (file_exists($cacheFile) && (time() - filemtime($cacheFile)) < 600) {
+        $cached = json_decode(file_get_contents($cacheFile), true);
+        if (!empty($cached['news'])) {
+            $news = $cached['news'];
+        }
+    }
+    
+    // Final fallback with real RSS feed
+    if (empty($news)) {
+        $news = fetchNewsFromRSS($category);
+    }
+}
+
+// Helper function to fetch from RSS
+function fetchNewsFromRSS($category = null) {
+    $cacheFile = __DIR__ . '/data/cache/news-rss-' . ($category ?: 'all') . '.json';
+    if (file_exists($cacheFile) && (time() - filemtime($cacheFile)) < 600) {
+        return json_decode(file_get_contents($cacheFile), true) ?: [];
+    }
+    
+    $cat = $category ?: 'all';
+    $url = '/api/news-rss.php?cat=' . $cat . '&limit=12';
+    
+    $context = stream_context_create([
+        'http' => ['timeout' => 5, 'ignore_errors' => true]
+    ]);
+    
+    $resp = @file_get_contents('http://' . $_SERVER['HTTP_HOST'] . $url, false, $context);
+    if ($resp) {
+        $data = json_decode($resp, true);
+        if (!empty($data['news'])) {
+            file_put_contents($cacheFile, $resp);
+            return $data['news'];
+        }
+    }
+    
+    return [];
 }
 
 $categories = [

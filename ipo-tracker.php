@@ -11,8 +11,9 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
 // Try to fetch from IPO API
 $ipos = [];
 $cacheFile = __DIR__ . '/data/cache/ipo-list.json';
-if (file_exists($cacheFile) && (time() - filemtime($cacheFile)) < 600) {
-    $ipos = json_decode(file_get_contents($cacheFile), true) ?: [];
+if (file_exists($cacheFile) && (time() - filemtime($cacheFile)) < 3600) {
+    $data = json_decode(file_get_contents($cacheFile), true);
+    $ipos = $data['ipos'] ?? $data ?? [];
 }
 
 // Fallback sample data if no API

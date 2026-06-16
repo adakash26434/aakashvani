@@ -219,5 +219,106 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
         console.log('Filtering:', category);
     }
     </script>
+    <script>
+    // Load tenders from API
+    async function loadTenders() {
+        const container = document.getElementById('tenders-list');
+        if (!container) return;
+        
+        container.innerHTML = '<div class="tender-card" style="text-align:center;padding:var(--space-8)"><div class="tender-title">लोड हुँदैछ...</div></div>';
+        
+        try {
+            const resp = await fetch('/api/government-tenders.php?days=30');
+            const data = await resp.json();
+            
+            if (data.ok && data.tenders && data.tenders.length > 0) {
+                renderTenders(data.tenders);
+            } else {
+                container.innerHTML = '<div class="tender-card" style="text-align:center;padding:var(--space-8)"><div class="tender-title"><?= $t('अहिले कुनै टेन्डर छैन', 'No tenders available') ?></div></div>';
+            }
+        } catch (e) {
+            container.innerHTML = '<div class="tender-card" style="text-align:center;padding:var(--space-8)"><div class="tender-title"><?= $t('डाटा लोड हुन सकेन', 'Failed to load data') ?></div></div>';
+        }
+    }
+    
+    function renderTenders(tenders) {
+        const container = document.getElementById('tenders-list');
+        container.innerHTML = tenders.map(t => \`
+            <div class="tender-card">
+                <div class="tender-header">
+                    <div>
+                        <div class="tender-org">\${t.ministry || 'सरकारी निकाय'}</div>
+                        <div class="tender-title">\${t.title || t.description || '<?= $t('टेन्डर', 'Tender') ?>'}</div>
+                        <div class="tender-number"><?= $t('टेन्डर नं.', 'Tender No.') ?>: \${t.tender_number || t.tender_no || 'N/A'}</div>
+                    </div>
+                    <span class="tender-badge badge-\${getBadgeClass(t)}">\${getBadgeText(t)}</span>
+                </div>
+                <div class="tender-details">
+                    <div class="tender-detail">
+                        <div class="tender-detail-label"><?= $t('अनुमानित मूल्य', 'Est. Value') ?></div>
+                        <div class="tender-detail-value">\${t.estimated_value ? 'रु ' + Number(t.estimated_value).toLocaleString() : 'N/A'}</div>
+                    </div>
+                    <div class="tender-detail">
+                        <div class="tender-detail-label"><?= $t('म्याद', 'Deadline') ?></div>
+                        <div class="tender-detail-value">\${t.deadline || 'N/A'}</div>
+                    </div>
+                    <div class="tender-detail">
+                        <div class="tender-detail-label"><?= $t('कागजात', 'Documents') ?></div>
+                        <div class="tender-detail-value">\${t.document_price ? 'रु ' + Number(t.document_price).toLocaleString() : '<?= $t('निःशुल्क', 'Free') ?>'}</div>
+                    </div>
+                </div>
+                <div class="tender-footer">
+                    <div class="tender-date"><?= $t('प्रकाशित', 'Published') ?>: \${t.published_date || t.created_at || '<?= date('Y-m-d') ?>'}</div>
+                    <a href="\${t.source_url || 'https://bolpatra.gov.np'}" target="_blank" class="btn btn-primary btn-sm"><?= $t('विवरण', 'Details') ?></a>
+                </div>
+            </div>
+        \`).join('');
+    }
+    
+    function getBadgeClass(t) {
+        if (t.is_new) return 'new';
+        if (t.is_urgent) return 'urgent';
+        if (t.closing_soon) return 'closing';
+        return 'new';
+    }
+    
+    function getBadgeText(t) {
+        if (t.is_new) return '<?= $t('नयाँ', 'NEW') ?>';
+        if (t.is_urgent) return '<?= $t('जरुरी', 'URGENT') ?>';
+        if (t.closing_soon) return '<?= $t('बन्द हुँदै', 'CLOSING') ?>';
+        return '<?= $t('नयाँ', 'NEW') ?>';
+    }
+    
+    function filterTenders(category) {
+        document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+        event.target.classList.add('active');
+        // Reload with category filter
+        loadTendersWithCategory(category);
+    }
+    
+    async function loadTendersWithCategory(category) {
+        const container = document.getElementById('tenders-list');
+        container.innerHTML = '<div class="tender-card" style="text-align:center;padding:var(--space-8)"><div class="tender-title">लोड हुँदैछ...</div></div>';
+        
+        try {
+            const url = category === 'all' 
+                ? '/api/government-tenders.php?days=30'
+                : '/api/government-tenders.php?category=' + category + '&days=30';
+            const resp = await fetch(url);
+            const data = await resp.json();
+            
+            if (data.ok && data.tenders && data.tenders.length > 0) {
+                renderTenders(data.tenders);
+            } else {
+                container.innerHTML = '<div class="tender-card" style="text-align:center;padding:var(--space-8)"><div class="tender-title"><?= $t('यस श्रेणीमा कुनै टेन्डर छैन', 'No tenders in this category') ?></div></div>';
+            }
+        } catch (e) {
+            container.innerHTML = '<div class="tender-card" style="text-align:center;padding:var(--space-8)"><div class="tender-title"><?= $t('डाटा लोड हुन सकेन', 'Failed to load data') ?></div></div>';
+        }
+    }
+    
+    // Load on page load
+    document.addEventListener('DOMContentLoaded', loadTenders);
+    </script>
 </body>
 </html>
