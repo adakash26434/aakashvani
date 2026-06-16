@@ -213,17 +213,24 @@ $monthDays = [31, 31, 31, 32, 31, 30, 30, 29, 30, 29, 30, 30];
                     
                     <div class="info-card">
                         <h3 class="info-card-title"><?= $t('पञ्चाङ्ग', 'Panchang') ?></h3>
-                        <div class="info-row">
-                            <span class="info-label"><?= $t('तिथि', 'Tithi') ?></span>
-                            <span class="info-value"><?= $t('शुक्ल पक्ष', 'Shukla Paksha') ?></span>
-                        </div>
-                        <div class="info-row">
-                            <span class="info-label"><?= $t('नक्षत्र', 'Nakshatra') ?></span>
-                            <span class="info-value"><?= $t('रोहिणी', 'Rohini') ?></span>
-                        </div>
-                        <div class="info-row">
-                            <span class="info-label"><?= $t('योग', 'Yoga') ?></span>
-                            <span class="info-value"><?= $t('शुभ', 'Shubha') ?></span>
+                        <div id="panchang-loading" style="text-align:center;padding:8px"><span style="font-size:0.75rem;color:var(--dark-400)"><?= $t('लोड हुँदै...','Loading...') ?></span></div>
+                        <div id="panchang-data" style="display:none">
+                            <div class="info-row">
+                                <span class="info-label"><?= $t('तिथि', 'Tithi') ?></span>
+                                <span class="info-value" id="panchang-tithi">-</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label"><?= $t('नक्षत्र', 'Nakshatra') ?></span>
+                                <span class="info-value" id="panchang-nakshatra">-</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label"><?= $t('योग', 'Yoga') ?></span>
+                                <span class="info-value" id="panchang-yoga">-</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label"><?= $t('करण', 'Karan') ?></span>
+                                <span class="info-value" id="panchang-karan">-</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -240,5 +247,23 @@ $monthDays = [31, 31, 31, 32, 31, 30, 30, 29, 30, 29, 30, 30];
     </footer>
     
     <script src="/assets/js/app.js"></script>
+    <script>
+    async function loadPanchang() {
+        try {
+            const resp = await fetch('/api/panchang.php');
+            const data = await resp.json();
+            if (data.ok && data.panchang) {
+                const p = data.panchang;
+                document.getElementById('panchang-tithi').textContent = p.tithi_name + ' ' + p.tithi;
+                document.getElementById('panchang-nakshatra').textContent = p.nakshatra;
+                document.getElementById('panchang-yoga').textContent = p.yoga;
+                document.getElementById('panchang-karan').textContent = p.karan;
+                document.getElementById('panchang-loading').style.display = 'none';
+                document.getElementById('panchang-data').style.display = 'block';
+            }
+        } catch(e) { console.error('Panchang error:', e); }
+    }
+    document.addEventListener('DOMContentLoaded', loadPanchang);
+    </script>
 </body>
 </html>
