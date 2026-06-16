@@ -1,0 +1,342 @@
+<?php
+/**
+ * आकाशवाणी — News Post Page (Article Detail)
+ * Premium 2026 Design
+ */
+require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/functions.php';
+
+$lang = siteLang();
+$isNepali = ($lang !== 'en');
+$t = fn($ne, $en) => $isNepali ? $ne : $en;
+
+$slug = isset($_GET['slug']) ? trim($_GET['slug']) : '';
+if (!$slug) {
+    header('Location: /news.php');
+    exit;
+}
+
+$news = getNewsBySlug($slug);
+if (!$news) {
+    http_response_code(404);
+    $news = [
+        'title' => $t('समाचार भेटिएन', 'News Not Found'),
+        'content' => $t('यो समाचार अवस्थित छैन।', 'This news article does not exist.'),
+        'published_at' => date('Y-m-d H:i:s'),
+        'source_name' => 'आकाशवाणी',
+    ];
+}
+
+// Related news
+$related = getRelatedNews($news['id'] ?? 0, $news['category'] ?? '', 4);
+?>
+<!DOCTYPE html>
+<html lang="<?= $isNepali ? 'ne' : 'en' ?>">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?= htmlspecialchars($news['title'] ?? '') ?> | <?= $t('आकाशवाणी', 'Aakashvani') ?></title>
+    <meta name="description" content="<?= htmlspecialchars(mb_substr(strip_tags($news['summary'] ?? $news['content'] ?? ''), 0, 160)) ?>">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/app.css">
+    
+    <style>
+        .article-header {
+            background: linear-gradient(135deg, var(--dark-900), var(--dark-800));
+            padding: var(--space-12) 0;
+            color: #fff;
+        }
+        
+        .article-badge {
+            display: inline-block;
+            padding: var(--space-1) var(--space-3);
+            background: var(--primary);
+            color: #fff;
+            font-size: 0.75rem;
+            font-weight: 700;
+            border-radius: var(--radius-full);
+            margin-bottom: var(--space-4);
+        }
+        
+        .article-title {
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            font-weight: 800;
+            line-height: 1.2;
+            color: #fff;
+            margin-bottom: var(--space-4);
+            max-width: 900px;
+        }
+        
+        .article-meta {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+            font-size: 0.875rem;
+            color: var(--dark-400);
+        }
+        
+        .article-source {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            color: var(--primary);
+            font-weight: 500;
+        }
+        
+        .article-content {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: var(--space-12) var(--space-6);
+        }
+        
+        .article-featured-image {
+            width: 100%;
+            max-height: 500px;
+            object-fit: cover;
+            border-radius: var(--radius-xl);
+            margin-bottom: var(--space-8);
+        }
+        
+        .article-body {
+            font-size: 1.0625rem;
+            line-height: 1.8;
+            color: var(--dark-700);
+        }
+        
+        .article-body p {
+            margin-bottom: var(--space-4);
+        }
+        
+        .article-body h2, .article-body h3 {
+            margin-top: var(--space-8);
+            margin-bottom: var(--space-4);
+        }
+        
+        .article-body blockquote {
+            padding: var(--space-4) var(--space-6);
+            border-left: 4px solid var(--primary);
+            background: var(--dark-50);
+            margin: var(--space-6) 0;
+            font-style: italic;
+        }
+        
+        /* Share */
+        .share-section {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+            padding: var(--space-6) 0;
+            border-top: 1px solid var(--dark-200);
+            border-bottom: 1px solid var(--dark-200);
+            margin: var(--space-8) 0;
+        }
+        
+        .share-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--dark-600);
+        }
+        
+        .share-buttons {
+            display: flex;
+            gap: var(--space-2);
+        }
+        
+        .share-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            transition: all var(--transition);
+            cursor: pointer;
+            border: none;
+        }
+        
+        .share-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .share-btn.facebook { background: #1877f2; }
+        .share-btn.twitter { background: #1da1f2; }
+        .share-btn.whatsapp { background: #25d366; }
+        
+        /* Related */
+        .related-section {
+            padding: var(--space-12) 0;
+            background: var(--dark-50);
+        }
+        
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--space-6);
+        }
+        
+        @media (max-width: 1024px) {
+            .related-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        
+        @media (max-width: 640px) {
+            .related-grid { grid-template-columns: 1fr; }
+        }
+        
+        .related-card {
+            background: #fff;
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            transition: all var(--transition);
+        }
+        
+        .related-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .related-image {
+            aspect-ratio: 16/10;
+            overflow: hidden;
+        }
+        
+        .related-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .related-body {
+            padding: var(--space-4);
+        }
+        
+        .related-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--dark-900);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- Header -->
+    <header class="site-header">
+        <div class="header-main">
+            <div class="container">
+                <div class="flex items-center justify-between">
+                    <a href="/" class="brand" style="text-decoration:none">
+                        <div class="brand-logo" style="width:40px;height:40px;font-size:1.25rem">आ</div>
+                        <span class="brand-name" style="font-size:1.25rem;font-weight:800;color:var(--dark-900)"><?= $t('आकाशवाणी', 'Aakashvani') ?></span>
+                    </a>
+                    <nav class="header-nav">
+                        <a href="/" class="nav-link"><?= $t('गृह', 'Home') ?></a>
+                        <a href="/news.php" class="nav-link active"><?= $t('समाचार', 'News') ?></a>
+                        <a href="/nepali-patro.php" class="nav-link"><?= $t('पात्रो', 'Calendar') ?></a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Article Header -->
+    <section class="article-header">
+        <div class="container">
+            <span class="article-badge"><?= htmlspecialchars($news['category'] ?? 'समाचार') ?></span>
+            <h1 class="article-title"><?= htmlspecialchars($news['title'] ?? '') ?></h1>
+            <div class="article-meta">
+                <span class="article-source">
+                    <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                    <?= htmlspecialchars($news['source_name'] ?? 'आकाशवाणी') ?>
+                </span>
+                <span><?= timeAgo($news['published_at'] ?? '') ?></span>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Article Content -->
+    <article class="article-content">
+        <?php if (!empty($news['image'])): ?>
+        <img src="<?= htmlspecialchars($news['image']) ?>" alt="" class="article-featured-image">
+        <?php endif; ?>
+        
+        <?php if (!empty($news['summary'])): ?>
+        <p style="font-size:1.125rem;font-weight:500;color:var(--dark-700);margin-bottom:var(--space-6)">
+            <?= nl2br(htmlspecialchars($news['summary'])) ?>
+        </p>
+        <?php endif; ?>
+        
+        <div class="article-body">
+            <?= $news['content'] ?? '' ?>
+        </div>
+        
+        <!-- Share -->
+        <div class="share-section">
+            <span class="share-label"><?= $t('सेयर गर्नुहोस्', 'Share') ?>:</span>
+            <div class="share-buttons">
+                <button class="share-btn facebook" onclick="shareContent('facebook')">
+                    <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+                </button>
+                <button class="share-btn twitter" onclick="shareContent('twitter')">
+                    <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg>
+                </button>
+                <button class="share-btn whatsapp" onclick="shareContent('whatsapp')">
+                    <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/></svg>
+                </button>
+            </div>
+        </div>
+    </article>
+    
+    <!-- Related News -->
+    <?php if (!empty($related)): ?>
+    <section class="related-section">
+        <div class="container">
+            <h2 class="text-xl font-bold mb-6" style="border-bottom:2px solid var(--primary);padding-bottom:var(--space-3)">
+                <?= $t('सम्बन्धित समाचार', 'Related News') ?>
+            </h2>
+            <div class="related-grid">
+                <?php foreach ($related as $item): ?>
+                <a href="/news-post.php?slug=<?= urlencode($item['slug'] ?? '') ?>" class="related-card">
+                    <div class="related-image">
+                        <img src="<?= htmlspecialchars($item['image'] ?? '/assets/images/placeholder.jpg') ?>" alt="" loading="lazy">
+                    </div>
+                    <div class="related-body">
+                        <h3 class="related-title"><?= htmlspecialchars($item['title'] ?? '') ?></h3>
+                    </div>
+                </a>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </section>
+    <?php endif; ?>
+    
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-bottom" style="border:none;padding:0">
+                <p class="footer-copyright">&copy; <?= date('Y') ?> <?= $t('आकाशवाणी', 'Aakashvani') ?></p>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="/assets/js/app.js"></script>
+    <script>
+        function shareContent(platform) {
+            const url = encodeURIComponent(window.location.href);
+            const title = encodeURIComponent(document.title);
+            const shareUrls = {
+                facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
+                twitter: `https://twitter.com/intent/tweet?url=${url}&text=${title}`,
+                whatsapp: `https://wa.me/?text=${title}%20${url}`
+            };
+            if (shareUrls[platform]) {
+                window.open(shareUrls[platform], '_blank', 'width=600,height=400');
+            }
+        }
+    </script>
+</body>
+</html>
