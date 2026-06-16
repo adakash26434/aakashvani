@@ -65,11 +65,20 @@ if (empty($ipos)) {
                         <div class="brand-logo">आ</div>
                         <span class="brand-name"><?= $t('आकाशवाणी', 'Aakashvani') ?></span>
                     </a>
-                    <nav class="header-nav">
-                        <a href="/" class="nav-link"><?= $t('गृह', 'Home') ?></a>
-                        <a href="/news.php" class="nav-link"><?= $t('समाचार', 'News') ?></a>
-                        <a href="/nepali-patro.php" class="nav-link"><?= $t('पात्रो', 'Calendar') ?></a>
-                        <a href="/ipo-tracker.php" class="nav-link active"><?= $t('IPO', 'IPO') ?></a>
+                    <nav class="main-nav">
+                        <div class="container">
+                            <div class="nav-list">
+                                <a href="/" class="nav-link"><?= $t('गृह', 'Home') ?></a>
+                                <a href="/news.php" class="nav-link"><?= $t('समाचार', 'News') ?></a>
+                                <a href="/nepali-patro.php" class="nav-link"><?= $t('पात्रो', 'Calendar') ?></a>
+                                <a href="/rashifal.php" class="nav-link"><?= $t('राशिफल', 'Horoscope') ?></a>
+                                <a href="/ipo-tracker.php" class="nav-link active"><?= $t('NEPSE/IPO', 'NEPSE/IPO') ?></a>
+                                <a href="/weather.php" class="nav-link"><?= $t('मौसम', 'Weather') ?></a>
+                                <a href="/cricket.php" class="nav-link"><?= $t('क्रिकेट', 'Cricket') ?></a>
+                                <a href="/tenders.php" class="nav-link"><?= $t('टेन्डर', 'Tenders') ?></a>
+                                <a href="/emergency.php" class="nav-link"><?= $t('आपतकालीन', 'Emergency') ?></a>
+                            </div>
+                        </div>
                     </nav>
                     <div class="header-actions">
                         <button class="btn btn-ghost btn-icon" aria-label="Search">

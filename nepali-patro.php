@@ -105,8 +105,10 @@ $monthDays = [31, 31, 31, 32, 31, 30, 30, 29, 30, 29, 30, 30];
                         <div class="brand-logo">आ</div>
                         <span class="brand-name"><?= $t('आकाशवाणी', 'Aakashvani') ?></span>
                     </a>
-                    <nav class="header-nav">
-                        <a href="/" class="nav-link"><?= $t('गृह', 'Home') ?></a>
+                    <nav class="main-nav">
+                        <div class="container">
+                            <div class="nav-list">
+                                <a href="/" class="nav-link"><?= $t('गृह', 'Home') ?></a>
                         <a href="/news.php" class="nav-link"><?= $t('समाचार', 'News') ?></a>
                         <a href="/nepali-patro.php" class="nav-link active"><?= $t('पात्रो', 'Calendar') ?></a>
                         <a href="/rashifal.php" class="nav-link"><?= $t('राशिफल', 'Horoscope') ?></a>

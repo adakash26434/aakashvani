@@ -35,8 +35,10 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
                         <div class="brand-logo">आ</div>
                         <span class="brand-name">आकाशवाणी</span>
                     </a>
-                    <nav class="header-nav">
-                        <a href="/" class="nav-link">गृह</a>
+                    <nav class="main-nav">
+                        <div class="container">
+                            <div class="nav-list">
+                                <a href="/" class="nav-link">गृह</a>
                         <a href="/news.php" class="nav-link">समाचार</a>
                         <a href="/rashifal.php" class="nav-link active">राशिफल</a>
                     </nav>

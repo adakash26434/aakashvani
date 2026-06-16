@@ -1137,19 +1137,24 @@ $pageTitle = $t('आकाशवाणी — सूचनाको खुला
                         </div>
                     </div>
                     
-                    <!-- Weather -->
+                    <!-- Weather - Live Data -->
                     <div class="sidebar-card">
                         <div class="sidebar-card-header">
                             <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--primary)"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
                             <?= $t('मौसम', 'Weather') ?>
+                            <a href="/weather.php" class="section-link" style="margin-left:auto;font-size:0.625rem"><?= $t('थप', 'More') ?></a>
                         </div>
-                        <div class="sidebar-card-body">
-                            <div class="flex items-center gap-4">
-                                <span class="text-4xl">☀️</span>
+                        <div class="sidebar-card-body" id="sidebar-weather">
+                            <div class="flex items-center gap-3">
+                                <span class="text-4xl" id="sidebar-weather-icon">☀️</span>
                                 <div>
-                                    <div class="text-2xl font-bold">22°C</div>
-                                    <div class="text-sm text-secondary"><?= $t('काठमाडौं', 'Kathmandu') ?></div>
+                                    <div class="text-2xl font-bold" id="sidebar-temp">--°C</div>
+                                    <div class="text-sm text-secondary" id="sidebar-weather-desc"><?= $t('काठमाडौं', 'Kathmandu') ?></div>
                                 </div>
+                            </div>
+                            <div class="flex gap-4 mt-3 text-xs text-secondary">
+                                <span>💧 <span id="sidebar-humidity">--</span>%</span>
+                                <span>💨 <span id="sidebar-wind">--</span> km/h</span>
                             </div>
                         </div>
                     </div>
