@@ -302,7 +302,7 @@ $related = getRelatedNews($news['id'] ?? 0, $news['category'] ?? '', 4);
                 <?php foreach ($related as $item): ?>
                 <a href="/news-post.php?slug=<?= urlencode($item['slug'] ?? '') ?>" class="related-card">
                     <div class="related-image">
-                        <img src="<?= htmlspecialchars($item['image'] ?? '/assets/images/placeholder.jpg') ?>" alt="" loading="lazy">
+                        <img src="<?= htmlspecialchars($item['image'] ?? '/assets/images/placeholder.svg') ?>" alt="" loading="lazy">
                     </div>
                     <div class="related-body">
                         <h3 class="related-title"><?= htmlspecialchars($item['title'] ?? '') ?></h3>

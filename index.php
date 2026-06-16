@@ -873,7 +873,7 @@ $pageTitle = $t('आकाशवाणी — सूचनाको खुला
                     <!-- Featured News - LIVE API -->
                     <?php if (!empty($featuredNews)): ?>
                     <a href="/news-post.php?slug=<?= urlencode($featuredNews[0]['slug'] ?? '') ?>" class="featured" id="featured-news">
-                        <img src="<?= htmlspecialchars($featuredNews[0]['image'] ?? '/assets/images/placeholder.jpg') ?>" alt="" class="featured-image">
+                        <img src="<?= htmlspecialchars($featuredNews[0]['image'] ?? '/assets/images/placeholder.svg') ?>" alt="" class="featured-image">
                         <div class="featured-content">
                             <span class="featured-badge"><?= htmlspecialchars($featuredNews[0]['category'] ?? 'समाचार') ?></span>
                             <h2 class="featured-title"><?= htmlspecialchars($featuredNews[0]['title'] ?? '') ?></h2>
@@ -915,7 +915,7 @@ $pageTitle = $t('आकाशवाणी — सूचनाको खुला
                             <?php foreach (array_slice($latestNews, 0, 6) as $news): ?>
                             <a href="/news-post.php?slug=<?= urlencode($news['slug'] ?? '') ?>" class="news-card">
                                 <div class="news-card-image">
-                                    <img src="<?= htmlspecialchars($news['image'] ?? '/assets/images/placeholder.jpg') ?>" alt="" loading="lazy">
+                                    <img src="<?= htmlspecialchars($news['image'] ?? '/assets/images/placeholder.svg') ?>" alt="" loading="lazy">
                                 </div>
                                 <div class="news-card-body">
                                     <span class="news-card-category"><?= htmlspecialchars($news['category'] ?? '') ?></span>
@@ -1181,7 +1181,7 @@ $pageTitle = $t('आकाशवाणी — सूचनाको खुला
                     grid.innerHTML = data.news.slice(0, 6).map(news => `
                         <a href="/news-post.php?slug=${news.slug || news.id}" class="news-card">
                             <div class="news-card-image">
-                                <img src="${news.image || '/assets/images/placeholder.jpg'}" alt="" loading="lazy">
+                                <img src="${news.image || '/assets/images/placeholder.svg'}" alt="" loading="lazy">
                             </div>
                             <div class="news-card-body">
                                 <span class="news-card-category">${news.category || 'समाचार'}</span>

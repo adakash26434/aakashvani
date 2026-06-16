@@ -227,7 +227,7 @@ $pageTitle = $t('समाचार | आकाशवाणी', 'News | Aakashv
                 <?php foreach ($news as $item): ?>
                 <a href="/news-post.php?slug=<?= urlencode($item['slug'] ?? '') ?>" class="news-card">
                     <div class="news-card-image">
-                        <img src="<?= htmlspecialchars($item['image'] ?? '/assets/images/placeholder.jpg') ?>" alt="" loading="lazy">
+                        <img src="<?= htmlspecialchars($item['image'] ?? '/assets/images/placeholder.svg') ?>" alt="" loading="lazy">
                     </div>
                     <div class="news-card-body">
                         <span class="news-card-category"><?= htmlspecialchars($item['category'] ?? 'समाचार') ?></span>
@@ -323,7 +323,7 @@ $pageTitle = $t('समाचार | आकाशवाणी', 'News | Aakashv
                     grid.innerHTML = data.news.map(news => `
                         <a href="/news-post.php?slug=${news.slug || news.id}" class="news-card">
                             <div class="news-card-image">
-                                <img src="${news.image || '/assets/images/placeholder.jpg'}" alt="" loading="lazy">
+                                <img src="${news.image || '/assets/images/placeholder.svg'}" alt="" loading="lazy">
                             </div>
                             <div class="news-card-body">
                                 <span class="news-card-category">${news.category || 'समाचार'}</span>
