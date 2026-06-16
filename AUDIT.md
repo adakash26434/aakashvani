@@ -140,18 +140,55 @@ Every page has:
 
 ## Recommendations
 
-### High Priority ✅ DONE
+### High Priority - DONE
 - [x] Fix nav class inconsistency
 - [x] Add navigation to all pages
 - [x] Create missing pages
 
-### Medium Priority
-- [ ] Add live weather API
-- [ ] Add live cricket scores
-- [ ] Add government tenders page
+### Medium Priority - DONE
+- [x] Add live weather API (weather.php)
+- [x] Add live cricket scores (cricket.php)
+- [x] Add government tenders page (tenders.php)
 
-### Low Priority
-- [ ] Add dark mode toggle
-- [ ] Add PWA support
-- [ ] Add sitemap.xml and robots.txt
+### Low Priority - DONE
+- [x] Add dark mode toggle (CSS + JS)
+- [x] Add PWA support (manifest.json, sw.js)
+- [x] Add sitemap.xml (updated with all pages)
 - [ ] Add Google Analytics
+
+---
+
+## New Pages Added
+
+| Page | Description | API |
+|------|-------------|-----|
+| weather.php | Live weather + earthquake alerts | /api/weather-alerts.php |
+| cricket.php | Live cricket scores, tabs | /api/cricket.php |
+| tenders.php | Government tenders with filters | Static sample data |
+| register.php | User registration page | Form only |
+| tool.php | Tool detail (Tax/BMI calculators) | JavaScript |
+
+---
+
+## New Features
+
+### Dark Mode
+- CSS variables for dark theme
+- Theme toggle button in header
+- LocalStorage persistence
+- System preference detection
+
+### PWA Support
+- manifest.json with app metadata
+- Service worker (sw.js) for offline support
+- Cache static assets
+- Push notification ready
+
+### SEO Updates
+- Updated sitemap.xml with all new pages
+- Full URLs with timestamps
+- Correct priorities
+
+### Navigation Updates
+- Added Weather, Cricket, Tenders links to nav
+- All 21 pages now accessible

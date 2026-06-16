@@ -24,6 +24,13 @@ $pageTitle = $t('आकाशवाणी — सूचनाको खुला
     <title><?= $pageTitle ?></title>
     <meta name="description" content="<?= $t('नेपालको सबैभन्दा विश्वसनीय सूचना प्लेटफर्म। समाचार, NEPSE, IPO, पात्रो, र सरकारी सेवा।', 'Nepal\'s most trusted information platform.') ?>">
     
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#16a34a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Aakashvani">
+    <link rel="manifest" href="/manifest.json">
+    
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -771,6 +778,9 @@ $pageTitle = $t('आकाशवाणी — सूचनाको खुला
                     
                     <!-- Actions -->
                     <div class="header-actions">
+                        <button id="themeToggle" class="btn btn-ghost btn-icon" aria-label="Toggle theme" title="<?= $t('Dark Mode', 'Dark Mode') ?>">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                        </button>
                         <button class="btn btn-ghost btn-icon mobile-menu-btn" aria-label="Menu">
                             <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12h16M4 6h16M4 18h16"/></svg>
                         </button>
@@ -810,6 +820,18 @@ $pageTitle = $t('आकाशवाणी — सूचनाको खुला
                     <a href="/gov-services.php" class="nav-link">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18"/><path d="M5 21V7l8-4v18"/><path d="M19 21V11l-6-4"/></svg>
                         <?= $t('सरकारी सेवा', 'Gov Services') ?>
+                    </a>
+                    <a href="/weather.php" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
+                        <?= $t('मौसम', 'Weather') ?>
+                    </a>
+                    <a href="/cricket.php" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+                        <?= $t('क्रिकेट', 'Cricket') ?>
+                    </a>
+                    <a href="/tenders.php" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>
+                        <?= $t('टेन्डर', 'Tenders') ?>
                     </a>
                     <a href="/emergency.php" class="nav-link">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
@@ -1239,5 +1261,15 @@ $pageTitle = $t('आकाशवाणी — सूचनाको खुला
     });
     </script>
     <script src="/assets/js/app.js"></script>
+    <!-- Service Worker Registration for PWA -->
+    <script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js')
+                .then(reg => console.log('SW registered:', reg.scope))
+                .catch(err => console.log('SW registration failed:', err));
+        });
+    }
+    </script>
 </body>
 </html>

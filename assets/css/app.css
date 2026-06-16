@@ -1110,6 +1110,55 @@ h6 { font-size: 0.875rem; }
     border-bottom: 2px solid var(--dark-100);
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   DARK MODE SUPPORT
+   ═══════════════════════════════════════════════════════════════ */
+
+@media (prefers-color-scheme: dark) {
+    :root.auto-dark {
+        --bg: #0f172a;
+        --bg-secondary: #1e293b;
+        --card: #1e293b;
+        --text: #f1f5f9;
+        --border: #334155;
+    }
+}
+
+body.dark-mode {
+    background: #0f172a;
+    color: #f1f5f9;
+}
+
+body.dark-mode .site-header,
+body.dark-mode .site-footer,
+body.dark-mode .main-nav {
+    background: #1e293b;
+}
+
+body.dark-mode .card,
+body.dark-mode .news-card,
+body.dark-mode .service-card {
+    background: #1e293b;
+    border-color: #334155;
+}
+
+.theme-toggle {
+    background: transparent;
+    border: 1px solid var(--dark-200);
+    border-radius: var(--radius-full);
+    padding: 8px;
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.theme-toggle:hover {
+    background: var(--dark-100);
+}
+
+body.dark-mode .theme-toggle {
+    border-color: var(--dark-700);
+}
+
 .section-title {
     font-size: 1.25rem;
     font-weight: 700;
