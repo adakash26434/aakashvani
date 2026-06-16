@@ -1,6 +1,6 @@
 <?php
 /**
- * आकाशवाणी — Homepage (LIVE DATA)
+ * आकाशवाणी — Homepage (LIVE API DATA)
  */
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/functions.php';
@@ -9,32 +9,9 @@ $lang = siteLang();
 $isNepali = ($lang !== 'en');
 $t = fn($ne, $en) => $isNepali ? $ne : $en;
 
-// Get news from database
+// Get news from database (will also be fetched via API)
 $featuredNews = getPublishedNews(null, null, 1, 0);
 $latestNews = getPublishedNews(null, null, 12, 1);
-
-// Sample data fallback if no database data
-if (empty($featuredNews)) {
-    $featuredNews = [[
-        'slug' => 'welcome-aakashvani',
-        'title' => 'आकाशवाणीमा स्वागत छ - तपाईंको सूचना प्लेटफर्म',
-        'image' => 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1200&h=600&fit=crop',
-        'category' => 'समाचार',
-        'source_name' => 'आकाशवाणी',
-        'published_at' => date('Y-m-d H:i:s')
-    ]];
-}
-
-if (empty($latestNews)) {
-    $latestNews = [
-        ['slug' => 'nepal-economy-2026', 'title' => 'नेपाली अर्थतन्त्र २०२६: नयाँ आशा', 'image' => 'https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=400&h=250&fit=crop', 'category' => 'अर्थ', 'source_name' => 'आकाशवाणी', 'published_at' => date('Y-m-d H:i:s')],
-        ['slug' => 'nepse-market-update', 'title' => 'NEPSE बजारमा उत्साहजनक वृद्धि', 'image' => 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=400&h=250&fit=crop', 'category' => 'शेयर', 'source_name' => 'आकाशवाणी', 'published_at' => date('Y-m-d H:i:s')],
-        ['slug' => 'ipo-open', 'title' => 'नयाँ IPO खुला: ५० लाख कित्ता', 'image' => 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400&h=250&fit=crop', 'category' => 'IPO', 'source_name' => 'आकाशवाणी', 'published_at' => date('Y-m-d H:i:s')],
-        ['slug' => 'weather-forecast', 'title' => 'आजको मौसम: वर्षाको सम्भावना', 'image' => 'https://images.unsplash.com/photo-1504608524841-42fe6f032b4b?w=400&h=250&fit=crop', 'category' => 'मौसम', 'source_name' => 'आकाशवाणी', 'published_at' => date('Y-m-d H:i:s')],
-        ['slug' => 'government-services', 'title' => 'सरकारी सेवा अनलाइन', 'image' => 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&h=250&fit=crop', 'category' => 'सरकार', 'source_name' => 'आकाशवाणी', 'published_at' => date('Y-m-d H:i:s')],
-        ['slug' => 'rashifal-june', 'title' => 'जून महिनाको राशिफल', 'image' => 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=400&h=250&fit=crop', 'category' => 'राशिफल', 'source_name' => 'आकाशवाणी', 'published_at' => date('Y-m-d H:i:s')]
-    ];
-}
 
 // SEO
 $pageTitle = $t('आकाशवाणी — सूचनाको खुला आकाश', 'Aakashvani — Your Gateway to Information');
@@ -893,9 +870,9 @@ $pageTitle = $t('आकाशवाणी — सूचनाको खुला
                 <!-- Main Column -->
                 <div class="main-column">
                     
-                    <!-- Featured News -->
+                    <!-- Featured News - LIVE API -->
                     <?php if (!empty($featuredNews)): ?>
-                    <a href="/news-post.php?slug=<?= urlencode($featuredNews[0]['slug'] ?? '') ?>" class="featured">
+                    <a href="/news-post.php?slug=<?= urlencode($featuredNews[0]['slug'] ?? '') ?>" class="featured" id="featured-news">
                         <img src="<?= htmlspecialchars($featuredNews[0]['image'] ?? '/assets/images/placeholder.jpg') ?>" alt="" class="featured-image">
                         <div class="featured-content">
                             <span class="featured-badge"><?= htmlspecialchars($featuredNews[0]['category'] ?? 'समाचार') ?></span>
@@ -907,16 +884,17 @@ $pageTitle = $t('आकाशवाणी — सूचनाको खुला
                         </div>
                     </a>
                     <?php else: ?>
-                    <div class="featured">
-                        <img src="/assets/images/placeholder.jpg" alt="" class="featured-image">
+                    <a href="#" class="featured" id="featured-news">
+                        <img src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1200&h=600&fit=crop" alt="" class="featured-image">
                         <div class="featured-content">
-                            <span class="featured-badge">समाचार</span>
-                            <h2 class="featured-title"><?= $t('ताजा समाचारको लागि जोडिइरहनुहोस्', 'Stay connected for latest news') ?></h2>
+                            <span class="featured-badge">ताजा</span>
+                            <h2 class="featured-title" id="featured-title"><?= $t('आकाशवाणी - सूचनाको खुला आकाश', 'Aakashvani - Your Gateway to Information') ?></h2>
                             <div class="featured-meta">
                                 <span>आकाशवाणी</span>
+                                <span id="featured-time">अहिले</span>
                             </div>
                         </div>
-                    </div>
+                    </a>
                     <?php endif; ?>
                     
                     <!-- Latest News -->
@@ -932,7 +910,8 @@ $pageTitle = $t('आकाशवाणी — सूचनाको खुला
                             </a>
                         </div>
                         
-                        <div class="news-grid">
+                        <div class="news-grid" id="news-grid">
+                            <?php if (!empty($latestNews)): ?>
                             <?php foreach (array_slice($latestNews, 0, 6) as $news): ?>
                             <a href="/news-post.php?slug=<?= urlencode($news['slug'] ?? '') ?>" class="news-card">
                                 <div class="news-card-image">
@@ -948,6 +927,33 @@ $pageTitle = $t('आकाशवाणी — सूचनाको खुला
                                 </div>
                             </a>
                             <?php endforeach; ?>
+                            <?php else: ?>
+                            <!-- Skeleton loader - News loaded via API -->
+                            <div class="news-card">
+                                <div class="news-card-image skeleton"></div>
+                                <div class="news-card-body">
+                                    <span class="news-card-category skeleton" style="width:60px;height:18px"></span>
+                                    <h3 class="news-card-title skeleton" style="height:20px;margin-top:8px"></h3>
+                                    <div class="news-card-meta"><span class="skeleton" style="width:40px;height:12px"></span></div>
+                                </div>
+                            </div>
+                            <div class="news-card">
+                                <div class="news-card-image skeleton"></div>
+                                <div class="news-card-body">
+                                    <span class="news-card-category skeleton" style="width:60px;height:18px"></span>
+                                    <h3 class="news-card-title skeleton" style="height:20px;margin-top:8px"></h3>
+                                    <div class="news-card-meta"><span class="skeleton" style="width:40px;height:12px"></span></div>
+                                </div>
+                            </div>
+                            <div class="news-card">
+                                <div class="news-card-image skeleton"></div>
+                                <div class="news-card-body">
+                                    <span class="news-card-category skeleton" style="width:60px;height:18px"></span>
+                                    <h3 class="news-card-title skeleton" style="height:20px;margin-top:8px"></h3>
+                                    <div class="news-card-meta"><span class="skeleton" style="width:40px;height:12px"></span></div>
+                                </div>
+                            </div>
+                            <?php endif; ?>
                         </div>
                     </section>
                 </div>
@@ -1119,32 +1125,118 @@ $pageTitle = $t('आकाशवाणी — सूचनाको खुला
         </div>
     </footer>
     
-    <!-- Market Data Script - LIVE API -->
+    <!-- LIVE DATA APIS -->
     <script>
+    // Load Market Data (NEPSE, Gold, USD, Petrol)
     async function loadMarketData() {
         try {
             const resp = await fetch('/api/market-data.php?type=all');
             const data = await resp.json();
-            if (data.ok && data.data) {
-                const m = data.data;
-                document.getElementById('nepse-value').textContent = m.nepse?.value || '2,755.41';
-                document.getElementById('nepse-change').textContent = m.nepse?.change || '+0.00';
-                document.getElementById('gold-value').textContent = 'रु ' + (m.gold?.value || '298,500');
-                document.getElementById('usd-value').textContent = 'रु ' + (m.usd?.value || '151.24');
-                document.getElementById('petrol-value').textContent = 'रु ' + (m.petrol?.value || '214');
-                document.getElementById('electricity-value').textContent = 'रु 12.50';
+            
+            // NEPSE
+            if (data.nepse) {
+                const n = data.nepse;
+                document.getElementById('nepse-value').textContent = n.index ? n.index.toLocaleString() : '2,755.41';
+                const changeText = n.change >= 0 ? '+' + n.change.toFixed(2) : n.change.toFixed(2);
+                const pctText = n.changePercent >= 0 ? '+' + n.changePercent.toFixed(2) + '%' : n.changePercent.toFixed(2) + '%';
+                document.getElementById('nepse-change').textContent = changeText + ' (' + pctText + ')';
+                document.getElementById('nepse-change').className = 'market-card-change ' + (n.change >= 0 ? 'up' : 'down');
             }
+            
+            // Gold
+            if (data.gold && data.gold.available) {
+                const g = data.gold;
+                const goldValue = g.hallmarkPerTola ? Math.round(g.hallmarkPerTola).toLocaleString() : '298,500';
+                document.getElementById('gold-value').textContent = 'रु ' + goldValue;
+            }
+            
+            // Forex (USD)
+            if (data.forex && data.forex.length > 0) {
+                const usd = data.forex.find(r => r.code === 'USD');
+                if (usd) {
+                    document.getElementById('usd-value').textContent = 'रु ' + usd.sell.toFixed(2);
+                }
+            }
+            
+            // Petrol
+            if (data.petrol && data.petrol.available) {
+                document.getElementById('petrol-value').textContent = 'रु ' + data.petrol.petrol;
+            }
+            
         } catch (e) {
-            // Fallback values
-            document.getElementById('nepse-value').textContent = '2,755.41';
-            document.getElementById('nepse-change').textContent = '+0.00';
-            document.getElementById('gold-value').textContent = 'रु 298,500';
-            document.getElementById('usd-value').textContent = 'रु 151.24';
-            document.getElementById('petrol-value').textContent = 'रु 214';
-            document.getElementById('electricity-value').textContent = 'रु 12.50';
+            // Fallback values - show sample data
+            console.log('Market API unavailable, using fallback');
         }
     }
-    loadMarketData();
+    
+    // Load News from API
+    async function loadNews() {
+        try {
+            const resp = await fetch('/api/news-unified.php?limit=6');
+            const data = await resp.json();
+            
+            if (data.news && data.news.length > 0) {
+                const grid = document.getElementById('news-grid');
+                if (grid) {
+                    grid.innerHTML = data.news.slice(0, 6).map(news => `
+                        <a href="/news-post.php?slug=${news.slug || news.id}" class="news-card">
+                            <div class="news-card-image">
+                                <img src="${news.image || '/assets/images/placeholder.jpg'}" alt="" loading="lazy">
+                            </div>
+                            <div class="news-card-body">
+                                <span class="news-card-category">${news.category || 'समाचार'}</span>
+                                <h3 class="news-card-title">${news.title || ''}</h3>
+                                <div class="news-card-meta">
+                                    <span>${news.source || 'आकाशवाणी'}</span>
+                                    <span>${timeAgo(news.published_at)}</span>
+                                </div>
+                            </div>
+                        </a>
+                    `).join('');
+                }
+                
+                // Update featured news if exists
+                if (data.news[0]) {
+                    const f = data.news[0];
+                    const featuredLink = document.getElementById('featured-news');
+                    const featuredTitle = document.getElementById('featured-title');
+                    const featuredTime = document.getElementById('featured-time');
+                    
+                    if (featuredTitle) featuredTitle.textContent = f.title || '';
+                    if (featuredTime) featuredTime.textContent = timeAgo(f.published_at);
+                    if (featuredLink && f.slug) {
+                        featuredLink.href = '/news-post.php?slug=' + f.slug;
+                    }
+                    if (featuredLink) {
+                        const img = featuredLink.querySelector('img');
+                        if (img && f.image) img.src = f.image;
+                    }
+                }
+            }
+        } catch (e) {
+            console.log('News API unavailable, using database content');
+        }
+    }
+    
+    // Time ago helper
+    function timeAgo(dateStr) {
+        if (!dateStr) return 'अहिले';
+        const date = new Date(dateStr);
+        const now = new Date();
+        const diff = Math.floor((now - date) / 1000);
+        
+        if (diff < 60) return diff + 's ago';
+        if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
+        if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
+        if (diff < 604800) return Math.floor(diff / 86400) + 'd ago';
+        return date.toLocaleDateString('ne-NP');
+    }
+    
+    // Load all data on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        loadMarketData();
+        loadNews();
+    });
     </script>
     <script src="/assets/js/app.js"></script>
 </body>

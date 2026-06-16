@@ -222,7 +222,8 @@ $pageTitle = $t('समाचार | आकाशवाणी', 'News | Aakashv
     <!-- News Grid -->
     <section class="news-section">
         <div class="container">
-            <div class="news-grid">
+            <div class="news-grid" id="news-list">
+                <?php if (!empty($news)): ?>
                 <?php foreach ($news as $item): ?>
                 <a href="/news-post.php?slug=<?= urlencode($item['slug'] ?? '') ?>" class="news-card">
                     <div class="news-card-image">
@@ -238,6 +239,57 @@ $pageTitle = $t('समाचार | आकाशवाणी', 'News | Aakashv
                     </div>
                 </a>
                 <?php endforeach; ?>
+                <?php else: ?>
+                <!-- Skeleton loader - loaded via API -->
+                <div class="news-card">
+                    <div class="news-card-image skeleton"></div>
+                    <div class="news-card-body">
+                        <span class="news-card-category skeleton" style="width:60px;height:18px"></span>
+                        <h3 class="news-card-title skeleton" style="height:20px;margin-top:8px"></h3>
+                        <div class="news-card-meta"><span class="skeleton" style="width:40px;height:12px"></span></div>
+                    </div>
+                </div>
+                <div class="news-card">
+                    <div class="news-card-image skeleton"></div>
+                    <div class="news-card-body">
+                        <span class="news-card-category skeleton" style="width:60px;height:18px"></span>
+                        <h3 class="news-card-title skeleton" style="height:20px;margin-top:8px"></h3>
+                        <div class="news-card-meta"><span class="skeleton" style="width:40px;height:12px"></span></div>
+                    </div>
+                </div>
+                <div class="news-card">
+                    <div class="news-card-image skeleton"></div>
+                    <div class="news-card-body">
+                        <span class="news-card-category skeleton" style="width:60px;height:18px"></span>
+                        <h3 class="news-card-title skeleton" style="height:20px;margin-top:8px"></h3>
+                        <div class="news-card-meta"><span class="skeleton" style="width:40px;height:12px"></span></div>
+                    </div>
+                </div>
+                <div class="news-card">
+                    <div class="news-card-image skeleton"></div>
+                    <div class="news-card-body">
+                        <span class="news-card-category skeleton" style="width:60px;height:18px"></span>
+                        <h3 class="news-card-title skeleton" style="height:20px;margin-top:8px"></h3>
+                        <div class="news-card-meta"><span class="skeleton" style="width:40px;height:12px"></span></div>
+                    </div>
+                </div>
+                <div class="news-card">
+                    <div class="news-card-image skeleton"></div>
+                    <div class="news-card-body">
+                        <span class="news-card-category skeleton" style="width:60px;height:18px"></span>
+                        <h3 class="news-card-title skeleton" style="height:20px;margin-top:8px"></h3>
+                        <div class="news-card-meta"><span class="skeleton" style="width:40px;height:12px"></span></div>
+                    </div>
+                </div>
+                <div class="news-card">
+                    <div class="news-card-image skeleton"></div>
+                    <div class="news-card-body">
+                        <span class="news-card-category skeleton" style="width:60px;height:18px"></span>
+                        <h3 class="news-card-title skeleton" style="height:20px;margin-top:8px"></h3>
+                        <div class="news-card-meta"><span class="skeleton" style="width:40px;height:12px"></span></div>
+                    </div>
+                </div>
+                <?php endif; ?>
             </div>
         </div>
     </section>
@@ -255,6 +307,60 @@ $pageTitle = $t('समाचार | आकाशवाणी', 'News | Aakashv
         </div>
     </footer>
     
+    <script>
+    // Load news from API
+    async function loadNews() {
+        const params = new URLSearchParams(window.location.search);
+        const cat = params.get('category') || 'all';
+        
+        try {
+            const resp = await fetch('/api/news-unified.php?cat=' + cat + '&limit=20');
+            const data = await resp.json();
+            
+            if (data.news && data.news.length > 0) {
+                const grid = document.getElementById('news-list');
+                if (grid) {
+                    grid.innerHTML = data.news.map(news => `
+                        <a href="/news-post.php?slug=${news.slug || news.id}" class="news-card">
+                            <div class="news-card-image">
+                                <img src="${news.image || '/assets/images/placeholder.jpg'}" alt="" loading="lazy">
+                            </div>
+                            <div class="news-card-body">
+                                <span class="news-card-category">${news.category || 'समाचार'}</span>
+                                <h3 class="news-card-title">${news.title || ''}</h3>
+                                <div class="news-card-meta">
+                                    <span>${news.source || 'आकाशवाणी'}</span>
+                                    <span>${timeAgo(news.published_at)}</span>
+                                </div>
+                            </div>
+                        </a>
+                    `).join('');
+                }
+            }
+        } catch (e) {
+            console.log('News API unavailable');
+        }
+    }
+    
+    function timeAgo(dateStr) {
+        if (!dateStr) return 'अहिले';
+        const date = new Date(dateStr);
+        const now = new Date();
+        const diff = Math.floor((now - date) / 1000);
+        if (diff < 60) return diff + 's ago';
+        if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
+        if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
+        return date.toLocaleDateString('ne-NP');
+    }
+    
+    // Load if no database data
+    document.addEventListener('DOMContentLoaded', function() {
+        const newsList = document.getElementById('news-list');
+        if (newsList && newsList.querySelector('.skeleton')) {
+            loadNews();
+        }
+    });
+    </script>
     <script src="/assets/js/app.js"></script>
 </body>
 </html>
