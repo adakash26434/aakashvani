@@ -1,7 +1,6 @@
 <?php
 /**
- * आकाशवाणी — Homepage (LIVE API DATA)
- * All data from APIs
+ * आकाशवाणी — Homepage (LIVE DATA)
  */
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/functions.php';
@@ -10,9 +9,32 @@ $lang = siteLang();
 $isNepali = ($lang !== 'en');
 $t = fn($ne, $en) => $isNepali ? $ne : $en;
 
-// LIVE: Get news from database
+// Get news from database
 $featuredNews = getPublishedNews(null, null, 1, 0);
 $latestNews = getPublishedNews(null, null, 12, 1);
+
+// Sample data fallback if no database data
+if (empty($featuredNews)) {
+    $featuredNews = [[
+        'slug' => 'welcome-aakashvani',
+        'title' => 'आकाशवाणीमा स्वागत छ - तपाईंको सूचना प्लेटफर्म',
+        'image' => 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1200&h=600&fit=crop',
+        'category' => 'समाचार',
+        'source_name' => 'आकाशवाणी',
+        'published_at' => date('Y-m-d H:i:s')
+    ]];
+}
+
+if (empty($latestNews)) {
+    $latestNews = [
+        ['slug' => 'nepal-economy-2026', 'title' => 'नेपाली अर्थतन्त्र २०२६: नयाँ आशा', 'image' => 'https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=400&h=250&fit=crop', 'category' => 'अर्थ', 'source_name' => 'आकाशवाणी', 'published_at' => date('Y-m-d H:i:s')],
+        ['slug' => 'nepse-market-update', 'title' => 'NEPSE बजारमा उत्साहजनक वृद्धि', 'image' => 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=400&h=250&fit=crop', 'category' => 'शेयर', 'source_name' => 'आकाशवाणी', 'published_at' => date('Y-m-d H:i:s')],
+        ['slug' => 'ipo-open', 'title' => 'नयाँ IPO खुला: ५० लाख कित्ता', 'image' => 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400&h=250&fit=crop', 'category' => 'IPO', 'source_name' => 'आकाशवाणी', 'published_at' => date('Y-m-d H:i:s')],
+        ['slug' => 'weather-forecast', 'title' => 'आजको मौसम: वर्षाको सम्भावना', 'image' => 'https://images.unsplash.com/photo-1504608524841-42fe6f032b4b?w=400&h=250&fit=crop', 'category' => 'मौसम', 'source_name' => 'आकाशवाणी', 'published_at' => date('Y-m-d H:i:s')],
+        ['slug' => 'government-services', 'title' => 'सरकारी सेवा अनलाइन', 'image' => 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&h=250&fit=crop', 'category' => 'सरकार', 'source_name' => 'आकाशवाणी', 'published_at' => date('Y-m-d H:i:s')],
+        ['slug' => 'rashifal-june', 'title' => 'जून महिनाको राशिफल', 'image' => 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=400&h=250&fit=crop', 'category' => 'राशिफल', 'source_name' => 'आकाशवाणी', 'published_at' => date('Y-m-d H:i:s')]
+    ];
+}
 
 // SEO
 $pageTitle = $t('आकाशवाणी — सूचनाको खुला आकाश', 'Aakashvani — Your Gateway to Information');

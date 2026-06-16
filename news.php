@@ -14,6 +14,16 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
 $category = isset($_GET['category']) ? sanitize($_GET['category']) : null;
 $news = getPublishedNews($category, null, 20, 0);
 
+// Sample data fallback
+if (empty($news)) {
+    $news = [
+        ['slug' => 'nepal-politics-update', 'title' => 'प्रधानमन्त्रीको नयाँ घोषणा', 'image' => 'https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?w=600&h=400&fit=crop', 'category' => 'politics', 'source_name' => 'आकाशवाणी', 'published_at' => date('Y-m-d H:i:s')],
+        ['slug' => 'nepal-economy', 'title' => 'नेपाली अर्थतन्त्रको स्थिति', 'image' => 'https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=600&h=400&fit=crop', 'category' => 'economy', 'source_name' => 'आकाशवाणी', 'published_at' => date('Y-m-d H:i:s')],
+        ['slug' => 'nepal-sports', 'title' => 'नेपाली खेलकुदको नयाँ सफलता', 'image' => 'https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=600&h=400&fit=crop', 'category' => 'sports', 'source_name' => 'आकाशवाणी', 'published_at' => date('Y-m-d H:i:s')],
+        ['slug' => 'nepal-tech', 'title' => 'नेपालमा प्रविधिको विकास', 'image' => 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=600&h=400&fit=crop', 'category' => 'technology', 'source_name' => 'आकाशवाणी', 'published_at' => date('Y-m-d H:i:s')],
+    ];
+}
+
 $categories = [
     '' => $t('सबै', 'All'),
     'politics' => $t('राजनीति', 'Politics'),
