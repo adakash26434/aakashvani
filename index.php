@@ -1,732 +1,776 @@
 <?php
 /**
- * आकाशवाणी — index.php v10 (APP HOMEPAGE)
- * Nagarik-app style mobile-first home: greeting hero, service tile grid,
- * breaking news strip, featured article, news list, rashifal wheel,
- * market summary, emergency, gov services. Same data sources as before.
+ * आकाशवाणी — index.php (World-Class Homepage)
+ * Premium Nepal News & Live Information Platform
+ * 
+ * Design Philosophy:
+ * - Clean, minimal, professional
+ * - Content-first hierarchy
+ * - Instant loading experience
+ * - World-class UI/UX
  */
 
-/* ── Clean URL fallback router (works when .htaccess rewrite is unavailable) ── */
+// Clean URL router
 $__path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
 $__clean = rtrim($__path, '/') ?: '/';
 $__routes = [
-    '/news'          => '/news.php',
-    '/loksewa'       => '/loksewa.php',
-    '/rashifal'      => '/rashifal.php',
-    '/tools'         => '/tools.php',
-    '/alerts'        => '/alerts.php',
-    '/gov-services'  => '/gov-services.php',
-    '/utilities'     => '/utilities.php',
-    '/nepali-patro'  => '/nepali-patro.php',
-    '/patro'         => '/nepali-patro.php',
-    '/contact'       => '/contact.php',
-    '/search'        => '/search.php',
-    '/install'       => '/install.php',
-    '/emergency'     => '/emergency.php',
-    '/ipo-tracker'   => '/ipo-tracker.php',
-    '/tax-calculator'=> '/tax-calculator.php',
-    '/downloads'     => '/downloads.php',
-    '/dashboard'     => '/dashboard.php',
-    '/login'         => '/login.php',
-    '/register'      => '/register.php',
-    '/about'         => '/about.php',
-    '/bookmarks'     => '/bookmarks.php',
-    '/morning-brief' => '/morning-brief.php',
-    '/notices'       => '/notices.php',
-    '/offline'       => '/offline.php',
+    '/news' => '/news.php', '/loksewa' => '/loksewa.php',
+    '/rashifal' => '/rashifal.php', '/tools' => '/tools.php',
+    '/gov-services' => '/gov-services.php', '/nepali-patro' => '/nepali-patro.php',
+    '/contact' => '/contact.php', '/search' => '/search.php',
+    '/emergency' => '/emergency.php', '/ipo-tracker' => '/ipo-tracker.php',
+    '/login' => '/login.php', '/register' => '/register.php',
+    '/about' => '/about.php',
 ];
 if ($__clean !== '/' && isset($__routes[$__clean])) {
-    $__target = $__routes[$__clean];
-    if (!empty($_SERVER['QUERY_STRING'])) $__target .= '?' . $_SERVER['QUERY_STRING'];
-    header('Location: ' . $__target, true, 302);
+    header('Location: ' . $__routes[$__clean], true, 302);
     exit;
 }
 
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/functions.php';
 require_once __DIR__ . '/includes/auth.php';
-
-/* Market data — v10.1 fix: single normalized loader (was: per-page cache reads
-   with wrong key names that always resolved to 0, then hardcoded fallbacks
-   appeared elsewhere → mismatched prices across pages). */
 require_once __DIR__ . '/includes/market.php';
+
+// Get data
 $market = getMarket(true);
-$gold   = $market['gold'];   // keys: fine, tejabi, silver
-$forex  = $market['forex'];  // keys: USD, EUR, INR, rates[...]
-$nepse  = $market['nepse'];  // keys: index, change, percent
-$petrol = $market['fuel'];   // keys: petrol, diesel, kerosene, lpg
-try { maybeRefreshNews(); } catch(\Exception $e) {}
+$gold = $market['gold'];
+$forex = $market['forex'];
+$nepse = $market['nepse'];
+$fuel = $market['fuel'];
 
 $lang = siteLang();
-$t    = fn($ne,$en) => $lang==='ne' ? $ne : $en;
+$isNepali = ($lang !== 'en');
 
-$user       = (function_exists('isLoggedIn') && isLoggedIn()) ? (function_exists('getCurrentUser') ? getCurrentUser() : null) : null;
-$latestNews = function_exists('getPublishedNews') ? getPublishedNews(null,null,9,0,null,null) : [];
-$breaking   = array_values(array_filter($latestNews, fn($n)=>!empty($n['is_breaking'])));
-$featured   = !empty($latestNews) ? array_shift($latestNews) : null;
-$regular    = array_slice($latestNews,0,6);
+$latestNews = function_exists('getPublishedNews') ? getPublishedNews(null, null, 12, 0, null, null) : [];
+$featured = !empty($latestNews) ? array_shift($latestNews) : null;
+$recentNews = array_slice($latestNews, 0, 8);
 
-$nepseIdx = (float)($nepse['index']  ?? 0);
-$nepseChg = $nepse['change']          ?? null;
-$nepseUp  = $nepseChg!==null && (float)$nepseChg >= 0;
+try { maybeRefreshNews(); } catch(\Exception $e) {}
+
+// Market values
+$nepseIdx = (float)($nepse['index'] ?? 0);
+$nepseChg = $nepse['change'] ?? null;
+$nepseUp = $nepseChg !== null && (float)$nepseChg >= 0;
 $goldFine = (float)($gold['fine'] ?? 0);
-$petrolP  = (float)($petrol['petrol'] ?? 0);
-$usdRate  = (float)($forex['USD'] ?? 0);
+$petrolP = (float)($fuel['petrol'] ?? 0);
+$usdRate = (float)($forex['USD'] ?? 0);
 
-$pageTitle = "आकाशवाणी — Nepal's AI App";
-$pageDesc  = 'NEPSE, सुन, फरेक्स, AI समाचार, पात्रो, राशिफल, सरकारी सेवा — सबै App मा।';
-$pageUrl   = (defined('SITE_URL')?SITE_URL:'').'/';
-$jsonLd    = json_encode(['@context'=>'https://schema.org','@type'=>'WebSite','name'=>defined('SITE_NAME')?SITE_NAME:'आकाशवाणी','url'=>defined('SITE_URL')?SITE_URL:'','description'=>$pageDesc,'potentialAction'=>['@type'=>'SearchAction','target'=>['@type'=>'EntryPoint','urlTemplate'=>(defined('SITE_URL')?SITE_URL:'').'/search.php?q={search_term_string}'],'query-input'=>'required name=search_term_string']],JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES);
+// SEO
+$pageTitle = 'आकाशवाणी — सूचनाको खुला आकाश';
+$pageDesc = 'नेपालको सबैभन्दा विश्वसनीय सूचना प्लेटफर्म। AI समाचार, NEPSE, IPO, पात्रो, र सरकारी सेवा सबै एकै ठाउँमा।';
+$pageUrl = defined('SITE_URL') ? SITE_URL : '';
+$pageImg = defined('OG_IMAGE') ? OG_IMAGE : $pageUrl . '/assets/images/og-image.jpg';
 
 include __DIR__ . '/header.php';
-
-/* Category badge helper */
-function catBadge(string $cat): string {
-    $map=['Technology'=>'bg-blue-50 text-blue-700','Business'=>'bg-emerald-50 text-emerald-700','Sports'=>'bg-orange-50 text-orange-700','Entertainment'=>'bg-pink-50 text-pink-700','International'=>'bg-purple-50 text-purple-700','National'=>'bg-teal-50 text-teal-700','राजनीति'=>'bg-red-50 text-red-700','अर्थ'=>'bg-emerald-50 text-emerald-700','खेलकुद'=>'bg-orange-50 text-orange-700'];
-    $cls=$map[$cat]??'bg-slate-100 text-slate-600';
-    return '<span class="inline-flex text-[10px] font-bold px-2 py-0.5 rounded-full '.$cls.'">'.htmlspecialchars($cat,ENT_QUOTES,'UTF-8').'</span>';
-}
 ?>
 
-<!-- Pass live values to header chip updater -->
-<script>
-window.__chips = {
-  nepse: <?= json_encode($nepseIdx ?: null) ?>,
-  nepse_chg: <?= json_encode($nepseChg!==null?(float)$nepseChg:null) ?>,
-  gold:  <?= json_encode($goldFine ?: null) ?>,
-  petrol:<?= json_encode($petrolP ?: null) ?>,
-  usd:   <?= json_encode($usdRate ?: null) ?>
-};
-</script>
+<!-- ═══════════════════════════════════════════════════════════════
+     WORLD-CLASS HOMEPAGE
+     ═══════════════════════════════════════════════════════════════ -->
 
-<!-- ═══ HERO CARD: greeting + BS date + quick actions ════════════════════════ -->
-<section class="mt-3">
-  <div class="rounded-3xl overflow-hidden relative text-white p-5"
-       style="background:radial-gradient(120% 100% at 0% 0%,#0d9488 0%,#0f766e 40%,#115e59 100%);box-shadow:0 20px 50px -16px rgba(13,148,136,.6)">
-    <div class="flex items-start justify-between gap-3">
-      <div class="min-w-0 flex-1">
-        <div class="text-[12px] opacity-85 ne font-medium"><?= htmlspecialchars($bsDateStr,ENT_QUOTES,'UTF-8') ?></div>
-        <h1 class="text-[20px] font-extrabold leading-tight mt-1 ne">
-          <?= $t('स्वागत छ','Welcome to') ?> <span class="text-amber-200">आकाशवाणी</span>
-        </h1>
-        <p class="text-[12.5px] opacity-90 ne mt-1 leading-relaxed">
-          <?= $t('समाचार, बजार, पात्रो, सरकारी सेवा — सबै एकै App मा।','News, market, patro, gov services — all in one app.') ?>
-        </p>
-        <div class="flex gap-2 mt-3">
-          <a href="/nepal-aaja.php" class="inline-flex items-center gap-1.5 bg-white/20 hover:bg-white/30 text-white text-[11px] font-semibold px-3 py-1.5 rounded-full border border-white/20 transition-colors">
-            <i data-lucide="sunrise" class="w-3.5 h-3.5"></i> <?= $t('बिहानी ब्रिफ','Morning Brief') ?>
-          </a>
-          <a href="/alerts.php" class="inline-flex items-center gap-1.5 bg-white/20 hover:bg-white/30 text-white text-[11px] font-semibold px-3 py-1.5 rounded-full border border-white/20 transition-colors">
-            <i data-lucide="bell" class="w-3.5 h-3.5"></i> <?= $t('अलर्ट','Alerts') ?>
-          </a>
+<!-- Live Market Bar -->
+<section class="market-bar">
+    <div class="container">
+        <div class="market-inner">
+            <div class="market-item">
+                <span class="market-label">NEPSE</span>
+                <span class="market-value <?= $nepseUp ? 'up' : 'down' ?>"><?= number_format($nepseIdx, 2) ?></span>
+                <?php if ($nepseChg !== null): ?>
+                <span class="market-change <?= $nepseUp ? 'up' : 'down' ?>">
+                    <i data-lucide="<?= $nepseUp ? 'trending-up' : 'trending-down' ?>" class="icon-xs"></i>
+                    <?= ($nepseUp ? '+' : '') . number_format((float)$nepseChg, 2) ?>
+                </span>
+                <?php endif; ?>
+            </div>
+            <div class="market-divider"></div>
+            <div class="market-item">
+                <span class="market-label"><?= $isNepali ? 'सुन (10g)' : 'Gold (10g)' ?></span>
+                <span class="market-value">रु <?= number_format($goldFine, 0) ?></span>
+            </div>
+            <div class="market-divider"></div>
+            <div class="market-item">
+                <span class="market-label">USD</span>
+                <span class="market-value">रु <?= number_format($usdRate, 2) ?></span>
+            </div>
+            <div class="market-divider"></div>
+            <div class="market-item">
+                <span class="market-label"><?= $isNepali ? 'पेट्रोल' : 'Petrol' ?></span>
+                <span class="market-value">रु <?= number_format($petrolP, 0) ?></span>
+            </div>
         </div>
-      </div>
-      <div class="flex-shrink-0 w-14 h-14 rounded-2xl bg-white/15 backdrop-blur-sm border border-white/20 flex items-center justify-center">
-        <span class="text-2xl">🇳🇵</span>
-      </div>
     </div>
-  </div>
 </section>
 
-<!-- ═══ MERO RASHIFAL — Personalized daily rashi card ════════════════════════
-     After the user picks their rashi (on /rashifal.php → star button) it is
-     stored in localStorage as `nsh_fav_rashi` (0-11).  On every home-page
-     load this widget reads that value, shows the personalised card, and
-     fetches today's reading from /api/rashifal.php in the background.
-     No server-side state — works without login.
-═══════════════════════════════════════════════════════════════════════════ -->
-<div id="mero-rashi-wrap" class="mt-3"></div>
-<script>
-(function(){
-  var RASHIS=[['मेष','♈','Aries'],['वृष','♉','Taurus'],['मिथुन','♊','Gemini'],['कर्कट','♋','Cancer'],['सिंह','♌','Leo'],['कन्या','♍','Virgo'],['तुला','♎','Libra'],['वृश्चिक','♏','Scorpio'],['धनु','♐','Sagittarius'],['मकर','♑','Capricorn'],['कुम्भ','♒','Aquarius'],['मीन','♓','Pisces']];
-  var wrap=document.getElementById('mero-rashi-wrap');
-  var saved=null;
-  try{var v=localStorage.getItem('nsh_fav_rashi');saved=v!==null?parseInt(v,10):null;}catch(_){}
-
-  if(saved!==null&&saved>=0&&saved<12){
-    var r=RASHIS[saved];
-    /* ── Personal card ─────────────────────────────────────── */
-    wrap.innerHTML='<div class="rounded-3xl overflow-hidden relative" style="background:radial-gradient(140% 120% at 5% 5%,#0e7490 0%,#1e3a5f 48%,#0f172a 100%);box-shadow:0 16px 40px -14px rgba(14,116,144,.55)">'
-      +'<div class="p-4 relative z-10">'
-        +'<div class="absolute inset-0 z-0 pointer-events-none" id="mr-stars"></div>'
-        +'<div class="relative z-10">'
-          +'<div class="flex items-center gap-2 mb-3">'
-            +'<span class="text-[10.5px] font-bold text-white bg-white/15 backdrop-blur-sm border border-white/20 px-2.5 py-0.5 rounded-full flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-cyan-300 animate-pulse inline-block"></span>मेरो राशिफल</span>'
-            +'<span class="ml-auto text-[10px] text-white/60 ne" id="mr-bs-date"></span>'
-          +'</div>'
-          +'<div class="flex items-center gap-4">'
-            +'<span class="text-[52px] leading-none select-none" style="text-shadow:0 0 40px rgba(165,243,252,.35)">'+r[1]+'</span>'
-            +'<div class="min-w-0 flex-1">'
-              +'<div class="text-[22px] font-extrabold text-white leading-tight ne">'+r[0]+' <span class="text-[13px] font-normal text-white/60">'+r[2]+'</span></div>'
-              +'<div class="flex flex-wrap gap-1.5 mt-1.5">'
-                +'<span id="mr-num" class="text-[10.5px] text-white/90 bg-white/15 border border-white/10 px-2 py-0.5 rounded-full">शुभ अंक: …</span>'
-                +'<span id="mr-col" class="text-[10.5px] text-white/90 bg-white/15 border border-white/10 px-2 py-0.5 rounded-full">रंग: …</span>'
-              +'</div>'
-            +'</div>'
-          +'</div>'
-          +'<p id="mr-text" class="text-[12.5px] text-white/85 leading-relaxed mt-3 ne" style="text-shadow:0 1px 3px rgba(0,0,0,.25)">आजको राशिफल लोड हुँदैछ…</p>'
-          +'<div class="flex items-center gap-3 mt-3">'
-            +'<a href="/rashifal.php?r='+saved+'" class="text-[11.5px] font-bold text-white bg-white/20 hover:bg-white/30 border border-white/20 px-3.5 py-1.5 rounded-full transition-colors ne">पूरा राशिफल हेर्नुस् →</a>'
-            +'<button id="mr-clear" class="text-[10px] text-white/45 hover:text-white/80 ml-auto transition-colors ne">बदल्नुस्</button>'
-          +'</div>'
-        +'</div>'
-      +'</div>'
-    +'</div>';
-
-    /* Sprinkle CSS star particles */
-    (function(){
-      var sc=document.getElementById('mr-stars');
-      if(!sc)return;
-      sc.innerHTML='';
-      for(var i=0;i<22;i++){
-        var sz=[1.5,2,2.5,3][Math.floor(Math.random()*4)];
-        sc.innerHTML+='<span class="mr-star" style="width:'+sz+'px;height:'+sz+'px;top:'+(Math.random()*100)+'%;left:'+(Math.random()*100)+'%;animation:twink '+(1.5+Math.random()*2.5).toFixed(1)+'s ease-in-out '+(Math.random()*2).toFixed(1)+'s infinite;opacity:.3"></span>';
-      }
-    })();
-
-    /* Inject today's BS date */
-    var bsEl=document.getElementById('mr-bs-date');
-    if(bsEl){try{var bsRaw='<?= addslashes($bsDateStr) ?>';if(bsRaw)bsEl.textContent=bsRaw;}catch(_){}}
-
-    /* Clear / change rashi */
-    var clearBtn=document.getElementById('mr-clear');
-    if(clearBtn)clearBtn.addEventListener('click',function(){
-      try{localStorage.removeItem('nsh_fav_rashi');}catch(_){}
-      wrap.innerHTML='';renderPicker();
-    });
-
-    /* Fetch today's reading */
-    fetch('/api/rashifal.php?rashi='+saved+'&lang=ne')
-      .then(function(r){return r.json();})
-      .then(function(d){
-        if(!d||!d.readings)return;
-        var rd=d.readings;
-        var t=document.getElementById('mr-text');if(t)t.textContent=rd.general||rd.love||'आज सकारात्मक ऊर्जा लिएर अगाडि बढ्नुस्।';
-        var n=document.getElementById('mr-num');if(n&&rd.lucky_number)n.textContent='शुभ अंक: '+rd.lucky_number;
-        var c=document.getElementById('mr-col');if(c&&rd.lucky_color)c.textContent='रंग: '+rd.lucky_color;
-      }).catch(function(){
-        var t=document.getElementById('mr-text');if(t)t.textContent='आज सकारात्मक सोचसहित अगाडि बढ्नुस् — सफलता नजिक छ।';
-      });
-
-  } else {
-    renderPicker();
-  }
-
-  function renderPicker(){
-    var syms=['♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓'];
-    var names=['मेष','वृष','मिथुन','कर्कट','सिंह','कन्या','तुला','वृश्चिक','धनु','मकर','कुम्भ','मीन'];
-    var html='<div class="rounded-3xl bg-gradient-to-br from-violet-50 to-indigo-50 border border-violet-100 p-4">'
-      +'<div class="flex items-center gap-2 mb-1"><i data-lucide="sparkles" class="w-5 h-5 text-violet-600"></i><div class="text-[14px] font-extrabold text-violet-900 ne">मेरो राशिफल सेट गर्नुस्</div></div>'
-      +'<p class="text-[11.5px] text-slate-500 mb-3 ne leading-snug">एक पटक छान्नुभएपछि — हरेच दिन मुख्य पानामा <b>आफ्नो राशिफल</b> स्वतः देखिनेछ।</p>'
-      +'<div class="grid grid-cols-6 gap-1.5">';
-    syms.forEach(function(s,i){
-      html+='<button class="mr-pick-btn flex flex-col items-center gap-0.5 py-2 rounded-xl bg-white hover:bg-violet-100 border border-violet-100 active:scale-95 transition-all text-center" data-i="'+i+'">'
-        +'<span class="text-[18px] leading-none">'+s+'</span>'
-        +'<span class="text-[9px] font-bold text-slate-600 ne">'+names[i]+'</span>'
-        +'</button>';
-    });
-    html+='</div></div>';
-    wrap.innerHTML=html;
-    wrap.querySelectorAll('.mr-pick-btn').forEach(function(btn){
-      btn.addEventListener('click',function(){
-        var idx=parseInt(btn.getAttribute('data-i'),10);
-        try{localStorage.setItem('nsh_fav_rashi',String(idx));}catch(_){}
-        wrap.innerHTML='';
-        /* Force re-run by reloading (simpler than full re-render) */
-        location.reload();
-      });
-    });
-  }
-})();
-</script>
-
-<!-- ═══ BREAKING STRIP ═══════════════════════════════════════════════════════ -->
-<?php if(!empty($breaking)): ?>
-<section class="mt-3">
-  <div class="rounded-2xl bg-rose-50 border border-rose-100 overflow-hidden">
-    <div class="flex items-center gap-2 px-3 py-2">
-      <span class="bg-rose-600 text-white text-[10px] font-extrabold px-2 py-0.5 rounded uppercase tracking-wider flex-shrink-0">
-        <?= $t('ब्रेकिङ','Live') ?>
-      </span>
-      <div class="flex-1 overflow-hidden">
-        <div class="flex gap-8 whitespace-nowrap" style="animation:marquee 36s linear infinite">
-          <?php foreach(array_merge($breaking,$breaking) as $bn): ?>
-            <a href="/news-post.php?slug=<?= urlencode($bn['slug']??'') ?>" class="text-[12.5px] font-semibold text-rose-800 ne">
-              <?= htmlspecialchars(mb_substr($bn['title'],0,90),ENT_QUOTES,'UTF-8') ?>
-            </a>
-          <?php endforeach; ?>
+<!-- Main Content -->
+<main class="home-main">
+    <div class="container">
+        <div class="home-grid">
+            
+            <!-- Primary Content -->
+            <div class="content-primary">
+                
+                <!-- Featured News -->
+                <?php if ($featured): ?>
+                <article class="featured-card">
+                    <a href="/news-post.php?id=<?= $featured['id'] ?>" class="featured-image">
+                        <img src="<?= htmlspecialchars($featured['image'] ?? '/assets/images/placeholder.jpg') ?>" 
+                             alt="<?= htmlspecialchars($featured['title']) ?>"
+                             loading="eager"
+                             class="featured-img">
+                        <?php if (!empty($featured['is_live'])): ?>
+                        <span class="live-badge">LIVE</span>
+                        <?php endif; ?>
+                    </a>
+                    <div class="featured-content">
+                        <div class="featured-meta">
+                            <span class="category-tag"><?= htmlspecialchars($featured['category'] ?? 'समाचार') ?></span>
+                            <span class="time-ago"><?= timeAgo($featured['published_at'] ?? $featured['created_at'] ?? '') ?></span>
+                        </div>
+                        <h2 class="featured-title">
+                            <a href="/news-post.php?id=<?= $featured['id'] ?>"><?= htmlspecialchars($featured['title']) ?></a>
+                        </h2>
+                        <p class="featured-excerpt"><?= htmlspecialchars(mb_substr($featured['summary'] ?? $featured['content'] ?? '', 0, 200)) ?>...</p>
+                        <div class="featured-footer">
+                            <span class="source"><?= htmlspecialchars($featured['source_name'] ?? 'आकाशवाणी') ?></span>
+                            <a href="/news-post.php?id=<?= $featured['id'] ?>" class="read-more">
+                                <?= $isNepali ? 'पढ्नुहोस्' : 'Read more' ?>
+                                <i data-lucide="arrow-right" class="icon-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+                </article>
+                <?php endif; ?>
+                
+                <!-- Latest News -->
+                <section class="news-section">
+                    <div class="section-header">
+                        <h3 class="section-title">
+                            <i data-lucide="clock" class="icon-md"></i>
+                            <?= $isNepali ? 'ताजा समाचार' : 'Latest News' ?>
+                        </h3>
+                        <a href="/news.php" class="view-all">
+                            <?= $isNepali ? 'सबै हेर्नुहोस्' : 'View all' ?>
+                            <i data-lucide="chevron-right" class="icon-sm"></i>
+                        </a>
+                    </div>
+                    
+                    <div class="news-grid">
+                        <?php foreach ($recentNews as $news): ?>
+                        <article class="news-card">
+                            <a href="/news-post.php?id=<?= $news['id'] ?>" class="news-image">
+                                <img src="<?= htmlspecialchars($news['image'] ?? '/assets/images/placeholder.jpg') ?>" 
+                                     alt="<?= htmlspecialchars($news['title']) ?>"
+                                     loading="lazy"
+                                     class="news-img">
+                            </a>
+                            <div class="news-content">
+                                <div class="news-meta">
+                                    <span class="category-tag-sm"><?= htmlspecialchars($news['category'] ?? '') ?></span>
+                                </div>
+                                <h4 class="news-title">
+                                    <a href="/news-post.php?id=<?= $news['id'] ?>"><?= htmlspecialchars($news['title']) ?></a>
+                                </h4>
+                                <div class="news-footer">
+                                    <span class="time-ago-sm"><?= timeAgo($news['published_at'] ?? $news['created_at'] ?? '') ?></span>
+                                    <span class="news-source"><?= htmlspecialchars($news['source_name'] ?? '') ?></span>
+                                </div>
+                            </div>
+                        </article>
+                        <?php endforeach; ?>
+                    </div>
+                </section>
+                
+            </div>
+            
+            <!-- Sidebar -->
+            <aside class="content-sidebar">
+                
+                <!-- Quick Services -->
+                <div class="sidebar-card">
+                    <h3 class="sidebar-title">
+                        <i data-lucide="layout-grid" class="icon-md"></i>
+                        <?= $isNepali ? 'छिटो सेवा' : 'Quick Services' ?>
+                    </h3>
+                    <div class="service-grid">
+                        <a href="/news.php" class="service-item">
+                            <i data-lucide="newspaper" class="service-icon"></i>
+                            <span><?= $isNepali ? 'समाचार' : 'News' ?></span>
+                        </a>
+                        <a href="/ipo-tracker.php" class="service-item">
+                            <i data-lucide="trending-up" class="service-icon"></i>
+                            <span>NEPSE</span>
+                        </a>
+                        <a href="/nepali-patro.php" class="service-item">
+                            <i data-lucide="calendar" class="service-icon"></i>
+                            <span><?= $isNepali ? 'पात्रो' : 'Calendar' ?></span>
+                        </a>
+                        <a href="/rashifal.php" class="service-item">
+                            <i data-lucide="sparkles" class="service-icon"></i>
+                            <span><?= $isNepali ? 'राशिफल' : 'Rashifal' ?></span>
+                        </a>
+                        <a href="/gov-services.php" class="service-item">
+                            <i data-lucide="landmark" class="service-icon"></i>
+                            <span><?= $isNepali ? 'सरकारी' : 'Government' ?></span>
+                        </a>
+                        <a href="/emergency.php" class="service-item">
+                            <i data-lucide="phone" class="service-icon"></i>
+                            <span><?= $isNepali ? 'आपतकालीन' : 'Emergency' ?></span>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Categories -->
+                <div class="sidebar-card">
+                    <h3 class="sidebar-title">
+                        <i data-lucide="grid-3x3" class="icon-md"></i>
+                        <?= $isNepali ? 'वर्गीकरण' : 'Categories' ?>
+                    </h3>
+                    <div class="category-list">
+                        <a href="/news.php?category=politics" class="category-item">
+                            <span class="cat-dot" style="background:#ef4444"></span>
+                            <span><?= $isNepali ? 'राजनीति' : 'Politics' ?></span>
+                            <i data-lucide="chevron-right" class="icon-sm"></i>
+                        </a>
+                        <a href="/news.php?category=economy" class="category-item">
+                            <span class="cat-dot" style="background:#10b981"></span>
+                            <span><?= $isNepali ? 'अर्थ' : 'Economy' ?></span>
+                            <i data-lucide="chevron-right" class="icon-sm"></i>
+                        </a>
+                        <a href="/news.php?category=sports" class="category-item">
+                            <span class="cat-dot" style="background:#f59e0b"></span>
+                            <span><?= $isNepali ? 'खेलकुद' : 'Sports' ?></span>
+                            <i data-lucide="chevron-right" class="icon-sm"></i>
+                        </a>
+                        <a href="/news.php?category=technology" class="category-item">
+                            <span class="cat-dot" style="background:#3b82f6"></span>
+                            <span><?= $isNepali ? 'प्रविधि' : 'Technology' ?></span>
+                            <i data-lucide="chevron-right" class="icon-sm"></i>
+                        </a>
+                        <a href="/news.php?category=international" class="category-item">
+                            <span class="cat-dot" style="background:#8b5cf6"></span>
+                            <span><?= $isNepali ? 'विश्व' : 'International' ?></span>
+                            <i data-lucide="chevron-right" class="icon-sm"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Tools -->
+                <div class="sidebar-card">
+                    <h3 class="sidebar-title">
+                        <i data-lucide="wrench" class="icon-md"></i>
+                        <?= $isNepali ? 'उपयोगी टूल' : 'Useful Tools' ?>
+                    </h3>
+                    <div class="tool-list">
+                        <a href="/gold-price.php" class="tool-item">
+                            <i data-lucide="gem" class="tool-icon"></i>
+                            <div>
+                                <span class="tool-name"><?= $isNepali ? 'सुनको मूल्य' : 'Gold Price' ?></span>
+                                <span class="tool-value">रु <?= number_format($goldFine, 0) ?></span>
+                            </div>
+                        </a>
+                        <a href="/currency-converter.php" class="tool-item">
+                            <i data-lucide="coins" class="tool-icon"></i>
+                            <div>
+                                <span class="tool-name"><?= $isNepali ? 'मुद्रा विनिमय' : 'Currency' ?></span>
+                                <span class="tool-value">1 USD = रु <?= number_format($usdRate, 2) ?></span>
+                            </div>
+                        </a>
+                        <a href="/weather.php" class="tool-item">
+                            <i data-lucide="cloud-sun" class="tool-icon"></i>
+                            <div>
+                                <span class="tool-name"><?= $isNepali ? 'मौसम' : 'Weather' ?></span>
+                                <span class="tool-value"><?= $isNepali ? 'हेर्नुहोस्' : 'Check now' ?></span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                
+            </aside>
         </div>
-      </div>
     </div>
-  </div>
-</section>
-<?php endif; ?>
+</main>
 
-<!-- ═══ SERVICES TILE GRID (Grouped by Category) ═════════════════════════════════════ -->
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   WORLD-CLASS HOMEPAGE STYLES
+   ═══════════════════════════════════════════════════════════════ */
 
-<!-- News & Media -->
-<div class="sec-title">
-  <i data-lucide="newspaper" class="icon-md text-blue-600" style="stroke-width:1.5px"></i>
-  <span class="ne"><?= $t('समाचार र मिडिया','News & Media') ?></span>
-</div>
-<section class="grid grid-cols-4 gap-2 mb-4">
-  <?php
-  $newsTiles=[
-    ['/news.php',         'newspaper',     $t('समाचार','News'),       'bg-i2'],
-    ['/stories.php',      'book-open',     $t('कथा','Stories'),     'bg-i4'],
-    ['/podcast.php',      'mic',          $t('पोडकास्ट','Podcast'),  'bg-i5'],
-    ['/radio.php',        'radio',        $t('रेडियो','Radio'),     'bg-i1'],
-  ];
-  foreach($newsTiles as [$h,$ic,$lb,$bg]): ?>
-    <a href="<?= $h ?>" class="tile">
-      <span class="ic <?= $bg ?>"><i data-lucide="<?= $ic ?>"></i></span>
-      <span class="lbl ne"><?= $lb ?></span>
-    </a>
-  <?php endforeach; ?>
-</section>
+/* Market Bar */
+.market-bar {
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    padding: 12px 0;
+    position: sticky;
+    top: 0;
+    z-index: 90;
+}
 
-<!-- Patro & Rashifal -->
-<div class="sec-title">
-  <i data-lucide="calendar-days" class="icon-md text-amber-600" style="stroke-width:1.5px"></i>
-  <span class="ne"><?= $t('पात्रो र राशिफल','Patro & Rashifal') ?></span>
-</div>
-<section class="grid grid-cols-4 gap-2 mb-4">
-  <?php
-  $patroTiles=[
-    ['/nepali-patro.php', 'calendar-days', $t('पात्रो','Patro'),     'bg-i3'],
-    ['/rashifal.php',     'sparkles',      $t('राशिफल','Rashifal'),  'bg-i4'],
-    ['/kundali-milan.php','heart',         $t('कुण्डली','Kundali'),   'bg-i4'],
-    ['/festival-calendar.php', 'calendar',  $t('त्योहार','Festivals'), 'bg-i3'],
-  ];
-  foreach($patroTiles as [$h,$ic,$lb,$bg]): ?>
-    <a href="<?= $h ?>" class="tile">
-      <span class="ic <?= $bg ?>"><i data-lucide="<?= $ic ?>"></i></span>
-      <span class="lbl ne"><?= $lb ?></span>
-    </a>
-  <?php endforeach; ?>
-</section>
+.market-inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+    flex-wrap: wrap;
+}
 
-<!-- Market & Finance -->
-<div class="sec-title">
-  <i data-lucide="trending-up" class="icon-md text-emerald-600" style="stroke-width:1.5px"></i>
-  <span class="ne"><?= $t('बजार र वित्त','Market & Finance') ?></span>
-</div>
-<section class="grid grid-cols-4 gap-2 mb-4">
-  <?php
-  $marketTiles=[
-    ['/ipo-tracker.php',    'trending-up',   'NEPSE',                  'bg-emerald-100 text-emerald-700'],
-    ['/ipo-bulk-check.php', 'search-check',  'BOLD',                   'bg-teal-100 text-teal-700'],
-    ['/market.php',          'bar-chart-2',  $t('बजार','Market'),      'bg-green-100 text-green-700'],
-    ['/gold-price.php',      'gem',          $t('सुन','Gold'),         'bg-yellow-100 text-yellow-700'],
-    ['/currency-converter.php', 'dollar-sign', $t('फरेक्स','Forex'),  'bg-blue-100 text-blue-700'],
-    ['/tax-calculator.php',  'receipt',       $t('कर','Tax'),           'bg-slate-100 text-slate-700'],
-  ];
-  foreach($marketTiles as [$h,$ic,$lb,$bg]): ?>
-    <a href="<?= $h ?>" class="tile">
-      <span class="ic <?= $bg ?>"><i data-lucide="<?= $ic ?>" class="w-[18px] h-[18px]"></i></span>
-      <span class="lbl ne"><?= $lb ?></span>
-    </a>
-  <?php endforeach; ?>
-</section>
+.market-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
 
-<!-- Government Services -->
-<div class="sec-title">
-  <i data-lucide="landmark" class="icon-md text-red-600" style="stroke-width:1.5px"></i>
-  <span class="ne"><?= $t('सरकारी सेवा','Government Services') ?></span>
-</div>
-<section class="grid grid-cols-4 gap-2 mb-4">
-  <?php
-  $govTiles=[
-    ['/gov-services.php',      'landmark',      $t('सेवा','Gov'),           'bg-red-100 text-red-700'],
-    ['/loksewa.php',           'briefcase',     $t('लोकसेवा','Loksewa'),    'bg-orange-100 text-orange-700'],
-    ['/notices.php',           'file-text',     $t('सूचना','Notices'),       'bg-amber-100 text-amber-700'],
-    ['/government-tenders.php','gavel',         $t('टेन्डर','Tender'),       'bg-yellow-100 text-yellow-700'],
-  ];
-  foreach($govTiles as [$h,$ic,$lb,$bg]): ?>
-    <a href="<?= $h ?>" class="tile">
-      <span class="ic <?= $bg ?>"><i data-lucide="<?= $ic ?>" class="w-[18px] h-[18px]"></i></span>
-      <span class="lbl ne"><?= $lb ?></span>
-    </a>
-  <?php endforeach; ?>
-</section>
+.market-label {
+    font-size: 12px;
+    color: #94a3b8;
+    font-weight: 500;
+}
 
-<!-- Tools & Utilities -->
-<div class="sec-title">
-  <i data-lucide="wrench" class="icon-md text-slate-600" style="stroke-width:1.5px"></i>
-  <span class="ne"><?= $t('उपकरण र उपयोगिता','Tools & Utilities') ?></span>
-</div>
-<section class="grid grid-cols-4 gap-2 mb-4">
-  <?php
-  $toolsTiles=[
-    ['/tools.php',           'wrench',        $t('टूलहरू','Tools'),       'bg-slate-100 text-slate-700'],
-    ['/utilities.php',       'bar-chart-2',   $t('उपयोगी','Utils'),       'bg-gray-100 text-gray-700'],
-    ['/unit-converter.php',  'calculator',    $t('एकाइ','Unit'),         'bg-blue-100 text-blue-700'],
-    ['/bmi-calculator.php',  'activity',      $t('BMI','BMI'),           'bg-green-100 text-green-700'],
-    ['/language-translator.php', 'languages', $t('अनुवाद','Translate'),  'bg-purple-100 text-purple-700'],
-    ['/dictionary.php',     'book',          $t('शब्दकोश','Dict'),      'bg-indigo-100 text-indigo-700'],
-    ['/pdf-convert.php',     'file-text',     $t('PDF','PDF'),           'bg-red-100 text-red-700'],
-    ['/downloads.php',       'download',      $t('डाउनलोड','Downloads'),  'bg-cyan-100 text-cyan-700'],
-  ];
-  foreach($toolsTiles as [$h,$ic,$lb,$bg]): ?>
-    <a href="<?= $h ?>" class="tile">
-      <span class="ic <?= $bg ?>"><i data-lucide="<?= $ic ?>" class="w-[18px] h-[18px]"></i></span>
-      <span class="lbl ne"><?= $lb ?></span>
-    </a>
-  <?php endforeach; ?>
-</section>
+.market-value {
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+}
 
-<!-- Health & Emergency -->
-<div class="sec-title">
-  <i data-lucide="heart-pulse" class="icon-md text-rose-600" style="stroke-width:1.5px"></i>
-  <span class="ne"><?= $t('स्वास्थ्य र आपतकाल','Health & Emergency') ?></span>
-</div>
-<section class="grid grid-cols-4 gap-2 mb-4">
-  <?php
-  $healthTiles=[
-    ['/emergency.php',    'phone-call',    $t('आपतकाल','SOS'),         'bg-rose-100 text-rose-700'],
-    ['/hospitals.php',    'heart-pulse',   $t('अस्पताल','Hospital'),    'bg-pink-100 text-pink-700'],
-    ['/nea-bill.php',     'zap',           $t('बिजुली','Electricity'),  'bg-yellow-100 text-yellow-700'],
-    ['/health-tips.php',  'heart',         $t('स्वास्थ्य','Health'),     'bg-teal-100 text-teal-700'],
-    ['/fitness-tracker.php', 'activity',    $t('फिटनेस','Fitness'),     'bg-orange-100 text-orange-700'],
-  ];
-  foreach($healthTiles as [$h,$ic,$lb,$bg]): ?>
-    <a href="<?= $h ?>" class="tile">
-      <span class="ic <?= $bg ?>"><i data-lucide="<?= $ic ?>" class="w-[18px] h-[18px]"></i></span>
-      <span class="lbl ne"><?= $lb ?></span>
-    </a>
-  <?php endforeach; ?>
-</section>
+.market-value.up { color: #22c55e; }
+.market-value.down { color: #ef4444; }
 
-<!-- Transport & Travel -->
-<div class="sec-title">
-  <i data-lucide="bus" class="icon-md text-cyan-600" style="stroke-width:1.5px"></i>
-  <span class="ne"><?= $t('यातायात र यात्रा','Transport & Travel') ?></span>
-</div>
-<section class="grid grid-cols-4 gap-2 mb-4">
-  <?php
-  $transportTiles=[
-    ['/transportation.php', 'bus',           $t('यातायात','Bus'),         'bg-cyan-100 text-cyan-700'],
-    ['/flight-status.php', 'plane',         $t('उडान','Flight'),         'bg-sky-100 text-sky-700'],
-    ['/weather.php',       'cloud-sun',     $t('मौसम','Weather'),       'bg-blue-100 text-blue-700'],
-  ];
-  foreach($transportTiles as [$h,$ic,$lb,$bg]): ?>
-    <a href="<?= $h ?>" class="tile">
-      <span class="ic <?= $bg ?>"><i data-lucide="<?= $ic ?>" class="w-[18px] h-[18px]"></i></span>
-      <span class="lbl ne"><?= $lb ?></span>
-    </a>
-  <?php endforeach; ?>
-</section>
+.market-change {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 600;
+}
 
-<!-- Education & Jobs -->
-<div class="sec-title">
-  <i data-lucide="graduation-cap" class="icon-md text-purple-600" style="stroke-width:1.5px"></i>
-  <span class="ne"><?= $t('शिक्षा र रोजगार','Education & Jobs') ?></span>
-</div>
-<section class="grid grid-cols-4 gap-2 mb-4">
-  <?php
-  $eduTiles=[
-    ['/nokari.php',         'briefcase',     $t('नोकरी','Jobs'),          'bg-purple-100 text-purple-700'],
-    ['/exam-results.php',  'graduation-cap',$t('परीक्षा','Exam'),        'bg-violet-100 text-violet-700'],
-    ['/auction-notices.php','gavel',        $t('लिलामी','Auction'),      'bg-orange-100 text-orange-700'],
-    ['/quiz-games.php',    'gamepad-2',     $t('खेल','Quiz'),           'bg-pink-100 text-pink-700'],
-  ];
-  foreach($eduTiles as [$h,$ic,$lb,$bg]): ?>
-    <a href="<?= $h ?>" class="tile">
-      <span class="ic <?= $bg ?>"><i data-lucide="<?= $ic ?>" class="w-[18px] h-[18px]"></i></span>
-      <span class="lbl ne"><?= $lb ?></span>
-    </a>
-  <?php endforeach; ?>
-</section>
+.market-change.up { color: #22c55e; }
+.market-change.down { color: #ef4444; }
 
-<div class="sec-title">
-  <i data-lucide="sparkles" class="icon-md text-amber-500" style="stroke-width:1.5px"></i>
-  <span class="ne"><?= $t('नेपाल आज','Nepal Today') ?></span>
-  <span class="badge inline-flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span><?= $t('स्मार्ट','Smart') ?></span>
-</div>
-<section id="nepal-aaja" class="app-card p-3 overflow-hidden">
-  <div class="rounded-2xl p-3 text-white bg-gradient-to-br from-slate-900 via-teal-900 to-emerald-800">
-    <div class="flex items-start gap-3">
-      <div class="w-11 h-11 rounded-2xl bg-white/15 border border-white/20 flex items-center justify-center flex-shrink-0">
-        <i data-lucide="radar" class="w-5 h-5" style="stroke-width:1.5px"></i>
-      </div>
-      <div class="min-w-0 flex-1">
-        <div class="text-[11px] text-white/90 font-medium ne"><?= htmlspecialchars($bsDateStr, ENT_QUOTES, 'UTF-8') ?></div>
-        <h2 class="text-[16px] font-extrabold leading-snug text-white ne"><?= $t('आज तपाईंलाई चाहिने मुख्य कुरा','Everything important for today') ?></h2>
-        <p id="na-summary" class="text-[12px] text-white font-medium mt-1 ne" style="text-shadow:0 1px 2px rgba(0,0,0,.25)">मौसम, अलर्ट, लोकसेवा र समाचार लोड हुँदै…</p>
-      </div>
-    </div>
-  </div>
-  <div class="grid grid-cols-2 gap-2 mt-2" id="na-grid">
-    <?php foreach([
-      ['/utilities.php', 'cloud-sun', $t('मौसम','Weather'), 'लोड हुँदै…', 'sky'],
-      ['/alerts.php', 'siren', $t('अलर्ट','Alerts'), 'लोड हुँदै…', 'rose'],
-      ['/loksewa.php', 'briefcase', $t('लोकसेवा','Loksewa'), 'लोड हुँदै…', 'purple'],
-      ['/news.php', 'newspaper', $t('समाचार','News'), 'लोड हुँदै…', 'teal'],
-    ] as $na): ?>
-      <a href="<?= $na[0] ?>" class="rounded-2xl border border-slate-100 bg-slate-50 hover:bg-white p-2.5 flex items-center gap-2 transition-colors">
-        <span class="w-9 h-9 rounded-xl bg-<?= $na[4] ?>-100 text-<?= $na[4] ?>-700 flex items-center justify-center flex-shrink-0"><i data-lucide="<?= $na[1] ?>" class="w-4 h-4" style="stroke-width:1.5px"></i></span>
-        <span class="min-w-0">
-          <span class="block text-[11px] font-bold text-slate-900 ne"><?= $na[2] ?></span>
-          <span class="block text-[10px] text-slate-500 truncate ne" data-na-label="<?= htmlspecialchars($na[2], ENT_QUOTES) ?>"><?= $na[3] ?></span>
-        </span>
-      </a>
-    <?php endforeach; ?>
-  </div>
-  <div class="grid grid-cols-3 gap-2 mt-2">
-    <a href="/rashifal.php" class="rounded-xl bg-violet-50 text-violet-800 px-2 py-2 text-center text-[11px] font-bold ne"><i data-lucide="sparkles" class="w-3.5 h-3.5 inline-block" style="stroke-width:1.5px"></i> <?= $t('राशिफल','Rashi') ?></a>
-    <a href="/nepali-patro.php" class="rounded-xl bg-indigo-50 text-indigo-800 px-2 py-2 text-center text-[11px] font-bold ne"><i data-lucide="calendar-days" class="w-3.5 h-3.5 inline-block" style="stroke-width:1.5px"></i> <?= $t('पात्रो','Patro') ?></a>
-    <a href="/gov-services.php" class="rounded-xl bg-emerald-50 text-emerald-800 px-2 py-2 text-center text-[11px] font-bold ne"><i data-lucide="landmark" class="w-3.5 h-3.5 inline-block" style="stroke-width:1.5px"></i> <?= $t('सेवा','Gov') ?></a>
-  </div>
-</section>
-<script>
-(function(){
-  var box = document.getElementById('nepal-aaja');
-  if (!box) return;
-  function setCard(label, text){
-    var el = Array.prototype.find.call(box.querySelectorAll('[data-na-label]'), function(x){ return x.getAttribute('data-na-label') === label; });
-    if (el) el.textContent = text || 'उपलब्ध छैन';
-  }
-  var facts = [];
-  Promise.all([
-    fetch('/api/weather-alerts.php?type=weather&city=' + encodeURIComponent('काठमाडौं')).then(function(r){return r.json();}).catch(function(){return null;}),
-    fetch('/api/alerts.php').then(function(r){return r.json();}).catch(function(){return null;}),
-    fetch('/api/loksewa.php?type=all&limit=3').then(function(r){return r.json();}).catch(function(){return null;}),
-    fetch('/api/news-rss.php?limit=3').then(function(r){return r.json();}).catch(function(){return null;})
-  ]).then(function(res){
-    var w = res[0] || {};
-    if (w && w.available !== false && (w.temp_c !== undefined || w.temperature !== undefined)) {
-      var wt = (w.temp_c !== undefined ? w.temp_c : w.temperature) + '°C · ' + (w.desc_ne || w.condition || 'काठमाडौं');
-      setCard('<?= $t('मौसम','Weather') ?>', wt);
-      facts.push('काठमाडौंमा ' + wt);
-    } else {
-      setCard('<?= $t('मौसम','Weather') ?>', 'काठमाडौं मौसम हेर्नुहोस्');
+.market-divider {
+    width: 1px;
+    height: 20px;
+    background: #334155;
+}
+
+.icon-xs { width: 12px; height: 12px; }
+.icon-sm { width: 14px; height: 14px; }
+.icon-md { width: 18px; height: 18px; }
+
+/* Main Content */
+.home-main {
+    padding: 32px 0;
+    background: #f8fafc;
+}
+
+.home-grid {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 32px;
+}
+
+@media (max-width: 1024px) {
+    .home-grid {
+        grid-template-columns: 1fr;
     }
-    var alerts = (res[1] && (res[1].items || res[1].alerts)) || [];
-    setCard('<?= $t('अलर्ट','Alerts') ?>', alerts.length ? alerts.length + ' वटा सक्रिय सूचना' : 'हाल ठूलो अलर्ट छैन');
-    if (alerts.length) facts.push(alerts.length + ' अलर्ट');
-    var lok = (res[2] && (res[2].items || res[2].notices || res[2].data)) || [];
-    setCard('<?= $t('लोकसेवा','Loksewa') ?>', lok.length ? lok.length + ' नयाँ सूचना' : 'नयाँ सूचना छैन');
-    if (lok.length) facts.push(lok.length + ' लोकसेवा सूचना');
-    var news = (res[3] && (res[3].items || res[3].news || res[3].data)) || [];
-    setCard('<?= $t('समाचार','News') ?>', news.length ? news.length + ' ताजा headline' : 'समाचार हेर्नुहोस्');
-    if (news.length) facts.push(news.length + ' headline');
-    var summary = document.getElementById('na-summary');
-    if (summary) summary.textContent = facts.length ? facts.slice(0,3).join(' · ') : 'आजका मुख्य अपडेटहरू app भित्रै हेर्नुहोस्।';
-    if(window.lucide&&lucide.createIcons) lucide.createIcons();
-  }).catch(function(){
-    var summary = document.getElementById('na-summary');
-    if (summary) summary.textContent = 'आजका मुख्य अपडेटहरू app भित्रै हेर्नुहोस्।';
-  });
-})();
-</script>
-
-<!-- ═══ LATEST NEWS (LIVE RSS — same source as /news.php) ════════════════════ -->
-<!-- v11 fix: home news ले DB-bound getPublishedNews() बाट देखाउँथ्यो जुन
-     /news.php (RSS-powered) सँग पूर्ण मेल खाँदैनथ्यो। अब दुवै एउटै single
-     source — /api/news-rss.php बाट hydrate। -->
-<div class="sec-title">
-  <i data-lucide="newspaper" class="icon-md text-brand-600" style="stroke-width:1.5px"></i>
-  <span class="ne"><?= $t('ताजा समाचार','Latest News') ?></span>
-  <a href="/news.php" class="badge"><?= $t('सबै','All →') ?></a>
-</div>
-<div id="home-news-feat" class="block"></div>
-<section class="mt-3 flex flex-col gap-2" id="home-news-list">
-  <!-- skeleton -->
-  <div class="news-row" style="opacity:.45">
-    <div class="thumb" style="background:#e2e8f0"></div>
-    <div class="min-w-0 flex-1"><div style="height:10px;width:30%;background:#e2e8f0;border-radius:6px"></div>
-      <div style="height:12px;width:90%;background:#e2e8f0;border-radius:6px;margin-top:8px"></div>
-      <div style="height:12px;width:60%;background:#e2e8f0;border-radius:6px;margin-top:6px"></div></div>
-  </div>
-</section>
-<a href="/news.php" class="mt-2 block text-center text-[12.5px] font-semibold text-brand-700 bg-brand-50 border border-brand-100 py-2.5 rounded-2xl">
-  <?= $t('सबै समाचार हेर्नुस्','See all news') ?> →
-</a>
-<script>
-(function(){
-  function esc(s){return String(s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
-  function timeAgo(ts){
-    if(!ts) return '';
-    var d=(Date.now()/1000)-ts;
-    if(d<60)return 'भर्खरै';
-    if(d<3600)return Math.floor(d/60)+' मिनेट अघि';
-    if(d<86400)return Math.floor(d/3600)+' घण्टा अघि';
-    return Math.floor(d/86400)+' दिन अघि';
-  }
-  fetch('/api/news-rss.php?limit=10').then(function(r){return r.json();}).then(function(d){
-    var items=(d&&(d.items||d.data||d.news))||[];
-    var feat=document.getElementById('home-news-feat');
-    var list=document.getElementById('home-news-list');
-    if(!items.length){ list.innerHTML='<div class="text-[12px] text-slate-400 p-2">समाचार उपलब्ध छैन</div>'; return; }
-    var f=items[0];
-    var fImg=f.image||f.thumbnail||f.enclosure||'';
-    var fUrl = f.internalUrl || (f.slug ? '/news-detail.php?slug=' + encodeURIComponent(f.slug) : '/news-detail.php?url=' + encodeURIComponent(f.link || f.url || '') + '&src=' + encodeURIComponent(f.sourceLabel || ''));
-    feat.innerHTML='<a href="'+esc(fUrl)+'" class="block"><div class="feat">'+
-      (fImg?'<img src="'+esc(fImg)+'" alt="" loading="lazy" onerror="this.style.display=\'none\'">':'')+
-      '<div class="meta"><span class="pill">'+esc(f.sourceLabel||f.source||'News')+'</span>'+
-      '<h3 class="ne">'+esc(f.title)+'</h3>'+
-      '<div class="text-[11px] opacity-80 mt-1 flex items-center gap-2">'+
-      '<i data-lucide="clock" class="w-3 h-3"></i>'+esc(timeAgo(f.timestamp||f.pubDate||0))+'</div>'+
-      '</div></div></a>';
-    var html='';
-    items.slice(1,7).forEach(function(n){
-      var img=n.image||n.thumbnail||n.enclosure||'';
-      var nUrl = n.internalUrl || (n.slug ? '/news-detail.php?slug=' + encodeURIComponent(n.slug) : '/news-detail.php?url=' + encodeURIComponent(n.link || n.url || '') + '&src=' + encodeURIComponent(n.sourceLabel || ''));
-      html+='<a href="'+esc(nUrl)+'" class="news-row">'+
-        '<div class="thumb">'+(img?'<img src="'+esc(img)+'" alt="" loading="lazy" onerror="this.closest(\'.thumb\').innerHTML=&quot;<div style=\\&quot;display:flex;width:100%;height:100%;align-items:center;justify-content:center;color:#0d9488\\&quot;><i data-lucide=\"newspaper\" class=\"w-6 h-6\"></i></div>&quot;">':'<div style="display:flex;width:100%;height:100%;align-items:center;justify-content:center;color:#0d9488"><i data-lucide=\"newspaper\" class=\"w-6 h-6\"></i></div>')+'</div>'+
-        '<div class="min-w-0 flex-1">'+
-          '<span class="badge badge-primary badge-sm">'+esc(n.sourceLabel||n.source||'News')+'</span>'+
-          '<h4 class="text-[13.5px] font-semibold text-ink leading-snug mt-1 line-clamp-2 ne">'+esc(n.title)+'</h4>'+
-          '<div class="text-[11px] text-slate-400 mt-1.5 flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i>'+esc(timeAgo(n.timestamp||n.pubDate||0))+'</div>'+
-        '</div></a>';
-    });
-    list.innerHTML=html;
-    if(window.lucide&&lucide.createIcons) lucide.createIcons();
-  }).catch(function(){
-    var list=document.getElementById('home-news-list');
-    if(list) list.innerHTML='<div class="text-[12px] text-slate-400 p-2">समाचार लोड हुन सकेन</div>';
-  });
-})();
-</script>
-
-<!-- ═══ MARKET SUMMARY CARD (animated counters) ══════════════════════════════ -->
-<?php if($nepseIdx||$goldFine||$petrolP||$usdRate): ?>
-<div class="sec-title">
-  <i data-lucide="bar-chart-2" class="icon-md text-brand-600" style="stroke-width:1.5px"></i>
-  <span class="ne"><?= $t('बजार सारांश','Today\'s Market') ?></span>
-  <span class="badge inline-flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>Live</span>
-</div>
-<section class="grid grid-cols-2 gap-2" id="market-grid">
-  <?php
-  $cards=array_filter([
-    $nepseIdx?['NEPSE',$nepseIdx,'idx',2,$nepseChg,$nepseUp,'trending-up','from-blue-500 to-blue-600','/ipo-tracker.php']:null,
-    $goldFine?[$t('सुन','Gold'),$goldFine,'gold',0,null,null,'gem','from-amber-500 to-amber-600','/utilities.php#gold']:null,
-    $petrolP?[$t('पेट्रोल','Petrol'),$petrolP,'petrol',0,null,null,'fuel','from-orange-500 to-orange-600','/utilities.php#fuel']:null,
-    $usdRate?['USD',$usdRate,'usd',2,null,null,'dollar-sign','from-emerald-500 to-emerald-600','/utilities.php#forex']:null,
-  ]);
-  $prefix=['gold'=>'रु ','petrol'=>'रु ','usd'=>'रु ','idx'=>''];
-  foreach($cards as $c):
-    [$lbl,$rawVal,$key,$dec,$chg,$up,$ic,$grad,$href]=$c;
-    $dispPfx=$prefix[$key]??'';
-  ?>
-    <a href="<?= $href ?>" class="app-card p-3 flex items-center gap-3">
-      <div class="w-11 h-11 rounded-xl bg-gradient-to-br <?= $grad ?> text-white flex items-center justify-center flex-shrink-0">
-        <i data-lucide="<?= $ic ?>" class="w-5 h-5" style="stroke-width:1.5px"></i>
-      </div>
-      <div class="min-w-0">
-        <div class="text-[11px] text-slate-500 font-medium ne"><?= $lbl ?></div>
-        <div class="text-[14px] font-extrabold text-ink ne">
-          <span class="mkt-pfx"><?= $dispPfx ?></span><span class="mkt-cnt" data-target="<?= $rawVal ?>" data-dec="<?= $dec ?>">0</span>
-        </div>
-        <?php if($chg!==null): ?>
-          <div class="text-[10.5px] font-bold <?= $up?'text-emerald-600':'text-rose-600' ?>"><i data-lucide="<?= $up?'trending-up':'trending-down' ?>" class="w-3 h-3 inline-block" style="stroke-width:1.5px"></i> <?= abs((float)$chg) ?></div>
-        <?php endif; ?>
-      </div>
-    </a>
-  <?php endforeach; ?>
-</section>
-<script>
-/* Animated counter: numbers count up from 0 to target on page load */
-(function(){
-  var els=document.querySelectorAll('.mkt-cnt');
-  if(!els.length)return;
-  var dur=1100,fps=50,steps=Math.round(dur/(1000/fps));
-  els.forEach(function(el){
-    var target=parseFloat(el.getAttribute('data-target'))||0;
-    var dec=parseInt(el.getAttribute('data-dec'))||0;
-    var step=0;
-    var timer=setInterval(function(){
-      step++;
-      var eased=1-Math.pow(1-(step/steps),3); /* ease-out cubic */
-      el.textContent=(target*eased).toFixed(dec);
-      if(step>=steps){el.textContent=target.toFixed(dec);clearInterval(timer);}
-    },1000/fps);
-  });
-})();
-</script>
-<?php endif; ?>
-
-<!-- ═══ TODAY'S RASHIFAL ════════════════════════════���════════════════════════ -->
-<div class="sec-title" id="rashifal-grid-title">
-  <i data-lucide="sparkles" class="icon-md text-pink-500" style="stroke-width:1.5px"></i>
-  <span class="ne"><?= $t('आजको राशिफल','Today\'s Rashifal') ?></span>
-  <a href="/rashifal.php" class="badge"><?= $t('विस्तृत','Full →') ?></a>
-</div>
-<section class="app-card p-3" id="rashifal-grid-section">
-  <div class="grid grid-cols-6 gap-1.5">
-    <?php
-    $rashiList=[['मेष','♈'],['वृष','♉'],['मिथुन','♊'],['कर्कट','♋'],['सिंह','♌'],['कन्या','♍'],['तुला','♎'],['वृश्चिक','♏'],['धनु','♐'],['मकर','♑'],['कुम्भ','♒'],['मीन','♓']];
-    foreach($rashiList as $i=>[$rName,$sym]): ?>
-      <a href="/rashifal.php#rashi-<?= $i ?>" class="flex flex-col items-center gap-0.5 py-2 px-0.5 rounded-xl hover:bg-pink-50 transition-colors">
-        <span class="text-[18px] leading-none"><?= $sym ?></span>
-        <span class="text-[9.5px] font-semibold text-slate-600 leading-tight ne"><?= $rName ?></span>
-      </a>
-    <?php endforeach; ?>
-  </div>
-</section>
-
-<!-- ═══ EMERGENCY NUMBERS ═════════════════════════════════════════════════════ -->
-<div class="sec-title">
-  <i data-lucide="phone-call" class="icon-md text-rose-600" style="stroke-width:1.5px"></i>
-  <span class="ne"><?= $t('आपतकालीन नम्बर','Emergency') ?></span>
-  <a href="/emergency.php" class="badge"><?= $t('सबै','All →') ?></a>
-</div>
-<section class="grid grid-cols-4 gap-2">
-  <?php foreach([
-    ['Police','100','shield-alert','from-blue-500 to-blue-700'],
-    ['Ambulance','102','activity','from-rose-500 to-rose-700'],
-    ['Fire','101','flame','from-orange-500 to-red-600'],
-    ['Traffic','103','car','from-emerald-500 to-emerald-700'],
-  ] as [$name,$num,$ic,$grad]): ?>
-    <a href="tel:<?= $num ?>" class="app-card p-2.5 flex flex-col items-center gap-1.5 text-center">
-      <div class="w-10 h-10 rounded-xl bg-gradient-to-br <?= $grad ?> text-white flex items-center justify-center">
-        <i data-lucide="<?= $ic ?>" class="w-[18px] h-[18px]" style="stroke-width:1.5px"></i>
-      </div>
-      <div class="text-[10.5px] font-semibold text-slate-500"><?= $name ?></div>
-      <div class="text-[15px] font-extrabold text-ink leading-none"><?= $num ?></div>
-    </a>
-  <?php endforeach; ?>
-</section>
-
-<!-- ═══ MORE SERVICES ═══════════════════════════════════════════════════════ -->
-<div class="sec-title mt-4">
-  <i data-lucide="grid-3x3" class="icon-md text-slate-500" style="stroke-width:1.5px"></i>
-  <span class="ne"><?= $t('थप सेवाहरू','More Services') ?></span>
-  <a href="/tools.php" class="badge"><?= $t('सबै हेर्नुस्','View All →') ?></a>
-</div>
-<section class="grid grid-cols-4 gap-2 mb-4">
-  <?php
-  $moreTiles=[
-    ['/ai-chat.php',      'message-square',$t('AI च्याट','AI Chat'),  'bg-i6'],
-    ['/visit-nepal.php',  'map-pin',       $t('घुम्ने ठाउँ','Visit'),  'bg-i7'],
-    ['/directory.php',    'book-user',     $t('निर्देशिका','Directory'),'bg-i2'],
-    ['/help.php',         'life-buoy',     $t('सहयोग','Help'),         'bg-i7'],
-  ];
-  foreach($moreTiles as [$h,$ic,$lb,$bg]): ?>
-    <a href="<?= $h ?>" class="tile">
-      <span class="ic <?= $bg ?>"><i data-lucide="<?= $ic ?>"></i></span>
-      <span class="lbl ne"><?= $lb ?></span>
-    </a>
-  <?php endforeach; ?>
-</section>
-<div class="mb-6"></div>
-
-
-<script type="application/ld+json"><?= $jsonLd ?></script>
-
-<!-- Hide rashifal grid if personalized rashifal is shown -->
-<script>
-(function(){
-  try {
-    var saved = localStorage.getItem('nsh_fav_rashi');
-    if (saved !== null && saved >= 0 && saved < 12) {
-      var gridTitle = document.getElementById('rashifal-grid-title');
-      var gridSection = document.getElementById('rashifal-grid-section');
-      if (gridTitle) gridTitle.style.display = 'none';
-      if (gridSection) gridSection.style.display = 'none';
+    .content-sidebar {
+        display: none;
     }
-  } catch(_) {}
-})();
-</script>
+}
+
+/* Featured Card */
+.featured-card {
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    margin-bottom: 32px;
+}
+
+.featured-image {
+    position: relative;
+    display: block;
+}
+
+.featured-img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+}
+
+@media (max-width: 768px) {
+    .featured-img { height: 240px; }
+}
+
+.live-badge {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    padding: 6px 12px;
+    background: #ef4444;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-radius: 4px;
+}
+
+.featured-content {
+    padding: 24px;
+}
+
+.featured-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.category-tag {
+    padding: 4px 12px;
+    background: #10b981;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 4px;
+}
+
+.time-ago {
+    font-size: 12px;
+    color: #94a3b8;
+}
+
+.featured-title {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 12px;
+}
+
+@media (max-width: 768px) {
+    .featured-title { font-size: 20px; }
+}
+
+.featured-title a {
+    color: #0f172a;
+    text-decoration: none;
+}
+
+.featured-title a:hover {
+    color: #10b981;
+}
+
+.featured-excerpt {
+    font-size: 15px;
+    color: #64748b;
+    line-height: 1.7;
+    margin-bottom: 16px;
+}
+
+.featured-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.source {
+    font-size: 13px;
+    color: #94a3b8;
+    font-weight: 500;
+}
+
+.read-more {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #10b981;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.read-more:hover {
+    gap: 10px;
+}
+
+/* News Section */
+.news-section {
+    background: #fff;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid #10b981;
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 18px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.section-title i { color: #10b981; }
+
+.view-all {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: #10b981;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.view-all:hover {
+    gap: 8px;
+}
+
+/* News Grid */
+.news-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+@media (max-width: 768px) {
+    .news-grid { grid-template-columns: 1fr; }
+}
+
+.news-card {
+    display: flex;
+    gap: 12px;
+    padding: 12px;
+    border-radius: 12px;
+    transition: background 0.2s;
+}
+
+.news-card:hover {
+    background: #f8fafc;
+}
+
+.news-image {
+    flex-shrink: 0;
+    width: 120px;
+    height: 80px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.news-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.news-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.news-meta {
+    margin-bottom: 6px;
+}
+
+.category-tag-sm {
+    font-size: 10px;
+    font-weight: 600;
+    color: #10b981;
+    text-transform: uppercase;
+}
+
+.news-title {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.4;
+    margin-bottom: 8px;
+}
+
+.news-title a {
+    color: #0f172a;
+    text-decoration: none;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.news-title a:hover {
+    color: #10b981;
+}
+
+.news-footer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: #94a3b8;
+}
+
+.news-source {
+    font-weight: 500;
+}
+
+.time-ago-sm {
+    color: #94a3b8;
+}
+
+/* Sidebar Cards */
+.sidebar-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.sidebar-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #10b981;
+}
+
+.sidebar-title i { color: #10b981; }
+
+/* Service Grid */
+.service-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+.service-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 16px 8px;
+    background: #f8fafc;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.service-item:hover {
+    background: #10b981;
+    transform: translateY(-2px);
+}
+
+.service-item:hover .service-icon,
+.service-item:hover span {
+    color: #fff;
+}
+
+.service-icon {
+    width: 24px;
+    height: 24px;
+    color: #10b981;
+}
+
+.service-item span {
+    font-size: 11px;
+    font-weight: 600;
+    color: #475569;
+}
+
+/* Category List */
+.category-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.category-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background 0.15s;
+}
+
+.category-item:hover {
+    background: #f8fafc;
+}
+
+.cat-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.category-item span {
+    flex: 1;
+    font-size: 13px;
+    font-weight: 500;
+    color: #475569;
+}
+
+.category-item i { color: #cbd5e1; }
+.category-item:hover i { color: #10b981; }
+
+/* Tool List */
+.tool-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.tool-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: #f8fafc;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: all 0.15s;
+}
+
+.tool-item:hover {
+    background: #f1f5f9;
+    transform: translateX(4px);
+}
+
+.tool-icon {
+    width: 20px;
+    height: 20px;
+    color: #10b981;
+}
+
+.tool-item div {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tool-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: #475569;
+}
+
+.tool-value {
+    font-size: 12px;
+    font-weight: 600;
+    color: #0f172a;
+}
+</style>
 
 <?php include __DIR__ . '/footer.php'; ?>
