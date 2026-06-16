@@ -884,14 +884,15 @@ $pageTitle = $t('आकाशवाणी — सूचनाको खुला
         </div>
     </section>
 
-    <!-- LIVE Alerts Section - Connected APIs -->
+    <!-- LIVE Alerts Section -->
     <section class="section" style="background: var(--dark-50); padding: var(--space-8) 0;">
         <div class="container">
             <div class="section-header">
                 <h2 class="section-title">
-                    <span class="live-badge" style="margin-right: var(--space-2);"><span class="live-dot"></span>LIVE</span>
+                    <span class="live-badge" style="margin-right: var(--space-2);"><span class="live-dot"></span>LIVE DATA</span>
                     <?= $t('अलर्ट र जानकारी', 'Alerts & Updates') ?>
                 </h2>
+                <small style="color: var(--dark-500); font-size: 0.75rem;"><?= $t('भूकम्प र मौसम Real-time हुन्छ', 'Earthquake & Weather are real-time') ?></small>
                 <a href="/alerts.php" class="btn btn-ghost btn-sm"><?= $t('सबै हेर्नुहोस्', 'View All') ?> →</a>
             </div>
             <div class="alerts-grid">
@@ -948,21 +949,23 @@ $pageTitle = $t('आकाशवाणी — सूचनाको खुला
                     </div>
                 </div>
 
-                <!-- Latest Quake Info -->
-                <div class="alert-card latest-quake" id="latest-quake-widget">
-                    <div class="alert-card-header">
+                <!-- Flood Warning -->
+                <div class="alert-card" style="border-left: 4px solid #f59e0b;">
+                    <div class="alert-card-header" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
                         <span class="alert-icon">⚠️</span>
-                        <span class="alert-title"><?= $t('हालको भूकम्प', 'Current Quake') ?></span>
+                        <span class="alert-title"><?= $t('बाढी/पहिरो', 'Flood/Landslide') ?></span>
+                        <span class="alert-badge warning">⚠️</span>
                     </div>
-                    <div class="alert-card-body" id="latest-quake-data">
-                        <div class="quake-info">
-                            <div class="quake-mag" id="quake-magnitude">--</div>
-                            <div class="quake-location" id="quake-location"><?= $t('लोड हुँदै...', 'Loading...') ?></div>
-                            <div class="quake-time" id="quake-time">--:--</div>
-                        </div>
+                    <div class="alert-card-body">
+                        <p style="color: var(--dark-600); font-size: 0.875rem;">
+                            <?= $t('Real-time बाढी/पहिरो डेटा हाल उपलब्ध छैन।', 'Real-time flood data currently unavailable.') ?>
+                        </p>
+                        <p style="margin-top: var(--space-2); font-size: 0.75rem; color: var(--dark-500);">
+                            <?= $t('Official Source:', 'Official Source:') ?> <a href="https://bipadportal.gov.np" target="_blank">bipadportal.gov.np</a>
+                        </p>
                     </div>
                     <div class="alert-card-footer">
-                        <small><a href="/emergency.php"><?= $t('आपतकालीन जानकारी', 'Emergency Info') ?> →</a></small>
+                        <small><a href="/weather.php"><?= $t('मौसम विवरण', 'Weather Details') ?> →</a></small>
                     </div>
                 </div>
             </div>

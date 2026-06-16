@@ -181,10 +181,19 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
     <section class="section alert-section" id="jobs-section">
         <div class="container">
             <h2 class="text-xl font-bold mb-6">💼 <?= $t('सरकारी जobs', 'Government Jobs') ?></h2>
-            <p style="color: var(--dark-500); margin-bottom: var(--space-6);"><?= $t('लोकसेवा आयोग र अन्य सरकारी निकायहरूबाट प्रकाशित जobs।', 'Jobs published by Lok Sewa Aayog and other government bodies.') ?></p>
+            <div class="alert alert-warning" style="margin-bottom: var(--space-6);">
+                <strong>⚠️ Sample Data</strong>: <?= $t('यो सेक्सनमा हाल नमूना जobs मात्र देखाइएको छ। Lok Sewa Aayog को Real API जडान गर्न बाँकी छ।', 'This section currently shows sample jobs only. Real Lok Sewa Aayog API integration is pending.') ?>
+            </div>
             <div class="jobs-list" id="jobs-list">
                 <div class="job-card">
-                    <div class="alert-loading" style="padding: var(--space-8); text-align: center;"><?= $t('जobs लोड हुँदै...', 'Loading jobs...') ?></div>
+                    <div class="job-header">
+                        <div>
+                            <div class="job-title"><?= $t('Lok Sewa Aayog - विभिन्न पदहरू', 'Lok Sewa Aayog - Various Positions') ?></div>
+                            <div class="job-org"><?= $t('लोकसेवा आयोग, काठमाडौं', 'Lok Sewa Aayog, Kathmandu') ?></div>
+                        </div>
+                        <span class="job-badge"><?= $t('नयाँ', 'New') ?></span>
+                    </div>
+                    <p style="color: var(--dark-500); margin-top: var(--space-3);"><?= $t('Lok Sewa Aayog को आधिकारिक वेबसाइटमा जानुहोस्: loksewaaayog.gov.np', 'Visit official Lok Sewa Aayog website: loksewaaayog.gov.np') ?></p>
                 </div>
             </div>
         </div>
@@ -194,10 +203,25 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
     <section class="section alert-section" id="flights-section">
         <div class="container">
             <h2 class="text-xl font-bold mb-6">✈️ <?= $t('हवाई उडान स्थिति', 'Flight Status') ?></h2>
+            <div class="alert alert-warning" style="margin-bottom: var(--space-6);">
+                <strong>⚠️ Sample Data</strong>: <?= $t('FlightAware API कुञ्फिगर गरिएको छैन। हाल नमूना डेटा देखाइएको छ।', 'FlightAware API is not configured. Currently showing sample data.') ?>
+            </div>
             <div class="flight-list" id="flight-list">
                 <div class="flight-card">
-                    <div class="alert-loading" style="padding: var(--space-8); text-align: center; width: 100%;"><?= $t('उडान स्थिति लोड हुँदै...', 'Loading flight status...') ?></div>
+                    <span class="flight-icon">✈️</span>
+                    <div class="flight-route">TIA → दिल्ली</div>
+                    <div class="flight-time">10:30</div>
+                    <span class="flight-status status-on-time"><?= $t('समयमा', 'On Time') ?></span>
                 </div>
+                <div class="flight-card">
+                    <span class="flight-icon">✈️</span>
+                    <div class="flight-route">TIA → दुबई</div>
+                    <div class="flight-time">14:00</div>
+                    <span class="flight-status status-delayed"><?= $t('विलम्बित', 'Delayed') ?></span>
+                </div>
+                <p style="margin-top: var(--space-4); color: var(--dark-500); font-size: 0.875rem;">
+                    <?= $t('यात्रुहरूले TIA को आधिकारिक वेबसाइट: facskyportal.com.np मा जानकारी हेर्नुहोस्।', 'Passengers should check official TIA website: facskyportal.com.np') ?>
+                </p>
             </div>
         </div>
     </section>
