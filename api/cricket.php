@@ -217,6 +217,79 @@ function fetchCricAPILive(): array {
     return array_slice($matches, 0, 10);
 }
 
+/* ── TheSportsDB Cricket Data ── */
+function getSportsDBMatches(string $type = 'live'): array {
+    $matches = [];
+    
+    // Use TheSportsDB free tier API - Cricket league events
+    // League IDs: 4688 = International Cricket, 4337 = IPL, 5296 = WPL
+    $leagueIds = ['4688', '4337', '5296'];
+    
+    foreach ($leagueIds as $leagueId) {
+        if ($type === 'live') {
+            $url = "https://www.thesportsdb.com/api/v1/json/3/eventsnextleague.php?id={$leagueId}";
+        } elseif ($type === 'upcoming') {
+            $url = "https://www.thesportsdb.com/api/v1/json/3/eventsnextleague.php?id={$leagueId}";
+        } else {
+            $url = "https://www.thesportsdb.com/api/v1/json/3/eventspastleague.php?id={$leagueId}";
+        }
+        
+        $raw = ckt_get($url, 8);
+        if (!$raw) continue;
+        
+        $data = @json_decode($raw, true);
+        if (empty($data['events'])) continue;
+        
+        foreach ($data['events'] as $event) {
+            $home = $event['strHomeTeam'] ?? '';
+            $away = $event['strAwayTeam'] ?? '';
+            $score = '';
+            
+            if (!empty($event['intHomeScore']) || !empty($event['intAwayScore'])) {
+                $homeScore = $event['intHomeScore'] ?? '0';
+                $awayScore = $event['intAwayScore'] ?? '0';
+                $score = "{$homeScore} - {$awayScore}";
+            }
+            
+            $status = 'upcoming';
+            if ($type === 'live' || $event['strStatus'] === 'In Progress') {
+                $status = 'live';
+            } elseif ($type === 'results') {
+                $status = 'completed';
+            }
+            
+            $ts = 0;
+            if (!empty($event['dateEvent']) && !empty($event['strTime'])) {
+                $ts = strtotime($event['dateEvent'] . ' ' . $event['strTime']);
+            } elseif (!empty($event['dateEvent'])) {
+                $ts = strtotime($event['dateEvent']);
+            }
+            
+            $matches[] = [
+                'id' => $event['idEvent'] ?? '',
+                'title' => "{$home} vs {$away}",
+                'home' => $home,
+                'away' => $away,
+                'score' => $score,
+                'status' => $status,
+                'venue' => $event['strVenue'] ?? '',
+                'date' => $event['dateEvent'] ?? '',
+                'time' => $event['strTime'] ?? '',
+                'ts' => $ts,
+                'league' => $event['strLeague'] ?? 'Cricket',
+                'season' => $event['strSeason'] ?? '',
+                'thumb' => $event['strThumb'] ?? '',
+                'result' => $event['strStatus'] ?: ($score ? 'Final' : ''),
+            ];
+        }
+        
+        // Limit to 5 per league
+        if (count($matches) >= 15) break;
+    }
+    
+    return $matches;
+}
+
 /* ── Fallback sample matches ── */
 function getSampleMatches(string $type = 'live'): array {
     $teams = [

@@ -30,6 +30,18 @@ $tool = $tools[$toolId] ?? ['name' => 'टूल', 'en' => 'Tool', 'desc' => '']
         .tool-result { background: var(--primary-50); border-radius: var(--radius-lg); padding: var(--space-6); text-align: center; margin-top: var(--space-6); }
         .tool-result-value { font-size: 2rem; font-weight: 800; color: var(--primary); }
     </style>
+
+    <style>
+        /* Responsive */
+        @media (max-width: 768px) {
+            .page-header { padding: var(--space-8) 0; }
+            .page-header h1 { font-size: 1.75rem; }
+        }
+        
+        @media (max-width: 480px) {
+            .page-header h1 { font-size: 1.5rem; }
+        }
+    </style>
 </head>
 <body>
     <!-- Header -->

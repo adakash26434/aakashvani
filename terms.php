@@ -12,6 +12,20 @@ $t=fn($ne,$en)=>$isNepali?$ne:$en;
     <title><?=$t('सेवा सर्त','Terms of Service')?> | <?=$t('आकाशवाणी','Aakashvani')?></title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/app.css">
+
+    <style>
+        /* Responsive */
+        @media (max-width: 768px) {
+            .page-header { padding: var(--space-8) 0; }
+            .page-header h1 { font-size: 1.75rem; }
+            .content-section { padding: var(--space-6) 0; }
+        }
+        
+        @media (max-width: 480px) {
+            .page-header h1 { font-size: 1.5rem; }
+            .btn { padding: var(--space-2) var(--space-4); font-size: 0.875rem; }
+        }
+    </style>
 </head>
 <body>
     <!-- Header -->

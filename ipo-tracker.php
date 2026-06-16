@@ -11,20 +11,112 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
 // Try to fetch from IPO API
 $ipos = [];
 $cacheFile = __DIR__ . '/data/cache/ipo-list.json';
-if (file_exists($cacheFile) && (time() - filemtime($cacheFile)) < 3600) {
+$forceRefresh = isset($_GET['refresh']);
+
+// Try cache first
+if (!$forceRefresh && file_exists($cacheFile) && (time() - filemtime($cacheFile)) < 600) {
     $data = json_decode(file_get_contents($cacheFile), true);
     $ipos = $data['ipos'] ?? $data ?? [];
 }
 
-// Fallback sample data if no API
+// Fetch fresh data if no cache or empty
 if (empty($ipos)) {
-    $ipos = [
-        ['symbol' => 'NMB', 'company' => 'NMB Bank', 'price' => 235, 'units' => '50,00,000', 'status' => 'open', 'close' => '2026-06-20'],
-        ['symbol' => 'GIME', 'company' => 'Global IME Bank', 'price' => 280, 'units' => '30,00,000', 'status' => 'open', 'close' => '2026-06-22'],
-        ['symbol' => 'NIC', 'company' => 'NIC Asia Bank', 'price' => 310, 'units' => '40,00,000', 'status' => 'upcoming', 'close' => '2026-06-28'],
-        ['symbol' => 'SKDBL', 'company' => 'Sajha Bank', 'price' => 245, 'units' => '25,00,000', 'status' => 'upcoming', 'close' => '2026-07-01'],
-        ['symbol' => 'ADBL', 'company' => 'Agricultural Bank', 'price' => 265, 'units' => '35,00,000', 'status' => 'closed', 'close' => '2026-06-15'],
-    ];
+    $ipos = fetchIPOsFromAPI();
+}
+
+// Save to cache
+if (!empty($ipos)) {
+    $cacheData = ['ipos' => $ipos, 'fetched_at' => date('Y-m-d H:i:s')];
+    file_put_contents($cacheFile, json_encode($cacheData, JSON_UNESCAPED_UNICODE));
+}
+
+function fetchIPOsFromAPI(): array {
+    $ipos = [];
+    
+    // Try ShareSansar API
+    $ch = curl_init('https://www.sharesansar.com/existing-issues?type=1&draw=1&start=0&length=20&_=' . time());
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'X-Requested-With: XMLHttpRequest',
+        'Accept: application/json',
+        'Referer: https://www.sharesansar.com/existing-issues'
+    ]);
+    
+    $resp = curl_exec($ch);
+    $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+    
+    if ($resp && $code === 200) {
+        $data = json_decode($resp, true);
+        if (!empty($data['data']) && is_array($data['data'])) {
+            foreach ($data['data'] as $item) {
+                $co = $item['company'] ?? [];
+                $symbol = strip_tags($co['symbol'] ?? '');
+                $name = strip_tags($co['companyname'] ?? '');
+                
+                if (empty($symbol) && empty($name)) continue;
+                
+                // Determine status
+                $closeDate = trim($item['closing_date'] ?? '');
+                $status = 'upcoming';
+                if (!empty($closeDate)) {
+                    $closeTs = strtotime($closeDate);
+                    if ($closeTs < time()) {
+                        $status = 'closed';
+                    } else {
+                        $status = 'open';
+                    }
+                }
+                
+                $ipos[] = [
+                    'symbol' => $symbol ?: $name,
+                    'company' => $name ?: $symbol,
+                    'price' => (int)($item['price'] ?? 0),
+                    'units' => number_format((int)($item['total_units'] ?? 0)),
+                    'status' => $status,
+                    'close' => $closeDate,
+                    'open' => trim($item['opening_date'] ?? ''),
+                ];
+            }
+        }
+    }
+    
+    // Fallback to MeroLagani if empty
+    if (empty($ipos)) {
+        $ipos = fetchFromMeroLagani();
+    }
+    
+    return $ipos;
+}
+
+function fetchFromMeroLagani(): array {
+    $ipos = [];
+    $html = @file_get_contents('https://www.merolagani.com/IPOList');
+    
+    if ($html && preg_match_all('/<tr[^>]*>(.*?)<\/tr>/is', $html, $matches)) {
+        foreach ($matches[1] as $row) {
+            if (preg_match('/IPO/i', $row)) {
+                preg_match('/<td[^>]*>(.*?)<\/td>/s', $row, $cols);
+                preg_match('/<a[^>]*>(.*?)<\/a>/s', $row, $link);
+                
+                if (!empty($cols[1])) {
+                    $ipos[] = [
+                        'symbol' => trim(strip_tags($cols[1])),
+                        'company' => trim(strip_tags($link[1] ?? $cols[1])),
+                        'price' => 0,
+                        'units' => '-',
+                        'status' => 'open',
+                        'close' => date('Y-m-d', strtotime('+7 days')),
+                    ];
+                }
+            }
+        }
+    }
+    
+    return array_slice($ipos, 0, 20);
 }
 ?>
 <!DOCTYPE html>

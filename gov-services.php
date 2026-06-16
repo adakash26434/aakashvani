@@ -29,6 +29,17 @@ $services=[
         .service-name{font-size:1.125rem;font-weight:700;color:var(--dark-900);margin-bottom:var(--space-2)}
         .service-desc{font-size:0.875rem;color:var(--dark-500)}
         .section{padding:var(--space-12) 0}
+        /* Responsive */
+        @media (max-width: 768px) {
+            .page-header { padding: var(--space-8) 0; }
+            .page-header h1 { font-size: 1.75rem; }
+            .content-section { padding: var(--space-6) 0; }
+        }
+        
+        @media (max-width: 480px) {
+            .page-header h1 { font-size: 1.5rem; }
+            .btn { padding: var(--space-2) var(--space-4); font-size: 0.875rem; }
+        }
     </style>
 </head>
 <body>

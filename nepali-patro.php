@@ -94,6 +94,18 @@ $monthDays = [31, 31, 31, 32, 31, 30, 30, 29, 30, 29, 30, 30];
         .info-label { color: var(--dark-500); font-size: 0.875rem; }
         .info-value { font-weight: 600; font-size: 0.875rem; }
     </style>
+
+    <style>
+        /* Responsive */
+        @media (max-width: 768px) {
+            .page-header { padding: var(--space-8) 0; }
+            .page-header h1 { font-size: 1.75rem; }
+        }
+        
+        @media (max-width: 480px) {
+            .page-header h1 { font-size: 1.5rem; }
+        }
+    </style>
 </head>
 <body>
     <!-- Header -->

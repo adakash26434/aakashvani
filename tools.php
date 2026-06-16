@@ -37,6 +37,18 @@ $tools = [
         .section { padding: var(--space-12) 0; }
         .section:nth-child(even) { background: var(--dark-50); }
     </style>
+
+    <style>
+        /* Responsive */
+        @media (max-width: 768px) {
+            .page-header { padding: var(--space-8) 0; }
+            .page-header h1 { font-size: 1.75rem; }
+        }
+        
+        @media (max-width: 480px) {
+            .page-header h1 { font-size: 1.5rem; }
+        }
+    </style>
 </head>
 <body>
     <header class="site-header">
