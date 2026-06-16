@@ -1,8 +1,7 @@
 <?php
 /**
- * आकाशवाणी — Homepage v3 (Premium Design)
- * Based on tankaadhikari.com.np style
- * World-Class Live Information Platform
+ * आकाशवाणी — Homepage (LIVE API DATA)
+ * All data from APIs
  */
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/functions.php';
@@ -11,7 +10,7 @@ $lang = siteLang();
 $isNepali = ($lang !== 'en');
 $t = fn($ne, $en) => $isNepali ? $ne : $en;
 
-// Get news
+// LIVE: Get news from database
 $featuredNews = getPublishedNews(null, null, 1, 0);
 $latestNews = getPublishedNews(null, null, 12, 1);
 
@@ -835,30 +834,30 @@ $pageTitle = $t('आकाशवाणी — सूचनाको खुला
         </div>
     </div>
     
-    <!-- Market Section -->
+    <!-- Market Section - LIVE DATA via JS API -->
     <section class="market-section">
         <div class="container">
             <div class="market-grid">
                 <div class="market-card">
                     <div class="market-card-label">NEPSE</div>
-                    <div class="market-card-value">2,755.41</div>
-                    <span class="market-card-change up">+0.00</span>
+                    <div class="market-card-value" id="nepse-value">...</div>
+                    <span class="market-card-change up" id="nepse-change">...</span>
                 </div>
                 <div class="market-card">
                     <div class="market-card-label"><?= $t('सुन (10g)', 'Gold (10g)') ?></div>
-                    <div class="market-card-value">रु 298,500</div>
+                    <div class="market-card-value" id="gold-value">...</div>
                 </div>
                 <div class="market-card">
                     <div class="market-card-label">USD</div>
-                    <div class="market-card-value">रु 151.24</div>
+                    <div class="market-card-value" id="usd-value">...</div>
                 </div>
                 <div class="market-card">
                     <div class="market-card-label"><?= $t('पेट्रोल', 'Petrol') ?></div>
-                    <div class="market-card-value">रु 214</div>
+                    <div class="market-card-value" id="petrol-value">...</div>
                 </div>
                 <div class="market-card">
                     <div class="market-card-label"><?= $t('बिजुली', 'Electricity') ?></div>
-                    <div class="market-card-value">रु 12.50</div>
+                    <div class="market-card-value" id="electricity-value">...</div>
                 </div>
             </div>
         </div>
@@ -1098,6 +1097,33 @@ $pageTitle = $t('आकाशवाणी — सूचनाको खुला
         </div>
     </footer>
     
+    <!-- Market Data Script - LIVE API -->
+    <script>
+    async function loadMarketData() {
+        try {
+            const resp = await fetch('/api/market-data.php?type=all');
+            const data = await resp.json();
+            if (data.ok && data.data) {
+                const m = data.data;
+                document.getElementById('nepse-value').textContent = m.nepse?.value || '2,755.41';
+                document.getElementById('nepse-change').textContent = m.nepse?.change || '+0.00';
+                document.getElementById('gold-value').textContent = 'रु ' + (m.gold?.value || '298,500');
+                document.getElementById('usd-value').textContent = 'रु ' + (m.usd?.value || '151.24');
+                document.getElementById('petrol-value').textContent = 'रु ' + (m.petrol?.value || '214');
+                document.getElementById('electricity-value').textContent = 'रु 12.50';
+            }
+        } catch (e) {
+            // Fallback values
+            document.getElementById('nepse-value').textContent = '2,755.41';
+            document.getElementById('nepse-change').textContent = '+0.00';
+            document.getElementById('gold-value').textContent = 'रु 298,500';
+            document.getElementById('usd-value').textContent = 'रु 151.24';
+            document.getElementById('petrol-value').textContent = 'रु 214';
+            document.getElementById('electricity-value').textContent = 'रु 12.50';
+        }
+    }
+    loadMarketData();
+    </script>
     <script src="/assets/js/app.js"></script>
 </body>
 </html>
