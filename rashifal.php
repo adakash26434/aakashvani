@@ -1,22 +1,27 @@
 <?php
 require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/includes/bs-date.php';
 $lang=siteLang();
 $isNepali=($lang!=='en');
 $t=fn($ne,$en)=>$isNepali?$ne:$en;
+$todayBS=getTodayBS();
+$selectedRashi=isset($_GET['rashi'])?sanitize($_GET['rashi']):null;
 $rashis=[
-    ['id'=>'mesha','name'=>'मेष','symbol'=>'♈','color'=>'#ef4444'],
-    ['id'=>'vrishabha','name'=>'वृष','symbol'=>'♉','color'=>'#10b981'],
-    ['id'=>'mithuna','name'=>'मिथुन','symbol'=>'♊','color'=>'#f59e0b'],
-    ['id'=>'karkata','name'=>'कर्कट','symbol'=>'♋','color'=>'#3b82f6'],
-    ['id'=>'simha','name'=>'सिंह','symbol'=>'♌','color'=>'#ef4444'],
-    ['id'=>'kanya','name'=>'कन्या','symbol'=>'♍','color'=>'#10b981'],
-    ['id'=>'tula','name'=>'तुला','symbol'=>'♎','color'=>'#f59e0b'],
-    ['id'=>'vrishchika','name'=>'वृश्चिक','symbol'=>'♏','color'=>'#3b82f6'],
-    ['id'=>'dhanu','name'=>'धनु','symbol'=>'♐','color'=>'#ef4444'],
-    ['id'=>'makara','name'=>'मकर','symbol'=>'♑','color'=>'#10b981'],
-    ['id'=>'kumbha','name'=>'कुम्भ','symbol'=>'♒','color'=>'#f59e0b'],
-    ['id'=>'meena','name'=>'मीन','symbol'=>'♓','color'=>'#3b82f6'],
+    ['id'=>'mesha','name'=>'मेष','symbol'=>'♈','color'=>'#ef4444','en'=>'Aries','element'=>'अग्नि','lord'=>'मंगल'],
+    ['id'=>'vrishabha','name'=>'वृष','symbol'=>'♉','color'=>'#10b981','en'=>'Taurus','element'=>'पृथ्वी','lord'=>'शुक्र'],
+    ['id'=>'mithuna','name'=>'मिथुन','symbol'=>'♊','color'=>'#f59e0b','en'=>'Gemini','element'=>'वायु','lord'=>'बुध'],
+    ['id'=>'karkata','name'=>'कर्कट','symbol'=>'♋','color'=>'#3b82f6','en'=>'Cancer','element'=>'जल','lord'=>'चन्द्र'],
+    ['id'=>'simha','name'=>'सिंह','symbol'=>'♌','color'=>'#ef4444','en'=>'Leo','element'=>'अग्नि','lord'=>'सूर्य'],
+    ['id'=>'kanya','name'=>'कन्या','symbol'=>'♍','color'=>'#10b981','en'=>'Virgo','element'=>'पृथ्वी','lord'=>'बुध'],
+    ['id'=>'tula','name'=>'तुला','symbol'=>'♎','color'=>'#f59e0b','en'=>'Libra','element'=>'वायु','lord'=>'शुक्र'],
+    ['id'=>'vrishchika','name'=>'वृश्चिक','symbol'=>'♏','color'=>'#3b82f6','en'=>'Scorpio','element'=>'जल','lord'=>'मंगल'],
+    ['id'=>'dhanu','name'=>'धनु','symbol'=>'♐','color'=>'#ef4444','en'=>'Sagittarius','element'=>'अग्नि','lord'=>'बृहस्पति'],
+    ['id'=>'makara','name'=>'मकर','symbol'=>'♑','color'=>'#10b981','en'=>'Capricorn','element'=>'पृथ्वी','lord'=>'शनि'],
+    ['id'=>'kumbha','name'=>'कुम्भ','symbol'=>'♒','color'=>'#f59e0b','en'=>'Aquarius','element'=>'वायु','lord'=>'शनि'],
+    ['id'=>'meena','name'=>'मीन','symbol'=>'♓','color'=>'#3b82f6','en'=>'Pisces','element'=>'जल','lord'=>'बृहस्पति'],
 ];
+$selectedRashiInfo=null;
+if($selectedRashi){foreach($rashis as$r){if($r['id']===$selectedRashi){$selectedRashiInfo=$r;break;}}}
 ?>
 <!DOCTYPE html>
 <html lang="<?=$isNepali?'ne':'en'?>">
@@ -42,6 +47,29 @@ $rashis=[
         .rashi-name{font-size:0.875rem;font-weight:600;color:var(--dark-900)}
         .rashi-element{font-size:0.75rem;color:var(--dark-400)}
         .section{padding:var(--space-12) 0}
+        .rashi-grid{grid-template-columns:repeat(6,1fr)}
+        @media(max-width:1024px){.rashi-grid{grid-template-columns:repeat(4,1fr)}}
+        @media(max-width:768px){.rashi-grid{grid-template-columns:repeat(3,1fr)}}
+        .rashi-card.active{background:var(--rashi-color)}
+        .rashi-card.active .rashi-symbol,.rashi-card.active .rashi-name,.rashi-card.active .rashi-element{color:#fff}
+        .rashifal-content{background:#fff;border-radius:var(--radius-xl);padding:var(--space-8);box-shadow:var(--shadow);margin-top:var(--space-6)}
+        .rashifal-section{margin-bottom:var(--space-6);padding-bottom:var(--space-6);border-bottom:1px solid var(--dark-100)}
+        .rashifal-section:last-child{border-bottom:none}
+        .rashifal-title{font-size:1.125rem;font-weight:700;color:var(--dark-900);margin-bottom:var(--space-4)}
+        .rashifal-text{font-size:1rem;line-height:1.8;color:var(--dark-700)}
+        .rashifal-meta{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-4);margin-top:var(--space-6)}
+        .rashifal-badge{text-align:center;padding:var(--space-4);background:var(--dark-50);border-radius:var(--radius-lg)}
+        .rashifal-badge-value{font-size:1.5rem;font-weight:700;color:var(--primary)}
+        .rashifal-badge-label{font-size:0.75rem;color:var(--dark-500);margin-top:var(--space-1)}
+        .loading-spinner{display:flex;justify-content:center;padding:var(--space-12)}
+        .spinner{width:40px;height:40px;border:3px solid var(--dark-200);border-top-color:var(--primary);border-radius:50%;animation:spin 1s linear infinite}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .error-message{text-align:center;padding:var(--space-8);background:var(--error-50);border-radius:var(--radius-xl);color:var(--error)}
+        .back-link{display:inline-flex;align-items:center;gap:var(--space-2);padding:var(--space-2) var(--space-4);background:var(--dark-100);border-radius:var(--radius-full);color:var(--dark-700);text-decoration:none;font-size:0.875rem;margin-bottom:var(--space-4)}
+        .rashi-hero{text-align:center;padding:var(--space-8);background:linear-gradient(135deg,#1e1b4b,#312e81);border-radius:var(--radius-xl);margin-bottom:var(--space-6)}
+        .rashi-hero-symbol{font-size:4rem;margin-bottom:var(--space-4)}
+        .rashi-hero-name{font-size:2rem;font-weight:800;color:#fff}
+        @media(max-width:768px){.rashifal-content{padding:var(--space-4)}.rashifal-meta{grid-template-columns:1fr}.rashi-hero-name{font-size:1.5rem}.rashi-hero-symbol{font-size:3rem}}
     </style>
 </head>
 <body>
@@ -105,24 +133,91 @@ $rashis=[
             <p class="page-subtitle"><?=$t('आफ्नो राशिको आजको भाग्य हेर्नुहोस्','Check your today\'s fortune')?></p>
         </div>
     </section>
-    <section class="section">
+    <section class="section" style="background:var(--dark-50)">
         <div class="container">
-            <div class="rashi-grid">
+            <h2 class="text-xl font-bold mb-6" style="text-align:center"><?=$t('आफ्नो राशि चयन गर्नुहोस्','Select Your Rashi')?></h2>
+            <div class="rashi-grid" style="grid-template-columns:repeat(6,1fr)">
                 <?php foreach($rashis as $r):?>
-                <a href="?rashi=<?=$r['id']?>" class="rashi-card" style="--rashi-color:<?=$r['color']?>">
+                <a href="?rashi=<?=$r['id']?>" class="rashi-card <?=$selectedRashi===$r['id']?'active':''?>" style="--rashi-color:<?=$r['color']?>">
                     <span class="rashi-symbol"><?=$r['symbol']?></span>
                     <span class="rashi-name"><?=$r['name']?></span>
-                    <span class="rashi-element"><?=$t('राशि','Sign')?></span>
+                    <span class="rashi-element"><?=$r['en']?></span>
                 </a>
                 <?php endforeach;?>
             </div>
         </div>
     </section>
+    <?php if($selectedRashiInfo):?>
+    <section class="section">
+        <div class="container" style="max-width:800px">
+            <a href="/rashifal.php" class="back-link">← <?=$t('सबै राशिहरू','All Rashis')?></a>
+            <div class="rashi-hero">
+                <div class="rashi-hero-symbol" style="color:<?=$selectedRashiInfo['color']?>"><?=$selectedRashiInfo['symbol']?></div>
+                <h1 class="rashi-hero-name"><?=$selectedRashiInfo['name']?> (<?=$selectedRashiInfo['en']?>)</h1>
+                <p style="color:#fff;opacity:0.8"><?=$selectedRashiInfo['element']?> | <?=$selectedRashiInfo['lord']?></p>
+            </div>
+            <div id="rashifal-loading" class="loading-spinner"><div class="spinner"></div></div>
+            <div id="rashifal-content" style="display:none">
+                <div class="rashifal-meta" id="rashifal-meta"></div>
+                <div id="rashifal-details"></div>
+            </div>
+            <div id="rashifal-error" class="error-message" style="display:none"><?=$t('राशिफल लोड हुन सकेन।','Failed to load horoscope.')?></div>
+        </div>
+    </section>
+    <?php else:?>
+    <section class="section">
+        <div class="container" style="max-width:800px">
+            <div class="rashifal-content">
+                <div class="rashifal-section">
+                    <h3 class="rashifal-title"><?=$t('आजको राशिफल','Todays Horoscope')?></h3>
+                    <p class="rashifal-text"><?=$t('माथि राशिमा क्लिक गर्नुहोस् र आफ्नो दैनिक राशिफल हेर्नुहोस्।','Click on your rashi above to view daily horoscope.')?></p>
+                </div>
+                <div class="rashifal-meta">
+                    <div class="rashifal-badge"><div class="rashifal-badge-value"><?=$todayBS['day']?></div><div class="rashifal-badge-label"><?=$t('आजको मिति','Todays Date')?></div></div>
+                    <div class="rashifal-badge"><div class="rashifal-badge-value"><?=$todayBS['year']?></div><div class="rashifal-badge-label"><?=$t('बि.स.','B.S. Year')?></div></div>
+                    <div class="rashifal-badge"><div class="rashifal-badge-value"><?=$todayBS['weekday']?></div><div class="rashifal-badge-label"><?=$t('हप्ताको दिन','Day of Week')?></div></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <?php endif;?>
     <footer class="site-footer">
         <div class="container">
             <div class="footer-bottom" style="border:none;padding:0"><p class="footer-copyright">&copy; <?=date('Y')?> <?=$t('आकाशवाणी','Aakashvani')?></p></div>
         </div>
     </footer>
+    <script>
+    async function loadRashifal(){
+        const params=new URLSearchParams(window.location.search);
+        const rashi=params.get('rashi');
+        if(!rashi)return;
+        const loading=document.getElementById('rashifal-loading');
+        const content=document.getElementById('rashifal-content');
+        const error=document.getElementById('rashifal-error');
+        const meta=document.getElementById('rashifal-meta');
+        const details=document.getElementById('rashifal-details');
+        try {
+            const resp=await fetch('/api/rashifal.php?rashi='+rashi+'&lang=ne');
+            const data=await resp.json();
+            if(data.ok&&data.rashifal){
+                const r=data.rashifal;
+                if(r.lucky_numbers&&r.lucky_numbers.length){
+                    meta.innerHTML='<div class="rashifal-badge"><div class="rashifal-badge-value">'+r.lucky_numbers[0]+'</div><div class="rashifal-badge-label"><?=$t("लाकी नम्बर","Lucky Number")?></div></div><div class="rashifal-badge"><div class="rashifal-badge-value">'+(r.lucky_colors?r.lucky_colors[0]:'-')+'</div><div class="rashifal-badge-label"><?=$t("लाकी रंग","Lucky Color")?></div></div><div class="rashifal-badge"><div class="rashifal-badge-value">'+(r.compatibility||'-')+'</div><div class="rashifal-badge-label"><?=$t("मिल्ने राशि","Compatibility")?></div></div>';
+                }
+                let html='';
+                if(r.overview)html+='<div class="rashifal-section"><h3 class="rashifal-title"><?=$t("आजको अवलोकन","Overview")?></h3><p class="rashifal-text">'+r.overview+'</p></div>';
+                if(r.love)html+='<div class="rashifal-section"><h3 class="rashifal-title"><?=$t("प्रेम","Love")?></h3><p class="rashifal-text">'+r.love+'</p></div>';
+                if(r.career)html+='<div class="rashifal-section"><h3 class="rashifal-title"><?=$t("करियर","Career")?></h3><p class="rashifal-text">'+r.career+'</p></div>';
+                if(r.health)html+='<div class="rashifal-section"><h3 class="rashifal-title"><?=$t("स्वास्थ्य","Health")?></h3><p class="rashifal-text">'+r.health+'</p></div>';
+                if(r.finance)html+='<div class="rashifal-section"><h3 class="rashifal-title"><?=$t("वित्त","Finance")?></h3><p class="rashifal-text">'+r.finance+'</p></div>';
+                details.innerHTML=html;
+                loading.style.display='none';
+                content.style.display='block';
+            }else{throw new Error();}
+        }catch(e){loading.style.display='none';error.style.display='block';}
+    }
+    document.addEventListener('DOMContentLoaded',loadRashifal);
+    </script>
     <script src="/assets/js/app.js"></script>
 </body>
 </html>
