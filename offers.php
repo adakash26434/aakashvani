@@ -19,7 +19,7 @@ require_once __DIR__ . '/header.php';
       <p class="text-[11px] text-slate-500">ISP प्याकेज · Daraz छुट · Cashback · Travel</p>
     </div>
     <span class="ml-auto text-[10px] bg-rose-100 text-rose-600 font-bold px-2 py-1 rounded-full animate-pulse">
-      🔴 Live
+      <i data-lucide="radio" class="w-4 h-4 text-red-500"></i> Live
     </span>
   </div>
 

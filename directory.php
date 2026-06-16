@@ -41,15 +41,15 @@ require_once __DIR__ . '/header.php';
   <div class="flex gap-1.5 overflow-x-auto pb-1 scrollbar-none">
     <?php foreach([
       ['',          '🔍', 'सबै'],
-      ['emergency', '🚨', 'इमर्जेन्सी'],
-      ['government','🏛️', 'सरकार'],
-      ['hospital',  '🏥', 'अस्पताल'],
+      ['emergency', 'alert-circle', 'इमर्जेन्सी'],
+      ['government','landmark', 'सरकार'],
+      ['hospital',  'building', 'अस्पताल'],
       ['bank',      '🏦', 'बैंक'],
       ['education', '🎓', 'शिक्षा'],
       ['telecom',   '📡', 'टेलिकम'],
-      ['utility',   '⚡', 'युटिलिटी'],
-      ['airport',   '✈️', 'हवाई'],
-      ['media',     '📺', 'मिडिया'],
+      ['utility',   'zap', 'युटिलिटी'],
+      ['airport',   'plane', 'हवाई'],
+      ['media',     'tv', 'मिडिया'],
     ] as [$c,$ic,$lb]): ?>
     <button data-cat="<?= $c ?>"
       class="dir-chip flex-shrink-0 text-[11px] font-semibold px-3 py-1.5 rounded-full border whitespace-nowrap transition-colors
@@ -69,7 +69,7 @@ require_once __DIR__ . '/header.php';
     <div class="grid grid-cols-4 gap-2">
       <?php foreach([
         ['100','👮','प्रहरी'],
-        ['101','🔥','दमकल'],
+        ['101','flame','दमकल'],
         ['102','🚑','एम्बुलेन्स'],
         ['1166','💙','मानसिक'],
       ] as [$num,$ic,$lb]): ?>
@@ -133,9 +133,9 @@ require_once __DIR__ . '/header.php';
     media:      'bg-pink-50 text-pink-700 border-pink-200',
   };
   var catLabels = {
-    emergency:'🚨 इमर्जेन्सी', government:'🏛️ सरकार', hospital:'🏥 अस्पताल',
+    emergency:'alert-circle इमर्जेन्सी', government:'landmark सरकार', hospital:'building अस्पताल',
     bank:'🏦 बैंक', education:'🎓 शिक्षा', telecom:'📡 टेलिकम',
-    utility:'⚡ युटिलिटी', airport:'✈️ हवाई', media:'📺 मिडिया',
+    utility:'zap युटिलिटी', airport:'plane हवाई', media:'tv मिडिया',
   };
 
   function esc(s){ return String(s||'').replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }

@@ -11,7 +11,7 @@ require_once __DIR__ . '/header.php';
 <!-- ── Hero ── -->
 <section class="px-4 pt-3 pb-2">
   <div class="rounded-2xl p-5 text-white shadow-app relative overflow-hidden" style="background:linear-gradient(135deg,#1e3a5f 0%,#1d4ed8 60%,#2563eb 100%)">
-    <div class="absolute -right-4 -top-4 text-[110px] opacity-10 leading-none select-none">💼</div>
+    <div class="absolute -right-4 -top-4 text-[110px] opacity-10 leading-none select-none">briefcase</div>
     <div class="flex items-center gap-2">
       <div class="text-[11px] opacity-80">निजी क्षेत्र जागिर</div>
       <span class="flex items-center gap-1 text-[10px] bg-white/20 px-2 py-0.5 rounded-full">
@@ -23,7 +23,7 @@ require_once __DIR__ . '/header.php';
     <div class="text-[12px] opacity-80 mt-1">MeroJob · HamroJob · FroxJob · KumariJob</div>
     <div class="mt-3">
       <a href="/loksewa.php" class="inline-flex items-center gap-1 bg-white/20 hover:bg-white/30 text-white text-[11px] font-semibold px-3 py-1.5 rounded-full border border-white/20">
-        🏛 सरकारी जागिर → लोकसेवा
+        landmark सरकारी जागिर → लोकसेवा
       </a>
     </div>
   </div>
@@ -34,10 +34,10 @@ require_once __DIR__ . '/header.php';
   <div class="flex gap-1.5 overflow-x-auto pb-1 scrollbar-none">
     <?php foreach([
       ['all',         '📋', 'सबै'],
-      ['it',          '💻', 'IT/Tech'],
-      ['finance',     '💰', 'Finance'],
-      ['marketing',   '📣', 'Marketing'],
-      ['engineering', '⚙️',  'Engineering'],
+      ['it',          'laptop', 'IT/Tech'],
+      ['finance',     'badge-dollar-sign', 'Finance'],
+      ['marketing',   'megaphone', 'Marketing'],
+      ['engineering', 'settings',  'Engineering'],
       ['teaching',    '📚', 'Teaching'],
       ['health',      '🏥', 'Health'],
       ['admin',       '🗂', 'Admin/HR'],
@@ -76,7 +76,7 @@ require_once __DIR__ . '/header.php';
   </div>
   <div id="job-list" class="space-y-2.5 hidden"></div>
   <div id="job-empty" class="py-16 text-center hidden">
-    <p class="text-4xl mb-3">💼</p>
+    <p class="text-4xl mb-3">briefcase</p>
     <p class="text-[14px] font-semibold text-slate-700">कुनै जागिर भेटिएन</p>
     <p class="text-[12px] text-slate-400 mt-1">अर्को category छान्नुस् वा पछि फेरि हेर्नुस्</p>
   </div>
@@ -88,11 +88,11 @@ require_once __DIR__ . '/header.php';
     <p class="text-[11px] text-slate-500 font-medium mb-2">🔗 सिधा जागिर Portal</p>
     <div class="grid grid-cols-2 gap-2">
       <?php foreach([
-        ['MeroJob',     'https://merojob.com/',              '💼'],
+        ['MeroJob',     'https://merojob.com/',              'briefcase'],
         ['HamroJob',    'https://www.hamrojob.com/',         '🤝'],
         ['FroxJob',     'https://froxjob.com/',              '🚀'],
-        ['KumariJob',   'https://kumarijob.com/',            '💼'],
-        ['JobAxle',     'https://jobaxle.com/',              '⚙️'],
+        ['KumariJob',   'https://kumarijob.com/',            'briefcase'],
+        ['JobAxle',     'https://jobaxle.com/',              'settings'],
         ['JobsNepal',   'https://jobsnepal.com/',            '🇳🇵'],
       ] as [$name,$url,$ic]): ?>
       <a href="<?= $url ?>" target="_blank" rel="noopener"
@@ -136,7 +136,7 @@ require_once __DIR__ . '/header.php';
     general:     'bg-gray-100 text-gray-600',
   };
   var catNames = {
-    it:'💻 IT/Tech',finance:'💰 Finance',marketing:'📣 Marketing',engineering:'⚙️ Engineering',
+    it:'laptop IT/Tech',finance:'badge-dollar-sign Finance',marketing:'megaphone Marketing',engineering:'settings Engineering',
     teaching:'📚 Teaching',health:'🏥 Health',admin:'🗂 Admin/HR',legal:'⚖️ Legal',driver:'🚗 Driver',general:'🔍 General'
   };
 

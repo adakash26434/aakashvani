@@ -44,8 +44,8 @@ $embassies = [
   ['बेलायत दूतावास','01-4237100','🇬🇧'],
 ];
 $firstAid = [
-  ['हृदयघात','Heart Attack','❤️','छाती थिच्नुस् (CPR) — ३०x छाती + २x श्वास। ambulance बोलाउनुस्।'],
-  ['जल्नु','Burns','🔥','चिसो पानीले १०+ मिनेट चलाउनुस्। बरफ नगर्नुस्।'],
+  ['हृदयघात','Heart Attack','heart','छाती थिच्नुस् (CPR) — ३०x छाती + २x श्वास। ambulance बोलाउनुस्।'],
+  ['जल्नु','Burns','flame','चिसो पानीले १०+ मिनेट चलाउनुस्। बरफ नगर्नुस्।'],
   ['ढल्नु','Choking','😮','पछाडिबाट ५ पटक ढाड थिच्नुस् (Heimlich)।'],
   ['साँप टोक्नु','Snake Bite','🐍','नखल्नुस्, नबाँध्नुस्। सुस्त राख्नुस् र अस्पताल जानुस्।'],
   ['बेहोस','Unconscious','🫁','श्वास जाँच्नुस् — छ भने पासो अवस्थामा राख्नुस्।'],
@@ -57,7 +57,7 @@ $firstAid = [
 <!-- ── Hero ── -->
 <section class="px-4 pt-3 pb-2">
   <div class="rounded-2xl p-4 bg-gradient-to-br from-red-600 to-rose-700 text-white shadow-app relative overflow-hidden">
-    <div class="absolute -right-3 -top-3 text-[90px] opacity-10 leading-none">🚨</div>
+    <div class="absolute -right-3 -top-3 text-[90px] opacity-10 leading-none">alert-circle</div>
     <h1 class="text-[20px] font-extrabold mb-0.5"><?= $tH('आपतकालीन सहायता','Emergency Help') ?></h1>
     <p class="text-[11px] opacity-90"><?= $tH('ट्याप गर्नुस् — तुरुन्तै कल हुन्छ','Tap to call instantly') ?></p>
   </div>

@@ -22,24 +22,24 @@ $nepalCities = [
 // Weather condition emojis and Nepali descriptions
 function getWeatherInfo($code) {
     $conditions = [
-        0 => ['emoji' => '☀️', 'ne' => 'खुला आकाश', 'en' => 'Clear sky'],
-        1 => ['emoji' => '🌤️', 'ne' => 'मुख्यतया सफा', 'en' => 'Mainly clear'],
+        0 => ['emoji' => 'sun', 'ne' => 'खुला आकाश', 'en' => 'Clear sky'],
+        1 => ['emoji' => 'sun-cloud', 'ne' => 'मुख्यतया सफा', 'en' => 'Mainly clear'],
         2 => ['emoji' => '⛅', 'ne' => 'आंशिक बादल', 'en' => 'Partly cloudy'],
-        3 => ['emoji' => '☁️', 'ne' => 'बादल', 'en' => 'Overcast'],
-        45 => ['emoji' => '🌫️', 'ne' => 'हुस्सु', 'en' => 'Foggy'],
-        48 => ['emoji' => '🌫️', 'ne' => 'तुषार हुस्सु', 'en' => 'Depositing rime fog'],
+        3 => ['emoji' => 'cloud', 'ne' => 'बादल', 'en' => 'Overcast'],
+        45 => ['emoji' => 'cloud-fog', 'ne' => 'हुस्सु', 'en' => 'Foggy'],
+        48 => ['emoji' => 'cloud-fog', 'ne' => 'तुषार हुस्सु', 'en' => 'Depositing rime fog'],
         51 => ['emoji' => '🌦️', 'ne' => 'हल्का वर्षा', 'en' => 'Light drizzle'],
-        53 => ['emoji' => '🌧️', 'ne' => 'मध्यम वर्षा', 'en' => 'Moderate drizzle'],
-        55 => ['emoji' => '🌧️', 'ne' => 'भारी वर्षा', 'en' => 'Dense drizzle'],
-        61 => ['emoji' => '🌧️', 'ne' => 'हल्का वर्षा', 'en' => 'Slight rain'],
-        63 => ['emoji' => '🌧️', 'ne' => 'वर्षा', 'en' => 'Moderate rain'],
-        65 => ['emoji' => '🌧️', 'ne' => 'भारी वर्षा', 'en' => 'Heavy rain'],
+        53 => ['emoji' => 'cloud-rain', 'ne' => 'मध्यम वर्षा', 'en' => 'Moderate drizzle'],
+        55 => ['emoji' => 'cloud-rain', 'ne' => 'भारी वर्षा', 'en' => 'Dense drizzle'],
+        61 => ['emoji' => 'cloud-rain', 'ne' => 'हल्का वर्षा', 'en' => 'Slight rain'],
+        63 => ['emoji' => 'cloud-rain', 'ne' => 'वर्षा', 'en' => 'Moderate rain'],
+        65 => ['emoji' => 'cloud-rain', 'ne' => 'भारी वर्षा', 'en' => 'Heavy rain'],
         71 => ['emoji' => '🌨️', 'ne' => 'हल्का हिउँ', 'en' => 'Slight snow'],
         73 => ['emoji' => '❄️', 'ne' => 'हिउँ', 'en' => 'Moderate snow'],
         75 => ['emoji' => '❄️', 'ne' => 'भारी हिउँ', 'en' => 'Heavy snow'],
         95 => ['emoji' => '⛈️', 'ne' => 'गडगडाहट', 'en' => 'Thunderstorm'],
     ];
-    return $conditions[$code] ?? ['emoji' => '🌡️', 'ne' => 'अज्ञात', 'en' => 'Unknown'];
+    return $conditions[$code] ?? ['emoji' => 'thermometer', 'ne' => 'अज्ञात', 'en' => 'Unknown'];
 }
 
 // Fetch weather data
@@ -132,7 +132,7 @@ if (isset($nepalCities[$selectedCity])) {
         <div class="text-xs text-sky-100 ne">हावा</div>
       </div>
       <div class="text-center">
-        <div class="text-2xl mb-1">🌡️</div>
+        <div class="text-2xl mb-1">thermometer</div>
         <div class="text-lg font-semibold"><?= round($current['apparent_temperature']) ?>°</div>
         <div class="text-xs text-sky-100 ne">अनुभव तापक्रम</div>
       </div>
@@ -176,7 +176,7 @@ if (isset($nepalCities[$selectedCity])) {
   
   <!-- Loading/Error State -->
   <div class="bg-gray-50 rounded-2xl p-8 text-center">
-    <div class="text-6xl mb-4">🌤️</div>
+    <div class="text-6xl mb-4">sun-cloud</div>
     <h3 class="text-lg font-semibold text-gray-900 mb-2 ne">मौसम डाटा लोड हुँदैछ</h3>
     <p class="text-gray-500">Unable to fetch weather data. Please try again.</p>
   </div>
