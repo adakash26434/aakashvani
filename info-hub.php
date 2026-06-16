@@ -100,14 +100,20 @@ $sections = [
     <header class="site-header">
         <div class="header-main">
             <div class="container">
-                <div class="flex items-center justify-between">
-                    <a href="/" class="brand" style="text-decoration:none">
-                        <div class="brand-logo" style="width:40px;height:40px;font-size:1.25rem">आ</div>
-                        <span class="brand-name" style="font-size:1.25rem;font-weight:800;color:var(--dark-900)"><?= $t('आकाशवाणी', 'Aakashvani') ?></span>
+                <div class="header-grid">
+                    <a href="/" class="header-brand">
+                        <div class="brand-logo">आ</div>
+                        <div class="brand-text">
+                            <h1><?= $t('आकाशवाणी', 'Aakashvani') ?></h1>
+                            <span><?= $t('सूचनाको खुला आकाश', 'Your Gateway to Information') ?></span>
+                        </div>
                     </a>
-                    <nav class="header-nav">
-                        <a href="/" class="nav-link"><?= $t('गृह', 'Home') ?></a>
-                        <a href="/info-hub.php" class="nav-link active"><?= $t('जानकारी', 'Info') ?></a>
+                    <nav class="main-nav">
+                        <div class="nav-list">
+                            <a href="/" class="nav-item-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:1rem;height:1rem"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><?= $t('गृह', 'Home') ?></a>
+                            <a href="/news.php" class="nav-item-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:1rem;height:1rem"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 0-2-2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/></svg><?= $t('समाचार', 'News') ?></a>
+                            <a href="/info-hub.php" class="nav-item-link active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:1rem;height:1rem"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg><?= $t('जानकारी', 'Info Hub') ?></a>
+                        </div>
                     </nav>
                 </div>
             </div>

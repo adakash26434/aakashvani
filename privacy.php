@@ -14,14 +14,24 @@ $t=fn($ne,$en)=>$isNepali?$ne:$en;
     <link rel="stylesheet" href="/assets/css/app.css">
 </head>
 <body>
+    <!-- Header -->
     <header class="site-header">
         <div class="header-main">
             <div class="container">
-                <div class="flex items-center justify-between">
-                    <a href="/" class="brand" style="text-decoration:none">
+                <div class="header-grid">
+                    <a href="/" class="header-brand">
                         <div class="brand-logo">आ</div>
-                        <span class="brand-name"><?=$t('आकाशवाणी','Aakashvani')?></span>
+                        <div class="brand-text">
+                            <h1><?=$t('आकाशवाणी','Aakashvani')?></h1>
+                            <span><?=$t('सूचनाको खुला आकाश','Your Gateway to Information')?></span>
+                        </div>
                     </a>
+                    <nav class="main-nav">
+                        <div class="nav-list">
+                            <a href="/" class="nav-item-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:1rem;height:1rem"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><?=$t('गृह','Home')?></a>
+                            <a href="/news.php" class="nav-item-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:1rem;height:1rem"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 0-2-2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/></svg><?=$t('समाचार','News')?></a>
+                        </div>
+                    </nav>
                 </div>
             </div>
         </div>
