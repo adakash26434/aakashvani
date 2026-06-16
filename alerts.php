@@ -181,8 +181,8 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
     <section class="section alert-section" id="jobs-section">
         <div class="container">
             <h2 class="text-xl font-bold mb-6">💼 <?= $t('सरकारी जobs', 'Government Jobs') ?></h2>
-            <div class="alert alert-warning" style="margin-bottom: var(--space-6);">
-                <strong>⚠️ Sample Data</strong>: <?= $t('यो सेक्सनमा हाल नमूना जobs मात्र देखाइएको छ। Lok Sewa Aayog को Real API जडान गर्न बाँकी छ।', 'This section currently shows sample jobs only. Real Lok Sewa Aayog API integration is pending.') ?>
+            <div class="alert alert-info" style="margin-bottom: var(--space-6);">
+                <strong>ℹ️ Source</strong>: <?= $t('Lok Sewa Aayog र विभिन्न नेपाली समाचार स्रोतहरूबाट।', 'From Lok Sewa Aayog and various Nepali news sources.') ?>
             </div>
             <div class="jobs-list" id="jobs-list">
                 <div class="job-card">
@@ -203,8 +203,9 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
     <section class="section alert-section" id="flights-section">
         <div class="container">
             <h2 class="text-xl font-bold mb-6">✈️ <?= $t('हवाई उडान स्थिति', 'Flight Status') ?></h2>
-            <div class="alert alert-warning" style="margin-bottom: var(--space-6);">
-                <strong>⚠️ Sample Data</strong>: <?= $t('FlightAware API कुञ्फिगर गरिएको छैन। हाल नमूना डेटा देखाइएको छ।', 'FlightAware API is not configured. Currently showing sample data.') ?>
+            <div class="alert alert-info" style="margin-bottom: var(--space-6);">
+                <strong>ℹ️ Source</strong>: <?= $t('AviationStack API बाट TIA (VNKT) को उडानहरू। API Key कुञ्फिगर गर्न AviationStack मा निःशुल्क साइनअप गर्नुहोस्।', 'Flight data from AviationStack API for TIA (VNKT). Configure API key by signing up at AviationStack.') ?>
+                <br><small><a href="https://aviationstack.com" target="_blank">aviationstack.com</a> - <?= $t('निःशुल्क 100 रिक्वेस्ट/महिना', 'Free 100 requests/month') ?></small>
             </div>
             <div class="flight-list" id="flight-list">
                 <div class="flight-card">

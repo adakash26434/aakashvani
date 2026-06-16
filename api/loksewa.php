@@ -166,7 +166,14 @@ function lk_collect_live2(int $limit = 40): array {
     }
 
     // Multiple RSS sources as backup when PSC blocks scraping
+    // Nepal Government Job Sources
+    $nepalGovJobs = [
+        ['Lok Sewa Aayog', 'https://www.loksewaaayog.gov.np/wp-json/wp/v2/posts?per_page=20', 'https://www.loksewaaayog.gov.np'],
+    ];
+    
+    // News RSS feeds with job-related content
     $feeds = [
+        ['Lok Sewa Aayog', 'https://www.loksewaaayog.gov.np/feed', 'https://www.loksewaaayog.gov.np'],
         ['OnlineKhabar Jobs', 'https://www.onlinekhabar.com/content/job-vacancy/feed', 'https://www.onlinekhabar.com'],
         ['Gorkhapatra',       'https://gorkhapatraonline.com/feed',                    'https://gorkhapatraonline.com'],
         ['Kantipur',          'https://ekantipur.com/feed',                            'https://ekantipur.com'],
