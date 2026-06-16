@@ -38,6 +38,14 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
         .team-overs { font-size: 0.875rem; color: var(--dark-500); }
         .match-footer { display: flex; justify-content: space-between; margin-top: var(--space-4); padding-top: var(--space-4); border-top: 1px solid var(--dark-100); font-size: 0.875rem; color: var(--dark-500); }
         .nepal-badge { display: inline-flex; align-items: center; gap: var(--space-2); padding: var(--space-1) var(--space-3); background: #dc2626; color: #fff; border-radius: var(--radius-full); font-size: 0.75rem; font-weight: 600; }
+        /* Responsive */
+        @media (max-width: 640px) {
+            .match-card { padding: var(--space-4); }
+            .team-name { font-size: 0.875rem; }
+            .team-score { font-size: 1.5rem; }
+            .cricket-tabs { flex-wrap: wrap; }
+            .cricket-tabs .tab-btn { flex: 1; min-width: 100px; font-size: 0.875rem; padding: var(--space-2) var(--space-3); }
+        }
     </style>
 </head>
 <body>

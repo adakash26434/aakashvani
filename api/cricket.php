@@ -312,10 +312,19 @@ if ($mode === 'news' || $mode === 'all') {
 if ($mode === 'live' || $mode === 'all') {
     try {
         $live = ckt_cached('live', 300, function() {
-            // Try CricAPI first
+            // Try CricAPI first (needs API key)
             $matches = fetchCricAPILive();
+            
+            // If no CricAPI data, try TheSportsDB for live/recent matches
             if (empty($matches)) {
-                // Fallback to sample data
+                $sportsdb = getSportsDBMatches('live');
+                if (!empty($sportsdb)) {
+                    $matches = $sportsdb;
+                }
+            }
+            
+            // Fallback to sample if nothing found
+            if (empty($matches)) {
                 $matches = getSampleMatches('live');
             }
             return $matches;

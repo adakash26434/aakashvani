@@ -1240,6 +1240,29 @@ $pageTitle = $t('आकाशवाणी — सूचनाको खुला
         </div>
     </footer>
     
+    <!-- Mobile Menu Script -->
+    <script>
+    function openMobileMenu() {
+        document.getElementById('mobileNav').classList.add('active');
+        document.getElementById('mobileOverlay').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    
+    function closeMobileMenu() {
+        document.getElementById('mobileNav').classList.remove('active');
+        document.getElementById('mobileOverlay').classList.remove('active');
+        document.body.style.overflow = '';
+    }
+    
+    // Add click handler to mobile menu button
+    document.addEventListener('DOMContentLoaded', function() {
+        const menuBtn = document.querySelector('.mobile-menu-btn');
+        if (menuBtn) {
+            menuBtn.addEventListener('click', openMobileMenu);
+        }
+    });
+    </script>
+    
     <!-- LIVE DATA APIS -->
     <script>
     // Load Market Data (NEPSE, Gold, USD, Petrol)

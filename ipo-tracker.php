@@ -54,6 +54,14 @@ if (empty($ipos)) {
         .ipo-detail-value { font-size: 0.875rem; font-weight: 600; color: var(--dark-900); }
         .section { padding: var(--space-12) 0; }
         .ipo-section:nth-child(even) { background: var(--dark-50); }
+        
+        /* Responsive */
+        @media (max-width: 640px) {
+            .page-title { font-size: 1.5rem; }
+            .ipo-card { padding: var(--space-4); }
+            .ipo-symbol { font-size: 1.25rem; }
+            .ipo-grid { grid-template-columns: 1fr; gap: var(--space-4); }
+        }
     </style>
 </head>
 <body>
