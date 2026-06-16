@@ -1234,6 +1234,189 @@ body.dark-mode .theme-toggle {
     }
 }
 
+/* LIVE Alerts Grid */
+.alerts-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-4);
+}
+
+@media (max-width: 992px) {
+    .alerts-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 576px) {
+    .alerts-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.alert-card {
+    background: #fff;
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: all var(--transition);
+}
+
+.alert-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.alert-card-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-4);
+    background: var(--dark-900);
+    color: #fff;
+}
+
+.alert-icon {
+    font-size: 1.25rem;
+}
+
+.alert-title {
+    flex: 1;
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+
+.alert-badge {
+    font-size: 0.625rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: var(--radius-full);
+    background: var(--error);
+    color: #fff;
+    text-transform: uppercase;
+}
+
+.alert-badge.warning {
+    background: #f59e0b;
+}
+
+.alert-badge.success {
+    background: var(--success);
+}
+
+.alert-card-body {
+    padding: var(--space-4);
+    min-height: 100px;
+}
+
+.alert-card-footer {
+    padding: var(--space-3) var(--space-4);
+    background: var(--dark-50);
+    border-top: 1px solid var(--dark-100);
+}
+
+.alert-card-footer small {
+    color: var(--dark-500);
+    font-size: 0.75rem;
+}
+
+.alert-card-footer a {
+    color: var(--primary);
+    text-decoration: none;
+}
+
+/* Earthquake specific */
+.earthquake-alert .alert-card-header {
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+}
+
+.quake-info {
+    text-align: center;
+}
+
+.quake-mag {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--error);
+    line-height: 1;
+}
+
+.quake-mag span {
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.quake-location {
+    font-size: 0.875rem;
+    color: var(--dark-700);
+    margin-top: var(--space-2);
+}
+
+.quake-time {
+    font-size: 0.75rem;
+    color: var(--dark-500);
+    margin-top: var(--space-1);
+}
+
+/* Weather specific */
+.weather-alert .alert-card-header {
+    background: linear-gradient(135deg, #0284c7, #0369a1);
+}
+
+.weather-main-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+}
+
+.weather-temp-display {
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--dark-900);
+    line-height: 1;
+}
+
+.weather-details {
+    flex: 1;
+}
+
+.weather-details > div:first-child {
+    font-size: 0.875rem;
+    color: var(--dark-700);
+    margin-bottom: var(--space-2);
+}
+
+.weather-mini-stats {
+    display: flex;
+    gap: var(--space-3);
+    font-size: 0.75rem;
+    color: var(--dark-500);
+}
+
+/* Traffic alert */
+.traffic-alert .alert-card-header {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.traffic-item {
+    padding: var(--space-2) 0;
+    border-bottom: 1px solid var(--dark-100);
+    font-size: 0.875rem;
+}
+
+.traffic-item:last-child {
+    border-bottom: none;
+}
+
+.traffic-item strong {
+    color: var(--error);
+}
+
+.alert-loading {
+    text-align: center;
+    color: var(--dark-400);
+    padding: var(--space-6);
+}
+
 .market-card {
     background: rgba(255,255,255,0.1);
     border-radius: var(--radius-lg);

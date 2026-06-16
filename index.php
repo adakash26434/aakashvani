@@ -883,6 +883,91 @@ $pageTitle = $t('आकाशवाणी — सूचनाको खुला
             </div>
         </div>
     </section>
+
+    <!-- LIVE Alerts Section - Connected APIs -->
+    <section class="section" style="background: var(--dark-50); padding: var(--space-8) 0;">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="live-badge" style="margin-right: var(--space-2);"><span class="live-dot"></span>LIVE</span>
+                    <?= $t('अलर्ट र जानकारी', 'Alerts & Updates') ?>
+                </h2>
+                <a href="/alerts.php" class="btn btn-ghost btn-sm"><?= $t('सबै हेर्नुहोस्', 'View All') ?> →</a>
+            </div>
+            <div class="alerts-grid">
+                <!-- Earthquake Alert -->
+                <div class="alert-card earthquake-alert" id="earthquake-widget">
+                    <div class="alert-card-header">
+                        <span class="alert-icon">🌍</span>
+                        <span class="alert-title"><?= $t('भूकम्प', 'Earthquake') ?></span>
+                        <span class="alert-badge" id="eq-badge">LIVE</span>
+                    </div>
+                    <div class="alert-card-body" id="earthquake-data">
+                        <div class="alert-loading"><?= $t('लोड हुँदै...', 'Loading...') ?></div>
+                    </div>
+                    <div class="alert-card-footer">
+                        <small>Source: USGS</small>
+                    </div>
+                </div>
+
+                <!-- Weather Alert -->
+                <div class="alert-card weather-alert" id="weather-widget">
+                    <div class="alert-card-header">
+                        <span class="alert-icon">🌤️</span>
+                        <span class="alert-title"><?= $t('मौसम', 'Weather') ?></span>
+                        <span class="alert-badge warning" id="weather-badge"><?= $t('आंशिक बादल', 'Cloudy') ?></span>
+                    </div>
+                    <div class="alert-card-body" id="weather-data">
+                        <div class="weather-main-row">
+                            <span class="weather-temp-display" id="home-temp">--°</span>
+                            <div class="weather-details">
+                                <div id="home-weather-desc"><?= $t('लोड हुँदै...', 'Loading...') ?></div>
+                                <div class="weather-mini-stats">
+                                    <span>💧 <span id="home-humidity">--</span>%</span>
+                                    <span>💨 <span id="home-wind">--</span> km/h</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="alert-card-footer">
+                        <small><a href="/weather.php"><?= $t('विस्तृत मौसम', 'Full Weather') ?> →</a></small>
+                    </div>
+                </div>
+
+                <!-- Traffic/Police Alert -->
+                <div class="alert-card traffic-alert" id="traffic-widget">
+                    <div class="alert-card-header">
+                        <span class="alert-icon">🚨</span>
+                        <span class="alert-title"><?= $t('ट्राफिक अलर्ट', 'Traffic Alert') ?></span>
+                    </div>
+                    <div class="alert-card-body" id="traffic-data">
+                        <div class="alert-loading"><?= $t('लोड हुँदै...', 'Loading...') ?></div>
+                    </div>
+                    <div class="alert-card-footer">
+                        <small>Source: Nepal Police</small>
+                    </div>
+                </div>
+
+                <!-- Latest Quake Info -->
+                <div class="alert-card latest-quake" id="latest-quake-widget">
+                    <div class="alert-card-header">
+                        <span class="alert-icon">⚠️</span>
+                        <span class="alert-title"><?= $t('हालको भूकम्प', 'Current Quake') ?></span>
+                    </div>
+                    <div class="alert-card-body" id="latest-quake-data">
+                        <div class="quake-info">
+                            <div class="quake-mag" id="quake-magnitude">--</div>
+                            <div class="quake-location" id="quake-location"><?= $t('लोड हुँदै...', 'Loading...') ?></div>
+                            <div class="quake-time" id="quake-time">--:--</div>
+                        </div>
+                    </div>
+                    <div class="alert-card-footer">
+                        <small><a href="/emergency.php"><?= $t('आपतकालीन जानकारी', 'Emergency Info') ?> →</a></small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
     
     <!-- Main Content -->
     <main class="main-content">
@@ -1191,6 +1276,72 @@ $pageTitle = $t('आकाशवाणी — सूचनाको खुला
         }
     }
     
+        // Load Earthquake Data from USGS API
+    async function loadEarthquakeData() {
+        try {
+            const resp = await fetch('/api/earthquake.php');
+            const data = await resp.json();
+            if (data.earthquakes && data.earthquakes.length > 0) {
+                const latest = data.earthquakes[0];
+                document.getElementById('quake-magnitude').innerHTML = latest.magnitude + ' <span>M</span>';
+                document.getElementById('quake-location').textContent = latest.place || 'नेपाल क्षेत्र';
+                document.getElementById('quake-time').textContent = latest.date || 'हाल';
+                const badge = document.getElementById('eq-badge');
+                if (latest.magnitude >= 5) {
+                    badge.textContent = '⚠️ STRONG';
+                    badge.style.background = '#dc2626';
+                } else if (latest.magnitude >= 4) {
+                    badge.textContent = '⚡ MODERATE';
+                    badge.style.background = '#f59e0b';
+                } else {
+                    badge.textContent = '✓ SAFE';
+                    badge.style.background = '#16a34a';
+                }
+                const eqList = data.earthquakes.slice(0, 3).map(eq => 
+                    '<div class="traffic-item"><strong>M' + eq.magnitude + '</strong> - ' + (eq.place || 'नेपाल') + ' <small>(' + eq.depth + 'km)</small></div>'
+                ).join('');
+                document.getElementById('earthquake-data').innerHTML = eqList;
+            }
+        } catch (e) {
+            document.getElementById('earthquake-data').innerHTML = '<div class="alert-loading">भूकम्प डेटा उपलब्ध छैन</div>';
+        }
+    }
+
+    // Load Weather Data
+    async function loadWeatherData() {
+        try {
+            const resp = await fetch('/api/weather-alerts.php?type=weather&city=Kathmandu');
+            const data = await resp.json();
+            if (data.current) {
+                const c = data.current;
+                document.getElementById('home-temp').textContent = Math.round(c.temp || 25) + '°';
+                document.getElementById('home-weather-desc').textContent = c.description || 'सामान्य';
+                document.getElementById('home-humidity').textContent = c.humidity || '--';
+                document.getElementById('home-wind').textContent = Math.round(c.wind_speed || 0);
+            }
+        } catch (e) {
+            document.getElementById('home-temp').textContent = '25°';
+        }
+    }
+
+    // Load Traffic/Police Alerts
+    async function loadTrafficAlerts() {
+        try {
+            const resp = await fetch('/api/alerts.php?type=police');
+            const data = await resp.json();
+            if (data.alerts && data.alerts.length > 0) {
+                const alerts = data.alerts.slice(0, 3).map(function(a) {
+                    return '<div class="traffic-item">🚧 ' + (a.title || a.description || 'सूचना') + '</div>';
+                }).join('');
+                document.getElementById('traffic-data').innerHTML = alerts;
+            } else {
+                document.getElementById('traffic-data').innerHTML = '<div class="alert-loading">✓ कुनै अलर्ट छैन</div>';
+            }
+        } catch (e) {
+            document.getElementById('traffic-data').innerHTML = '<div class="alert-loading">अलर्ट लोड हुन सकेन</div>';
+        }
+    }
+
     // Load News from API
     async function loadNews() {
         try {
@@ -1257,6 +1408,9 @@ $pageTitle = $t('आकाशवाणी — सूचनाको खुला
     // Load all data on page load
     document.addEventListener('DOMContentLoaded', function() {
         loadMarketData();
+        loadEarthquakeData();
+        loadWeatherData();
+        loadTrafficAlerts();
         loadNews();
     });
     </script>
