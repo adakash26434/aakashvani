@@ -1,5 +1,5 @@
 # Ignore local config and sensitive files
-config.php
+# config.php - Keep this tracked for new installations
 .env
 
 # Cache, uploads, and data
