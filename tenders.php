@@ -41,6 +41,20 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
         .category-tab:hover { background: var(--dark-200); }
         .category-tab.active { background: var(--primary); color: #fff; }
     </style>
+
+    <style>
+        /* Responsive */
+        @media (max-width: 768px) {
+            .emergency-hero, .weather-hero, .tenders-hero { padding: var(--space-8) 0; }
+            .emergency-hero h1, .weather-hero h1, .tenders-hero h1 { font-size: 1.75rem; }
+            .emergency-grid, .weather-grid, .tender-card { padding: var(--space-4); }
+        }
+        
+        @media (max-width: 480px) {
+            .emergency-hero h1, .weather-hero h1, .tenders-hero h1 { font-size: 1.5rem; }
+            .emergency-number { font-size: 1.25rem; }
+        }
+    </style>
 </head>
 <body>
     <!-- Header -->
