@@ -3,21 +3,15 @@ require_once __DIR__ . '/config.php';
 $lang=siteLang();
 $isNepali=($lang!=='en');
 $t=fn($ne,$en)=>$isNepali?$ne:$en;
-$services=[
-    ['name'=>'नागरिकता','en'=>'Citizenship','icon'=>'id-card','desc'=>'नागरिकता प्रमाणपत्र'],
-    ['name'=>'राहदानी','en'=>'Passport','icon'=>'book-open','desc'=>'राहदानी (Passport)'],
-    ['name'=>'स्थानीय तह','en'=>'Local Body','icon'=>'map-pin','desc'=>'नगरपालिका/गाउँपालिका'],
-    ['name'=>'कर','en'=>'Tax','icon'=>'calculator','desc'=>'आयकर र मूल्याङ्कन'],
-    ['name'=>'जग्गा','en'=>'Land','icon'=>'home','desc'=>'जग्गा रजिष्ट्रेशन'],
-    ['name'=>'शिक्षा','en'=>'Education','icon'=>'graduation-cap','desc'=>'शैक्षिक प्रमाणपत्र'],
-];
+// Services loaded via API (JS fetch)
 ?>
 <!DOCTYPE html>
 <html lang="<?=$isNepali?'ne':'en'?>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?=$t('सरकारी सेवा','Government Services')?> | आकाशवाणी<meta property="og:title" content="<?= $t('आकाशवाणी', 'Aakashvani') ?>">
+    <title><?=$t('सरकारी सेवा','Government Services')?> | आकाशवाणी</title>
+    <meta property="og:title" content="<?= $t('आकाशवाणी', 'Aakashvani') ?>">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
     </title>
@@ -81,17 +75,18 @@ $services=[
     </section>
     <section class="section">
         <div class="container">
-            <div class="services-grid">
-                <?php foreach($services as $svc):?>
-                <a href="#" class="service-card">
-                    <div class="service-icon">
-                        <svg class="icon-xl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
-                    </div>
-                    <h3 class="service-name"><?=$isNepali?$svc['name']:$svc['en']?></h3>
-                    <p class="service-desc"><?=$svc['desc']?></p>
-                </a>
-                <?php endforeach;?>
+            <!-- Category Filter -->
+            <div class="flex gap-4 mb-6" style="flex-wrap:wrap;gap:var(--space-3);margin-bottom:var(--space-6)">
+                <button class="btn-cat active" data-cat="all" style="padding:var(--space-2) var(--space-4);border:1px solid var(--dark-200);border-radius:var(--radius-full);background:var(--primary);color:#fff;cursor:pointer"><?=$t('सबै','All')?></button>
+                <button class="btn-cat" data-cat="citizenship" style="padding:var(--space-2) var(--space-4);border:1px solid var(--dark-200);border-radius:var(--radius-full);background:#fff;cursor:pointer"><?=$t('नागरिकता','Citizenship')?></button>
+                <button class="btn-cat" data-cat="passport" style="padding:var(--space-2) var(--space-4);border:1px solid var(--dark-200);border-radius:var(--radius-full);background:#fff;cursor:pointer"><?=$t('राहदानी','Passport')?></button>
+                <button class="btn-cat" data-cat="tax" style="padding:var(--space-2) var(--space-4);border:1px solid var(--dark-200);border-radius:var(--radius-full);background:#fff;cursor:pointer"><?=$t('कर','Tax')?></button>
+                <button class="btn-cat" data-cat="land" style="padding:var(--space-2) var(--space-4);border:1px solid var(--dark-200);border-radius:var(--radius-full);background:#fff;cursor:pointer"><?=$t('जग्गा','Land')?></button>
+                <button class="btn-cat" data-cat="education" style="padding:var(--space-2) var(--space-4);border:1px solid var(--dark-200);border-radius:var(--radius-full);background:#fff;cursor:pointer"><?=$t('शिक्षा','Education')?></button>
             </div>
+            <div id="services-loading" style="text-align:center;padding:var(--space-8)"><div class="spinner" style="width:40px;height:40px;border:3px solid var(--dark-200);border-top-color:var(--primary);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto"></div></div>
+            <div id="services-grid" class="services-grid" style="display:none"></div>
+            <div id="services-error" style="display:none;text-align:center;padding:var(--space-8);color:var(--error)"><?=$t('सेवा लोड हुन सकेन','Failed to load services')?></div>
         </div>
     </section>
     <footer class="site-footer">
@@ -100,5 +95,55 @@ $services=[
         </div>
     </footer>
     <script src="/assets/js/app.js"></script>
+<script>
+let allServices = {};
+async function loadServices() {
+    const grid = document.getElementById('services-grid');
+    const loading = document.getElementById('services-loading');
+    const error = document.getElementById('services-error');
+    try {
+        const resp = await fetch('/api/gov-services.php');
+        const data = await resp.json();
+        if (data.ok) {
+            allServices = data.services;
+            renderServices('all');
+            loading.style.display = 'none';
+            grid.style.display = 'grid';
+        } else { throw new Error(); }
+    } catch(e) { loading.style.display = 'none'; error.style.display = 'block'; }
+}
+function renderServices(cat) {
+    const grid = document.getElementById('services-grid');
+    const cats = cat === 'all' ? Object.keys(allServices) : [cat];
+    let html = '';
+    cats.forEach(c => {
+        if (allServices[c]) {
+            allServices[c].forEach(svc => {
+                html += '<div class="service-card" style="background:#fff;border-radius:var(--radius-xl);border:1px solid var(--dark-100);padding:var(--space-6);text-align:left">';
+                html += '<h3 style="font-size:1.125rem;font-weight:700;color:var(--dark-900);margin-bottom:var(--space-2)">' + svc.name + '</h3>';
+                html += '<p style="font-size:0.875rem;color:var(--dark-500);margin-bottom:var(--space-3)">' + svc.desc + '</p>';
+                html += '<div style="font-size:0.75rem;color:var(--dark-400);margin-bottom:var(--space-2)"><strong><?= $t("आवश्यक कागजात","Required Docs") ?>:</strong> ' + (svc.docs ? svc.docs.join(', ') : '-') + '</div>';
+                html += '<div style="font-size:0.75rem;color:var(--dark-400);margin-bottom:var(--space-2)"><strong><?= $t("शुल्क","Fee") ?>:</strong> ' + svc.fee + '</div>';
+                html += '<div style="font-size:0.75rem;color:var(--dark-400);margin-bottom:var(--space-3)"><strong><?= $t("समय","Time") ?>:</strong> ' + svc.time + '</div>';
+                if (svc.url) html += '<a href="' + svc.url + '" target="_blank" style="display:inline-block;padding:var(--space-2) var(--space-4);background:var(--primary);color:#fff;border-radius:var(--radius-lg);font-size:0.875rem;text-decoration:none"><?= $t("वेबसाइट","Website") ?> →</a>';
+                html += '</div>';
+            });
+        }
+    });
+    grid.innerHTML = html;
+    // Update button states
+    document.querySelectorAll('.btn-cat').forEach(btn => {
+        btn.style.background = btn.dataset.cat === cat ? 'var(--primary)' : '#fff';
+        btn.style.color = btn.dataset.cat === cat ? '#fff' : 'inherit';
+    });
+}
+// Category buttons
+document.addEventListener('DOMContentLoaded', () => {
+    loadServices();
+    document.querySelectorAll('.btn-cat').forEach(btn => {
+        btn.addEventListener('click', () => renderServices(btn.dataset.cat));
+    });
+});
+</script>
 </body>
 </html>
