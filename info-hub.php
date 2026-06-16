@@ -359,7 +359,7 @@ fetch('/api/news-rss.php?cat=all&limit=4')
       if (window.lucide) lucide.createIcons();
     }
   })
-  .catch(e => console.log('News load failed:', e));
+  .catch(e => { console.error('News load failed:', e); });
 
 // Load Market Data
 fetch('/api/market-data.php?type=summary')
@@ -378,7 +378,7 @@ fetch('/api/market-data.php?type=summary')
         (d.nepse.index || '—') + ' (' + (d.nepse.change || '—') + ')';
     }
   })
-  .catch(e => console.log('Market load failed:', e));
+  .catch(e => { console.error('Market load failed:', e); });
 
 // Search functionality
 document.getElementById('hubSearch').addEventListener('input', function(e) {
