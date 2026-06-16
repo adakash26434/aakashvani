@@ -187,7 +187,7 @@ h6 { font-size: 0.875rem; }
 .text-lg { font-size: 1.125rem; line-height: 1.5; }
 .text-xl { font-size: 1.25rem; line-height: 1.4; }
 
-.text-primary { color: var(--dark-900); }
+.text-primary { color: var(--primary); }
 .text-secondary { color: var(--dark-500); }
 .text-muted { color: var(--dark-400); }
 
@@ -707,7 +707,8 @@ h6 { font-size: 0.875rem; }
     }
 }
 
-.brand {
+.brand,
+.header-brand {
     display: flex;
     align-items: center;
     gap: var(--space-3);
@@ -727,7 +728,8 @@ h6 { font-size: 0.875rem; }
     font-weight: 800;
 }
 
-.brand-text h1 {
+.brand-text h1,
+.brand-name {
     font-size: 1.25rem;
     font-weight: 700;
     color: var(--dark-900);
