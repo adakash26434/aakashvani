@@ -58,7 +58,7 @@ $pageDesc  = 'इन्टरनेट जडान छैन। कृपया
   </div>
 
   <div class="card">
-    <h2>⚡ ऑफलाइन परिचर्या</h2>
+    <h2>zap ऑफलाइन परिचर्या</h2>
     <p style="margin:0 0 12px;font-size:.9375rem;color:#475569">यहाँ केही पृष्ठहरू र विषयवस्तु उपलब्ध हो।</p>
     <nav>
       <a href="/" class="quick-link">
@@ -66,7 +66,7 @@ $pageDesc  = 'इन्टरनेट जडान छैन। कृपया
         <span>गृहपृष्ठ</span>
       </a>
       <a href="/news.php" class="quick-link">
-        <span class="icon-sm">📰</span>
+        <span class="icon-sm">newspaper</span>
         <span>समाचार</span>
       </a>
       <a href="/about.php" class="quick-link">

@@ -86,9 +86,9 @@ $mainNav=[
     '/gov-services.php'=> ['ne'=>'सरकारी सेवा',   'en'=>'Gov',         'icon'=>'landmark'],
 ];
 $moreNav=[
-    '/cricket.php'       => ['ne'=>'🏏 क्रिकेट',    'en'=>'Cricket',       'icon'=>'trophy'],
-    '/nokari.php'        => ['ne'=>'💼 नोकरी',       'en'=>'Jobs',          'icon'=>'briefcase'],
-    '/loksewa.php'       => ['ne'=>'🏛 लोकसेवा',     'en'=>'Gov Jobs',      'icon'=>'landmark'],
+    '/cricket.php'       => ['ne'=>'क्रिकेट',    'en'=>'Cricket',       'icon'=>'trophy'],
+    '/nokari.php'        => ['ne'=>'नोकरी',       'en'=>'Jobs',          'icon'=>'briefcase'],
+    '/loksewa.php'       => ['ne'=>'लोकसेवा',     'en'=>'Gov Jobs',      'icon'=>'landmark'],
     '/info-hub.php'      => ['ne'=>'सबै जानकारी',   'en'=>'Info Hub',      'icon'=>'layout-grid'],
     '/utilities.php'     => ['ne'=>'बजार / उपयोगी', 'en'=>'Market & Utils','icon'=>'bar-chart-2'],
     '/tax-calculator.php'=> ['ne'=>'कर Calculator',  'en'=>'Tax Calc',      'icon'=>'receipt'],
@@ -743,7 +743,7 @@ $_flash = getFlash();
   class="fixed top-4 left-1/2 -translate-x-1/2 z-[9999] max-w-sm w-[92%] flex items-center gap-3 px-4 py-3 rounded-2xl shadow-2xl border text-[13px] font-semibold
     <?= $_flash['type']==='error' ? 'bg-rose-50 border-rose-200 text-rose-800' : 'bg-emerald-50 border-emerald-200 text-emerald-800' ?>"
   role="alert">
-  <span class="text-lg"><?= $_flash['type']==='error' ? '❌' : '✅' ?></span>
+  <i data-lucide="<?= $_flash['type']==='error' ? 'x-circle' : 'check-circle' ?>" class="text-lg"></i>
   <span class="flex-1"><?= htmlspecialchars($_flash['msg'], ENT_QUOTES, 'UTF-8') ?></span>
   <button onclick="this.parentElement.remove()" class="ml-1 text-slate-400 hover:text-slate-600 text-lg leading-none">&times;</button>
 </div>

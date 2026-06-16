@@ -127,7 +127,7 @@ function answerPetrol(string $lang): ?string {
 function answerNepse(string $lang): ?string {
     $d = fetchMarket('nepse');
     if (!$d) return null;
-    $arrow = $d['change'] >= 0 ? '🟢 +' : '🔴 ';
+    $arrow = $d['change'] >= 0 ? 'circle +' : 'circle ';
     $idx = number_format((float)$d['index'], 2);
     $chg = number_format((float)$d['change'], 2);
     $pct = number_format((float)$d['changePercent'], 2);
@@ -195,7 +195,7 @@ function answerHelp(string $lang): string {
              . "* 💱 Forex rates (USD, EUR, GBP, AED…)\n"
              . "* 🔮 Daily Rashifal\n"
              . "* 📅 Nepali Patro / BS-AD date\n"
-             . "* 📰 Latest AI & Nepal news\n\nJust ask in Nepali or English.";
+             . "* newspaper Latest AI & Nepal news\n\nJust ask in Nepali or English.";
     }
     return "म **सहायक AI** हुँ — मलाई सोध्न सक्नुहुन्छ:\n\n"
          . "* 🪙 सुनको भाउ (हलमार्क / तेजाबी, तोला / ग्राम)\n"
@@ -204,7 +204,7 @@ function answerHelp(string $lang): string {
          . "* 💱 विदेशी मुद्रा दर (USD, EUR, GBP, AED…)\n"
          . "* 🔮 आजको राशिफल\n"
          . "* 📅 नेपाली पात्रो / BS-AD मिति\n"
-         . "* 📰 ताजा AI र नेपाल समाचार\n\nनेपाली वा अंग्रेजी जुनसुकै भाषामा सोध्नुस्।";
+         . "* newspaper ताजा AI र नेपाल समाचार\n\nनेपाली वा अंग्रेजी जुनसुकै भाषामा सोध्नुस्।";
 }
 
 // ─── Try local intent first (always works, no key needed) ────────────────────

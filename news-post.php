@@ -111,7 +111,7 @@ include __DIR__ . '/header.php';
           <?php if (!empty($news['is_breaking'])): ?>
           <span class="px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wide"
                 style="background:#fef2f2;color:#dc2626;border:1px solid #fecaca;">
-            🔴 <?= $t('ब्रेकिङ','BREAKING') ?>
+            <i data-lucide="radio" class="w-5 h-5 text-red-500"></i> <?= $t('ब्रेकिङ','BREAKING') ?>
           </span>
           <?php endif; ?>
           <?php
@@ -204,7 +204,7 @@ include __DIR__ . '/header.php';
                 }
             } else {
                 echo '<div class="no-content-box">
-                    <p class="text-2xl mb-2">📰</p>
+                    <i data-lucide="newspaper" class="w-8 h-8 text-slate-400"></i>
                     <p>' . $t('यो समाचारको विस्तृत विवरण उपलब्ध छैन।','Full article content is not available.') . '</p>
                 </div>';
             }
@@ -281,7 +281,7 @@ include __DIR__ . '/header.php';
               <img src="<?= h($r['image_url']) ?>" alt="" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" loading="lazy" onerror="this.parentElement.remove()" />
             </div>
             <?php else: ?>
-            <div class="w-20 h-[58px] rounded-lg bg-slate-100 flex-shrink-0 flex items-center justify-center text-xl">📰</div>
+            <div class="w-20 h-[58px] rounded-lg bg-slate-100 flex-shrink-0 flex items-center justify-center text-xl"><i data-lucide="newspaper" class="w-6 h-6 text-slate-400"></i></div>
             <?php endif; ?>
             <div class="flex-1 min-w-0">
               <div class="text-[10px] text-slate-400 mb-0.5"><?= function_exists('bsDate') ? bsDate($r['created_at']) : date('M j, Y', strtotime($r['created_at'])) ?></div>
@@ -307,7 +307,7 @@ include __DIR__ . '/header.php';
       <!-- Latest News -->
       <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
         <h3 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3 pb-2 border-b border-slate-200">
-          🔴 <?= $t('ताजा समाचार','Latest News') ?>
+          <i data-lucide="radio" class="w-5 h-5 text-red-500"></i> <?= $t('ताजा समाचार','Latest News') ?>
         </h3>
         <div>
           <?php foreach ($latest as $l): ?>
@@ -315,7 +315,7 @@ include __DIR__ . '/header.php';
             <?php if ($l['image_url']): ?>
             <img src="<?= h($l['image_url']) ?>" alt="" class="side-card-img" loading="lazy" onerror="this.remove()" />
             <?php else: ?>
-            <div class="w-[68px] h-[50px] rounded-lg bg-slate-100 flex-shrink-0 flex items-center justify-center">📰</div>
+            <div class="w-[68px] h-[50px] rounded-lg bg-slate-100 flex-shrink-0 flex items-center justify-center"><i data-lucide="newspaper" class="w-6 h-6 text-slate-400"></i></div>
             <?php endif; ?>
             <div class="flex-1 min-w-0">
               <h5 class="text-xs font-semibold text-slate-900 group-hover:text-teal-600 transition-colors line-clamp-3 leading-snug"><?= h($l['title']) ?></h5>

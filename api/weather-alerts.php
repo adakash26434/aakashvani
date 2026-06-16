@@ -104,16 +104,16 @@ $nepalCities = [
 
 function weatherCodeToEmoji(int $code): string {
     return match(true) {
-        $code === 0 => '☀️',
+        $code === 0 => 'sun',
         $code <= 3 => '⛅',
         in_array($code, [45, 48]) => '🌫️',
         in_array($code, [51, 53, 55, 56, 57]) => '🌦️',
-        in_array($code, [61, 63, 65, 66, 67]) => '🌧️',
+        in_array($code, [61, 63, 65, 66, 67]) => 'cloud-rain',
         in_array($code, [71, 73, 75, 77]) => '❄️',
-        in_array($code, [80, 81, 82]) => '🌧️',
+        in_array($code, [80, 81, 82]) => 'cloud-rain',
         in_array($code, [85, 86]) => '🌨️',
         in_array($code, [95, 96, 99]) => '⛈️',
-        default => '🌡️',
+        default => 'thermometer',
     };
 }
 

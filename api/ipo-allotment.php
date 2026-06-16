@@ -116,7 +116,7 @@ foreach ($boids as $boid) {
 
             $result['allotted'] = $isAllotted;
             $result['shares']   = $shares;
-            $result['message']  = $msg ?: ($isAllotted ? 'Allotted ✅' : 'Allotted भएन ❌');
+            $result['message']  = $msg ?: ($isAllotted ? 'Allotted check-circle' : 'Allotted भएन x-circle');
             $result['posted_date'] = $d['postedDate'] ?? '';
         } else {
             $errors++;

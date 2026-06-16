@@ -24,11 +24,11 @@ $pageImg   = '/assets/images/og-image.jpg';
 @include __DIR__ . '/includes/header.php';
 
 $cats = [
-  ['all','सबै','📰'],
-  ['politics','राजनीति','🏛️'],
-  ['economy','अर्थ / बजार','💰'],
+  ['all','सबै','newspaper'],
+  ['politics','राजनीति','landmark'],
+  ['economy','अर्थ / बजार','badge-dollar-sign'],
   ['sports','खेलकुद','⚽'],
-  ['entertainment','मनोरञ्जन','🎬'],
+  ['entertainment','मनोरञ्जन','video'],
   ['technology','प्रविधि','💻'],
   ['world','विश्व','🌏'],
 ];

@@ -61,7 +61,7 @@ try {
         $s = $pdo->prepare("SELECT id,title FROM app_notices WHERE active=1 AND title LIKE ? ORDER BY priority DESC LIMIT 3");
         $s->execute([$like]);
         foreach ($s->fetchAll(PDO::FETCH_ASSOC) as $r) {
-            $results[] = ['type'=>'notice','icon'=>'📢','label'=>$r['title'],'sub'=>'सूचना','url'=>'/notices.php#n-'.$r['id']];
+            $results[] = ['type'=>'notice','icon'=>'radio','label'=>$r['title'],'sub'=>'सूचना','url'=>'/notices.php#n-'.$r['id']];
         }
     }
 } catch (Throwable $e) {
