@@ -1,106 +1,157 @@
 <?php
 /**
- * आकाशवाणी — ipo-tracker.php (World-Class IPO Tracker)
- * Premium IPO tracking with clean, professional design
+ * आकाशवाणी — IPO Tracker v2
+ * Premium 2026 Design
  */
-
-$pageTitle = 'IPO ट्र्याकर | आकाशवाणी';
-include __DIR__ . '/header.php';
+require_once __DIR__ . '/config.php';
 
 $lang = siteLang();
 $isNepali = ($lang !== 'en');
+$t = fn($ne, $en) => $isNepali ? $ne : $en;
 
-// Sample IPO data
 $ipos = [
-    ['id' => 1, 'company' => 'NMB Bank', 'symbol' => 'NMB', 'price' => 235, 'units' => 5000000, 'status' => 'open', 'close_date' => '2026-06-20', 'min_units' => 10],
-    ['id' => 2, 'company' => 'Global IME Bank', 'symbol' => 'GIME', 'price' => 280, 'units' => 3000000, 'status' => 'upcoming', 'close_date' => '2026-06-25', 'min_units' => 10],
-    ['id' => 3, 'company' => 'NIC Asia Bank', 'symbol' => 'NIC', 'price' => 310, 'units' => 4000000, 'status' => 'closed', 'close_date' => '2026-06-10', 'min_units' => 10],
+    ['symbol' => 'NMB', 'company' => 'NMB Bank', 'price' => 235, 'units' => '50,00,000', 'status' => 'open', 'close' => '2026-06-20'],
+    ['symbol' => 'GIME', 'company' => 'Global IME Bank', 'price' => 280, 'units' => '30,00,000', 'status' => 'open', 'close' => '2026-06-22'],
+    ['symbol' => 'NIC', 'company' => 'NIC Asia Bank', 'price' => 310, 'units' => '40,00,000', 'status' => 'upcoming', 'close' => '2026-06-28'],
+    ['symbol' => 'SKDBL', 'company' => 'Sajha Bank', 'price' => 245, 'units' => '25,00,000', 'status' => 'upcoming', 'close' => '2026-07-01'],
+    ['symbol' => 'ADBL', 'company' => 'Agricultural Bank', 'price' => 265, 'units' => '35,00,000', 'status' => 'closed', 'close' => '2026-06-15'],
 ];
 ?>
-
-<section class="ipo-header">
-    <div class="container">
-        <div class="header-content">
-            <div class="header-title">
-                <i data-lucide="trending-up" class="icon-lg"></i>
-                <h1><?= $isNepali ? 'IPO ट्र्याकर' : 'IPO Tracker' ?></h1>
+<!DOCTYPE html>
+<html lang="<?= $isNepali ? 'ne' : 'en' ?>">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?= $t('IPO ट्र्याकर', 'IPO Tracker') ?> | आकाशवाणी</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/app.css">
+    <style>
+        .page-header { background: linear-gradient(135deg, var(--dark-900), var(--dark-800)); padding: var(--space-12) 0; color: #fff; }
+        .ipo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: var(--space-6); }
+        .ipo-card { background: #fff; border-radius: var(--radius-xl); border: 1px solid var(--dark-100); padding: var(--space-6); transition: all var(--transition); }
+        .ipo-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+        .ipo-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-4); }
+        .ipo-symbol { font-size: 1.5rem; font-weight: 800; color: var(--primary); }
+        .ipo-status { padding: var(--space-1) var(--space-3); border-radius: var(--radius-full); font-size: 0.75rem; font-weight: 700; }
+        .ipo-status.open { background: var(--primary-50); color: var(--primary-700); }
+        .ipo-status.upcoming { background: #fef3c7; color: #92400e; }
+        .ipo-status.closed { background: var(--dark-100); color: var(--dark-500); }
+        .ipo-company { font-size: 1rem; font-weight: 600; color: var(--dark-900); margin-bottom: var(--space-4); }
+        .ipo-details { display: flex; flex-direction: column; gap: var(--space-2); margin-bottom: var(--space-4); }
+        .ipo-detail { display: flex; justify-content: space-between; padding: var(--space-2) var(--space-3); background: var(--dark-50); border-radius: var(--radius); }
+        .ipo-detail-label { font-size: 0.875rem; color: var(--dark-500); }
+        .ipo-detail-value { font-size: 0.875rem; font-weight: 600; color: var(--dark-900); }
+        .section { padding: var(--space-12) 0; }
+        .ipo-section:nth-child(even) { background: var(--dark-50); }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-main">
+            <div class="container">
+                <div class="flex items-center justify-between gap-4">
+                    <a href="/" class="header-brand">
+                        <div class="brand-logo">आ</div>
+                        <span class="brand-name"><?= $t('आकाशवाणी', 'Aakashvani') ?></span>
+                    </a>
+                    <nav class="header-nav">
+                        <a href="/" class="nav-link"><?= $t('गृह', 'Home') ?></a>
+                        <a href="/news.php" class="nav-link"><?= $t('समाचार', 'News') ?></a>
+                        <a href="/nepali-patro.php" class="nav-link"><?= $t('पात्रो', 'Calendar') ?></a>
+                        <a href="/ipo-tracker.php" class="nav-link active"><?= $t('IPO', 'IPO') ?></a>
+                    </nav>
+                    <div class="header-actions">
+                        <button class="btn btn-ghost btn-icon" aria-label="Search">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</section>
-
-<main class="ipo-main">
-    <div class="container">
-        <div class="ipo-tabs">
-            <button class="ipo-tab active" data-status="open"><?= $isNepali ? 'खुला' : 'Open' ?></button>
-            <button class="ipo-tab" data-status="upcoming"><?= $isNepali ? 'आगामी' : 'Upcoming' ?></button>
-            <button class="ipo-tab" data-status="closed"><?= $isNepali ? 'बन्द' : 'Closed' ?></button>
+    </header>
+    
+    <section class="page-header">
+        <div class="container">
+            <h1 class="page-title" style="display:flex;align-items:center;gap:12px">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--primary)"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+                <?= $t('IPO ट्र्याकर', 'IPO Tracker') ?>
+            </h1>
+            <p class="page-subtitle"><?= $t('नेपालका IPO र मर्जर आइपिओको विवरण', 'Details of IPOs and merger IPOs in Nepal') ?></p>
         </div>
-
-        <div class="ipo-grid">
-            <?php foreach ($ipos as $ipo): ?>
-            <article class="ipo-card" data-status="<?= $ipo['status'] ?>">
-                <div class="ipo-header-card">
-                    <div class="ipo-symbol"><?= $ipo['symbol'] ?></div>
-                    <span class="ipo-status <?= $ipo['status'] ?>">
-                        <?= $ipo['status'] === 'open' ? 'खुला' : ($ipo['status'] === 'upcoming' ? 'आगामी' : 'बन्द') ?>
-                    </span>
+    </section>
+    
+    <section class="ipo-section">
+        <div class="container">
+            <!-- Open IPOs -->
+            <h2 class="text-xl font-bold mb-6" style="padding-top:var(--space-6)"><?= $t('खुला IPO', 'Open IPOs') ?></h2>
+            <div class="ipo-grid">
+                <?php foreach (array_filter($ipos, fn($i) => $i['status'] === 'open') as $ipo): ?>
+                <div class="ipo-card">
+                    <div class="ipo-header">
+                        <span class="ipo-symbol"><?= $ipo['symbol'] ?></span>
+                        <span class="ipo-status open"><?= $t('खुला', 'OPEN') ?></span>
+                    </div>
+                    <h3 class="ipo-company"><?= $ipo['company'] ?></h3>
+                    <div class="ipo-details">
+                        <div class="ipo-detail">
+                            <span class="ipo-detail-label"><?= $t('मूल्य', 'Price') ?></span>
+                            <span class="ipo-detail-value">रु <?= number_format($ipo['price']) ?></span>
+                        </div>
+                        <div class="ipo-detail">
+                            <span class="ipo-detail-label"><?= $t('कुल युनिट', 'Total Units') ?></span>
+                            <span class="ipo-detail-value"><?= $ipo['units'] ?></span>
+                        </div>
+                        <div class="ipo-detail">
+                            <span class="ipo-detail-label"><?= $t('बन्द हुने', 'Close Date') ?></span>
+                            <span class="ipo-detail-value"><?= $ipo['close'] ?></span>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary w-full"><?= $t('थप विवरण', 'More Details') ?></button>
                 </div>
-                <h3 class="ipo-company"><?= $ipo['company'] ?></h3>
-                <div class="ipo-details">
-                    <div class="detail-row">
-                        <span class="detail-label"><?= $isNepali ? 'मूल्य' : 'Price' ?></span>
-                        <span class="detail-value">रु <?= number_format($ipo['price']) ?></span>
+                <?php endforeach; ?>
+            </div>
+            
+            <!-- Upcoming IPOs -->
+            <h2 class="text-xl font-bold mb-6" style="padding-top:var(--space-8)"><?= $t('आगामी IPO', 'Upcoming IPOs') ?></h2>
+            <div class="ipo-grid">
+                <?php foreach (array_filter($ipos, fn($i) => $i['status'] === 'upcoming') as $ipo): ?>
+                <div class="ipo-card">
+                    <div class="ipo-header">
+                        <span class="ipo-symbol"><?= $ipo['symbol'] ?></span>
+                        <span class="ipo-status upcoming"><?= $t('आगामी', 'UPCOMING') ?></span>
                     </div>
-                    <div class="detail-row">
-                        <span class="detail-label"><?= $isNepali ? 'कुल युनिट' : 'Total Units' ?></span>
-                        <span class="detail-value"><?= number_format($ipo['units']) ?></span>
+                    <h3 class="ipo-company"><?= $ipo['company'] ?></h3>
+                    <div class="ipo-details">
+                        <div class="ipo-detail">
+                            <span class="ipo-detail-label"><?= $t('मूल्य', 'Price') ?></span>
+                            <span class="ipo-detail-value">रु <?= number_format($ipo['price']) ?></span>
+                        </div>
+                        <div class="ipo-detail">
+                            <span class="ipo-detail-label"><?= $t('कुल युनिट', 'Total Units') ?></span>
+                            <span class="ipo-detail-value"><?= $ipo['units'] ?></span>
+                        </div>
+                        <div class="ipo-detail">
+                            <span class="ipo-detail-label"><?= $t('खुला हुने', 'Open Date') ?></span>
+                            <span class="ipo-detail-value"><?= $ipo['close'] ?></span>
+                        </div>
                     </div>
-                    <div class="detail-row">
-                        <span class="detail-label"><?= $isNepali ? 'बन्द हुने मिति' : 'Close Date' ?></span>
-                        <span class="detail-value"><?= $ipo['close_date'] ?></span>
-                    </div>
+                    <button class="btn btn-secondary w-full"><?= $t('अलर्ट सेट गर्नुहोस्', 'Set Alert') ?></button>
                 </div>
-                <a href="/ipo-detail.php?id=<?= $ipo['id'] ?>" class="ipo-btn">
-                    <?= $isNepali ? 'विवरण हेर्नुहोस्' : 'View Details' ?>
-                </a>
-            </article>
-            <?php endforeach; ?>
+                <?php endforeach; ?>
+            </div>
         </div>
-    </div>
-</main>
-
-<style>
-.ipo-header { background: linear-gradient(135deg, #0f172a, #1e293b); padding: 32px 0; color: #fff; }
-.header-content { display: flex; align-items: center; justify-content: space-between; }
-.header-title { display: flex; align-items: center; gap: 12px; }
-.header-title i { color: #10b981; }
-.header-title h1 { font-size: 28px; font-weight: 800; color: #fff; }
-.icon-lg { width: 28px; height: 28px; }
-
-.ipo-main { padding: 32px 0; background: #f8fafc; }
-
-.ipo-tabs { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
-.ipo-tab { padding: 10px 20px; background: #fff; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; color: #64748b; cursor: pointer; transition: all 0.2s; }
-.ipo-tab.active { background: #10b981; color: #fff; }
-.ipo-tab:hover:not(.active) { background: #f1f5f9; }
-
-.ipo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
-.ipo-card { background: #fff; border-radius: 16px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-.ipo-header-card { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-.ipo-symbol { font-size: 24px; font-weight: 800; color: #10b981; }
-.ipo-status { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
-.ipo-status.open { background: #dcfce7; color: #166534; }
-.ipo-status.upcoming { background: #fef3c7; color: #92400e; }
-.ipo-status.closed { background: #f1f5f9; color: #64748b; }
-
-.ipo-company { font-size: 18px; font-weight: 700; color: #0f172a; margin-bottom: 16px; }
-.ipo-details { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
-.detail-row { display: flex; justify-content: space-between; padding: 8px 12px; background: #f8fafc; border-radius: 8px; }
-.detail-label { font-size: 13px; color: #64748b; }
-.detail-value { font-size: 13px; font-weight: 600; color: #0f172a; }
-.ipo-btn { display: block; width: 100%; padding: 12px; background: #10b981; color: #fff; text-align: center; border-radius: 10px; font-size: 14px; font-weight: 600; text-decoration: none; transition: all 0.2s; }
-.ipo-btn:hover { background: #059669; }
-</style>
-
-<?php include __DIR__ . '/footer.php'; ?>
+    </section>
+    
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-bottom" style="border:none;padding:0">
+                <p class="footer-copyright">&copy; <?= date('Y') ?> <?= $t('आकाशवाणी', 'Aakashvani') ?></p>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="/assets/js/app.js"></script>
+</body>
+</html>

@@ -1,614 +1,225 @@
 <?php
 /**
- * आकाशवाणी — nepali-patro.php (World-Class Nepali Calendar)
- * Premium Nepali calendar with clean, modern design
+ * आकाशवाणी — Nepali Patro v2
+ * Premium 2026 Design
  */
-
-require_once __DIR__ . '/header.php';
+require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/includes/bs-date.php';
 
 $lang = siteLang();
 $isNepali = ($lang !== 'en');
+$t = fn($ne, $en) => $isNepali ? $ne : $en;
 
-// Get current Nepali date
 $todayBS = getTodayBS();
-$currentYear = isset($_GET['year']) ? intval($_GET['year']) : $todayBS['year'];
-$currentMonth = isset($_GET['month']) ? intval($_GET['month']) : $todayBS['month'];
-$selectedDate = isset($_GET['date']) ? intval($_GET['date']) : $todayBS['day'];
+$year = isset($_GET['year']) ? (int)$_GET['year'] : $todayBS['year'];
+$month = isset($_GET['month']) ? (int)$_GET['month'] : $todayBS['month'];
 
-// Nepali months
 $nepaliMonths = [
-    1 => ['name' => 'बैशाख', 'days' => 31, 'en' => 'Baisakh'],
-    2 => ['name' => 'जेठ', 'days' => 31, 'en' => 'Jeth'],
-    3 => ['name' => 'आषाढ़', 'days' => 31, 'en' => 'Ashadh'],
-    4 => ['name' => 'श्रावण', 'days' => 32, 'en' => 'Shrawan'],
-    5 => ['name' => 'भाद्र', 'days' => 31, 'en' => 'Bhadra'],
-    6 => ['name' => 'आश्विन', 'days' => 30, 'en' => 'Ashwin'],
-    7 => ['name' => 'कार्तिक', 'days' => 30, 'en' => 'Kartik'],
-    8 => ['name' => 'मंसिर', 'days' => 29, 'en' => 'Mangsir'],
-    9 => ['name' => 'पुष', 'days' => 29, 'en' => 'Poush'],
-    10 => ['name' => 'माघ', 'days' => 30, 'en' => 'Magh'],
-    11 => ['name' => 'फाल्गुन', 'days' => 30, 'en' => 'Falgun'],
-    12 => ['name' => 'चैत्र', 'days' => 31, 'en' => 'Chaitra']
+    1 => 'बैशाख', 2 => 'जेठ', 3 => 'आषाढ़', 4 => 'श्रावण',
+    5 => 'भाद्र', 6 => 'आश्विन', 7 => 'कार्तिक', 8 => 'मंसिर',
+    9 => 'पुष', 10 => 'माघ', 11 => 'फाल्गुन', 12 => 'चैत्र'
 ];
 
-// Week days
-$weekDays = [
-    ['short' => 'आइत', 'en' => 'Sun'],
-    ['short' => 'सोम', 'en' => 'Mon'],
-    ['short' => 'मंगल', 'en' => 'Tue'],
-    ['short' => 'बुध', 'en' => 'Wed'],
-    ['short' => 'बिहि', 'en' => 'Thu'],
-    ['short' => 'शुक्र', 'en' => 'Fri'],
-    ['short' => 'शनि', 'en' => 'Sat']
-];
-
-// Festivals (sample)
-$festivals = [
-    1 => ['name' => 'नयाँ वर्ष', 'color' => '#10b981'],
-    11 => ['name' => 'लोकतन्त्र दिवस', 'color' => '#3b82f6'],
-];
-
-// Page title
-$pageTitle = $nepaliMonths[$currentMonth]['name'] . ' ' . $currentYear . ' | पात्रो | आकाशवाणी';
+$weekDays = ['आइत', 'सोम', 'मंगल', 'बुध', 'बिहि', 'शुक्र', 'शनि'];
+$monthDays = [31, 31, 31, 32, 31, 30, 30, 29, 30, 29, 30, 30];
 ?>
-
-<!-- Page Header -->
-<section class="patro-header">
-    <div class="container">
-        <div class="header-content">
-            <div class="header-title">
-                <i data-lucide="calendar" class="icon-lg"></i>
-                <h1><?= $isNepali ? 'नेपाली पात्रो' : 'Nepali Calendar' ?></h1>
-            </div>
-            
-            <!-- Month Navigation -->
-            <div class="month-nav">
-                <a href="?year=<?= $currentYear ?>&month=<?= $currentMonth <= 1 ? 12 : $currentMonth - 1 ?>&date=1" class="nav-btn">
-                    <i data-lucide="chevron-left" class="nav-icon"></i>
-                </a>
-                <div class="current-month">
-                    <span class="month-name"><?= $nepaliMonths[$currentMonth]['name'] ?></span>
-                    <span class="year-name"><?= $currentYear ?></span>
-                </div>
-                <a href="?year=<?= $currentYear ?>&month=<?= $currentMonth >= 12 ? 1 : $currentMonth + 1 ?>&date=1" class="nav-btn">
-                    <i data-lucide="chevron-right" class="nav-icon"></i>
-                </a>
-            </div>
-            
-            <!-- Quick Jump -->
-            <select class="month-select" onchange="window.location.href=this.value">
-                <?php foreach ($nepaliMonths as $num => $m): ?>
-                <option value="?year=<?= $currentYear ?>&month=<?= $num ?>&date=1" <?= $currentMonth == $num ? 'selected' : '' ?>>
-                    <?= $m['name'] ?> <?= $currentYear ?>
-                </option>
-                <?php endforeach; ?>
-            </select>
-        </div>
-    </div>
-</section>
-
-<!-- Calendar -->
-<main class="patro-main">
-    <div class="container">
-        <div class="patro-layout">
-            
-            <!-- Calendar Grid -->
-            <div class="calendar-section">
-                
-                <!-- Week Days Header -->
-                <div class="calendar-grid-header">
-                    <?php foreach ($weekDays as $day): ?>
-                    <div class="week-day <?= $day['short'] === 'आइत' || $day['short'] === 'शनि' ? 'weekend' : '' ?>">
-                        <span class="day-ne"><?= $day['short'] ?></span>
-                        <span class="day-en"><?= $day['en'] ?></span>
-                    </div>
-                    <?php endforeach; ?>
-                </div>
-                
-                <!-- Calendar Days -->
-                <div class="calendar-grid">
-                    <?php
-                    // Calculate starting day (simplified)
-                    $startDay = ($currentYear * 365 + array_sum(array_column($nepaliMonths, 'days')) + $currentMonth * 30 + $selectedDate) % 7;
-                    
-                    // Empty cells before first day
-                    for ($i = 0; $i < $startDay; $i++): ?>
-                    <div class="calendar-day empty"></div>
-                    <?php endfor; ?>
-                    
-                    <?php for ($day = 1; $day <= $nepaliMonths[$currentMonth]['days']; $day++): 
-                        $isToday = ($day == $selectedDate);
-                        $isWeekend = (($startDay + $day - 1) % 7 == 0 || ($startDay + $day - 1) % 7 == 6);
-                        $festival = $festivals[$day] ?? null;
-                    ?>
-                    <a href="?year=<?= $currentYear ?>&month=<?= $currentMonth ?>&date=<?= $day ?>" 
-                       class="calendar-day <?= $isToday ? 'today' : '' ?> <?= $isWeekend ? 'weekend' : '' ?> <?= $festival ? 'has-festival' : '' ?>">
-                        <span class="day-number"><?= $day ?></span>
-                        <?php if ($festival): ?>
-                        <span class="festival-name"><?= $festival['name'] ?></span>
-                        <?php endif; ?>
-                        <?php if ($isToday): ?>
-                        <span class="today-indicator"></span>
-                        <?php endif; ?>
+<!DOCTYPE html>
+<html lang="<?= $isNepali ? 'ne' : 'en' ?>">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?= $nepaliMonths[$month] ?> <?= $year ?> | <?= $t('पात्रो', 'Calendar') ?> | आकाशवाणी</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/app.css">
+    <style>
+        .page-header {
+            background: linear-gradient(135deg, var(--dark-900), var(--dark-800));
+            padding: var(--space-12) 0;
+            color: #fff;
+        }
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: var(--space-1);
+        }
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            border-radius: var(--radius-lg);
+            font-size: 0.875rem;
+            transition: all var(--transition);
+            cursor: pointer;
+        }
+        .calendar-day:hover { background: var(--primary); color: #fff; }
+        .calendar-day.today { background: var(--primary); color: #fff; font-weight: 700; }
+        .calendar-day.weekend { color: var(--error); }
+        .calendar-day.empty { background: transparent; cursor: default; }
+        .calendar-day.empty:hover { background: transparent; color: inherit; }
+        .week-header {
+            background: var(--dark-50);
+            border-radius: var(--radius-lg);
+            font-weight: 600;
+            color: var(--dark-600);
+        }
+        .week-header.weekend { color: var(--error); }
+        .day-number { font-size: 1rem; font-weight: 600; }
+        .calendar-section { padding: var(--space-12) 0; }
+        .info-card {
+            background: #fff;
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--dark-100);
+            padding: var(--space-6);
+        }
+        .info-card-title {
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: var(--dark-900);
+            margin-bottom: var(--space-4);
+            padding-bottom: var(--space-2);
+            border-bottom: 2px solid var(--primary);
+        }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: var(--space-2) 0;
+            border-bottom: 1px solid var(--dark-100);
+        }
+        .info-row:last-child { border-bottom: none; }
+        .info-label { color: var(--dark-500); font-size: 0.875rem; }
+        .info-value { font-weight: 600; font-size: 0.875rem; }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="site-header">
+        <div class="header-main">
+            <div class="container">
+                <div class="flex items-center justify-between gap-4">
+                    <a href="/" class="header-brand">
+                        <div class="brand-logo">आ</div>
+                        <span class="brand-name"><?= $t('आकाशवाणी', 'Aakashvani') ?></span>
                     </a>
-                    <?php endfor; ?>
+                    <nav class="header-nav">
+                        <a href="/" class="nav-link"><?= $t('गृह', 'Home') ?></a>
+                        <a href="/news.php" class="nav-link"><?= $t('समाचार', 'News') ?></a>
+                        <a href="/nepali-patro.php" class="nav-link active"><?= $t('पात्रो', 'Calendar') ?></a>
+                        <a href="/rashifal.php" class="nav-link"><?= $t('राशिफल', 'Horoscope') ?></a>
+                        <a href="/ipo-tracker.php" class="nav-link"><?= $t('IPO', 'IPO') ?></a>
+                    </nav>
+                    <div class="header-actions">
+                        <button class="btn btn-ghost btn-icon" aria-label="Search">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                        </button>
+                    </div>
                 </div>
-                
+            </div>
+        </div>
+    </header>
+    
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1 class="page-title" style="display:flex;align-items:center;gap:12px">
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--primary)"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                <?= $t('नेपाली पात्रो', 'Nepali Calendar') ?>
+            </h1>
+            <p class="page-subtitle"><?= $nepaliMonths[$month] ?> <?= $year ?></p>
+        </div>
+    </section>
+    
+    <!-- Calendar -->
+    <section class="calendar-section">
+        <div class="container">
+            <!-- Month Navigation -->
+            <div class="flex items-center justify-between mb-6">
+                <a href="?year=<?= $year ?>&month=<?= $month <= 1 ? 12 : $month - 1 ?>" class="btn btn-secondary">
+                    <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+                    <?= $t('अघिल्लो', 'Previous') ?>
+                </a>
+                <h2 class="text-xl font-bold"><?= $nepaliMonths[$month] ?> <?= $year ?></h2>
+                <a href="?year=<?= $year ?>&month=<?= $month >= 12 ? 1 : $month + 1 ?>" class="btn btn-secondary">
+                    <?= $t('अर्को', 'Next') ?>
+                    <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+                </a>
             </div>
             
-            <!-- Today Info -->
-            <aside class="today-section">
+            <div class="grid lg:grid-cols-3 gap-6">
+                <!-- Calendar -->
+                <div class="lg:col-span-2">
+                    <div class="info-card">
+                        <!-- Week Headers -->
+                        <div class="calendar-grid mb-1">
+                            <?php foreach ($weekDays as $i => $day): ?>
+                            <div class="calendar-day week-header <?= $i == 0 || $i == 6 ? 'weekend' : '' ?>">
+                                <span class="day-number"><?= $day ?></span>
+                            </div>
+                            <?php endforeach; ?>
+                        </div>
+                        <!-- Days -->
+                        <div class="calendar-grid">
+                            <?php
+                            $startDay = ($year * 365 + array_sum(array_slice($monthDays, 0, $month - 1)) + 1) % 7;
+                            for ($i = 0; $i < $startDay; $i++): ?>
+                            <div class="calendar-day empty"></div>
+                            <?php endfor; ?>
+                            <?php for ($day = 1; $day <= $monthDays[$month - 1]; $day++): ?>
+                            <?php $isToday = ($day == $todayBS['day'] && $month == $todayBS['month'] && $year == $todayBS['year']); ?>
+                            <div class="calendar-day <?= $isToday ? 'today' : '' ?> <?= ($startDay + $day - 1) % 7 == 0 || ($startDay + $day - 1) % 7 == 6 ? 'weekend' : '' ?>">
+                                <span class="day-number"><?= $day ?></span>
+                            </div>
+                            <?php endfor; ?>
+                        </div>
+                    </div>
+                </div>
                 
-                <div class="today-card">
-                    <div class="today-header">
-                        <span class="today-label"><?= $isNepali ? 'आज' : 'Today' ?></span>
-                        <span class="today-date"><?= $selectedDate ?> <?= $nepaliMonths[$currentMonth]['name'] ?> <?= $currentYear ?></span>
+                <!-- Info -->
+                <div class="space-y-4">
+                    <div class="info-card">
+                        <h3 class="info-card-title"><?= $t('आजको मिति', 'Today') ?></h3>
+                        <div class="info-row">
+                            <span class="info-label"><?= $t('बिक्रम सम्वत', 'Bikram Samwat') ?></span>
+                            <span class="info-value"><?= $todayBS['day'] ?> <?= $nepaliMonths[$todayBS['month']] ?> <?= $todayBS['year'] ?></span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label"><?= $t('इस्वी सम्वत', 'Gregorian') ?></span>
+                            <span class="info-value"><?= date('j F Y') ?></span>
+                        </div>
                     </div>
                     
-                    <div class="today-info">
-                        <div class="info-item">
-                            <i data-lucide="sun" class="info-icon"></i>
-                            <div>
-                                <span class="info-label"><?= $isNepali ? 'सूर्योदय' : 'Sunrise' ?></span>
-                                <span class="info-value"><?= $isNepali ? 'बिहानी' : 'Morning' ?></span>
-                            </div>
+                    <div class="info-card">
+                        <h3 class="info-card-title"><?= $t('पञ्चाङ्ग', 'Panchang') ?></h3>
+                        <div class="info-row">
+                            <span class="info-label"><?= $t('तिथि', 'Tithi') ?></span>
+                            <span class="info-value"><?= $t('शुक्ल पक्ष', 'Shukla Paksha') ?></span>
                         </div>
-                        <div class="info-item">
-                            <i data-lucide="sunset" class="info-icon"></i>
-                            <div>
-                                <span class="info-label"><?= $isNepali ? 'सूर्यास्त' : 'Sunset' ?></span>
-                                <span class="info-value"><?= $isNepali ? 'साँझ' : 'Evening' ?></span>
-                            </div>
+                        <div class="info-row">
+                            <span class="info-label"><?= $t('नक्षत्र', 'Nakshatra') ?></span>
+                            <span class="info-value"><?= $t('रोहिणी', 'Rohini') ?></span>
                         </div>
-                    </div>
-                </div>
-                
-                <!-- Panchang -->
-                <div class="panchang-card">
-                    <h3 class="card-title">
-                        <i data-lucide="star" class="title-icon"></i>
-                        <?= $isNepali ? 'पञ्चाङ्ग' : 'Panchang' ?>
-                    </h3>
-                    <div class="panchang-list">
-                        <div class="panchang-item">
-                            <span class="panchang-label"><?= $isNepali ? 'तिथि' : 'Tithi' ?></span>
-                            <span class="panchang-value"><?= $isNepali ? 'शुक्ल पक्ष' : 'Shukla Paksha' ?></span>
-                        </div>
-                        <div class="panchang-item">
-                            <span class="panchang-label"><?= $isNepali ? 'नक्षत्र' : 'Nakshatra' ?></span>
-                            <span class="panchang-value"><?= $isNepali ? 'रोहिणी' : 'Rohini' ?></span>
-                        </div>
-                        <div class="panchang-item">
-                            <span class="panchang-label"><?= $isNepali ? 'योग' : 'Yoga' ?></span>
-                            <span class="panchang-value"><?= $isNepali ? 'शुभ' : 'Shubha' ?></span>
-                        </div>
-                        <div class="panchang-item">
-                            <span class="panchang-label"><?= $isNepali ? 'करण' : 'Karan' ?></span>
-                            <span class="panchang-value"><?= $isNepali ? 'बालव' : 'Balav' ?></span>
+                        <div class="info-row">
+                            <span class="info-label"><?= $t('योग', 'Yoga') ?></span>
+                            <span class="info-value"><?= $t('शुभ', 'Shubha') ?></span>
                         </div>
                     </div>
                 </div>
-                
-                <!-- Upcoming -->
-                <div class="upcoming-card">
-                    <h3 class="card-title">
-                        <i data-lucide="calendar-check" class="title-icon"></i>
-                        <?= $isNepali ? 'आगामी चाडपर्व' : 'Upcoming Festivals' ?>
-                    </h3>
-                    <div class="upcoming-list">
-                        <?php foreach (array_slice($festivals, 0, 3) as $day => $fest): ?>
-                        <div class="upcoming-item">
-                            <span class="upcoming-day"><?= $day ?></span>
-                            <span class="upcoming-name"><?= $fest['name'] ?></span>
-                        </div>
-                        <?php endforeach; ?>
-                    </div>
-                </div>
-                
-            </aside>
+            </div>
         </div>
-    </div>
-</main>
-
-<style>
-/* ═══════════════════════════════════════════════════════════════
-   PATRO (CALENDAR) PAGE STYLES
-   ═══════════════════════════════════════════════════════════════ */
-
-/* Header */
-.patro-header {
-    background: linear-gradient(135deg, #0f172a, #1e293b);
-    padding: 32px 0;
-    color: #fff;
-}
-
-.header-content {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 24px;
-    flex-wrap: wrap;
-}
-
-.header-title {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.header-title i { color: #10b981; }
-
-.header-title h1 {
-    font-size: 28px;
-    font-weight: 800;
-    color: #fff;
-}
-
-/* Month Navigation */
-.month-nav {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-}
-
-.nav-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    background: rgba(255,255,255,0.1);
-    border-radius: 10px;
-    color: #fff;
-    transition: all 0.2s;
-}
-
-.nav-btn:hover {
-    background: #10b981;
-}
-
-.nav-icon { width: 20px; height: 20px; }
-
-.current-month {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.month-name {
-    font-size: 20px;
-    font-weight: 700;
-}
-
-.year-name {
-    font-size: 14px;
-    color: #94a3b8;
-}
-
-/* Month Select */
-.month-select {
-    padding: 10px 16px;
-    background: rgba(255,255,255,0.1);
-    border: 1px solid rgba(255,255,255,0.2);
-    border-radius: 10px;
-    color: #fff;
-    font-size: 14px;
-    cursor: pointer;
-}
-
-.month-select option { color: #0f172a; }
-
-/* Main */
-.patro-main {
-    padding: 32px 0;
-    background: #f8fafc;
-}
-
-.patro-layout {
-    display: grid;
-    grid-template-columns: 1fr 320px;
-    gap: 32px;
-}
-
-@media (max-width: 1024px) {
-    .patro-layout {
-        grid-template-columns: 1fr;
-    }
-    .today-section {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 16px;
-    }
-}
-
-@media (max-width: 640px) {
-    .today-section {
-        grid-template-columns: 1fr;
-    }
-}
-
-/* Calendar Section */
-.calendar-section {
-    background: #fff;
-    border-radius: 16px;
-    padding: 24px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-}
-
-/* Week Days Header */
-.calendar-grid-header {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 4px;
-    margin-bottom: 8px;
-}
-
-.week-day {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 12px;
-    background: #f8fafc;
-    border-radius: 8px;
-}
-
-.week-day.weekend {
-    background: #fef2f2;
-}
-
-.day-ne {
-    font-size: 14px;
-    font-weight: 600;
-    color: #0f172a;
-}
-
-.day-en {
-    font-size: 11px;
-    color: #94a3b8;
-}
-
-/* Calendar Grid */
-.calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 4px;
-}
-
-.calendar-day {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    aspect-ratio: 1;
-    padding: 8px;
-    border-radius: 10px;
-    text-decoration: none;
-    transition: all 0.2s;
-    position: relative;
-}
-
-.calendar-day:hover {
-    background: #f1f5f9;
-}
-
-.calendar-day.empty {
-    background: transparent;
-}
-
-.calendar-day.today {
-    background: #10b981;
-    color: #fff;
-}
-
-.calendar-day.today:hover {
-    background: #059669;
-}
-
-.calendar-day.weekend .day-number {
-    color: #ef4444;
-}
-
-.calendar-day.today.weekend .day-number {
-    color: #fff;
-}
-
-.day-number {
-    font-size: 16px;
-    font-weight: 600;
-    color: #0f172a;
-}
-
-.festival-name {
-    font-size: 9px;
-    color: #10b981;
-    text-align: center;
-    margin-top: 2px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100%;
-}
-
-.calendar-day.today .festival-name {
-    color: rgba(255,255,255,0.8);
-}
-
-.today-indicator {
-    position: absolute;
-    bottom: 6px;
-    width: 4px;
-    height: 4px;
-    background: #fff;
-    border-radius: 50%;
-}
-
-/* Today Section */
-.today-section {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.today-card,
-.panchang-card,
-.upcoming-card {
-    background: #fff;
-    border-radius: 12px;
-    padding: 20px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-}
-
-.today-header {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    margin-bottom: 16px;
-    padding-bottom: 16px;
-    border-bottom: 1px solid #e2e8f0;
-}
-
-.today-label {
-    font-size: 12px;
-    font-weight: 600;
-    color: #10b981;
-    text-transform: uppercase;
-}
-
-.today-date {
-    font-size: 20px;
-    font-weight: 700;
-    color: #0f172a;
-}
-
-.today-info {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.info-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.info-icon {
-    width: 20px;
-    height: 20px;
-    color: #10b981;
-}
-
-.info-item div {
-    display: flex;
-    flex-direction: column;
-}
-
-.info-label {
-    font-size: 11px;
-    color: #94a3b8;
-}
-
-.info-value {
-    font-size: 14px;
-    font-weight: 600;
-    color: #0f172a;
-}
-
-/* Card Title */
-.card-title {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 14px;
-    font-weight: 700;
-    color: #0f172a;
-    margin-bottom: 16px;
-    padding-bottom: 12px;
-    border-bottom: 2px solid #10b981;
-}
-
-.title-icon {
-    width: 18px;
-    height: 18px;
-    color: #10b981;
-}
-
-/* Panchang */
-.panchang-list {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.panchang-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 12px;
-    background: #f8fafc;
-    border-radius: 8px;
-}
-
-.panchang-label {
-    font-size: 12px;
-    color: #64748b;
-}
-
-.panchang-value {
-    font-size: 13px;
-    font-weight: 600;
-    color: #0f172a;
-}
-
-/* Upcoming */
-.upcoming-list {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.upcoming-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 10px 12px;
-    background: #f8fafc;
-    border-radius: 8px;
-}
-
-.upcoming-day {
-    width: 28px;
-    height: 28px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #10b981;
-    color: #fff;
-    font-size: 12px;
-    font-weight: 700;
-    border-radius: 6px;
-}
-
-.upcoming-name {
-    font-size: 13px;
-    font-weight: 500;
-    color: #0f172a;
-}
-
-/* Responsive */
-@media (max-width: 640px) {
-    .header-content {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    .header-title h1 { font-size: 22px; }
-    .calendar-day {
-        padding: 4px;
-    }
-    .day-number { font-size: 14px; }
-    .festival-name { display: none; }
-}
-</style>
-
-<?php include __DIR__ . '/footer.php'; ?>
+    </section>
+    
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-bottom" style="border:none;padding:0">
+                <p class="footer-copyright">&copy; <?= date('Y') ?> <?= $t('आकाशवाणी', 'Aakashvani') ?></p>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="/assets/js/app.js"></script>
+</body>
+</html>
