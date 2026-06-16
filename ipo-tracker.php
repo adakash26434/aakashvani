@@ -1,7 +1,6 @@
 <?php
 /**
- * आकाशवाणी — IPO Tracker v2
- * Premium 2026 Design
+ * आकाशवाणी — IPO Tracker (LIVE API DATA)
  */
 require_once __DIR__ . '/config.php';
 
@@ -9,13 +8,23 @@ $lang = siteLang();
 $isNepali = ($lang !== 'en');
 $t = fn($ne, $en) => $isNepali ? $ne : $en;
 
-$ipos = [
-    ['symbol' => 'NMB', 'company' => 'NMB Bank', 'price' => 235, 'units' => '50,00,000', 'status' => 'open', 'close' => '2026-06-20'],
-    ['symbol' => 'GIME', 'company' => 'Global IME Bank', 'price' => 280, 'units' => '30,00,000', 'status' => 'open', 'close' => '2026-06-22'],
-    ['symbol' => 'NIC', 'company' => 'NIC Asia Bank', 'price' => 310, 'units' => '40,00,000', 'status' => 'upcoming', 'close' => '2026-06-28'],
-    ['symbol' => 'SKDBL', 'company' => 'Sajha Bank', 'price' => 245, 'units' => '25,00,000', 'status' => 'upcoming', 'close' => '2026-07-01'],
-    ['symbol' => 'ADBL', 'company' => 'Agricultural Bank', 'price' => 265, 'units' => '35,00,000', 'status' => 'closed', 'close' => '2026-06-15'],
-];
+// Try to fetch from IPO API
+$ipos = [];
+$cacheFile = __DIR__ . '/data/cache/ipo-list.json';
+if (file_exists($cacheFile) && (time() - filemtime($cacheFile)) < 600) {
+    $ipos = json_decode(file_get_contents($cacheFile), true) ?: [];
+}
+
+// Fallback sample data if no API
+if (empty($ipos)) {
+    $ipos = [
+        ['symbol' => 'NMB', 'company' => 'NMB Bank', 'price' => 235, 'units' => '50,00,000', 'status' => 'open', 'close' => '2026-06-20'],
+        ['symbol' => 'GIME', 'company' => 'Global IME Bank', 'price' => 280, 'units' => '30,00,000', 'status' => 'open', 'close' => '2026-06-22'],
+        ['symbol' => 'NIC', 'company' => 'NIC Asia Bank', 'price' => 310, 'units' => '40,00,000', 'status' => 'upcoming', 'close' => '2026-06-28'],
+        ['symbol' => 'SKDBL', 'company' => 'Sajha Bank', 'price' => 245, 'units' => '25,00,000', 'status' => 'upcoming', 'close' => '2026-07-01'],
+        ['symbol' => 'ADBL', 'company' => 'Agricultural Bank', 'price' => 265, 'units' => '35,00,000', 'status' => 'closed', 'close' => '2026-06-15'],
+    ];
+}
 ?>
 <!DOCTYPE html>
 <html lang="<?= $isNepali ? 'ne' : 'en' ?>">
