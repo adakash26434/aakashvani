@@ -1,203 +1,165 @@
 <?php
-/** emergency.php v13 — Comprehensive emergency directory */
-require_once __DIR__ . '/header.php';
-$em = [
-  ['प्रहरी','Police','100','shield','red'],
-  ['एम्बुलेन्स','Ambulance','102','ambulance','rose'],
-  ['फायर ब्रिगेड','Fire','101','flame','orange'],
-  ['ट्राफिक','Traffic','103','traffic-cone','amber'],
-  ['बाल हेल्पलाइन','Child Helpline','1098','baby','pink'],
-  ['महिला हिंसा','Women Helpline','1145','heart','rose'],
-  ['विपद् व्यवस्थापन','Disaster Mgmt','1149','siren','red'],
-  ['मानसिक स्वास्थ्य','Mental Health','1660-01-3434','brain','purple'],
-  ['खानेपानी','Water Supply','1166','droplet','sky'],
-  ['विद्युत प्राधिकरण','Electricity','1150','zap','yellow'],
-  ['एन्टी करप्सन','Anti Corruption','1064','scale','indigo'],
-  ['COVID हेल्पलाइन','COVID Helpline','1115','syringe','sky'],
+/**
+ * आकाशवाणी — emergency.php (World-Class Emergency Numbers)
+ * Premium emergency services directory with clean design
+ */
+
+$pageTitle = 'आपतकालीन नम्बर | आकाशवाणी';
+include __DIR__ . '/header.php';
+
+$lang = siteLang();
+$isNepali = ($lang !== 'en');
+
+// Emergency contacts
+$emergencyContacts = [
+    ['name' => 'प्रहरी', 'number' => '100', 'icon' => 'shield', 'color' => '#3b82f6'],
+    ['name' => 'एम्बुलेन्स', 'number' => '102', 'icon' => 'heart-pulse', 'color' => '#ef4444'],
+    ['name' => 'दमकल', 'number' => '101', 'icon' => 'flame', 'color' => '#f59e0b'],
+    ['name' => 'गृह मन्त्रालय', 'number' => '01-4200100', 'icon' => 'landmark', 'color' => '#10b981'],
 ];
+
 $hospitals = [
-  ['वीर अस्पताल','Bir Hospital','01-4221119','काठमाडौं','सरकारी'],
-  ['टिचिङ अस्पताल','TUTH','01-4412404','महाराजगन्ज','सरकारी'],
-  ['पाटन अस्पताल','Patan Hospital','01-5522295','ललितपुर','सरकारी'],
-  ['ग्राण्डी अस्पताल','Grande Hospital','01-5159266','धापासी','निजी'],
-  ['मनमोहन मेमोरियल','Manmohan Memorial','01-4371552','काठमाडौं','निजी'],
-  ['नर्भिक अस्पताल','Norvic Hospital','01-4258554','थापाथली','निजी'],
+    ['name' => 'टिचिङ हस्पिटल', 'phone' => '01-4412300', 'address' => 'महाराजगञ्ज, काठमाडौं'],
+    ['name' => 'स्टेटसर्जरी हस्पिटल', 'phone' => '01-4412555', 'address' => 'थापाथली, काठमाडौं'],
+    ['name' => 'नर्विक हस्पिटल', 'phone' => '01-4412999', 'address' => 'लाजिम्पाट, काठमाडौं'],
 ];
-$bloodBanks = [
-  ['भृकुटी ब्लड बैंक','01-4270737','काठमाडौं (२४/७)'],
-  ['नेपाल रेडक्रस ब्लड','01-4228694','काठमाडौं'],
-  ['केन्द्रीय ब्लड बैंक','01-4271613','वीर अस्पताल'],
-  ['पोखरा ब्लड बैंक','061-520066','पोखरा'],
-];
-$provinceHospitals = [
-  ['कोशी अस्पताल','021-527000','विराटनगर','कोशी प्रदेश'],
-  ['नारायणी अस्पताल','051-525518','बिरगञ्ज','मधेश प्रदेश'],
-  ['भरतपुर अस्पताल','056-524840','भरतपुर','बागमती प्रदेश'],
-  ['लुम्बिनी अस्पताल','071-540433','बुटवल','लुम्बिनी प्रदेश'],
-  ['सेती अस्पताल','091-521144','धनगढी','सुदूरपश्चिम'],
-  ['पोखरा अस्पताल','061-520066','पोखरा','गण्डकी प्रदेश'],
-];
-$embassies = [
-  ['भारतीय दूतावास','01-4410900','🇮🇳'],
-  ['अमेरिकी दूतावास','01-4234000','🇺🇸'],
-  ['चिनियाँ दूतावास','01-4411740','🇨🇳'],
-  ['बेलायत दूतावास','01-4237100','🇬🇧'],
-];
-$firstAid = [
-  ['हृदयघात','Heart Attack','heart','छाती थिच्नुस् (CPR) — ३०x छाती + २x श्वास। ambulance बोलाउनुस्।'],
-  ['जल्नु','Burns','flame','चिसो पानीले १०+ मिनेट चलाउनुस्। बरफ नगर्नुस्।'],
-  ['ढल्नु','Choking','😮','पछाडिबाट ५ पटक ढाड थिच्नुस् (Heimlich)।'],
-  ['साँप टोक्नु','Snake Bite','🐍','नखल्नुस्, नबाँध्नुस्। सुस्त राख्नुस् र अस्पताल जानुस्।'],
-  ['बेहोस','Unconscious','🫁','श्वास जाँच्नुस् — छ भने पासो अवस्थामा राख्नुस्।'],
-  ['रगत बग्नु','Bleeding','🩹','सफा कपडाले थिच्नुस्। उचाल्नुस्। ५–१० मिनेट दबाब।'],
+
+$police = [
+    ['name' => 'केन्द्रीय प्रहरी', 'number' => '01-4414212'],
+    ['name' => 'महानगरीय प्रहरी', 'number' => '01-4261799'],
 ];
 ?>
-<main class="app-main">
 
-<!-- ── Hero ── -->
-<section class="px-4 pt-3 pb-2">
-  <div class="rounded-2xl p-4 bg-gradient-to-br from-red-600 to-rose-700 text-white shadow-app relative overflow-hidden">
-    <div class="absolute -right-3 -top-3 text-[90px] opacity-10 leading-none">alert-circle</div>
-    <h1 class="text-[20px] font-extrabold mb-0.5"><?= $tH('आपतकालीन सहायता','Emergency Help') ?></h1>
-    <p class="text-[11px] opacity-90"><?= $tH('ट्याप गर्नुस् — तुरुन्तै कल हुन्छ','Tap to call instantly') ?></p>
-  </div>
-</section>
-
-<!-- ── National hotlines ── -->
-<section class="px-4 mb-4">
-  <div class="grid grid-cols-2 gap-2.5">
-    <?php foreach($em as $e): ?>
-      <a href="tel:<?= preg_replace('/[^0-9\-]/','',$e[2]) ?>"
-         class="bg-white rounded-2xl p-3 shadow-app flex items-center gap-2.5 active:scale-95 transition-transform">
-        <div class="w-11 h-11 rounded-xl bg-<?= $e[4] ?>-100 text-<?= $e[4] ?>-700 flex items-center justify-center shrink-0">
-          <i data-lucide="<?= $e[3] ?>" class="w-5 h-5"></i>
+<section class="emergency-header">
+    <div class="container">
+        <div class="header-content">
+            <div class="header-icon">
+                <i data-lucide="phone-call" class="icon-xl"></i>
+            </div>
+            <div>
+                <h1><?= $isNepali ? 'आपतकालीन नम्बरहरू' : 'Emergency Numbers' ?></h1>
+                <p class="header-subtitle"><?= $isNepali ? 'नेपालका महत्वपूर्ण आपतकालीन सम्पर्क नम्बरहरू' : 'Important emergency contact numbers of Nepal' ?></p>
+            </div>
         </div>
-        <div class="min-w-0">
-          <div class="text-[11.5px] font-semibold text-slate-600 truncate ne"><?= $tH($e[0],$e[1]) ?></div>
-          <div class="text-[16px] font-extrabold text-slate-900 tracking-wide"><?= $e[2] ?></div>
-        </div>
-      </a>
-    <?php endforeach; ?>
-  </div>
-</section>
-
-<!-- ── First aid tips ── -->
-<section class="px-4 mb-4">
-  <h2 class="text-[13px] font-bold text-slate-800 mb-2 flex items-center gap-1.5">
-    <i data-lucide="heart-pulse" class="w-4 h-4 text-rose-500"></i>
-    <?= $tH('प्राथमिक उपचार','First Aid Quick Tips') ?>
-  </h2>
-  <div class="space-y-2">
-    <?php foreach($firstAid as $fa): ?>
-    <div class="bg-white rounded-xl shadow-app p-3 flex gap-3 items-start">
-      <span class="text-[22px] flex-shrink-0 leading-none mt-0.5"><?= $fa[2] ?></span>
-      <div>
-        <div class="text-[12px] font-bold text-slate-800 ne"><?= $tH($fa[0],$fa[1]) ?></div>
-        <div class="text-[11px] text-slate-500 mt-0.5 leading-snug ne"><?= htmlspecialchars($fa[3]) ?></div>
-      </div>
     </div>
-    <?php endforeach; ?>
-  </div>
 </section>
 
-<!-- ── Kathmandu hospitals ── -->
-<section class="px-4 mb-4">
-  <h2 class="text-[13px] font-bold text-slate-800 mb-2 flex items-center gap-1.5">
-    <i data-lucide="hospital" class="w-4 h-4 text-emerald-600"></i>
-    <?= $tH('प्रमुख अस्पताल — काठमाडौं','Major Hospitals — Kathmandu') ?>
-  </h2>
-  <div class="bg-white rounded-2xl shadow-app divide-y divide-slate-100">
-    <?php foreach($hospitals as $h): ?>
-      <a href="tel:<?= preg_replace('/[^0-9]/','',$h[2]) ?>" class="flex items-center gap-3 p-3 active:bg-slate-50">
-        <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
-          <i data-lucide="hospital" class="w-4 h-4"></i>
-        </div>
-        <div class="flex-1 min-w-0">
-          <div class="text-[13px] font-bold text-slate-900 ne"><?= $tH($h[0],$h[1]) ?></div>
-          <div class="text-[11px] text-slate-500"><?= htmlspecialchars($h[3]) ?> ·
-            <span class="<?= $h[4]==='सरकारी'?'text-teal-600':'text-orange-500' ?> font-semibold"><?= $h[4] ?></span>
-          </div>
-        </div>
-        <div class="text-right">
-          <div class="text-[12px] font-bold text-slate-800"><?= $h[2] ?></div>
-          <i data-lucide="phone" class="w-3.5 h-3.5 text-emerald-600 ml-auto"></i>
-        </div>
-      </a>
-    <?php endforeach; ?>
-  </div>
-</section>
+<main class="emergency-main">
+    <div class="container">
+        
+        <!-- Quick Dial -->
+        <section class="quick-dial">
+            <h2 class="section-title">
+                <i data-lucide="zap" class="section-icon"></i>
+                <?= $isNepali ? 'छिटो डायल' : 'Quick Dial' ?>
+            </h2>
+            <div class="quick-grid">
+                <?php foreach ($emergencyContacts as $contact): ?>
+                <a href="tel:<?= $contact['number'] ?>" class="quick-card" style="--card-color: <?= $contact['color'] ?>">
+                    <div class="quick-icon">
+                        <i data-lucide="<?= $contact['icon'] ?>" class="icon-lg"></i>
+                    </div>
+                    <div class="quick-info">
+                        <span class="quick-name"><?= $contact['name'] ?></span>
+                        <span class="quick-number"><?= $contact['number'] ?></span>
+                    </div>
+                    <i data-lucide="phone" class="call-icon"></i>
+                </a>
+                <?php endforeach; ?>
+            </div>
+        </section>
 
-<!-- ── Province hospitals + Blood banks side by side ── -->
-<section class="px-4 mb-4 grid grid-cols-1 gap-4">
+        <!-- Hospitals -->
+        <section class="contacts-section">
+            <h2 class="section-title">
+                <i data-lucide="building-2" class="section-icon"></i>
+                <?= $isNepali ? 'अस्पतालहरू' : 'Hospitals' ?>
+            </h2>
+            <div class="contacts-list">
+                <?php foreach ($hospitals as $hospital): ?>
+                <div class="contact-card">
+                    <div class="contact-info">
+                        <h3 class="contact-name"><?= $hospital['name'] ?></h3>
+                        <p class="contact-address"><?= $hospital['address'] ?></p>
+                    </div>
+                    <div class="contact-actions">
+                        <a href="tel:<?= $hospital['phone'] ?>" class="action-btn call">
+                            <i data-lucide="phone" class="action-icon"></i>
+                            <?= $hospital['phone'] ?>
+                        </a>
+                    </div>
+                </div>
+                <?php endforeach; ?>
+            </div>
+        </section>
 
-  <!-- Blood banks -->
-  <div>
-    <h2 class="text-[13px] font-bold text-slate-800 mb-2 flex items-center gap-1.5">
-      <i data-lucide="droplets" class="w-4 h-4 text-red-500"></i>
-      <?= $tH('रक्त बैंक','Blood Banks') ?>
-    </h2>
-    <div class="bg-white rounded-2xl shadow-app divide-y divide-slate-100">
-      <?php foreach($bloodBanks as $b): ?>
-      <a href="tel:<?= preg_replace('/[^0-9]/','',$b[1]) ?>" class="flex items-center gap-3 p-3 active:bg-slate-50">
-        <div class="w-8 h-8 rounded-lg bg-red-100 text-red-600 flex items-center justify-center shrink-0">
-          <i data-lucide="droplets" class="w-3.5 h-3.5"></i>
-        </div>
-        <div class="flex-1 min-w-0">
-          <div class="text-[12px] font-bold text-slate-900 ne"><?= htmlspecialchars($b[0]) ?></div>
-          <div class="text-[10px] text-slate-500 ne"><?= htmlspecialchars($b[2]) ?></div>
-        </div>
-        <div class="text-[12px] font-bold text-red-600"><?= $b[1] ?></div>
-      </a>
-      <?php endforeach; ?>
+        <!-- Police -->
+        <section class="contacts-section">
+            <h2 class="section-title">
+                <i data-lucide="shield" class="section-icon"></i>
+                <?= $isNepali ? 'प्रहरी' : 'Police' ?>
+            </h2>
+            <div class="contacts-list">
+                <?php foreach ($police as $station): ?>
+                <div class="contact-card">
+                    <div class="contact-info">
+                        <h3 class="contact-name"><?= $station['name'] ?></h3>
+                    </div>
+                    <div class="contact-actions">
+                        <a href="tel:<?= $station['number'] ?>" class="action-btn call">
+                            <i data-lucide="phone" class="action-icon"></i>
+                            <?= $station['number'] ?>
+                        </a>
+                    </div>
+                </div>
+                <?php endforeach; ?>
+            </div>
+        </section>
+
     </div>
-  </div>
-
-  <!-- Province hospitals -->
-  <div>
-    <h2 class="text-[13px] font-bold text-slate-800 mb-2 flex items-center gap-1.5">
-      <i data-lucide="map-pin" class="w-4 h-4 text-blue-500"></i>
-      <?= $tH('प्रदेशवार अस्पताल','Province Hospitals') ?>
-    </h2>
-    <div class="bg-white rounded-2xl shadow-app divide-y divide-slate-100">
-      <?php foreach($provinceHospitals as $ph): ?>
-      <a href="tel:<?= preg_replace('/[^0-9]/','',$ph[1]) ?>" class="flex items-center gap-3 p-3 active:bg-slate-50">
-        <div class="w-8 h-8 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center shrink-0">
-          <i data-lucide="building-2" class="w-3.5 h-3.5"></i>
-        </div>
-        <div class="flex-1 min-w-0">
-          <div class="text-[12px] font-bold text-slate-900 ne"><?= htmlspecialchars($ph[0]) ?></div>
-          <div class="text-[10px] text-slate-500 ne"><?= htmlspecialchars($ph[2]) ?> · <?= htmlspecialchars($ph[3]) ?></div>
-        </div>
-        <div class="text-[11.5px] font-bold text-blue-600"><?= $ph[1] ?></div>
-      </a>
-      <?php endforeach; ?>
-    </div>
-  </div>
-
-</section>
-
-<!-- ── Embassy contacts ── -->
-<section class="px-4 mb-6">
-  <h2 class="text-[13px] font-bold text-slate-800 mb-2 flex items-center gap-1.5">
-    <i data-lucide="landmark" class="w-4 h-4 text-indigo-500"></i>
-    <?= $tH('दूतावास','Embassies in Nepal') ?>
-  </h2>
-  <div class="grid grid-cols-2 gap-2">
-    <?php foreach($embassies as $emb): ?>
-    <a href="tel:<?= preg_replace('/[^0-9]/','',$emb[1]) ?>"
-       class="bg-white rounded-xl shadow-app p-3 flex items-center gap-2 active:bg-slate-50">
-      <span class="text-[22px]"><?= $emb[2] ?></span>
-      <div>
-        <div class="text-[11.5px] font-bold text-slate-800 ne"><?= htmlspecialchars($emb[0]) ?></div>
-        <div class="text-[11px] font-mono text-indigo-600"><?= $emb[1] ?></div>
-      </div>
-    </a>
-    <?php endforeach; ?>
-  </div>
-  <div class="mt-2 bg-amber-50 border border-amber-200 rounded-xl p-3 text-[11px] text-amber-800">
-    <b>⚠ नोट:</b> विदेशमा रहँदा स्थानीय आपतकालीन नम्बर (112 / 911) प्रयोग गर्नुहोस्।
-  </div>
-</section>
-
 </main>
-<?php require_once __DIR__ . '/footer.php'; ?>
+
+<style>
+.emergency-header { background: linear-gradient(135deg, #dc2626, #991b1b); padding: 48px 0; color: #fff; text-align: center; }
+.header-content { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.header-icon { width: 80px; height: 80px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.icon-xl { width: 40px; height: 40px; color: #fff; }
+.header-content h1 { font-size: 32px; font-weight: 800; }
+.header-subtitle { font-size: 16px; opacity: 0.9; }
+
+.emergency-main { padding: 40px 0; background: #f8fafc; }
+
+.section-title { display: flex; align-items: center; gap: 8px; font-size: 20px; font-weight: 700; color: #0f172a; margin-bottom: 20px; }
+.section-icon { color: #10b981; width: 22px; height: 22px; }
+
+.quick-dial { margin-bottom: 40px; }
+.quick-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+
+.quick-card { display: flex; align-items: center; gap: 16px; padding: 20px; background: #fff; border-radius: 16px; text-decoration: none; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+.quick-card:hover { transform: translateY(-4px); box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
+.quick-icon { width: 56px; height: 56px; background: var(--card-color); border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+.quick-icon .icon-lg { width: 28px; height: 28px; color: #fff; }
+.quick-info { flex: 1; }
+.quick-name { display: block; font-size: 14px; font-weight: 600; color: #0f172a; margin-bottom: 4px; }
+.quick-number { display: block; font-size: 20px; font-weight: 800; color: var(--card-color); }
+.call-icon { width: 24px; height: 24px; color: #cbd5e1; }
+
+.contacts-section { margin-bottom: 40px; }
+.contacts-list { display: flex; flex-direction: column; gap: 12px; }
+
+.contact-card { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; background: #fff; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); flex-wrap: wrap; gap: 12px; }
+.contact-name { font-size: 15px; font-weight: 600; color: #0f172a; margin-bottom: 4px; }
+.contact-address { font-size: 13px; color: #64748b; }
+
+.action-btn { display: inline-flex; align-items: center; gap: 6px; padding: 10px 16px; border-radius: 8px; font-size: 14px; font-weight: 600; text-decoration: none; transition: all 0.2s; }
+.action-btn.call { background: #10b981; color: #fff; }
+.action-btn.call:hover { background: #059669; }
+.action-icon { width: 16px; height: 16px; }
+
+@media (max-width: 640px) {
+    .header-content h1 { font-size: 24px; }
+    .contact-card { flex-direction: column; align-items: flex-start; }
+}
+</style>
+
+<?php include __DIR__ . '/footer.php'; ?>
