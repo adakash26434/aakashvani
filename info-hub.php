@@ -36,8 +36,8 @@ $sections = [
         'color' => '#3b82f6',
         'items' => [
             ['name' => $t('IPO ट्र्याकर', 'IPO Tracker'), 'href' => '/ipo-tracker.php'],
-            ['name' => $t('मुद्रा', 'Currency'), 'href' => '/currency.php'],
-            ['name' => $t('सुनको मूल्य', 'Gold Price'), 'href' => '/gold-price.php'],
+            ['name' => $t('मुद्रा', 'Currency'), 'href' => '/currency.php', 'new' => true],
+            ['name' => $t('सुनको मूल्य', 'Gold Price'), 'href' => '/gold-price.php', 'new' => true],
         ]
     ],
     [
@@ -65,8 +65,8 @@ $sections = [
         'icon' => 'graduation-cap',
         'color' => '#06b6d4',
         'items' => [
-            ['name' => $t('नोकरी', 'Jobs'), 'href' => '/nokari.php'],
-            ['name' => $t('लोकसेवा', 'Gov Jobs'), 'href' => '/loksewa.php'],
+            ['name' => $t('नोकरी', 'Jobs'), 'href' => '/nokari.php', 'new' => true],
+            ['name' => $t('लोकसेवा', 'Gov Jobs'), 'href' => '/loksewa.php', 'new' => true],
             ['name' => $t('क्रिकेट', 'Cricket'), 'href' => '/cricket.php'],
         ]
     ],
