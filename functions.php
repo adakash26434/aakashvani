@@ -152,3 +152,41 @@ if (!function_exists('searchNews')) {
         }
     }
 }
+
+// Security Headers for APIs
+if (!function_exists('sendSecurityHeaders')) {
+    function sendSecurityHeaders(): void {
+        header('X-Content-Type-Options: nosniff');
+        header('X-Frame-Options: SAMEORIGIN');
+        header('X-XSS-Protection: 1; mode=block');
+        header('Referrer-Policy: strict-origin-when-cross-origin');
+    }
+}
+
+// Rate limiting check
+if (!function_exists('checkRateLimit')) {
+    function checkRateLimit(string $key, int $maxRequests = 60, int $window = 60): bool {
+        $cacheDir = __DIR__ . '/data/cache/';
+        if (!is_dir($cacheDir)) @mkdir($cacheDir, 0755, true);
+        $file = $cacheDir . 'rate_' . md5($key) . '.json';
+        $now = time();
+        
+        $data = ['count' => 0, 'window' => $now];
+        if (file_exists($file)) {
+            $data = json_decode(file_get_contents($file), true) ?: $data;
+        }
+        
+        if ($now - $data['window'] > $window) {
+            $data = ['count' => 0, 'window' => $now];
+        }
+        
+        $data['count']++;
+        
+        if ($data['count'] > $maxRequests) {
+            return false;
+        }
+        
+        file_put_contents($file, json_encode($data));
+        return true;
+    }
+}

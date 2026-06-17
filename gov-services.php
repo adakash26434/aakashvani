@@ -102,15 +102,24 @@ async function loadServices() {
     const loading = document.getElementById('services-loading');
     const error = document.getElementById('services-error');
     try {
-        const resp = await fetch('/api/gov-services.php');
+        const resp = await fetch('/api/gov-services.php', { cache: 'no-store' });
+        if (!resp.ok) throw new Error('HTTP ' + resp.status);
         const data = await resp.json();
-        if (data.ok) {
+        if (data && data.services) {
             allServices = data.services;
             renderServices('all');
             loading.style.display = 'none';
             grid.style.display = 'grid';
-        } else { throw new Error(); }
-    } catch(e) { loading.style.display = 'none'; error.style.display = 'block'; }
+        } else { 
+            console.log('API response:', data);
+            throw new Error('Invalid data format'); 
+        }
+    } catch(e) { 
+        console.error('Services load error:', e);
+        loading.style.display = 'none'; 
+        error.style.display = 'block';
+        error.innerHTML = '<p style="color:var(--error);text-align:center;padding:var(--space-4)"><?= $t("सेवा लोड हुन सकेन। कृपया पुनः प्रयास गर्नुहोस्।","Services failed to load. Please try again.") ?></p><button onclick="loadServices()" class="btn btn-primary"><?= $t("पुनः लोड गर्नुहोस्","Reload") ?></button>';
+    }
 }
 function renderServices(cat) {
     const grid = document.getElementById('services-grid');
