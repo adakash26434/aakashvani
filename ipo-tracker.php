@@ -3,121 +3,10 @@
  * आकाशवाणी — IPO Tracker (LIVE API DATA)
  */
 require_once __DIR__ . '/config.php';
-
 $lang = siteLang();
 $isNepali = ($lang !== 'en');
 $t = fn($ne, $en) => $isNepali ? $ne : $en;
-
-// Try to fetch from IPO API
-$ipos = [];
-$cacheFile = __DIR__ . '/data/cache/ipo-list.json';
-$forceRefresh = isset($_GET['refresh']);
-
-// Try cache first
-if (!$forceRefresh && file_exists($cacheFile) && (time() - filemtime($cacheFile)) < 600) {
-    $data = json_decode(file_get_contents($cacheFile), true);
-    $ipos = $data['ipos'] ?? $data ?? [];
-}
-
-// Fetch fresh data if no cache or empty
-if (empty($ipos)) {
-    $ipos = fetchIPOsFromAPI();
-}
-
-// Save to cache
-if (!empty($ipos)) {
-    $cacheData = ['ipos' => $ipos, 'fetched_at' => date('Y-m-d H:i:s')];
-    file_put_contents($cacheFile, json_encode($cacheData, JSON_UNESCAPED_UNICODE));
-}
-
-function fetchIPOsFromAPI(): array {
-    $ipos = [];
-    
-    // Try ShareSansar API
-    $ch = curl_init('https://www.sharesansar.com/existing-issues?type=1&draw=1&start=0&length=20&_=' . time());
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, [
-        'X-Requested-With: XMLHttpRequest',
-        'Accept: application/json',
-        'Referer: https://www.sharesansar.com/existing-issues'
-    ]);
-    
-    $resp = curl_exec($ch);
-    $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
-    
-    if ($resp && $code === 200) {
-        $data = json_decode($resp, true);
-        if (!empty($data['data']) && is_array($data['data'])) {
-            foreach ($data['data'] as $item) {
-                $co = $item['company'] ?? [];
-                $symbol = strip_tags($co['symbol'] ?? '');
-                $name = strip_tags($co['companyname'] ?? '');
-                
-                if (empty($symbol) && empty($name)) continue;
-                
-                // Determine status
-                $closeDate = trim($item['closing_date'] ?? '');
-                $status = 'upcoming';
-                if (!empty($closeDate)) {
-                    $closeTs = strtotime($closeDate);
-                    if ($closeTs < time()) {
-                        $status = 'closed';
-                    } else {
-                        $status = 'open';
-                    }
-                }
-                
-                $ipos[] = [
-                    'symbol' => $symbol ?: $name,
-                    'company' => $name ?: $symbol,
-                    'price' => (int)($item['price'] ?? 0),
-                    'units' => number_format((int)($item['total_units'] ?? 0)),
-                    'status' => $status,
-                    'close' => $closeDate,
-                    'open' => trim($item['opening_date'] ?? ''),
-                ];
-            }
-        }
-    }
-    
-    // Fallback to MeroLagani if empty
-    if (empty($ipos)) {
-        $ipos = fetchFromMeroLagani();
-    }
-    
-    return $ipos;
-}
-
-function fetchFromMeroLagani(): array {
-    $ipos = [];
-    $html = @file_get_contents('https://www.merolagani.com/IPOList');
-    
-    if ($html && preg_match_all('/<tr[^>]*>(.*?)<\/tr>/is', $html, $matches)) {
-        foreach ($matches[1] as $row) {
-            if (preg_match('/IPO/i', $row)) {
-                preg_match('/<td[^>]*>(.*?)<\/td>/s', $row, $cols);
-                preg_match('/<a[^>]*>(.*?)<\/a>/s', $row, $link);
-                
-                if (!empty($cols[1])) {
-                    $ipos[] = [
-                        'symbol' => trim(strip_tags($cols[1])),
-                        'company' => trim(strip_tags($link[1] ?? $cols[1])),
-                        'price' => 0,
-                        'units' => '-',
-                        'status' => 'open',
-                        'close' => date('Y-m-d', strtotime('+7 days')),
-                    ];
-                }
-            }
-        }
-    }
-    
-    return array_slice($ipos, 0, 20);
-}
+// IPO data loaded via JavaScript API from /api/ipo-data.php
 ?>
 <!DOCTYPE html>
 <html lang="<?= $isNepali ? 'ne' : 'en' ?>">
@@ -152,6 +41,9 @@ function fetchFromMeroLagani(): array {
         .ipo-detail-value { font-size: 0.875rem; font-weight: 600; color: var(--dark-900); }
         .section { padding: var(--space-12) 0; }
         .ipo-section:nth-child(even) { background: var(--dark-50); }
+        .loading-spinner { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: var(--space-12); }
+        .spinner { width: 48px; height: 48px; border: 4px solid var(--dark-200); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
         
         /* Responsive */
         @media (max-width: 640px) {
@@ -208,63 +100,28 @@ function fetchFromMeroLagani(): array {
     
     <section class="ipo-section">
         <div class="container">
-            <!-- Open IPOs -->
-            <h2 class="text-xl font-bold mb-6" style="padding-top:var(--space-6)"><?= $t('खुला IPO', 'Open IPOs') ?></h2>
-            <div class="ipo-grid">
-                <?php foreach (array_filter($ipos, fn($i) => $i['status'] === 'open') as $ipo): ?>
-                <div class="ipo-card">
-                    <div class="ipo-header">
-                        <span class="ipo-symbol"><?= $ipo['symbol'] ?></span>
-                        <span class="ipo-status open"><?= $t('खुला', 'OPEN') ?></span>
-                    </div>
-                    <h3 class="ipo-company"><?= $ipo['company'] ?></h3>
-                    <div class="ipo-details">
-                        <div class="ipo-detail">
-                            <span class="ipo-detail-label"><?= $t('मूल्य', 'Price') ?></span>
-                            <span class="ipo-detail-value">रु <?= number_format($ipo['price']) ?></span>
-                        </div>
-                        <div class="ipo-detail">
-                            <span class="ipo-detail-label"><?= $t('कुल युनिट', 'Total Units') ?></span>
-                            <span class="ipo-detail-value"><?= $ipo['units'] ?></span>
-                        </div>
-                        <div class="ipo-detail">
-                            <span class="ipo-detail-label"><?= $t('बन्द हुने', 'Close Date') ?></span>
-                            <span class="ipo-detail-value"><?= $ipo['close'] ?></span>
-                        </div>
-                    </div>
-                    <button class="btn btn-primary w-full"><?= $t('थप विवरण', 'More Details') ?></button>
-                </div>
-                <?php endforeach; ?>
+            <!-- Loading State -->
+            <div id="ipo-loading" class="loading-spinner">
+                <div class="spinner"></div>
+                <p style="margin-top:var(--space-4);color:var(--dark-500)"><?= $t('IPO डाटा लोड हुँदै...', 'Loading IPO data...') ?></p>
             </div>
             
-            <!-- Upcoming IPOs -->
-            <h2 class="text-xl font-bold mb-6" style="padding-top:var(--space-8)"><?= $t('आगामी IPO', 'Upcoming IPOs') ?></h2>
-            <div class="ipo-grid">
-                <?php foreach (array_filter($ipos, fn($i) => $i['status'] === 'upcoming') as $ipo): ?>
-                <div class="ipo-card">
-                    <div class="ipo-header">
-                        <span class="ipo-symbol"><?= $ipo['symbol'] ?></span>
-                        <span class="ipo-status upcoming"><?= $t('आगामी', 'UPCOMING') ?></span>
-                    </div>
-                    <h3 class="ipo-company"><?= $ipo['company'] ?></h3>
-                    <div class="ipo-details">
-                        <div class="ipo-detail">
-                            <span class="ipo-detail-label"><?= $t('मूल्य', 'Price') ?></span>
-                            <span class="ipo-detail-value">रु <?= number_format($ipo['price']) ?></span>
-                        </div>
-                        <div class="ipo-detail">
-                            <span class="ipo-detail-label"><?= $t('कुल युनिट', 'Total Units') ?></span>
-                            <span class="ipo-detail-value"><?= $ipo['units'] ?></span>
-                        </div>
-                        <div class="ipo-detail">
-                            <span class="ipo-detail-label"><?= $t('खुला हुने', 'Open Date') ?></span>
-                            <span class="ipo-detail-value"><?= $ipo['close'] ?></span>
-                        </div>
-                    </div>
-                    <button class="btn btn-secondary w-full"><?= $t('अलर्ट सेट गर्नुहोस्', 'Set Alert') ?></button>
-                </div>
-                <?php endforeach; ?>
+            <!-- Error State -->
+            <div id="ipo-error" style="display:none;text-align:center;padding:var(--space-8)">
+                <p style="color:var(--error);margin-bottom:var(--space-4)"><?= $t('IPO डाटा लोड हुन सकेन', 'Failed to load IPO data') ?></p>
+                <button onclick="loadIPOs()" class="btn btn-primary"><?= $t('पुनः प्रयास गर्नुहोस्', 'Retry') ?></button>
             </div>
+            
+            <!-- Open IPOs -->
+            <h2 class="text-xl font-bold mb-6" id="open-title" style="padding-top:var(--space-6);display:none"><?= $t('खुला IPO', 'Open IPOs') ?></h2>
+            <div class="ipo-grid" id="open-ipos" style="display:none"></div>
+            
+            <!-- Upcoming IPOs -->
+            <h2 class="text-xl font-bold mb-6" id="upcoming-title" style="padding-top:var(--space-8);display:none"><?= $t('आगामी IPO', 'Upcoming IPOs') ?></h2>
+            <div class="ipo-grid" id="upcoming-ipos" style="display:none"></div>
+            
+            <!-- Last Updated -->
+            <p id="ipo-updated" style="display:none;text-align:center;padding:var(--space-6);font-size:0.75rem;color:var(--dark-400)"></p>
         </div>
     </section>
     
@@ -277,5 +134,103 @@ function fetchFromMeroLagani(): array {
     </footer>
     
     <script src="/assets/js/app.js"></script>
+<script>
+async function loadIPOs() {
+    const loading = document.getElementById('ipo-loading');
+    const error = document.getElementById('ipo-error');
+    const openGrid = document.getElementById('open-ipos');
+    const upcomingGrid = document.getElementById('upcoming-ipos');
+    const openTitle = document.getElementById('open-title');
+    const upcomingTitle = document.getElementById('upcoming-title');
+    const updated = document.getElementById('ipo-updated');
+    
+    loading.style.display = 'flex';
+    error.style.display = 'none';
+    
+    try {
+        const resp = await fetch('/api/ipo-data.php');
+        const data = await resp.json();
+        
+        if (data.ok && data.ipos && data.ipos.length > 0) {
+            const now = new Date().toISOString().split('T')[0];
+            const openIPOs = data.ipos.filter(i => i.status === 'Active' || (i.openDate && i.closeDate && i.openDate <= now && i.closeDate >= now));
+            const upcomingIPOs = data.ipos.filter(i => i.status === 'Upcoming' || !i.openDate || i.openDate > now);
+            
+            if (openIPOs.length > 0) {
+                openGrid.innerHTML = openIPOs.map(ipo => `
+                    <div class="ipo-card">
+                        <div class="ipo-header">
+                            <span class="ipo-symbol">${ipo.symbol || '-'}</span>
+                            <span class="ipo-status open"><?= $t('खुला', 'OPEN') ?></span>
+                        </div>
+                        <h3 class="ipo-company">${ipo.name || ipo.company || '-'}</h3>
+                        <div class="ipo-details">
+                            <div class="ipo-detail">
+                                <span class="ipo-detail-label"><?= $t('मूल्य', 'Price') ?></span>
+                                <span class="ipo-detail-value">${ipo.price || 'रु 0'}</span>
+                            </div>
+                            <div class="ipo-detail">
+                                <span class="ipo-detail-label"><?= $t('कुल युनिट', 'Total Units') ?></span>
+                                <span class="ipo-detail-value">${ipo.shares || '-'}</span>
+                            </div>
+                            <div class="ipo-detail">
+                                <span class="ipo-detail-label"><?= $t('बन्द हुने', 'Close Date') ?></span>
+                                <span class="ipo-detail-value">${ipo.closeDate || '-'}</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary w-full"><?= $t('थप विवरण', 'More Details') ?></button>
+                    </div>
+                `).join('');
+                openTitle.style.display = 'block';
+                openGrid.style.display = 'grid';
+            }
+            
+            if (upcomingIPOs.length > 0) {
+                upcomingGrid.innerHTML = upcomingIPOs.map(ipo => `
+                    <div class="ipo-card">
+                        <div class="ipo-header">
+                            <span class="ipo-symbol">${ipo.symbol || '-'}</span>
+                            <span class="ipo-status upcoming"><?= $t('आगामी', 'UPCOMING') ?></span>
+                        </div>
+                        <h3 class="ipo-company">${ipo.name || ipo.company || '-'}</h3>
+                        <div class="ipo-details">
+                            <div class="ipo-detail">
+                                <span class="ipo-detail-label"><?= $t('मूल्य', 'Price') ?></span>
+                                <span class="ipo-detail-value">${ipo.price || 'रु 0'}</span>
+                            </div>
+                            <div class="ipo-detail">
+                                <span class="ipo-detail-label"><?= $t('कुल युनिट', 'Total Units') ?></span>
+                                <span class="ipo-detail-value">${ipo.shares || '-'}</span>
+                            </div>
+                            <div class="ipo-detail">
+                                <span class="ipo-detail-label"><?= $t('खुला हुने', 'Open Date') ?></span>
+                                <span class="ipo-detail-value">${ipo.openDate || '-'}</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary w-full"><?= $t('अलर्ट सेट गर्नुहोस्', 'Set Alert') ?></button>
+                    </div>
+                `).join('');
+                upcomingTitle.style.display = 'block';
+                upcomingGrid.style.display = 'grid';
+            }
+            
+            if (data.fetched_at) {
+                updated.textContent = '<?= $t("अन्तिम अपडेट:", "Last updated:") ?> ' + data.fetched_at;
+                updated.style.display = 'block';
+            }
+            
+            loading.style.display = 'none';
+        } else {
+            throw new Error('No IPO data');
+        }
+    } catch(e) {
+        loading.style.display = 'none';
+        error.style.display = 'block';
+        console.error('IPO Error:', e);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', loadIPOs);
+</script>
 </body>
 </html>
