@@ -13,6 +13,24 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
 
 // Page config
 $pageTitle = $t('आकाशवाणी — सूचनाको खुला आकाश', 'Aakashvani — Your Gateway to Information');
+
+// Fetch homepage news server-side
+$homepageNews = [];
+$apiBase = 'https://news.bandanasigdel.com.np';
+$ch = curl_init($apiBase . '/api/news-rss.php?limit=4&cat=general');
+curl_setopt_array($ch, [
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_TIMEOUT => 8,
+    CURLOPT_FOLLOWLOCATION => true,
+]);
+$apiResp = curl_exec($ch);
+curl_close($ch);
+if ($apiResp) {
+    $apiData = json_decode($apiResp, true);
+    if (!empty($apiData['items'])) {
+        $homepageNews = array_slice($apiData['items'], 0, 4);
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="<?= $isNepali ? 'ne' : 'en' ?>">
@@ -262,7 +280,23 @@ $pageTitle = $t('आकाशवाणी — सूचनाको खुला
                 </div>
                 
                 <div class="news-grid" id="newsGrid">
-                    <!-- News Card 1 -->
+<?php if (!empty($homepageNews)): ?>
+    <?php foreach ($homepageNews as $item): ?>
+                    <a href="<?= htmlspecialchars($item['internalUrl'] ?? $item['link'] ?? '#') ?>" class="news-card">
+                        <div class="card-image-wrapper">
+                            <img src="<?= htmlspecialchars($item['image'] ?? 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=400&h=250&fit=crop') ?>" alt="<?= htmlspecialchars(mb_substr($item['title'] ?? '', 0, 60, 'UTF-8')) ?>" class="card-image" loading="lazy">
+                            <span class="card-category-badge"><?= htmlspecialchars(ucfirst($item['cat'] ?? 'general')) ?></span>
+                        </div>
+                        <div class="card-body">
+                            <h3 class="card-title"><?= htmlspecialchars(mb_substr($item['title'] ?? '', 0, 100, 'UTF-8')) ?></h3>
+                            <div class="card-meta">
+                                <span class="meta-source"><?= htmlspecialchars($item['sourceLabel'] ?? 'Aakashvani') ?></span>
+                                <span class="meta-time"><?= htmlspecialchars($item['ago'] ?? '') ?></span>
+                            </div>
+                        </div>
+                    </a>
+    <?php endforeach; ?>
+<?php else: ?>
                     <a href="/news-post.php" class="news-card">
                         <div class="card-image-wrapper">
                             <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&h=250&fit=crop" alt="News" class="card-image" loading="lazy">
@@ -276,8 +310,6 @@ $pageTitle = $t('आकाशवाणी — सूचनाको खुला
                             </div>
                         </div>
                     </a>
-                    
-                    <!-- News Card 2 -->
                     <a href="/news-post.php" class="news-card">
                         <div class="card-image-wrapper">
                             <img src="https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=400&h=250&fit=crop" alt="News" class="card-image" loading="lazy">
@@ -291,8 +323,6 @@ $pageTitle = $t('आकाशवाणी — सूचनाको खुला
                             </div>
                         </div>
                     </a>
-                    
-                    <!-- News Card 3 -->
                     <a href="/news-post.php" class="news-card">
                         <div class="card-image-wrapper">
                             <img src="https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=400&h=250&fit=crop" alt="News" class="card-image" loading="lazy">
@@ -306,7 +336,9 @@ $pageTitle = $t('आकाशवाणी — सूचनाको खुला
                             </div>
                         </div>
                     </a>
+<?php endif; ?>
                 </div>
+
             </div>
 
             <!-- Quick Tools Section -->
@@ -504,9 +536,9 @@ $pageTitle = $t('आकाशवाणी — सूचनाको खुला
                     if (!resp.ok) throw new Error('News API Error');
                     
                     const data = await resp.json();
-                    if (data.news && data.news.length > 0) {
-                        this.updateFeatured(data.news[0]);
-                        this.updateGrid(data.news.slice(1, 4));
+                    if (data.items && data.items.length > 0) {
+                        this.updateFeatured(data.items[0]);
+                        this.updateGrid(data.items.slice(1, 4));
                     }
                 } catch (err) {
                     console.warn('News data load failed:', err.message);

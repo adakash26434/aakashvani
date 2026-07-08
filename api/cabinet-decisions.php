@@ -34,9 +34,28 @@ try {
     ], JSON_UNESCAPED_UNICODE);
 }
 
+function ensureCabinetDecisionsTable(): void {
+    static $done = false;
+    if ($done) return;
+    $db = db();
+    if (!$db) return;
+    $db->exec("CREATE TABLE IF NOT EXISTS cabinet_decisions (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        date TEXT NOT NULL,
+        title TEXT NOT NULL,
+        title_ne TEXT,
+        details JSON DEFAULT '[]',
+        details_ne JSON DEFAULT '[]',
+        source TEXT,
+        created_at TEXT DEFAULT CURRENT_TIMESTAMP
+    )");
+    $done = true;
+}
+
 function getCabinetDecisions(?string $month = null, ?string $year = null): array {
     ensureCabinetDecisionsTable();
     $db = db();
+    if (!$db) return [];
     
     $sql = 'SELECT * FROM cabinet_decisions WHERE 1=1';
     $params = [];

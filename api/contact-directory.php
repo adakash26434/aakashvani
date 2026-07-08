@@ -35,9 +35,33 @@ try {
     ], JSON_UNESCAPED_UNICODE);
 }
 
+function ensureContactDirectoryTable(): void {
+    static $done = false;
+    if ($done) return;
+    $db = db();
+    if (!$db) return;
+    $db->exec("CREATE TABLE IF NOT EXISTS contact_directory (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        name_ne TEXT,
+        phone TEXT,
+        phone_alt TEXT,
+        email TEXT,
+        address TEXT,
+        address_ne TEXT,
+        city TEXT,
+        category TEXT,
+        website TEXT,
+        is_emergency INTEGER DEFAULT 0,
+        created_at TEXT DEFAULT CURRENT_TIMESTAMP
+    )");
+    $done = true;
+}
+
 function getContacts(?string $search = null, ?string $category = null, ?string $city = null): array {
     ensureContactDirectoryTable();
     $db = db();
+    if (!$db) return [];
     
     $sql = 'SELECT * FROM contact_directory WHERE 1=1';
     $params = [];
