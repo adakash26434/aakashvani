@@ -3,10 +3,10 @@
  * api/overrides.php — Admin manual price overrides
  *
  *  GET  → returns currently-active overrides (public, used by dashboard)
- *  POST → save overrides (admin only, requires PIN in session)
+ *  POST → save overrides (admin only, requires PIN in session or CRON_KEY)
  *
- * Storage: /cache/overrides.json (auto-created)
- * Auth   : PIN stored in /cache/admin-pin.txt (set on first run, see admin/prices.php)
+ * Storage: /data/cache/overrides.json (auto-created)
+ * Auth   : Admin session OR CRON_KEY
  *
  * Override format (only fields with "use:true" are applied; rest fall back to live API):
  * {
@@ -17,15 +17,20 @@
  *   "updatedBy":"admin", "updatedAt":"2026-..."
  * }
  */
-header('Content-Type: application/json; charset=UTF-8');
-header('Access-Control-Allow-Origin: *');
+require_once __DIR__ . '/../config.php';
 
-$cacheDir  = __DIR__ . '/../cache';
+header('Content-Type: application/json; charset=UTF-8');
+// GET is public (dashboard reads overrides), POST requires auth
+$cronKey = defined('CRON_KEY') ? CRON_KEY : '';
+$reqKey  = trim($_GET['key'] ?? $_SERVER['HTTP_X_CRON_KEY'] ?? '');
+$hasKey  = $cronKey && hash_equals($cronKey, $reqKey);
+
+session_start();
+
+$cacheDir  = __DIR__ . '/../data/cache';
 $file      = $cacheDir . '/overrides.json';
 $pinFile   = $cacheDir . '/admin-pin.txt';
 if (!is_dir($cacheDir)) @mkdir($cacheDir, 0755, true);
-
-session_start();
 
 function read_overrides(string $file): array {
   if (!is_file($file)) return [];
@@ -35,24 +40,23 @@ function read_overrides(string $file): array {
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
   $data = read_overrides($file);
-  // strip metadata fields not needed publicly
   echo json_encode(['ok'=>true, 'overrides'=>$data], JSON_UNESCAPED_UNICODE);
-  exit;
+  return;
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  // Must be authenticated admin (set by admin/prices.php login)
-  if (empty($_SESSION['nh_admin'])) {
+  $hasAdmin = !empty($_SESSION['nh_admin']) || !empty($_SESSION['admin_logged_in']);
+  if (!$hasKey && !$hasAdmin) {
     http_response_code(401);
-    echo json_encode(['ok'=>false, 'error'=>'Unauthorized — login at /admin/prices.php']);
-    exit;
+    echo json_encode(['ok'=>false, 'error'=>'Unauthorized — admin session or CRON_KEY required']);
+    return;
   }
   $raw = file_get_contents('php://input');
   $in  = json_decode($raw, true);
   if (!is_array($in)) {
     http_response_code(400);
     echo json_encode(['ok'=>false, 'error'=>'Invalid JSON']);
-    exit;
+    return;
   }
   // sanitize: only allow known sections
   $clean = [];
@@ -71,8 +75,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $clean['updatedAt'] = date('c');
   @file_put_contents($file, json_encode($clean, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
   echo json_encode(['ok'=>true, 'saved'=>$clean], JSON_UNESCAPED_UNICODE);
-  exit;
+  return;
 }
 
 http_response_code(405);
 echo json_encode(['ok'=>false, 'error'=>'Method not allowed']);
+return;

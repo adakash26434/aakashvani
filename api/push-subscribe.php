@@ -7,7 +7,7 @@ require_once __DIR__ . '/../config.php';
 header('Content-Type: application/json; charset=utf-8');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405); echo json_encode(['error'=>'POST only']); exit;
+    http_response_code(405); echo json_encode(['error'=>'POST only']); return;
 }
 
 $body = json_decode(file_get_contents('php://input'), true);
@@ -16,7 +16,7 @@ $userId = $body['user_id'] ?? null;
 $lang   = ($body['lang'] ?? 'ne') === 'en' ? 'en' : 'ne';
 
 if (!$sub || empty($sub['endpoint']) || empty($sub['keys']['p256dh']) || empty($sub['keys']['auth'])) {
-    http_response_code(400); echo json_encode(['error'=>'invalid subscription']); exit;
+    http_response_code(400); echo json_encode(['error'=>'invalid subscription']); return;
 }
 
 try {

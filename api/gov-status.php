@@ -7,6 +7,7 @@ header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
 
 require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/../includes/http.php';
 
 $type = $_GET['type'] ?? '';
 $number = $_GET['number'] ?? '';
@@ -77,7 +78,7 @@ function checkLicenseStatus($licenseNo, $dob) {
         ]),
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_TIMEOUT => 15,
-        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_SSL_VERIFYPEER => true,
         CURLOPT_HTTPHEADER => [
             'Content-Type: application/x-www-form-urlencoded',
             'Accept: application/json'
@@ -148,7 +149,7 @@ function checkNIDStatus($nidNo, $dob) {
         ]),
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_TIMEOUT => 15,
-        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_SSL_VERIFYPEER => true,
         CURLOPT_HTTPHEADER => [
             'Content-Type: application/json',
             'Accept: application/json'
@@ -207,7 +208,7 @@ function checkPANStatus($panNo) {
         CURLOPT_URL => $apiUrl,
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_TIMEOUT => 15,
-        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_SSL_VERIFYPEER => true,
         CURLOPT_HTTPHEADER => [
             'Accept: application/json'
         ]

@@ -26,7 +26,7 @@ function ensureUserDataTable(): void {
 
 startAuthSession();
 $user = getCurrentUser();
-if (!$user) { echo json_encode(['ok' => true, 'guest' => true, 'data' => new stdClass()]); exit; }
+if (!$user) { echo json_encode(['ok' => true, 'guest' => true, 'data' => new stdClass()]); return; }
 
 ensureUserDataTable();
 $uid = (int)$user['id'];
@@ -37,16 +37,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $row = $stmt->fetch();
     $data = $row ? (json_decode($row['data_json'], true) ?: []) : [];
     echo json_encode(['ok' => true, 'data' => (object)$data]);
-    exit;
+    return;
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $raw = file_get_contents('php://input');
     $in  = json_decode($raw, true);
-    if (!is_array($in) || !isset($in['key'])) { http_response_code(400); echo json_encode(['ok'=>false,'error'=>'bad request']); exit; }
+    if (!is_array($in) || !isset($in['key'])) { http_response_code(400); echo json_encode(['ok'=>false,'error'=>'bad request']); return; }
 
     $key = substr(preg_replace('/[^a-zA-Z0-9_\-\.]/', '', (string)$in['key']), 0, 80);
-    if ($key === '') { http_response_code(400); echo json_encode(['ok'=>false,'error'=>'bad key']); exit; }
+    if ($key === '') { http_response_code(400); echo json_encode(['ok'=>false,'error'=>'bad key']); return; }
 
     $stmt = db()->prepare('SELECT data_json FROM user_data WHERE user_id = ?');
     $stmt->execute([$uid]);
@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $json = json_encode($data, JSON_UNESCAPED_UNICODE);
-    if (strlen($json) > 200000) { http_response_code(413); echo json_encode(['ok'=>false,'error'=>'too large']); exit; }
+    if (strlen($json) > 200000) { http_response_code(413); echo json_encode(['ok'=>false,'error'=>'too large']); return; }
 
     if ($row) {
         $u = db()->prepare('UPDATE user_data SET data_json = ?, updated_at = CURRENT_TIMESTAMP WHERE user_id = ?');
@@ -70,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $i->execute([$uid, $json]);
     }
     echo json_encode(['ok' => true]);
-    exit;
+    return;
 }
 
 http_response_code(405);

@@ -9,6 +9,7 @@
  */
 require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../functions.php';
+require_once __DIR__ . '/../includes/http.php';
 require_once __DIR__ . '/../includes/error-logger.php';
 
 // Security headers
@@ -53,35 +54,11 @@ $alerts = [];
 $errors = [];
 $bipad = null; $usgs = null; $wx = null; $policeAlerts = [];
 
-// Robust HTTP fetch with cURL fallback (shared hosting often blocks file_get_contents externally)
+// HTTP fetch via nh_fetchUrl (SSL-verified, consolidated)
 if (!function_exists('http_get_json')) {
   function http_get_json(string $url, int $timeout = 8): ?array {
-    // Try cURL first (more reliable on shared hosting)
-    if (function_exists('curl_init')) {
-      $ch = curl_init($url);
-      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-      curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
-      curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-      curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-      curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-      curl_setopt($ch, CURLOPT_USERAGENT, 'Aakashvani/1.0');
-      curl_setopt($ch, CURLOPT_HTTPHEADER, ['Accept: application/json']);
-      $raw = curl_exec($ch);
-      $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-      curl_close($ch);
-      if ($raw !== false && $httpCode >= 200 && $httpCode < 300) {
-        $j = json_decode($raw, true);
-        return is_array($j) ? $j : null;
-      }
-    }
-    // Fallback to file_get_contents
-    $ctx = stream_context_create([
-      'http' => ['timeout'=>$timeout, 'header'=>"User-Agent: Aakashvani/1.0\r\nAccept: application/json\r\n", 'ignore_errors'=>true],
-      'ssl'  => ['verify_peer'=>false, 'verify_peer_name'=>false],
-    ]);
-    $raw = @file_get_contents($url, false, $ctx);
-    if ($raw === false) return null;
+    $raw = nh_fetchUrl($url, ['Accept: application/json'], $timeout, true);
+    if ($raw === null) return null;
     $j = json_decode($raw, true);
     return is_array($j) ? $j : null;
   }

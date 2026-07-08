@@ -56,7 +56,7 @@ $cacheKey  = md5("$type:$number:$dob");
 $cacheFile = $cacheDir . "/$cacheKey.json";
 if (file_exists($cacheFile) && (time() - filemtime($cacheFile)) < 300) {
     echo file_get_contents($cacheFile);
-    exit;
+    return;
 }
 
 // ── SSRF Protection: Allowlist of permitted government domains ───────────────
@@ -120,7 +120,7 @@ function respond(array $data): void {
     $json = json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     @file_put_contents($cacheFile, $json, LOCK_EX);
     echo $json;
-    exit;
+    return;
 }
 
 function failWithLink(string $message, string $officialUrl, string $officialLabel, array $steps = [], string $enteredNumber = ''): void {

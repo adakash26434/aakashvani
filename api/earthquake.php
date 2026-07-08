@@ -50,20 +50,8 @@ function fetchEarthquakes($minmag = 3.0, $days = 30) {
         $minmag
     );
     
-    $ch = curl_init($url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    
-    $response = curl_exec($ch);
-    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
-    
-    if ($httpCode !== 200 || !$response) {
-        return null;
-    }
-    
+    $response = nh_fetchUrl($url, ['Accept: application/json'], 10, true);
+    if ($response === null) return null;
     $data = json_decode($response, true);
     if (!$data || empty($data['features'])) {
         return [];

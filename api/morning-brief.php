@@ -50,7 +50,7 @@ if (!$forceGen && file_exists($cacheFile)) {
     $cached = json_decode(file_get_contents($cacheFile), true);
     if ($cached && ($cached['date'] ?? '') === $today) {
         echo json_encode($cached, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-        exit;
+        return;
     }
 }
 
