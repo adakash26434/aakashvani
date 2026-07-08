@@ -15,7 +15,7 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Design System Test | आकाशवाणी</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-    <link rel="stylesheet" href="/assets/css/app.css">
+    <link rel="stylesheet" href="/assets/css/premium.css">
     <style>
         .test-container { max-width: 1000px; margin: 40px auto; padding: 20px; }
         .test-section { background: #fff; border: 1px solid var(--dark-200); border-radius: var(--radius-xl); padding: 24px; margin-bottom: 24px; }
@@ -28,30 +28,83 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
     </style>
 </head>
 <body style="background: var(--dark-50);">
-    <header class="site-header">
-        <div class="header-main">
-            <div class="container">
-                <div class="flex items-center justify-between gap-4">
-                    <a href="/" class="header-brand">
-                        <div class="brand-logo">आ</div>
-                        <span class="brand-name">आकाशवाणी</span>
-                    </a>
-                    <nav class="main-nav">
-                        <div class="container">
-                            <div class="nav-list">
-                                <a href="/" class="nav-link">गृह</a>
-                        <a href="/news.php" class="nav-link">समाचार</a>
-                        <a href="/rashifal.php" class="nav-link active">राशिफल</a>
-                    </nav>
-                    <div class="header-actions">
-                        <button class="btn btn-ghost btn-icon">
-                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-                        </button>
-                    </div>
+
+    <!-- TOP BAR -->
+    <div class="tp-topbar">
+        <div class="tp-container">
+            <div class="tp-topbar-inner">
+                <div class="tp-topbar-left">
+                    <span class="tp-date"><?= date('l, j F Y') ?></span>
+                    <span class="tp-topbar-links"><a href="/unicode">Unicode</a><a href="?lang=en">English</a></span>
+                </div>
+                <div class="tp-topbar-right">
+                    <a href="#" aria-label="Facebook"><i data-lucide="facebook"></i></a>
+                    <a href="#" aria-label="Twitter"><i data-lucide="twitter"></i></a>
+                    <a href="#" aria-label="YouTube"><i data-lucide="youtube"></i></a>
                 </div>
             </div>
         </div>
-    </header>
+    </div>
+
+    <!-- MID HEADER -->
+    <div class="tp-header-mid">
+        <div class="tp-container">
+            <div class="tp-header-mid-inner">
+                <a href="/" class="tp-logo">
+                    <img src="/favicon.svg" alt="Aakashvani" width="48" height="48">
+                    <div class="tp-logo-text">
+                        <span class="tp-logo-name"><?= $t('आकाशवाणी', 'Aakashvani') ?></span>
+                        <span class="tp-logo-tagline"><?= $t('सूचनाको खुला आकाश', 'Your Gateway to Information') ?></span>
+                    </div>
+                </a>
+                <div class="tp-header-ads"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- STICKY NAV -->
+    <nav class="tp-nav" id="tpNav">
+        <div class="tp-container">
+            <div class="tp-nav-inner">
+                <button class="tp-nav-toggle" id="navToggle" aria-label="Menu"><i data-lucide="menu"></i></button>
+                <ul class="tp-nav-list" id="navList">
+                    <li><a href="/"><?= $t('गृह', 'Home') ?></a></li>
+                    <li><a href="/news.php"><?= $t('समाचार', 'News') ?></a></li>
+                    <li><a href="/nepali-patro.php"><?= $t('पात्रो', 'Calendar') ?></a></li>
+                    <li><a href="/rashifal.php"><?= $t('राशिफल', 'Horoscope') ?></a></li>
+                    <li><a href="/ipo-tracker.php"><?= $t('NEPSE/IPO', 'NEPSE/IPO') ?></a></li>
+                    <li><a href="/tools.php"><?= $t('टूलहरू', 'Tools') ?></a></li>
+                    <li><a href="/gov-services.php"><?= $t('सरकारी', 'Gov') ?></a></li>
+                    <li><a href="/weather.php"><?= $t('मौसम', 'Weather') ?></a></li>
+                    <li><a href="/cricket.php"><?= $t('क्रिकेट', 'Cricket') ?></a></li>
+                    <li><a href="/tenders.php"><?= $t('टेन्डर', 'Tenders') ?></a></li>
+                    <li><a href="/emergency.php"><?= $t('आपतकालीन', 'Emergency') ?></a></li>
+                </ul>
+                <div class="tp-nav-search">
+                    <button class="tp-search-btn" id="searchToggle" aria-label="Search"><i data-lucide="search"></i></button>
+                </div>
+            </div>
+            <div class="tp-search-bar" id="searchBar" style="display:none">
+                <input type="search" placeholder="<?= $t('खोज्नुहोस्...', 'Search...') ?>" id="searchInput">
+            </div>
+        </div>
+    </nav>
+
+    <!-- MARKET TICKER -->
+    <div class="tp-market-bar">
+        <div class="tp-container">
+            <div class="tp-market-inner">
+                <span class="tp-market-item"><i data-lucide="trending-up"></i><span class="tp-mkt-label">NEPSE</span><span class="tp-mkt-value" id="nepse-value">...</span><span class="tp-mkt-change" id="nepse-change">...</span></span>
+                <span class="tp-market-divider">|</span>
+                <span class="tp-market-item"><i data-lucide="gem"></i><span class="tp-mkt-label"><?= $t('सुन', 'Gold') ?></span><span class="tp-mkt-value" id="gold-value">...</span></span>
+                <span class="tp-market-divider">|</span>
+                <span class="tp-market-item"><i data-lucide="dollar-sign"></i><span class="tp-mkt-label">USD</span><span class="tp-mkt-value" id="forex-value">...</span></span>
+                <span class="tp-market-divider">|</span>
+                <span class="tp-market-item"><i data-lucide="fuel"></i><span class="tp-mkt-label"><?= $t('पेट्रोल', 'Petrol') ?></span><span class="tp-mkt-value" id="petrol-value">...</span></span>
+            </div>
+        </div>
+    </div>
+
     
     <div class="test-container">
         <h1 style="margin-bottom: 24px;">🎨 Design System Test</h1>
@@ -236,14 +289,59 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
             </div>
         </div>
     </div>
-    
-    <footer class="site-footer">
-        <div class="container">
-            <div class="footer-bottom" style="border:none;padding:0">
-                <p class="footer-copyright">&copy; <?=date('Y')?> आकाशवाणी</p>
+
+    <!-- FOOTER -->
+    <footer class="tp-footer">
+        <div class="tp-container">
+            <div class="tp-footer-grid">
+                <div class="tp-footer-brand">
+                    <a href="/" class="tp-footer-logo">
+                        <img src="/favicon.svg" alt="Aakashvani" width="40" height="40">
+                        <div>
+                            <span class="tp-footer-name"><?= $t('आकाशवाणी', 'Aakashvani') ?></span>
+                            <span class="tp-footer-tagline"><?= $t('सूचनाको खुला आकाश', 'Your Gateway to Information') ?></span>
+                        </div>
+                    </a>
+                    <p class="tp-footer-desc"><?= $t('नेपालको सबैभन्दा विश्वसनीय सूचना प्लेटफर्म।', 'Nepal's most trusted information platform.') ?></p>
+                    <div class="tp-footer-social">
+                        <a href="#" aria-label="Facebook"><i data-lucide="facebook"></i></a>
+                        <a href="#" aria-label="Twitter"><i data-lucide="twitter"></i></a>
+                        <a href="#" aria-label="YouTube"><i data-lucide="youtube"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h4><?= $t('लिंकहरू', 'Links') ?></h4>
+                    <ul>
+                        <li><a href="/"><?= $t('गृहपृष्ठ', 'Home') ?></a></li>
+                        <li><a href="/news.php"><?= $t('समाचार', 'News') ?></a></li>
+                        <li><a href="/ipo-tracker.php"><?= $t('NEPSE/IPO', 'NEPSE/IPO') ?></a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4><?= $t('स्रोतहरू', 'Resources') ?></h4>
+                    <ul>
+                        <li><a href="/rashifal.php"><?= $t('राशिफल', 'Horoscope') ?></a></li>
+                        <li><a href="/nepali-patro.php"><?= $t('नेपाली पात्रो', 'Calendar') ?></a></li>
+                        <li><a href="/weather.php"><?= $t('मौसम', 'Weather') ?></a></li>
+                        <li><a href="/emergency.php"><?= $t('आपतकालीन', 'Emergency') ?></a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4><?= $t('कम्पनी', 'Company') ?></h4>
+                    <ul>
+                        <li><a href="/about.php"><?= $t('हाम्रो बारेमा', 'About') ?></a></li>
+                        <li><a href="/contact.php"><?= $t('सम्पर्क', 'Contact') ?></a></li>
+                        <li><a href="/privacy.php"><?= $t('गोपनीयता', 'Privacy') ?></a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="tp-footer-bottom">
+                <span>&copy; <?= date('Y') ?> <?= $t('आकाशवाणी। सर्वाधिकार सुरक्षित।', 'Aakashvani. All rights reserved.') ?></span>
+                <span><?= $t('हामी नेपालको सूचना खुला राख्छौं', 'We keep Nepal's information open') ?></span>
             </div>
         </div>
     </footer>
+
     
     <script src="/assets/js/app.js"></script>
 </body>
