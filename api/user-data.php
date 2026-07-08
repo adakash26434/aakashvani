@@ -13,6 +13,7 @@ require_once __DIR__ . '/../includes/auth.php';
 
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store');
+sendSecurityHeaders();
 
 function ensureUserDataTable(): void {
     static $done = false; if ($done) return;
