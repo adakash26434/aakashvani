@@ -133,6 +133,7 @@ if (!function_exists('incrementViewCount')) {
 // Search News
 if (!function_exists('searchNews')) {
     function searchNews($query, $limit = 20) {
+        if (mb_strlen(trim($query ?? ''), 'UTF-8') < 2) return [];
         $pdo = getDB();
         if (!$pdo) return [];
         
@@ -160,6 +161,7 @@ if (!function_exists('sendSecurityHeaders')) {
         header('X-Frame-Options: SAMEORIGIN');
         header('X-XSS-Protection: 1; mode=block');
         header('Referrer-Policy: strict-origin-when-cross-origin');
+        header('Permissions-Policy: camera=(), microphone=(), geolocation=()');
         // HSTS: Force HTTPS for 1 year (uncomment when SSL is properly configured)
         // header('Strict-Transport-Security: max-age=31536000; includeSubDomains');
     }

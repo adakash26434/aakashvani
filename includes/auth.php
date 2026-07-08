@@ -126,6 +126,7 @@ if (!function_exists('loginUser')) {
         if (!$user['is_active']) return ['error' => 'Account is disabled'];
         if (!verifyPassword($password, $user['password_hash'])) return ['error' => 'Invalid email or password'];
 
+        session_regenerate_id(true);
         $_SESSION['auth_user_id'] = $user['id'];
         return ['success' => true, 'user' => $user];
     }

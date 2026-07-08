@@ -86,7 +86,7 @@ try {
     ], JSON_UNESCAPED_UNICODE);
     exit;
   }
-} catch (Throwable $e) {
+} catch (Throwable $e) { error_log("news-rss DB fallback: " . $e->getMessage()); }
 }
 
 $feeds = [
