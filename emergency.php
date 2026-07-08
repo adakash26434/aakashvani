@@ -31,6 +31,7 @@ $emergency = [
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/app.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
     <style>
         .emergency-header { background: linear-gradient(135deg, #dc2626, #991b1b); padding: var(--space-16) 0; color: #fff; text-align: center; }
         .emergency-icon { width: 80px; height: 80px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-4); }
@@ -124,5 +125,18 @@ $emergency = [
     </footer>
     
     <script src="/assets/js/app.js"></script>
+
+    <!-- Mobile Bottom Nav -->
+    <nav class="mobile-bottom-nav" aria-label="Mobile navigation">
+        <div class="bottom-nav-inner">
+            <a href="/" class="bottom-nav-item"><i data-lucide="home"></i><span>गृह</span></a>
+            <a href="/news.php" class="bottom-nav-item"><i data-lucide="newspaper"></i><span>समाचार</span></a>
+            <a href="/ipo-tracker.php" class="bottom-nav-item"><i data-lucide="trending-up"></i><span>NEPSE</span></a>
+            <a href="/nepali-patro.php" class="bottom-nav-item"><i data-lucide="calendar-days"></i><span>पात्रो</span></a>
+            <a href="/rashifal.php" class="bottom-nav-item"><i data-lucide="sparkles"></i><span>राशिफल</span></a>
+        </div>
+    </nav>
+
+<script>document.addEventListener('DOMContentLoaded',function(){if(typeof lucide!=='undefined')lucide.createIcons()});</script>
 </body>
 </html>

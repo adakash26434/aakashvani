@@ -20,6 +20,7 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/app.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
     <style>
         .tenders-hero { background: linear-gradient(135deg, #1e3a5f, #0c4a6e); padding: var(--space-16) 0; color: #fff; text-align: center; }
         .tender-card { background: #fff; border-radius: var(--radius-xl); padding: var(--space-6); box-shadow: var(--shadow); margin-bottom: var(--space-4); transition: all var(--transition); border-left: 4px solid var(--primary); }
@@ -339,5 +340,18 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
     // Load on page load
     document.addEventListener('DOMContentLoaded', loadTenders);
     </script>
+
+    <!-- Mobile Bottom Nav -->
+    <nav class="mobile-bottom-nav" aria-label="Mobile navigation">
+        <div class="bottom-nav-inner">
+            <a href="/" class="bottom-nav-item"><i data-lucide="home"></i><span>गृह</span></a>
+            <a href="/news.php" class="bottom-nav-item"><i data-lucide="newspaper"></i><span>समाचार</span></a>
+            <a href="/ipo-tracker.php" class="bottom-nav-item"><i data-lucide="trending-up"></i><span>NEPSE</span></a>
+            <a href="/nepali-patro.php" class="bottom-nav-item"><i data-lucide="calendar-days"></i><span>पात्रो</span></a>
+            <a href="/rashifal.php" class="bottom-nav-item"><i data-lucide="sparkles"></i><span>राशिफल</span></a>
+        </div>
+    </nav>
+
+<script>document.addEventListener('DOMContentLoaded',function(){if(typeof lucide!=='undefined')lucide.createIcons()});</script>
 </body>
 </html>

@@ -84,6 +84,7 @@ $pageTitle = $t('समाचार | आकाशवाणी', 'News | Aakashv
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/app.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
     <style>
         .page-header {
             background: linear-gradient(135deg, var(--dark-900), var(--dark-800));
@@ -434,5 +435,35 @@ $pageTitle = $t('समाचार | आकाशवाणी', 'News | Aakashv
     });
     </script>
     <script src="/assets/js/app.js"></script>
+<script>document.addEventListener('DOMContentLoaded', function() {
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    });</script>
+
+    <!-- Mobile Bottom Nav -->
+    <nav class="mobile-bottom-nav" aria-label="Mobile navigation">
+        <div class="bottom-nav-inner">
+            <a href="/" class="bottom-nav-item">
+                <i data-lucide="home"></i>
+                <span>गृह</span>
+            </a>
+            <a href="/news.php" class="bottom-nav-item active">
+                <i data-lucide="newspaper"></i>
+                <span>समाचार</span>
+            </a>
+            <a href="/ipo-tracker.php" class="bottom-nav-item">
+                <i data-lucide="trending-up"></i>
+                <span>NEPSE</span>
+            </a>
+            <a href="/nepali-patro.php" class="bottom-nav-item">
+                <i data-lucide="calendar-days"></i>
+                <span>पात्रो</span>
+            </a>
+            <a href="/rashifal.php" class="bottom-nav-item">
+                <i data-lucide="sparkles"></i>
+                <span>राशिफल</span>
+            </a>
+        </div>
+    </nav>
+
 </body>
 </html>
