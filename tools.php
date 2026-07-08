@@ -159,7 +159,7 @@ $tools = [
                             <span class="tp-footer-tagline"><?= $t('सूचनाको खुला आकाश', 'Your Gateway to Information') ?></span>
                         </div>
                     </a>
-                    <p class="tp-footer-desc"><?= $t('नेपालको सबैभन्दा विश्वसनीय सूचना प्लेटफर्म।', 'Nepal's most trusted information platform.') ?></p>
+                    <p class="tp-footer-desc"><?= $t('नेपालको सबैभन्दा विश्वसनीय सूचना प्लेटफर्म।', 'Nepal\'s most trusted information platform.') ?></p>
                     <div class="tp-footer-social">
                         <a href="#" aria-label="Facebook"><i data-lucide="facebook"></i></a>
                         <a href="#" aria-label="Twitter"><i data-lucide="twitter"></i></a>
@@ -194,7 +194,7 @@ $tools = [
             </div>
             <div class="tp-footer-bottom">
                 <span>&copy; <?= date('Y') ?> <?= $t('आकाशवाणी। सर्वाधिकार सुरक्षित।', 'Aakashvani. All rights reserved.') ?></span>
-                <span><?= $t('हामी नेपालको सूचना खुला राख्छौं', 'We keep Nepal's information open') ?></span>
+                <span><?= $t('हामी नेपालको सूचना खुला राख्छौं', 'We keep Nepal\'s information open') ?></span>
             </div>
         </div>
     </footer>
