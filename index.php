@@ -100,25 +100,56 @@ try {
             </div>
             <ul class="tp-nav-list" id="navList">
                 <?php
+                $currentPath = $_SERVER['REQUEST_URI'] ?? '/';
                 $navItems = [
                     ['path' => '/', 'label' => $t('गृह', 'Home')],
-                    ['path' => '/news.php', 'label' => $t('समाचार', 'News')],
-                    ['path' => '/nepali-patro.php', 'label' => $t('पात्रो', 'Calendar')],
-                    ['path' => '/rashifal.php', 'label' => $t('राशिफल', 'Horoscope')],
-                    ['path' => '/ipo-tracker.php', 'label' => $t('NEPSE/IPO', 'NEPSE/IPO')],
-                    ['path' => '/tools.php', 'label' => $t('टूलहरू', 'Tools')],
-                    ['path' => '/gov-services.php', 'label' => $t('सरकारी', 'Gov')],
-                    ['path' => '/weather.php', 'label' => $t('मौसम', 'Weather')],
+                    ['path' => '/news.php', 'label' => $t('समाचार', 'News'), 'subs' => [
+                        ['path' => '/news.php', 'label' => $t('सबै समाचार', 'All News')],
+                        ['path' => '/news-post.php', 'label' => $t('समाचार विवरण', 'News Detail')],
+                    ]],
+                    ['path' => '/ipo-tracker.php', 'label' => $t('बजार', 'Markets'), 'subs' => [
+                        ['path' => '/ipo-tracker.php', 'label' => $t('NEPSE / IPO', 'NEPSE / IPO')],
+                        ['path' => '/currency.php', 'label' => $t('मुद्रा विनिमय', 'Currency')],
+                        ['path' => '/gold-price.php', 'label' => $t('सुन / चाँदी', 'Gold / Silver')],
+                        ['path' => '/bank-interest-rates.php', 'label' => $t('ब्याज दर', 'Bank Interest')],
+                    ]],
+                    ['path' => '/loksewa.php', 'label' => $t('करियर', 'Career'), 'subs' => [
+                        ['path' => '/loksewa.php', 'label' => $t('लोकसेवा', 'Loksewa')],
+                        ['path' => '/nokari.php', 'label' => $t('नोकरी', 'Jobs')],
+                    ]],
+                    ['path' => '/gov-services.php', 'label' => $t('सरकारी', 'Gov'), 'subs' => [
+                        ['path' => '/gov-services.php', 'label' => $t('सरकारी सेवाहरू', 'Gov Services')],
+                        ['path' => '/tenders.php', 'label' => $t('टेन्डर', 'Tenders')],
+                        ['path' => '/alerts.php', 'label' => $t('अलर्ट', 'Alerts')],
+                    ]],
+                    ['path' => '/nepali-patro.php', 'label' => $t('दैनिक', 'Daily'), 'subs' => [
+                        ['path' => '/nepali-patro.php', 'label' => $t('पात्रो', 'Calendar')],
+                        ['path' => '/rashifal.php', 'label' => $t('राशिफल', 'Horoscope')],
+                        ['path' => '/weather.php', 'label' => $t('मौसम', 'Weather')],
+                        ['path' => '/emergency.php', 'label' => $t('आपतकालीन', 'Emergency')],
+                    ]],
                     ['path' => '/cricket.php', 'label' => $t('क्रिकेट', 'Cricket')],
-                    ['path' => '/tenders.php', 'label' => $t('टेन्डर', 'Tenders')],
-                    ['path' => '/emergency.php', 'label' => $t('आपतकालीन', 'Emergency')],
+                    ['path' => '/tools.php', 'label' => $t('टूलहरू', 'Tools'), 'subs' => [
+                        ['path' => '/tools.php', 'label' => $t('सबै टूलहरू', 'All Tools')],
+                        ['path' => '/info-hub.php', 'label' => $t('सूचना केन्द्र', 'Info Hub')],
+                    ]],
                 ];
-                $currentPath = $_SERVER['REQUEST_URI'] ?? '/';
                 foreach ($navItems as $item):
                     $isActive = ($currentPath === $item['path']) ? ' class="active"' : '';
+                    if (!empty($item['subs'])):
                 ?>
+                <li class="has-dropdown">
+                    <a href="<?= $item['path'] ?>"<?= $isActive ?>><?= $item['label'] ?></a>
+                    <ul class="tp-nav-sub">
+                        <?php foreach ($item['subs'] as $sub): ?>
+                        <?php $subActive = ($currentPath === $sub['path']) ? ' class="active"' : ''; ?>
+                        <li><a href="<?= $sub['path'] ?>"<?= $subActive ?>><?= $sub['label'] ?></a></li>
+                        <?php endforeach; ?>
+                    </ul>
+                </li>
+                <?php else: ?>
                 <li><a href="<?= $item['path'] ?>"<?= $isActive ?>><?= $item['label'] ?></a></li>
-                <?php endforeach; ?>
+                <?php endif; endforeach; ?>
             </ul>
             <div class="tp-nav-search">
                 <button class="tp-search-btn" aria-label="Search" id="searchToggle">
@@ -540,6 +571,15 @@ try {
             if (navToggle && navList) {
                 navToggle.addEventListener('click', () => navList.classList.toggle('open'));
             }
+            // Mobile dropdown: clicking has-dropdown links toggles submenu
+            navList?.querySelectorAll('.has-dropdown > a').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    if (window.innerWidth <= 768) {
+                        e.preventDefault();
+                        link.parentElement.classList.toggle('open');
+                    }
+                });
+            });
         }
 
         document.addEventListener('DOMContentLoaded', function() {

@@ -17,15 +17,24 @@ $cat     = strtolower(trim($_GET['cat']     ?? ''));
 $company = trim($_GET['company'] ?? '');
 $limit   = max(1, min(100, (int)($_GET['limit'] ?? 60)));
 
+/* ── serve (graceful fallback if DB unavailable) ──────────────────── */
+$_db = db();
+if (!$_db) {
+    echo json_encode(['ok'=>false,'error'=>'Database unavailable','items'=>[],'cats'=>[]], JSON_UNESCAPED_UNICODE);
+    exit;
+}
+
 /* ── ensure DB seeded ─────────────────────────────────────────────── */
 ensureOffersTable();
 
 /* ── try live scrape for ISP offers (if stale > 2h) ──────────────── */
-$newest = db()->query('SELECT MAX(fetched_at) FROM offers WHERE is_curated=0')->fetchColumn();
-$stale  = $newest ? (time() - (int)@strtotime($newest)) > 7200 : true;
-if ($stale) {
-    _scrapeLiveOffers();
-}
+try {
+    $newest = $_db->query('SELECT MAX(fetched_at) FROM offers WHERE is_curated=0')->fetchColumn();
+    $stale  = $newest ? (time() - (int)@strtotime($newest)) > 7200 : true;
+    if ($stale) {
+        _scrapeLiveOffers();
+    }
+} catch (Throwable $e) { error_log('[offers] scrape check: ' . $e->getMessage()); }
 
 /* ── serve ────────────────────────────────────────────────────────── */
 $items     = getActiveOffers($cat === 'all' ? '' : $cat, $company, $limit);
