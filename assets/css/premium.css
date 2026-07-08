@@ -1205,3 +1205,26 @@ button { cursor: pointer; border: none; background: none; font: inherit; }
 .tp-footer ul li a { color: rgba(255,255,255,0.6); text-decoration: none; font-size: 0.875rem; transition: color 0.2s; }
 .tp-footer ul li a:hover { color: #fff; }
 .tp-footer-bottom { display: flex; align-items: center; justify-content: space-between; font-size: 0.8rem; color: rgba(255,255,255,0.4); flex-wrap: wrap; gap: var(--sp-3); }
+
+
+/* NEWS PAGE SPECIFIC */
+.tp-news-main { padding: var(--sp-8) 0; }
+.tp-page-banner { background: linear-gradient(135deg, var(--dark-900), var(--dark-700)); padding: var(--sp-8) 0; color: #fff; }
+.tp-page-banner-inner { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-4); }
+.tp-page-title { font-size: 2rem; font-weight: 800; color: #fff; display: flex; align-items: center; gap: var(--sp-3); }
+.tp-page-title svg, .tp-page-title i { width: 32px; height: 32px; color: var(--primary); }
+.tp-page-subtitle { color: rgba(255,255,255,0.65); font-size: 0.95rem; margin-top: var(--sp-1); }
+.tp-live-badge { display: flex; align-items: center; gap: 6px; background: rgba(239,68,68,0.2); color: #f87171; padding: 6px 14px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; border: 1px solid rgba(239,68,68,0.3); flex-shrink: 0; }
+.tp-live-dot { width: 8px; height: 8px; background: #f87171; border-radius: 50%; animation: livePulse 2s infinite; }
+@media (max-width: 768px) { .tp-page-banner-inner { flex-direction: column; align-items: flex-start; } .tp-page-title { font-size: 1.5rem; } }
+.tp-cat-strip { background: var(--surface); border-bottom: 1px solid var(--border); position: sticky; top: 48px; z-index: 50; }
+.tp-cat-strip-inner { display: flex; gap: 6px; padding: var(--sp-3) 0; overflow-x: auto; scrollbar-width: none; }
+.tp-cat-strip-inner::-webkit-scrollbar { display: none; }
+.tp-cat-pill { padding: 6px 18px; border: 1.5px solid var(--border); border-radius: 24px; background: #fff; color: var(--text); font-size: 0.82rem; font-weight: 600; white-space: nowrap; text-decoration: none; transition: all 0.2s; }
+.tp-cat-pill:hover { border-color: var(--primary); color: var(--primary); }
+.tp-cat-pill.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+/* SKELETON LOADER */
+.tp-skeleton { pointer-events: none; }
+.tp-skeleton-img { width: 100%; height: 200px; background: linear-gradient(90deg, var(--dark-100) 25%, var(--dark-200) 50%, var(--dark-100) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: var(--r-lg) var(--r-lg) 0 0; }
+.tp-skeleton-line { height: 12px; background: linear-gradient(90deg, var(--dark-100) 25%, var(--dark-200) 50%, var(--dark-100) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 4px; }
