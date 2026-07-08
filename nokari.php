@@ -221,6 +221,5 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
     }
     document.addEventListener('DOMContentLoaded', loadJobs);
     </script>
-    <script src="/assets/js/app.js"></script>
 </body>
 </html>

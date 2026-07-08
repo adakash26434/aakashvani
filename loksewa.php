@@ -243,6 +243,5 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
         });
     });
     </script>
-    <script src="/assets/js/app.js"></script>
 </body>
 </html>

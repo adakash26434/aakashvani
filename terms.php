@@ -183,6 +183,5 @@ $t=fn($ne,$en)=>$isNepali?$ne:$en;
         </div>
     </footer>
 
-    <script src="/assets/js/app.js"></script>
 </body>
 </html>

@@ -430,7 +430,6 @@ $related = getRelatedNews($news['id'] ?? 0, $news['category'] ?? '', 4);
     </footer>
 
     
-    <script src="/assets/js/app.js"></script>
     <script>
         function shareContent(platform) {
             const url = encodeURIComponent(window.location.href);

@@ -211,7 +211,6 @@ $tools = [
         </div>
     </footer>
 
-    <script src="/assets/js/app.js"></script>
 <script>document.addEventListener('DOMContentLoaded', function() {
         if (typeof lucide !== 'undefined') lucide.createIcons();
     });</script>

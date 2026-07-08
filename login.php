@@ -62,6 +62,5 @@ $t=fn($ne,$en)=>$isNepali?$ne:$en;
             </p>
         </div>
     </div>
-    <script src="/assets/js/app.js"></script>
 </body>
 </html>
