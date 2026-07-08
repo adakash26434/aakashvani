@@ -51,19 +51,17 @@ try {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
     <!-- Premium CSS -->
     <link rel="stylesheet" href="/assets/css/premium.css">
 </head>
 <body>
-    <!-- ═══════════════════════════════════════════════════════════════
-         PREMIUM TOP BAR
-         ═══════════════════════════════════════════════════════════════ -->
-    <div class="premium-topbar">
+    <!-- TOP BAR -->
+    <div class="topbar">
         <div class="container">
-            <div class="topbar-content">
+            <div class="topbar-inner">
                 <div class="topbar-left">
-                    <span class="topbar-badge">✨</span>
                     <span class="topbar-date"><?= date('l, j F Y') ?></span>
                     <span class="topbar-divider">|</span>
                     <span class="topbar-greeting"><?= $t('शुभ प्रभात', 'Good Morning') ?></span>
@@ -76,78 +74,56 @@ try {
         </div>
     </div>
 
-    <!-- ═══════════════════════════════════════════════════════════════
-         PREMIUM HEADER
-         ═══════════════════════════════════════════════════════════════ -->
-    <header class="premium-header">
+    <!-- HEADER -->
+    <header class="site-header">
         <div class="container">
-            <div class="header-grid">
-                <!-- Brand -->
+            <div class="header-inner">
                 <a href="/" class="brand">
-                    <div class="brand-logo">
-                        <span>आ</span>
-                    </div>
+                    <div class="brand-logo"><span>आ</span></div>
                     <div class="brand-text">
                         <h1>आकाशवाणी</h1>
                         <span><?= $t('सूचनाको खुला आकाश', 'Your Gateway to Information') ?></span>
                     </div>
                 </a>
-                
-                <!-- Search -->
                 <div class="header-search">
                     <div class="search-wrapper">
-                        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="11" cy="11" r="8"/>
-                            <path d="m21 21-4.3-4.3"/>
-                        </svg>
+                        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
                         <input type="search" class="search-input" placeholder="<?= $t('समाचार, जानकारी खोज्नुहोस्...', 'Search news, info...') ?>" id="headerSearch">
                         <kbd class="search-kbd">⌘K</kbd>
                     </div>
                 </div>
-                
-                <!-- Actions -->
                 <div class="header-actions">
-                    <button class="action-btn" id="themeToggle" title="<?= $t('Dark Mode', 'Dark Mode') ?>">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-                        </svg>
-                    </button>
-                    <button class="action-btn mobile-menu-toggle" id="mobileMenuToggle">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M4 12h16M4 6h16M4 18h16"/>
-                        </svg>
+                    <button class="action-btn mobile-menu-toggle" id="mobileMenuToggle" aria-label="Menu">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
                     </button>
                 </div>
             </div>
         </div>
-        
-        <!-- Navigation -->
-        <nav class="premium-nav">
+        <!-- NAV -->
+        <nav class="main-nav">
             <div class="container">
                 <ul class="nav-list">
                     <?php
                     $navItems = [
-                        ['path' => '/', 'label' => 'गृह', 'label_en' => 'Home', 'icon' => 'home'],
-                        ['path' => '/news.php', 'label' => 'समाचार', 'label_en' => 'News', 'icon' => 'newspaper'],
-                        ['path' => '/nepali-patro.php', 'label' => 'पात्रो', 'label_en' => 'Calendar', 'icon' => 'calendar'],
-                        ['path' => '/rashifal.php', 'label' => 'राशिफल', 'label_en' => 'Horoscope', 'icon' => 'star'],
-                        ['path' => '/ipo-tracker.php', 'label' => 'NEPSE/IPO', 'label_en' => 'NEPSE/IPO', 'icon' => 'chart'],
-                        ['path' => '/tools.php', 'label' => 'टूलहरू', 'label_en' => 'Tools', 'icon' => 'tool'],
-                        ['path' => '/gov-services.php', 'label' => 'सरकारी', 'label_en' => 'Gov', 'icon' => 'building'],
-                        ['path' => '/weather.php', 'label' => 'मौसम', 'label_en' => 'Weather', 'icon' => 'cloud'],
-                        ['path' => '/cricket.php', 'label' => 'क्रिकेट', 'label_en' => 'Cricket', 'icon' => 'circle'],
-                        ['path' => '/tenders.php', 'label' => 'टेन्डर', 'label_en' => 'Tenders', 'icon' => 'file'],
-                        ['path' => '/emergency.php', 'label' => 'आपतकालीन', 'label_en' => 'Emergency', 'icon' => 'phone'],
+                        ['path' => '/', 'label' => 'गृह', 'label_en' => 'Home'],
+                        ['path' => '/news.php', 'label' => 'समाचार', 'label_en' => 'News'],
+                        ['path' => '/nepali-patro.php', 'label' => 'पात्रो', 'label_en' => 'Calendar'],
+                        ['path' => '/rashifal.php', 'label' => 'राशिफल', 'label_en' => 'Horoscope'],
+                        ['path' => '/ipo-tracker.php', 'label' => 'NEPSE/IPO', 'label_en' => 'NEPSE/IPO'],
+                        ['path' => '/tools.php', 'label' => 'टूलहरू', 'label_en' => 'Tools'],
+                        ['path' => '/gov-services.php', 'label' => 'सरकारी', 'label_en' => 'Gov'],
+                        ['path' => '/weather.php', 'label' => 'मौसम', 'label_en' => 'Weather'],
+                        ['path' => '/cricket.php', 'label' => 'क्रिकेट', 'label_en' => 'Cricket'],
+                        ['path' => '/tenders.php', 'label' => 'टेन्डर', 'label_en' => 'Tenders'],
+                        ['path' => '/emergency.php', 'label' => 'आपतकालीन', 'label_en' => 'Emergency'],
                     ];
-                    
                     $currentPath = $_SERVER['REQUEST_URI'] ?? '/';
                     foreach ($navItems as $item):
                         $isActive = ($currentPath === $item['path']) ? 'active' : '';
-                        $label = $t($item['label'], $item['label_en']);
                     ?>
                     <li>
                         <a href="<?= $item['path'] ?>" class="nav-link <?= $isActive ?>">
-                            <?= $item['label'] ?>
+                            <?= $t($item['label'], $item['label_en']) ?>
                         </a>
                     </li>
                     <?php endforeach; ?>
@@ -156,101 +132,85 @@ try {
         </nav>
     </header>
 
-    <!-- ═══════════════════════════════════════════════════════════════
-         LIVE BANNER
-         ═══════════════════════════════════════════════════════════════ -->
+    <!-- LIVE BANNER -->
     <div class="live-banner">
         <div class="container">
-            <div class="banner-content">
-                <span class="live-badge">
-                    <span class="live-dot"></span>
+            <div class="banner-inner">
+                <span class="live-pill">
+                    <span class="live-pill-dot"></span>
                     LIVE
                 </span>
                 <span class="banner-text">
-                    <?= $t('स्वागत छ! आकाशवाणी - नेपालको छिटो सूचना प्लेटफर्म', 'Welcome to Aakashbani - Nepal\'s fastest information platform') ?>
+                    <?= $t('स्वागत छ! आकाशवाणी - नेपालको छिटो सूचना प्लेटफर्म', 'Welcome to Aakashvani - Nepal\'s fastest information platform') ?>
                 </span>
             </div>
         </div>
     </div>
 
-    <!-- ═══════════════════════════════════════════════════════════════
-         PREMIUM MARKET SECTION
-         ═══════════════════════════════════════════════════════════════ -->
-    <section class="premium-market" id="marketSection">
+    <!-- MARKET STRIP -->
+    <section class="market-strip" id="marketSection">
         <div class="container">
             <div class="market-grid">
-                <!-- NEPSE -->
                 <div class="market-card" data-type="nepse">
-                    <div class="card-icon">📈</div>
-                    <div class="card-label">NEPSE</div>
-                    <div class="card-value" id="nepse-value">...</div>
-                    <div class="card-change" id="nepse-change">...</div>
+                    <div class="market-icon" data-lucide="trending-up"></div>
+                    <div class="market-label">NEPSE</div>
+                    <div class="market-value" id="nepse-value">...</div>
+                    <div class="market-change" id="nepse-change">...</div>
                 </div>
-                
-                <!-- Gold -->
                 <div class="market-card" data-type="gold">
-                    <div class="card-icon">🥇</div>
-                    <div class="card-label"><?= $t('सुन (10g)', 'Gold (10g)') ?></div>
-                    <div class="card-value" id="gold-value">...</div>
-                    <div class="card-meta" id="gold-meta">...</div>
+                    <div class="market-icon" data-lucide="gem"></div>
+                    <div class="market-label"><?= $t('सुन (10g)', 'Gold (10g)') ?></div>
+                    <div class="market-value" id="gold-value">...</div>
+                    <div class="market-meta" id="gold-meta">...</div>
                 </div>
-                
-                <!-- USD -->
                 <div class="market-card" data-type="forex">
-                    <div class="card-icon">💵</div>
-                    <div class="card-label">USD</div>
-                    <div class="card-value" id="forex-value">...</div>
-                    <div class="card-meta" id="forex-meta">...</div>
+                    <div class="market-icon" data-lucide="dollar-sign"></div>
+                    <div class="market-label">USD</div>
+                    <div class="market-value" id="forex-value">...</div>
+                    <div class="market-meta" id="forex-meta">...</div>
                 </div>
-                
-                <!-- Petrol -->
                 <div class="market-card" data-type="petrol">
-                    <div class="card-icon">⛽</div>
-                    <div class="card-label"><?= $t('पेट्रोल', 'Petrol') ?></div>
-                    <div class="card-value" id="petrol-value">...</div>
-                    <div class="card-meta" id="petrol-meta">...</div>
+                    <div class="market-icon" data-lucide="fuel"></div>
+                    <div class="market-label"><?= $t('पेट्रोल', 'Petrol') ?></div>
+                    <div class="market-value" id="petrol-value">...</div>
+                    <div class="market-meta" id="petrol-meta">...</div>
                 </div>
-                
-                <!-- Electricity -->
                 <div class="market-card" data-type="electricity">
-                    <div class="card-icon">⚡</div>
-                    <div class="card-label"><?= $t('बिजुली', 'Electricity') ?></div>
-                    <div class="card-value" id="electricity-value">...</div>
-                    <div class="card-meta" id="electricity-meta">...</div>
+                    <div class="market-icon" data-lucide="zap"></div>
+                    <div class="market-label"><?= $t('बिजुली', 'Electricity') ?></div>
+                    <div class="market-value" id="electricity-value">...</div>
+                    <div class="market-meta" id="electricity-meta">...</div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- ═══════════════════════════════════════════════════════════════
-         MAIN CONTENT
-         ═══════════════════════════════════════════════════════════════ -->
-    <main class="main-content">
+    <!-- MAIN CONTENT -->
+    <main class="main-content page-enter">
         <div class="container">
+
             <!-- Featured News -->
             <a href="/news-post.php" class="featured-card" id="featuredNews">
-                <div class="featured-image-wrapper">
-                    <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1200&h=600&fit=crop" alt="Featured" class="featured-image" loading="eager">
+                <div class="featured-img-wrap">
+                    <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1200&h=600&fit=crop" alt="Featured" class="featured-img" loading="eager">
                     <div class="featured-overlay"></div>
                 </div>
                 <div class="featured-content">
                     <span class="featured-badge">
-                        <span class="badge-dot"></span>
+                        <span class="featured-badge-dot"></span>
                         <?= $t('समाचार', 'News') ?>
                     </span>
                     <h2 class="featured-title" id="featured-title">
                         <?= $t('नेपालको आर्थिक विकास: नयाँ अवसर र चुनौतीहरू', 'Nepal Economic Development: New Opportunities and Challenges') ?>
                     </h2>
                     <div class="featured-meta">
-                        <span class="meta-source"><?= $t('आकाशवाणी', 'Aakashvani') ?></span>
-                        <span class="meta-divider">•</span>
-                        <span class="meta-time" id="featured-time"><?= $t('2 घण्टा अघि', '2 hours ago') ?></span>
+                        <span><?= $t('आकाशवाणी', 'Aakashvani') ?></span>
+                        <span class="featured-meta-dot">•</span>
+                        <span id="featured-time"><?= $t('2 घण्टा अघि', '2 hours ago') ?></span>
                     </div>
                     <div class="featured-cta">
-                        <span class="cta-text"><?= $t('थप पढ्नुहोस्', 'Read More') ?></span>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M5 12h14M12 5l7 7-7 7"/>
-                        </svg>
+                        <span><?= $t('थप पढ्नुहोस्', 'Read More') ?></span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
                     </div>
                 </div>
             </a>
@@ -259,176 +219,202 @@ try {
             <div class="news-section">
                 <div class="section-header">
                     <h2 class="section-title">
-                        <span class="section-title-icon">📰</span>
+                        <span class="section-title-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg>
+                        </span>
                         <?= $t('ताजा समाचार', 'Latest News') ?>
                     </h2>
                     <a href="/news.php" class="section-link">
                         <?= $t('सबै हेर्नुहोस्', 'View All') ?>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
-                            <path d="M5 12h14M12 5l7 7-7 7"/>
-                        </svg>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
                     </a>
                 </div>
-                
+
                 <div class="news-grid" id="newsGrid">
 <?php if (!empty($homepageNews)): ?>
     <?php foreach ($homepageNews as $item): ?>
-                    <a href="<?= htmlspecialchars($item['internalUrl'] ?? $item['link'] ?? '#') ?>" class="news-card">
-                        <div class="card-image-wrapper">
-                            <img src="<?= htmlspecialchars($item['image'] ?? 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=400&h=250&fit=crop') ?>" alt="<?= htmlspecialchars(mb_substr($item['title'] ?? '', 0, 60, 'UTF-8')) ?>" class="card-image" loading="lazy">
-                            <span class="card-category-badge"><?= htmlspecialchars(ucfirst($item['cat'] ?? 'general')) ?></span>
+                    <a href="<?= htmlspecialchars($item['internalUrl'] ?? $item['link'] ?? '#') ?>" class="news-card anim-fade-up">
+                        <div class="card-img-wrap">
+                            <img src="<?= htmlspecialchars($item['image'] ?? 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=400&h=250&fit=crop') ?>" alt="<?= htmlspecialchars(mb_substr($item['title'] ?? '', 0, 60, 'UTF-8')) ?>" class="card-img" loading="lazy">
+                            <span class="card-cat-badge"><?= htmlspecialchars(ucfirst($item['cat'] ?? 'general')) ?></span>
                         </div>
                         <div class="card-body">
                             <h3 class="card-title"><?= htmlspecialchars(mb_substr($item['title'] ?? '', 0, 100, 'UTF-8')) ?></h3>
                             <div class="card-meta">
-                                <span class="meta-source"><?= htmlspecialchars($item['sourceLabel'] ?? 'Aakashvani') ?></span>
-                                <span class="meta-time"><?= htmlspecialchars($item['ago'] ?? '') ?></span>
+                                <span class="card-source"><?= htmlspecialchars($item['sourceLabel'] ?? 'Aakashvani') ?></span>
+                                <span class="card-time"><?= htmlspecialchars($item['ago'] ?? '') ?></span>
                             </div>
                         </div>
                     </a>
     <?php endforeach; ?>
 <?php else: ?>
-                    <a href="/news-post.php" class="news-card">
-                        <div class="card-image-wrapper">
-                            <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&h=250&fit=crop" alt="News" class="card-image" loading="lazy">
-                            <span class="card-category-badge"><?= $t('अर्थ', 'Economy') ?></span>
+                    <a href="/news-post.php" class="news-card anim-fade-up delay-1">
+                        <div class="card-img-wrap">
+                            <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&h=250&fit=crop" alt="News" class="card-img" loading="lazy">
+                            <span class="card-cat-badge"><?= $t('अर्थ', 'Economy') ?></span>
                         </div>
                         <div class="card-body">
                             <h3 class="card-title"><?= $t('NEPSE ले नयाँ रेकर्ड बनायो', 'NEPSE Sets New Record High') ?></h3>
                             <div class="card-meta">
-                                <span class="meta-source"><?= $t('आकाशवाणी', 'Aakashvani') ?></span>
-                                <span class="meta-time"><?= $t('30 मिनेट अघि', '30 min ago') ?></span>
+                                <span class="card-source"><?= $t('आकाशवाणी', 'Aakashvani') ?></span>
+                                <span class="card-time"><?= $t('30 मिनेट अघि', '30 min ago') ?></span>
                             </div>
                         </div>
                     </a>
-                    <a href="/news-post.php" class="news-card">
-                        <div class="card-image-wrapper">
-                            <img src="https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=400&h=250&fit=crop" alt="News" class="card-image" loading="lazy">
-                            <span class="card-category-badge"><?= $t('प्रविधि', 'Technology') ?></span>
+                    <a href="/news-post.php" class="news-card anim-fade-up delay-2">
+                        <div class="card-img-wrap">
+                            <img src="https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=400&h=250&fit=crop" alt="News" class="card-img" loading="lazy">
+                            <span class="card-cat-badge"><?= $t('प्रविधि', 'Technology') ?></span>
                         </div>
                         <div class="card-body">
                             <h3 class="card-title"><?= $t('सुनको मूल्यमा वृद्धि', 'Gold Prices Surge') ?></h3>
                             <div class="card-meta">
-                                <span class="meta-source"><?= $t('आकाशवाणी', 'Aakashvani') ?></span>
-                                <span class="meta-time"><?= $t('1 घण्टा अघि', '1 hour ago') ?></span>
+                                <span class="card-source"><?= $t('आकाशवाणी', 'Aakashvani') ?></span>
+                                <span class="card-time"><?= $t('1 घण्टा अघि', '1 hour ago') ?></span>
                             </div>
                         </div>
                     </a>
-                    <a href="/news-post.php" class="news-card">
-                        <div class="card-image-wrapper">
-                            <img src="https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=400&h=250&fit=crop" alt="News" class="card-image" loading="lazy">
-                            <span class="card-category-badge"><?= $t('खेलकुद', 'Sports') ?></span>
+                    <a href="/news-post.php" class="news-card anim-fade-up delay-3">
+                        <div class="card-img-wrap">
+                            <img src="https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=400&h=250&fit=crop" alt="News" class="card-img" loading="lazy">
+                            <span class="card-cat-badge"><?= $t('खेलकुद', 'Sports') ?></span>
                         </div>
                         <div class="card-body">
                             <h3 class="card-title"><?= $t('IPO आवेदन खुला', 'IPO Applications Open') ?></h3>
                             <div class="card-meta">
-                                <span class="meta-source"><?= $t('आकाशवाणी', 'Aakashvani') ?></span>
-                                <span class="meta-time"><?= $t('2 घण्टा अघि', '2 hours ago') ?></span>
+                                <span class="card-source"><?= $t('आकाशवाणी', 'Aakashvani') ?></span>
+                                <span class="card-time"><?= $t('2 घण्टा अघि', '2 hours ago') ?></span>
                             </div>
                         </div>
                     </a>
 <?php endif; ?>
                 </div>
-
             </div>
 
-            <!-- Quick Tools Section -->
-            <div class="tools-section mt-8 mb-8">
+            <!-- Quick Tools -->
+            <div class="tools-section">
                 <div class="section-header">
                     <h2 class="section-title">
-                        <span class="section-title-icon">🛠️</span>
+                        <span class="section-title-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                        </span>
                         <?= $t('छिटो टूलहरू', 'Quick Tools') ?>
                     </h2>
                 </div>
-                
                 <div class="tools-grid">
                     <?php
                     $quickTools = [
-                        ['icon' => '📅', 'label' => $t('पात्रो', 'Calendar'), 'href' => '/nepali-patro.php'],
-                        ['icon' => '♈', 'label' => $t('राशिफल', 'Horoscope'), 'href' => '/rashifal.php'],
-                        ['icon' => '📊', 'label' => $t('NEPSE', 'NEPSE'), 'href' => '/ipo-tracker.php'],
-                        ['icon' => '🏥', 'label' => $t('अस्पताल', 'Hospitals'), 'href' => '/gov-services.php'],
-                        ['icon' => '⚡', 'label' => $t('मौसम', 'Weather'), 'href' => '/weather.php'],
-                        ['icon' => '🔔', 'label' => $t('सरकारी सेवा', 'Gov Services'), 'href' => '/gov-services.php'],
+                        ['icon' => 'calendar', 'label' => $t('पात्रो', 'Calendar'), 'href' => '/nepali-patro.php'],
+                        ['icon' => 'star', 'label' => $t('राशिफल', 'Horoscope'), 'href' => '/rashifal.php'],
+                        ['icon' => 'trending-up', 'label' => $t('NEPSE', 'NEPSE'), 'href' => '/ipo-tracker.php'],
+                        ['icon' => 'building', 'label' => $t('अस्पताल', 'Hospitals'), 'href' => '/gov-services.php'],
+                        ['icon' => 'cloud-sun', 'label' => $t('मौसम', 'Weather'), 'href' => '/weather.php'],
+                        ['icon' => 'megaphone', 'label' => $t('एसएमएस', 'SMS Alert'), 'href' => '/alerts.php'],
                     ];
-                    foreach ($quickTools as $tool):
-                    ?>
+                    foreach ($quickTools as $tool): ?>
                     <a href="<?= $tool['href'] ?>" class="tool-card">
-                        <span class="tool-icon"><?= $tool['icon'] ?></span>
+                        <div class="tool-card-icon">
+                            <i data-lucide="<?= $tool['icon'] ?>"></i>
+                        </div>
                         <span class="tool-label"><?= $tool['label'] ?></span>
                     </a>
                     <?php endforeach; ?>
                 </div>
             </div>
+
         </div>
     </main>
 
-    <!-- ═══════════════════════════════════════════════════════════════
-         PREMIUM FOOTER
-         ═══════════════════════════════════════════════════════════════ -->
-    <footer class="premium-footer">
+    <!-- MOBILE BOTTOM NAV -->
+    <nav class="mobile-bottom-nav" aria-label="Mobile navigation">
+        <div class="bottom-nav-inner">
+            <a href="/" class="bottom-nav-item <?= ($currentPath === '/') ? 'active' : '' ?>">
+                <i data-lucide="home"></i>
+                <span>गृह</span>
+            </a>
+            <a href="/news.php" class="bottom-nav-item <?= (strpos($currentPath, 'news') !== false) ? 'active' : '' ?>">
+                <i data-lucide="newspaper"></i>
+                <span>समाचार</span>
+            </a>
+            <a href="/ipo-tracker.php" class="bottom-nav-item">
+                <i data-lucide="trending-up"></i>
+                <span>NEPSE</span>
+            </a>
+            <a href="/nepali-patro.php" class="bottom-nav-item">
+                <i data-lucide="calendar-days"></i>
+                <span>पात्रो</span>
+            </a>
+            <a href="/rashifal.php" class="bottom-nav-item">
+                <i data-lucide="sparkles"></i>
+                <span>राशिफल</span>
+            </a>
+        </div>
+    </nav>
+
+    <script>
+    // Initialize Lucide icons after DOM
+    document.addEventListener('DOMContentLoaded', function() {
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
+    });
+    </script>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
         <div class="container">
             <div class="footer-grid">
-                <!-- Brand Column -->
+                <!-- Brand -->
                 <div>
                     <div class="footer-brand">
                         <div class="footer-logo">आ</div>
-                        <div class="footer-brand-text">
-                            <h3>आकाशवाणी</h3>
-                            <span><?= $t('सूचनाको खुला आकाश', 'Your Gateway to Information') ?></span>
+                        <div>
+                            <div class="footer-name">आकाशवाणी</div>
+                            <div class="footer-tagline"><?= $t('सूचनाको खुला आकाश', 'Your Gateway to Information') ?></div>
                         </div>
                     </div>
-                    <p class="footer-description">
+                    <p class="footer-desc">
                         <?= $t('नेपालको सबैभन्दा विश्वसनीय सूचना प्लेटफर्म। समाचार, बजार डाटा, सरकारी सेवा, र थप जानकारी एकैठाउँमा।', 'Nepal\'s most trusted information platform. News, market data, government services, and more in one place.') ?>
                     </p>
                     <div class="footer-social">
-                        <a href="#" class="social-link">📘</a>
-                        <a href="#" class="social-link">🐦</a>
-                        <a href="#" class="social-link">📸</a>
-                        <a href="#" class="social-link">📺</a>
+                        <a href="#" class="social-btn" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+                        <a href="#" class="social-btn" aria-label="Twitter/X"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622Zm-1.161 17.52h1.833L7.084 4.126H5.117Z"/></svg></a>
+                        <a href="#" class="social-btn" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
                     </div>
                 </div>
-                
-                <!-- Links Column -->
+                <!-- Links -->
                 <div>
-                    <h4 class="footer-title"><?= $t('लिंकहरू', 'Links') ?></h4>
+                    <div class="footer-col-title"><?= $t('लिंकहरू', 'Links') ?></div>
                     <ul class="footer-links">
                         <li><a href="/"><?= $t('गृहपृष्ठ', 'Home') ?></a></li>
                         <li><a href="/news.php"><?= $t('समाचार', 'News') ?></a></li>
                         <li><a href="/ipo-tracker.php"><?= $t('NEPSE/IPO', 'NEPSE/IPO') ?></a></li>
-                        <li><a href="/tools.php"><?= $t('टूलहरू', 'Tools') ?></a></li>
                         <li><a href="/gov-services.php"><?= $t('सरकारी सेवा', 'Gov Services') ?></a></li>
                     </ul>
                 </div>
-                
-                <!-- Resources Column -->
+                <!-- Resources -->
                 <div>
-                    <h4 class="footer-title"><?= $t('स्रोतहरू', 'Resources') ?></h4>
+                    <div class="footer-col-title"><?= $t('स्रोतहरू', 'Resources') ?></div>
                     <ul class="footer-links">
                         <li><a href="/rashifal.php"><?= $t('राशिफल', 'Horoscope') ?></a></li>
-                        <li><a href="/nepali-patro.php"><?= $t('नेपाली पात्रो', 'Nepali Calendar') ?></a></li>
+                        <li><a href="/nepali-patro.php"><?= $t('नेपाली पात्रो', 'Calendar') ?></a></li>
                         <li><a href="/weather.php"><?= $t('मौसम', 'Weather') ?></a></li>
                         <li><a href="/emergency.php"><?= $t('आपतकालीन', 'Emergency') ?></a></li>
                     </ul>
                 </div>
-                
-                <!-- Contact Column -->
+                <!-- Company -->
                 <div>
-                    <h4 class="footer-title"><?= $t('सम्पर्क', 'Contact') ?></h4>
+                    <div class="footer-col-title"><?= $t('कम्पनी', 'Company') ?></div>
                     <ul class="footer-links">
                         <li><a href="/about.php"><?= $t('हाम्रो बारेमा', 'About Us') ?></a></li>
-                        <li><a href="/contact.php"><?= $t('सम्पर्क गर्नुहोस्', 'Contact') ?></a></li>
+                        <li><a href="/contact.php"><?= $t('सम्पर्क', 'Contact') ?></a></li>
                         <li><a href="/privacy.php"><?= $t('गोपनीयता', 'Privacy') ?></a></li>
                         <li><a href="/terms.php"><?= $t('सेवा सर्त', 'Terms') ?></a></li>
                     </ul>
                 </div>
             </div>
-            
-            <!-- Footer Bottom -->
             <div class="footer-bottom">
-                <p class="footer-copyright">
-                    &copy; <?= date('Y') ?> <?= $t('आकाशवाणी। सर्वाधिकार सुरक्षित।', 'Aakashvani. All rights reserved.') ?>
-                </p>
+                <span class="footer-copy">&copy; <?= date('Y') ?> <?= $t('आकाशवाणी। सर्वाधिकार सुरक्षित।', 'Aakashvani. All rights reserved.') ?></span>
                 <div class="footer-legal">
                     <a href="/privacy.php"><?= $t('गोपनीयता', 'Privacy') ?></a>
                     <a href="/terms.php"><?= $t('सर्तहरू', 'Terms') ?></a>
@@ -437,135 +423,82 @@ try {
         </div>
     </footer>
 
-    <!-- ═══════════════════════════════════════════════════════════════
-         SCRIPTS
-         ═══════════════════════════════════════════════════════════════ -->
+    <!-- MARKET + NEWS LOADER -->
     <script>
-    // Premium Market Data Loader
     (function() {
         'use strict';
-        
-        const MarketLoader = {
-            apiUrl: '/api/market-data.php',
-            init() {
-                this.loadMarketData();
-                setInterval(() => this.loadMarketData(), 5 * 60 * 1000); // 5 min refresh
-            },
-            
-            async loadMarketData() {
-                try {
-                    const resp = await fetch(this.apiUrl + '?type=all');
-                    if (!resp.ok) throw new Error('API Error');
-                    
-                    const data = await resp.json();
-                    this.updateUI(data);
-                    this.animateCards();
-                } catch (err) {
-                    console.warn('Market data unavailable:', err.message);
-                }
-            },
-            
-            updateUI(data) {
-                // NEPSE
-                if (data.nepse) {
-                    const n = data.nepse;
-                    const valueEl = document.getElementById('nepse-value');
-                    const changeEl = document.getElementById('nepse-change');
-                    
-                    if (valueEl) valueEl.textContent = n.index ? n.index.toLocaleString('en-US', {maximumFractionDigits: 2}) : '—';
-                    
-                    if (changeEl && n.change !== undefined) {
-                        const isUp = n.change >= 0;
-                        changeEl.innerHTML = `<span class="change-value ${isUp ? 'up' : 'down'}">${isUp ? '+' : ''}${n.change.toFixed(2)} (${isUp ? '+' : ''}${n.changePercent.toFixed(2)}%)</span>`;
-                        changeEl.className = `card-change ${isUp ? 'up' : 'down'}`;
+
+        // Market data
+        async function loadMarket() {
+            try {
+                const resp = await fetch('/api/market-data.php?type=all');
+                if (!resp.ok) return;
+                const d = await resp.json();
+                if (d.nepse) {
+                    const n = d.nepse;
+                    const v = document.getElementById('nepse-value');
+                    const c = document.getElementById('nepse-change');
+                    if (v && n.index) v.textContent = n.index.toLocaleString('en-US', {maximumFractionDigits:2});
+                    if (c && n.change !== undefined) {
+                        const up = n.change >= 0;
+                        c.textContent = (up ? '+' : '') + n.change.toFixed(2) + ' (' + (up ? '+' : '') + n.changePercent.toFixed(2) + '%)';
+                        c.className = 'market-change ' + (up ? 'up' : 'down');
                     }
                 }
-                
-                // Gold
-                if (data.gold && data.gold.hallmarkPerTola) {
-                    const goldEl = document.getElementById('gold-value');
-                    if (goldEl) goldEl.textContent = 'रु ' + Number(data.gold.hallmarkPerTola).toLocaleString('en-US');
-                    
-                    const metaEl = document.getElementById('gold-meta');
-                    if (metaEl && data.gold.source) {
-                        metaEl.innerHTML = `<span class="meta-source">${data.gold.source}</span>`;
-                    }
+                if (d.gold && d.gold.hallmarkPerTola) {
+                    const gv = document.getElementById('gold-value');
+                    const gm = document.getElementById('gold-meta');
+                    if (gv) gv.textContent = 'रु ' + Number(d.gold.hallmarkPerTola).toLocaleString('en-US');
+                    if (gm && d.gold.source) gm.textContent = d.gold.source;
                 }
-                
-                // Forex
-                if (data.forex && data.forex.length > 0) {
-                    const usd = data.forex.find(r => r.code === 'USD');
+                if (d.forex && d.forex.length > 0) {
+                    const usd = d.forex.find(r => r.code === 'USD');
                     if (usd) {
-                        const forexEl = document.getElementById('forex-value');
-                        const metaEl = document.getElementById('forex-meta');
-                        if (forexEl) forexEl.textContent = 'रु ' + usd.sell.toFixed(2);
-                        if (metaEl) metaEl.innerHTML = `<span class="meta-buy">Buy: रु ${usd.buy.toFixed(2)}</span>`;
+                        const fv = document.getElementById('forex-value');
+                        const fm = document.getElementById('forex-meta');
+                        if (fv) fv.textContent = 'रु ' + usd.sell.toFixed(2);
+                        if (fm) fm.textContent = 'Buy: रु ' + usd.buy.toFixed(2);
                     }
                 }
-                
-                // Petrol
-                if (data.petrol && data.petrol.petrol) {
-                    const petrolEl = document.getElementById('petrol-value');
-                    if (petrolEl) petrolEl.textContent = 'रु ' + data.petrol.petrol;
+                if (d.petrol && d.petrol.petrol) {
+                    const pv = document.getElementById('petrol-value');
+                    if (pv) pv.textContent = 'रु ' + d.petrol.petrol;
                 }
-            },
-            
-            animateCards() {
-                document.querySelectorAll('.market-card').forEach((card, i) => {
-                    setTimeout(() => card.classList.add('loaded'), i * 100);
-                });
-            }
-        };
-        
-        // News Loader
-        const NewsLoader = {
-            apiUrl: '/api/news-unified.php',
-            
-            async loadNews() {
-                try {
-                    const resp = await fetch(this.apiUrl + '?limit=6');
-                    if (!resp.ok) throw new Error('News API Error');
-                    
-                    const data = await resp.json();
-                    if (data.items && data.items.length > 0) {
-                        this.updateFeatured(data.items[0]);
-                        this.updateGrid(data.items.slice(1, 4));
-                    }
-                } catch (err) {
-                    console.warn('News data load failed:', err.message);
+                document.querySelectorAll('.market-card').forEach((c, i) => setTimeout(() => c.classList.add('loaded'), i * 100));
+            } catch(e) { console.warn('Market data unavailable'); }
+        }
+
+        // Featured news
+        async function loadNews() {
+            try {
+                const resp = await fetch('/api/news-unified.php?limit=3');
+                if (!resp.ok) return;
+                const d = await resp.json();
+                if (d.items && d.items[0]) {
+                    const n = d.items[0];
+                    const t = document.getElementById('featured-title');
+                    const ti = document.getElementById('featured-time');
+                    if (t && n.title) t.textContent = n.title;
+                    if (ti && n.published_at) ti.textContent = timeAgo(n.published_at);
                 }
-            },
-            
-            updateFeatured(news) {
-                const titleEl = document.getElementById('featured-title');
-                const timeEl = document.getElementById('featured-time');
-                if (titleEl && news.title) titleEl.textContent = news.title;
-                if (timeEl && news.published_at) timeEl.textContent = this.timeAgo(news.published_at);
-            },
-            
-            updateGrid(newsItems) {
-                // Optional: Update news grid dynamically
-            },
-            
-            timeAgo(dateStr) {
-                if (!dateStr) return '<?= $t('अहिले', 'Just now') ?>';
-                const diff = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000);
-                if (diff < 60) return diff + 's <?= $t('अघि', 'ago') ?>';
-                if (diff < 3600) return Math.floor(diff / 60) + 'm <?= $t('अघि', 'ago') ?>';
-                if (diff < 86400) return Math.floor(diff / 3600) + 'h <?= $t('अघि', 'ago') ?>';
-                return Math.floor(diff / 86400) + 'd <?= $t('अघि', 'ago') ?>';
-            }
-        };
-        
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            MarketLoader.init();
-            NewsLoader.loadNews();
+            } catch(e) { console.warn('News load failed'); }
+        }
+
+        function timeAgo(d) {
+            if (!d) return '';
+            const s = Math.floor((Date.now() - new Date(d).getTime()) / 1000);
+            if (s < 60) return s + 's ago';
+            if (s < 3600) return Math.floor(s/60) + 'm ago';
+            if (s < 86400) return Math.floor(s/3600) + 'h ago';
+            return Math.floor(s/86400) + 'd ago';
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadMarket();
+            loadNews();
         });
     })();
     </script>
-    
-    <!-- Service Worker -->
     <script>
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
