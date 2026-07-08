@@ -12,6 +12,7 @@
  */
 
 require_once __DIR__ . '/data-schema.php';
+require_once __DIR__ . '/../config.php';
 
 class DataManager {
     
@@ -54,8 +55,9 @@ class DataManager {
         
         // 1. Fetch from RSS API
         try {
-            $rssData = @json_decode(file_get_contents(
-                'http://localhost/api/news-rss.php?cat=' . urlencode($category ?? 'general')
+            $baseUrl = defined('SITE_URL') ? SITE_URL : 'https://news.bandanasigdel.com.np';
+            $rssData = @json_decode(@file_get_contents(
+                $baseUrl . '/api/news-rss.php?cat=' . urlencode($category ?? 'general')
             ), true);
             if ($rssData && is_array($rssData['items'] ?? null)) {
                 $articles = array_merge($articles, $rssData['items']);
@@ -151,8 +153,9 @@ class DataManager {
         
         try {
             // Fetch from market API
-            $marketData = @json_decode(file_get_contents(
-                'http://localhost/api/market-data.php?type=' . urlencode($category ?? 'stock')
+            $baseUrl = defined('SITE_URL') ? SITE_URL : 'https://news.bandanasigdel.com.np';
+            $marketData = @json_decode(@file_get_contents(
+                $baseUrl . '/api/market-data.php?type=' . urlencode($category ?? 'stock')
             ), true);
             if ($marketData && is_array($marketData['data'] ?? null)) {
                 $data = array_slice($marketData['data'], 0, $limit);

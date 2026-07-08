@@ -81,3 +81,10 @@ function timeAgo($datetime) {
 function sanitize($str) {
     return htmlspecialchars(trim($str ?? ''), ENT_QUOTES, 'UTF-8');
 }
+
+// Truncate text to a given length
+function truncateText(string $str, int $length = 200): string {
+    $str = strip_tags($str ?? '');
+    if (mb_strlen($str) <= $length) return $str;
+    return mb_substr($str, 0, $length) . '…';
+}
