@@ -32,6 +32,8 @@ if (PHP_SAPI !== 'cli') {
 
 require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../functions.php';
+require_once __DIR__ . '/../includes/csrf.php';
+csrfRequire();
 
 // ── Auth: Admin session OR CRON_KEY ─────────────────────────────────────────────
 $cronKey = defined('CRON_KEY') ? CRON_KEY : '';

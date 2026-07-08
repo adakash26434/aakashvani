@@ -162,6 +162,8 @@ if (!function_exists('sendSecurityHeaders')) {
         header('X-XSS-Protection: 1; mode=block');
         header('Referrer-Policy: strict-origin-when-cross-origin');
         header('Permissions-Policy: camera=(), microphone=(), geolocation=()');
+        // Content Security Policy — restrict scripts to self + inline for app.js
+        header("Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://news.bandanasigdel.com.np; frame-ancestors 'self';");
         // HSTS: Force HTTPS for 1 year (uncomment when SSL is properly configured)
         // header('Strict-Transport-Security: max-age=31536000; includeSubDomains');
     }

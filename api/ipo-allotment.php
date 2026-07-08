@@ -19,6 +19,8 @@ header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { http_response_code(204); exit; }
 
 require_once __DIR__ . '/../functions.php';
+require_once __DIR__ . '/../includes/csrf.php';
+csrfRequire();
 
 /* ── Read input ─────────────────────────────────────────────────── */
 $raw = file_get_contents('php://input');

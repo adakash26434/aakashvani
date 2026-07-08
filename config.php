@@ -14,7 +14,7 @@ define('DB_CHARSET', 'utf8mb4');
 // Site Configuration
 define('SITE_NAME', 'आकाशवाणी');
 define('SITE_TAGLINE', 'सूचनाको खुला आकाश');
-define('SITE_URL', 'https://tankaadhikari.com.np');
+define('SITE_URL', 'https://news.bandanasigdel.com.np');
 
 // Timezone
 date_default_timezone_set('Asia/Kathmandu');
@@ -36,9 +36,11 @@ function siteLang() {
 }
 
 // Helper translation
-function t($ne, $en = '') {
-    $lang = siteLang();
-    return $lang === 'en' ? $en : $ne;
+if (!function_exists('t')) {
+    function t($ne, $en = '') {
+        $lang = siteLang();
+        return $lang === 'en' ? $en : $ne;
+    }
 }
 
 // Database Connection
@@ -66,25 +68,31 @@ if (!function_exists('db')) {
 }
 
 // Time Ago
-function timeAgo($datetime) {
-    if (!$datetime) return '';
-    $time = strtotime($datetime);
-    $diff = time() - $time;
-    if ($diff < 60) return $diff . 's ago';
-    if ($diff < 3600) return floor($diff / 60) . 'm ago';
-    if ($diff < 86400) return floor($diff / 3600) . 'h ago';
-    if ($diff < 604800) return floor($diff / 86400) . 'd ago';
-    return date('j M', $time);
+if (!function_exists('timeAgo')) {
+    function timeAgo($datetime) {
+        if (!$datetime) return '';
+        $time = strtotime($datetime);
+        $diff = time() - $time;
+        if ($diff < 60) return $diff . 's ago';
+        if ($diff < 3600) return floor($diff / 60) . 'm ago';
+        if ($diff < 86400) return floor($diff / 3600) . 'h ago';
+        if ($diff < 604800) return floor($diff / 86400) . 'd ago';
+        return date('j M', $time);
+    }
 }
 
 // Sanitize
-function sanitize($str) {
-    return htmlspecialchars(trim($str ?? ''), ENT_QUOTES, 'UTF-8');
+if (!function_exists('sanitize')) {
+    function sanitize($str) {
+        return htmlspecialchars(trim($str ?? ''), ENT_QUOTES, 'UTF-8');
+    }
 }
 
 // Truncate text to a given length
-function truncateText(string $str, int $length = 200): string {
-    $str = strip_tags($str ?? '');
-    if (mb_strlen($str) <= $length) return $str;
-    return mb_substr($str, 0, $length) . '…';
+if (!function_exists('truncateText')) {
+    function truncateText(string $str, int $length = 200): string {
+        $str = strip_tags($str ?? '');
+        if (mb_strlen($str) <= $length) return $str;
+        return mb_substr($str, 0, $length) . '…';
+    }
 }

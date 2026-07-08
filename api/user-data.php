@@ -10,6 +10,8 @@
 require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../functions.php';
 require_once __DIR__ . '/../includes/auth.php';
+require_once __DIR__ . '/../includes/csrf.php';
+csrfRequire();
 
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store');
