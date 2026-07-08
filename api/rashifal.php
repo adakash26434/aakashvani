@@ -475,7 +475,7 @@ function writeDbRashifal(int $rashiIndex, array $rashiInfo, array $bsDate, strin
                 VALUES (?,?,?,?,?,?,?,?)")
                 ->execute([$rashiIndex, $rashiInfo['en'], $bsDate['short'], $dateAd, $lang, $payload, $source, $isAi]);
         }
-    } catch (Throwable $e) {}
+    } catch (Throwable $e) { error_log("[rashifal] insert: " . $e->getMessage()); }
 }
 
 function getRashifalForRashi(int $rashiIndex, string $type = 'daily'): array {

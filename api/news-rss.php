@@ -284,7 +284,7 @@ if ($allItems === null) {
   // Ensure DB table exists
   try {
     ensureNewsTable();
-  } catch (Throwable $e) {}
+  } catch (Throwable $e) { error_log("[news-rss] ensureNewsTable: " . $e->getMessage()); }
   
   foreach ($feeds as $f) {
     [$label, $url, $defaultCat, $key] = $f;
@@ -321,7 +321,7 @@ if ($allItems === null) {
                 $fullContent = $scraped;
                 $hasFullContent = true;
               }
-            } catch (\Throwable $e) {}
+            } catch (\\Throwable $e) { error_log("[news-rss] scrape: " . $e->getMessage()); }
           }
         }
         
@@ -355,7 +355,7 @@ if ($allItems === null) {
           try {
             $up = db()->prepare("UPDATE tech_news SET content=?, ai_processed=1, updated_at=NOW() WHERE id=? AND (LENGTH(content) < 300 OR content IS NULL)");
             $up->execute([$fullContent, $existing['id']]);
-          } catch (\Throwable $e) {}
+          } catch (\\Throwable $e) { error_log("[news-rss] scrape: " . $e->getMessage()); }
         }
       } catch (Throwable $e) {
         // Continue even if DB insert fails

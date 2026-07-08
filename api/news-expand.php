@@ -89,7 +89,7 @@ if ($slug) {
                             try {
                                 $up = db()->prepare("UPDATE tech_news SET content=?, ai_processed=1 WHERE slug=?");
                                 $up->execute([$scraped, $slug]);
-                            } catch(\Throwable $e) {}
+                            } catch(\Throwable $e) { error_log("[news-expand] content fetch: " . $e->getMessage()); }
                             echo json_encode([
                                 'content'     => formatAsHtml($title, $scraped, $lang),
                                 'source'      => 'live_scrape',
@@ -100,11 +100,11 @@ if ($slug) {
                             ]);
                             return;
                         }
-                    } catch(\Throwable $e) {}
+                    } catch(\Throwable $e) { error_log("[news-expand] inner: " . $e->getMessage()); }
                 }
             }
         }
-    } catch(\Throwable $e) {}
+    } catch(\Throwable $e) { error_log("[news-expand] outer: " . $e->getMessage()); }
 }
 
 // ── Build context for AI ──────────────────────────────────────────────────────
