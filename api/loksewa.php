@@ -4,7 +4,6 @@
  * Fetches PSC + RSS feeds → stores in DB → serves JSON
  * ?type=notice|vacancy|result|syllabus|all  ?limit=40
  */
-ob_start();
 @ini_set('default_socket_timeout', 8);
 
 require_once __DIR__ . '/../config.php';

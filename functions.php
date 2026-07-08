@@ -301,3 +301,126 @@ if (!function_exists('ensureRashifalTable')) {
         }
     }
 }
+
+if (!function_exists('ensureStoriesTable')) {
+    function ensureStoriesTable(): void {
+        $pdo = db();
+        if (!$pdo) return;
+        try {
+            $pdo->exec("CREATE TABLE IF NOT EXISTS `stories` (
+                `id`          INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                `title`       VARCHAR(500) NOT NULL,
+                `slug`        VARCHAR(500) UNIQUE,
+                `excerpt`     TEXT,
+                `content`     LONGTEXT,
+                `category`    VARCHAR(100) DEFAULT 'general',
+                `source`      VARCHAR(100),
+                `source_url`  VARCHAR(500),
+                `image_url`   VARCHAR(500),
+                `is_published` TINYINT(1) DEFAULT 0,
+                `views`       INT UNSIGNED DEFAULT 0,
+                `tags`        TEXT,
+                `tags_en`     TEXT,
+                `created_at`  DATETIME DEFAULT CURRENT_TIMESTAMP,
+                `updated_at`  DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                INDEX `idx_published` (`is_published`),
+                INDEX `idx_category` (`category`),
+                INDEX `idx_views` (`views`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+        } catch (Throwable $e) {
+            error_log('[ensureStoriesTable] ' . $e->getMessage());
+        }
+    }
+}
+
+if (!function_exists('ensureOffersTable')) {
+    function ensureOffersTable(): void {
+        $pdo = db();
+        if (!$pdo) return;
+        try {
+            $pdo->exec("CREATE TABLE IF NOT EXISTS `offers` (
+                `id`           INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                `slug`         VARCHAR(255) UNIQUE,
+                `title`        VARCHAR(500) NOT NULL,
+                `summary`      TEXT,
+                `company`      VARCHAR(120),
+                `category`     VARCHAR(60) DEFAULT 'general',
+                `badge`        VARCHAR(60),
+                `price`        VARCHAR(60),
+                `discount_pct` INT UNSIGNED DEFAULT 0,
+                `url`          TEXT,
+                `image_url`    VARCHAR(500),
+                `is_curated`   TINYINT(1) DEFAULT 0,
+                `is_active`    TINYINT(1) DEFAULT 1,
+                `valid_until`  DATETIME,
+                `fetched_at`   DATETIME DEFAULT CURRENT_TIMESTAMP,
+                INDEX `idx_active` (`is_active`),
+                INDEX `idx_category` (`category`),
+                INDEX `idx_company` (`company`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+        } catch (Throwable $e) {
+            error_log('[ensureOffersTable] ' . $e->getMessage());
+        }
+    }
+}
+
+if (!function_exists('upsertOffer')) {
+    function upsertOffer(array $data): void {
+        $pdo = db();
+        if (!$pdo) return;
+        try {
+            $ignore = (defined('DB_DRIVER') && DB_DRIVER === 'mysql') ? 'INSERT IGNORE INTO' : 'INSERT OR IGNORE INTO';
+            $stmt = $pdo->prepare("$ignore offers (slug, title, summary, company, category, badge, price, discount_pct, url, is_curated, fetched_at)
+                VALUES (:slug, :title, :summary, :company, :cat, :badge, :price, :discount_pct, :url, 0, NOW())
+                ON DUPLICATE KEY UPDATE title=VALUES(title), summary=VALUES(summary), fetched_at=NOW()");
+            $stmt->execute([
+                ':slug'   => $data['slug'] ?? '',
+                ':title'  => $data['title'] ?? '',
+                ':summary'=> $data['summary'] ?? '',
+                ':company'=> $data['company'] ?? '',
+                ':cat'    => $data['cat'] ?? 'general',
+                ':badge'  => $data['badge'] ?? '',
+                ':price'  => $data['price'] ?? '',
+                ':discount_pct' => (int)($data['discount_pct'] ?? 0),
+                ':url'    => $data['url'] ?? '',
+            ]);
+        } catch (Throwable $e) {
+            error_log('[upsertOffer] ' . $e->getMessage());
+        }
+    }
+}
+
+if (!function_exists('getActiveOffers')) {
+    function getActiveOffers(string $cat = '', string $company = '', int $limit = 60): array {
+        $pdo = db();
+        if (!$pdo) return [];
+        try {
+            $sql = 'SELECT * FROM offers WHERE is_active=1';
+            $params = [];
+            if ($cat && $cat !== 'all') { $sql .= ' AND category=?'; $params[] = $cat; }
+            if ($company) { $sql .= ' AND company=?'; $params[] = $company; }
+            $sql .= ' ORDER BY fetched_at DESC LIMIT ' . (int)$limit;
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute($params);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+        } catch (Throwable $e) {
+            error_log('[getActiveOffers] ' . $e->getMessage());
+            return [];
+        }
+    }
+}
+
+if (!function_exists('getOfferCatCounts')) {
+    function getOfferCatCounts(): array {
+        $pdo = db();
+        if (!$pdo) return [];
+        try {
+            $rows = $pdo->query('SELECT category, COUNT(*) c FROM offers WHERE is_active=1 GROUP BY category')->fetchAll(PDO::FETCH_ASSOC);
+            $out = [];
+            foreach ($rows as $r) $out[$r['category']] = (int)$r['c'];
+            return $out;
+        } catch (Throwable $e) {
+            return [];
+        }
+    }
+}
