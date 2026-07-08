@@ -58,6 +58,13 @@ function getDB() {
     return $pdo;
 }
 
+// Alias for getDB() — maintains compatibility with codebase that uses db()
+if (!function_exists('db')) {
+    function db() {
+        return getDB();
+    }
+}
+
 // Time Ago
 function timeAgo($datetime) {
     if (!$datetime) return '';

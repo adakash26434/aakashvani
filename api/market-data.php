@@ -540,24 +540,25 @@ function getNepseData(): array {
         return $data;
     }
 
-    // All scraping methods failed — return honest unavailable response with sample data
+    // All scraping methods failed — return honest UNAVAILABLE response
+    // NEVER return fake financial data — it could mislead users
     return [
         'available'      => false,
-        'index'          => 2734.18,
-        'change'         => 12.45,
-        'changePercent'  => 0.46,
-        'turnover'       => 3.5,
-        'tradedShares'   => 12500000,
-        'transactions'   => 45000,
-        'positiveStocks' => 120,
-        'negativeStocks' => 85,
-        'neutralStocks'  => 15,
-        'topGainers'     => getSampleGainers(),
-        'topLosers'      => getSampleLosers(),
+        'index'          => null,
+        'change'         => null,
+        'changePercent'  => null,
+        'turnover'       => null,
+        'tradedShares'   => null,
+        'transactions'   => null,
+        'positiveStocks' => null,
+        'negativeStocks' => null,
+        'neutralStocks'  => null,
+        'topGainers'     => [],
+        'topLosers'      => [],
         'updatedAt'      => date('Y-m-d H:i'),
-        'source'         => 'Sample Data',
+        'source'         => 'unavailable',
         'marketStatus'   => getMarketStatus(),
-        'note'           => 'NEPSE लाइभ डाटा अहिले उपलब्ध छैन। Sample डाटा देखाइएको छ। nepalstock.com.np मा हेर्नुस्।',
+        'note'           => 'NEPSE लाइभ डाटा अहिले उपलब्ध छैन। nepse.gov.np वा nepalstock.com.np मा हेर्नुस्।',
         'link'           => 'https://nepalstock.com.np',
     ];
 }
@@ -623,8 +624,8 @@ function scrapeNepseDetailedFromMerolagani(): ?array {
         'positiveStocks' => $positiveStocks,
         'negativeStocks' => $negativeStocks,
         'neutralStocks'  => $neutralStocks,
-        'topGainers'     => getSampleGainers(),
-        'topLosers'      => getSampleLosers(),
+        'topGainers'     => [],
+        'topLosers'      => [],
         'source'         => 'Merolagani',
     ];
 }

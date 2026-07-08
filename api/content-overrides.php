@@ -2,7 +2,7 @@
 /**
  * api/content-overrides.php — Admin manual content fallback
  *
- *  GET                → returns all current overrides
+ *  GET                → returns all current overrides (public read, restricted CORS)
  *  GET ?key=traffic   → returns one block
  *  POST  (admin)      → save one block {key, items, note}
  *
@@ -14,16 +14,39 @@
  *   transport      — Bus/flight schedule notes
  *   alert          — General urgent broadcast
  *
- * Storage: /cache/content-overrides.json
- * Auth   : same admin session as /admin (uses $_SESSION['nh_admin'])
+ * Storage: /data/cache/admin/content-overrides.json
+ * Auth   : Admin session OR CRON_KEY
  */
-header('Content-Type: application/json; charset=UTF-8');
-header('Access-Control-Allow-Origin: *');
+require_once __DIR__ . '/../config.php';
 
-$cacheDir = __DIR__ . '/../cache';
+header('Content-Type: application/json; charset=UTF-8');
+
+// ── CORS: Restrict to same-origin ───────────────────────────────────────────────
+$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+$allowed = [
+    'https://tankaadhikari.com.np',
+    'https://www.tankaadhikari.com.np',
+    'http://localhost',
+    'http://localhost:8080',
+    'http://127.0.0.1',
+];
+if (in_array($origin, $allowed, true)) {
+    header("Access-Control-Allow-Origin: $origin");
+}
+header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type');
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { http_response_code(204); return; }
+
+$cacheDir = __DIR__ . '/../data/cache/admin';
 $file     = $cacheDir . '/content-overrides.json';
 if (!is_dir($cacheDir)) @mkdir($cacheDir, 0755, true);
 session_start();
+
+// ── Auth: Admin session OR CRON_KEY ─────────────────────────────────────────────
+$cronKey = defined('CRON_KEY') ? CRON_KEY : '';
+$reqKey  = trim($_GET['key'] ?? $_SERVER['HTTP_X_CRON_KEY'] ?? '');
+$hasKey   = $cronKey && $reqKey === $cronKey;
+$hasAdmin = !empty($_SESSION['nh_admin']) || !empty($_SESSION['admin_logged_in']);
 
 $ALLOWED = ['traffic','loadshedding','water','loksewa','transport','alert'];
 
@@ -43,20 +66,20 @@ if ($method === 'GET') {
   } else {
     echo json_encode(['ok'=>true, 'overrides'=>$all, 'source'=>'आकाशवाणी Admin'], JSON_UNESCAPED_UNICODE);
   }
-  exit;
+  return;
 }
 
 if ($method === 'POST') {
-  if (empty($_SESSION['nh_admin'])) {
+  if (!$hasKey && !$hasAdmin) {
     http_response_code(401);
-    echo json_encode(['ok'=>false, 'error'=>'Unauthorized — login at /admin/']);
-    exit;
+    echo json_encode(['ok'=>false, 'error'=>'Unauthorized — admin session or CRON_KEY required']);
+    return;
   }
   $in = json_decode((string)file_get_contents('php://input'), true);
   if (!is_array($in) || empty($in['key']) || !in_array($in['key'], $ALLOWED, true)) {
     http_response_code(400);
     echo json_encode(['ok'=>false, 'error'=>'Invalid key. Allowed: '.implode(',', $ALLOWED)]);
-    exit;
+    return;
   }
   $key   = $in['key'];
   $items = is_array($in['items'] ?? null) ? $in['items'] : [];
@@ -88,8 +111,9 @@ if ($method === 'POST') {
   ];
   @file_put_contents($file, json_encode($all, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
   echo json_encode(['ok'=>true, 'saved'=>$all[$key]], JSON_UNESCAPED_UNICODE);
-  exit;
+  return;
 }
 
 http_response_code(405);
 echo json_encode(['ok'=>false, 'error'=>'Method not allowed']);
+return;

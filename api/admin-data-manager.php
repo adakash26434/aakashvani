@@ -5,20 +5,48 @@
  * All admin-manageable data in one place
  */
 header('Content-Type: application/json; charset=utf-8');
-header('Access-Control-Allow-Origin: *');
+
+// ── CORS: Restrict to same-origin (admin panel is on same site) ────────────────
+if (PHP_SAPI !== 'cli') {
+    $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+    $allowed = [
+        'https://tankaadhikari.com.np',
+        'https://www.tankaadhikari.com.np',
+        'http://localhost',
+        'http://localhost:8080',
+        'http://127.0.0.1',
+    ];
+    if (in_array($origin, $allowed, true)) {
+        header("Access-Control-Allow-Origin: $origin");
+    }
+    header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+    header('Access-Control-Allow-Headers: Content-Type, X-CSRF-Token');
+    header('Access-Control-Max-Age: 86400');
+
+    // Handle preflight
+    if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+        http_response_code(204);
+        return;
+    }
+}
 
 require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../functions.php';
 
-// Check admin auth
+// ── Auth: Admin session OR CRON_KEY ─────────────────────────────────────────────
+$cronKey = defined('CRON_KEY') ? CRON_KEY : '';
+$reqKey  = trim($_GET['key'] ?? $_SERVER['HTTP_X_CRON_KEY'] ?? '');
 session_start();
-if (empty($_SESSION['nh_admin']) && empty($_SESSION['admin_logged_in'])) {
+$hasKey   = $cronKey && $reqKey === $cronKey;
+$hasAdmin = !empty($_SESSION['nh_admin']) || !empty($_SESSION['admin_logged_in']);
+
+if (!$hasKey && !$hasAdmin) {
     http_response_code(401);
     echo json_encode(['ok' => false, 'error' => 'Unauthorized']);
-    exit;
+    return;
 }
 
-$cacheDir = __DIR__ . '/../cache';
+$cacheDir = __DIR__ . '/../data/cache/admin';
 if (!is_dir($cacheDir)) @mkdir($cacheDir, 0755, true);
 
 $action = $_GET['action'] ?? $_POST['action'] ?? 'list';

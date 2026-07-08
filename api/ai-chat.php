@@ -23,8 +23,10 @@ header('X-Accel-Buffering: no');
 @ini_set('zlib.output_compression', 0);
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
     echo "data: " . json_encode(['error' => 'POST only']) . "\n\n";
-    flush(); exit;
+    flush();
+    return;
 }
 
 $body    = json_decode(file_get_contents('php://input'), true) ?: [];
@@ -33,8 +35,10 @@ $lang    = ($body['lang'] ?? 'ne') === 'en' ? 'en' : 'ne';
 $history = is_array($body['history'] ?? null) ? $body['history'] : [];
 
 if ($message === '') {
+    http_response_code(400);
     echo "data: " . json_encode(['error' => 'Empty message']) . "\n\n";
-    flush(); exit;
+    flush();
+    return;
 }
 
 function sse(array $payload): void {

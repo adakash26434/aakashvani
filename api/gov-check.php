@@ -33,7 +33,7 @@ $dob    = trim($_GET['dob'] ?? $input['dob'] ?? '');
 
 if (!$type || !$number) {
     echo json_encode(['success' => false, 'message' => 'type र number आवश्यक छ']);
-    exit;
+    return;
 }
 
 // ── Rate limiting — max 30 req/min per IP ────────────────────────────────────
@@ -46,7 +46,7 @@ $rateData = @json_decode(@file_get_contents($rateFile), true) ?: ['count' => 0, 
 if (time() > $rateData['reset']) $rateData = ['count' => 0, 'reset' => time() + 60];
 if ($rateData['count'] >= 30) {
     echo json_encode(['success' => false, 'message' => 'धेरै अनुरोध भयो। केही समय पछि प्रयास गर्नुहोस्।', 'rate_limited' => true]);
-    exit;
+    return;
 }
 $rateData['count']++;
 @file_put_contents($rateFile, json_encode($rateData), LOCK_EX);
@@ -59,8 +59,29 @@ if (file_exists($cacheFile) && (time() - filemtime($cacheFile)) < 300) {
     exit;
 }
 
-// ── cURL helper ───────────────────────────────────────────────────────────────
+// ── SSRF Protection: Allowlist of permitted government domains ───────────────
+const GOV_ALLOWED_HOSTS = [
+    'ird.gov.np',
+    'applydlnew.dotm.gov.np',
+    'dotm.gov.np',
+    'nidmc.gov.np',
+    'nidmc.np',
+    'passport.gov.np',
+];
+
 function govFetch(string $url, array $opts = []): ?string {
+    // SSRF: Validate URL is on an allowlisted host
+    $parsed = @parse_url($url);
+    if (!$parsed || !isset($parsed['host'])) return null;
+    $host = strtolower($parsed['host']);
+    $allowed = false;
+    foreach (GOV_ALLOWED_HOSTS as $h) {
+        if ($host === $h || str_ends_with($host, '.' . $h)) { $allowed = true; break; }
+    }
+    if (!$allowed) {
+        error_log("[gov-check] SSRF block: $url");
+        return null;
+    }
     if (!extension_loaded('curl')) return null;
     $ch = curl_init($url);
     curl_setopt_array($ch, [
