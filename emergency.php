@@ -31,33 +31,19 @@ $emergency = [
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/premium.css">
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script src="/assets/js/lucide.min.js"></script>
     <style>
-        .emergency-header { background: linear-gradient(135deg, #dc2626, #991b1b); padding: var(--space-16) 0; color: #fff; text-align: center; }
-        .emergency-icon { width: 80px; height: 80px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-4); }
-        .emergency-section { padding: var(--space-12) 0; }
-        .quick-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-4); }
-        .quick-card { display: flex; align-items: center; gap: var(--space-4); padding: var(--space-6); background: #fff; border-radius: var(--radius-xl); box-shadow: var(--shadow); text-decoration: none; transition: all var(--transition); }
+        .emergency-header { background: linear-gradient(135deg, #dc2626, #991b1b); padding: var(--sp-16) 0; color: #fff; text-align: center; }
+        .emergency-icon { width: 80px; height: 80px; background: rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto var(--sp-4); }
+        .emergency-section { padding: var(--sp-12) 0; }
+        .quick-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--sp-4); }
+        .quick-card { display: flex; align-items: center; gap: var(--sp-4); padding: var(--sp-6); background: #fff; border-radius: var(--radius-xl); box-shadow: var(--shadow); text-decoration: none; transition: all var(--transition); }
         .quick-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
         .quick-icon { width: 56px; height: 56px; border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; color: #fff; flex-shrink: 0; }
         .quick-info { flex: 1; }
-        .quick-name { font-size: 0.875rem; color: var(--dark-500); margin-bottom: var(--space-1); }
+        .quick-name { font-size: 0.875rem; color: var(--dark-500); margin-bottom: var(--sp-1); }
         .quick-number { font-size: 1.5rem; font-weight: 800; color: var(--dark-900); }
-        .section-title { font-size: 1.25rem; font-weight: 700; margin-bottom: var(--space-6); }
-    </style>
-
-    <style>
-        /* Responsive */
-        @media (max-width: 768px) {
-            .emergency-hero, .weather-hero, .tenders-hero { padding: var(--space-8) 0; }
-            .emergency-hero h1, .weather-hero h1, .tenders-hero h1 { font-size: 1.75rem; }
-            .emergency-grid, .weather-grid, .tender-card { padding: var(--space-4); }
-        }
-        
-        @media (max-width: 480px) {
-            .emergency-hero h1, .weather-hero h1, .tenders-hero h1 { font-size: 1.5rem; }
-            .emergency-number { font-size: 1.25rem; }
-        }
+        .section-title { font-size: 1.25rem; font-weight: 700; margin-bottom: var(--sp-6); }
     </style>
 </head>
 <body>
@@ -67,7 +53,7 @@ $emergency = [
             <div class="tp-topbar-inner">
                 <div class="tp-topbar-left">
                     <span class="tp-date"><?= date('l, j F Y') ?></span>
-                    <span class="tp-topbar-links"><a href="/unicode">Unicode</a><a href="?lang=en">English</a></span>
+                    <span class="tp-topbar-links"><a href="?">नेपाली</a><a href="?lang=en">English</a></span>
                 </div>
                 <div class="tp-topbar-right">
                     <a href="#" aria-label="Facebook"><i data-lucide="facebook"></i></a>
@@ -222,7 +208,7 @@ $emergency = [
     <!-- Mobile Bottom Nav -->
 <script>document.addEventListener('DOMContentLoaded',function(){if(typeof lucide!=='undefined')lucide.createIcons()}
         (function() {
-            var s=document.createElement('script');s.src='https://unpkg.com/lucide@latest/dist/umd/lucide.min.js';document.head.appendChild(s);
+            var s=document.createElement('script');s.src='/assets/js/lucide.min.js';document.head.appendChild(s);
         })();
 );</script>
 </body>

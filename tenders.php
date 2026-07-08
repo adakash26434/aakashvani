@@ -20,46 +20,32 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/premium.css">
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script src="/assets/js/lucide.min.js"></script>
     <style>
-        .tenders-hero { background: linear-gradient(135deg, #1e3a5f, #0c4a6e); padding: var(--space-16) 0; color: #fff; text-align: center; }
-        .tender-card { background: #fff; border-radius: var(--radius-xl); padding: var(--space-6); box-shadow: var(--shadow); margin-bottom: var(--space-4); transition: all var(--transition); border-left: 4px solid var(--primary); }
+        .tenders-hero { background: linear-gradient(135deg, #1e3a5f, #0c4a6e); padding: var(--sp-16) 0; color: #fff; text-align: center; }
+        .tender-card { background: #fff; border-radius: var(--radius-xl); padding: var(--sp-6); box-shadow: var(--shadow); margin-bottom: var(--sp-4); transition: all var(--transition); border-left: 4px solid var(--primary); }
         .tender-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
-        .tender-header { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--space-4); margin-bottom: var(--space-4); }
-        .tender-org { font-size: 0.75rem; font-weight: 600; color: var(--primary); text-transform: uppercase; margin-bottom: var(--space-1); }
+        .tender-header { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--sp-4); margin-bottom: var(--sp-4); }
+        .tender-org { font-size: 0.75rem; font-weight: 600; color: var(--primary); text-transform: uppercase; margin-bottom: var(--sp-1); }
         .tender-title { font-size: 1.125rem; font-weight: 700; color: var(--dark-900); line-height: 1.4; }
-        .tender-number { font-size: 0.875rem; color: var(--dark-500); margin-top: var(--space-1); }
-        .tender-badge { padding: var(--space-1) var(--space-3); border-radius: var(--radius-full); font-size: 0.75rem; font-weight: 600; white-space: nowrap; }
+        .tender-number { font-size: 0.875rem; color: var(--dark-500); margin-top: var(--sp-1); }
+        .tender-badge { padding: var(--sp-1) var(--sp-3); border-radius: var(--radius-full); font-size: 0.75rem; font-weight: 600; white-space: nowrap; }
         .badge-new { background: var(--primary-50); color: var(--primary-700); }
         .badge-urgent { background: #fef2f2; color: #b91c1c; }
         .badge-closing { background: #fef3c7; color: #92400e; }
-        .tender-details { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--space-4); padding: var(--space-4); background: var(--dark-50); border-radius: var(--radius-lg); margin-bottom: var(--space-4); }
+        .tender-details { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--sp-4); padding: var(--sp-4); background: var(--dark-50); border-radius: var(--radius-lg); margin-bottom: var(--sp-4); }
         .tender-detail { text-align: center; }
-        .tender-detail-label { font-size: 0.75rem; color: var(--dark-500); margin-bottom: var(--space-1); }
+        .tender-detail-label { font-size: 0.75rem; color: var(--dark-500); margin-bottom: var(--sp-1); }
         .tender-detail-value { font-weight: 600; color: var(--dark-900); }
-        .tender-footer { display: flex; justify-content: space-between; align-items: center; padding-top: var(--space-4); border-top: 1px solid var(--dark-100); }
+        .tender-footer { display: flex; justify-content: space-between; align-items: center; padding-top: var(--sp-4); border-top: 1px solid var(--dark-100); }
         .tender-date { font-size: 0.875rem; color: var(--dark-500); }
-        .filter-section { background: #fff; border-radius: var(--radius-xl); padding: var(--space-6); box-shadow: var(--shadow); margin-bottom: var(--space-6); }
-        .filter-grid { display: flex; flex-wrap: wrap; gap: var(--space-4); align-items: center; }
-        .section { padding: var(--space-12) 0; }
-        .category-tabs { display: flex; gap: var(--space-2); flex-wrap: wrap; margin-bottom: var(--space-6); }
-        .category-tab { padding: var(--space-2) var(--space-4); background: var(--dark-100); border: none; border-radius: var(--radius-full); cursor: pointer; font-size: 0.875rem; transition: all var(--transition); }
+        .filter-section { background: #fff; border-radius: var(--radius-xl); padding: var(--sp-6); box-shadow: var(--shadow); margin-bottom: var(--sp-6); }
+        .filter-grid { display: flex; flex-wrap: wrap; gap: var(--sp-4); align-items: center; }
+        .section { padding: var(--sp-12) 0; }
+        .category-tabs { display: flex; gap: var(--sp-2); flex-wrap: wrap; margin-bottom: var(--sp-6); }
+        .category-tab { padding: var(--sp-2) var(--sp-4); background: var(--dark-100); border: none; border-radius: var(--radius-full); cursor: pointer; font-size: 0.875rem; transition: all var(--transition); }
         .category-tab:hover { background: var(--dark-200); }
         .category-tab.active { background: var(--primary); color: #fff; }
-    </style>
-
-    <style>
-        /* Responsive */
-        @media (max-width: 768px) {
-            .emergency-hero, .weather-hero, .tenders-hero { padding: var(--space-8) 0; }
-            .emergency-hero h1, .weather-hero h1, .tenders-hero h1 { font-size: 1.75rem; }
-            .emergency-grid, .weather-grid, .tender-card { padding: var(--space-4); }
-        }
-        
-        @media (max-width: 480px) {
-            .emergency-hero h1, .weather-hero h1, .tenders-hero h1 { font-size: 1.5rem; }
-            .emergency-number { font-size: 1.25rem; }
-        }
     </style>
 </head>
 <body>
@@ -69,7 +55,7 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
             <div class="tp-topbar-inner">
                 <div class="tp-topbar-left">
                     <span class="tp-date"><?= date('l, j F Y') ?></span>
-                    <span class="tp-topbar-links"><a href="/unicode">Unicode</a><a href="?lang=en">English</a></span>
+                    <span class="tp-topbar-links"><a href="?">नेपाली</a><a href="?lang=en">English</a></span>
                 </div>
                 <div class="tp-topbar-right">
                     <a href="#" aria-label="Facebook"><i data-lucide="facebook"></i></a>
@@ -142,7 +128,7 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
     <!-- Tenders Hero -->
     <section class="tenders-hero">
         <div class="container">
-            <h1 style="font-size: 2.5rem; font-weight: 800; margin-bottom: var(--space-2);">
+            <h1 style="font-size: 2.5rem; font-weight: 800; margin-bottom: var(--sp-2);">
                 📋 <?= $t('सरकारी टेन्डर', 'Government Tenders') ?>
             </h1>
             <p style="opacity: 0.8;"><?= $t('सरकारी निकायहरूबाट प्रकाशित टेन्डरहरू', 'Tenders published by government bodies') ?></p>
@@ -167,7 +153,7 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
     </section>
 
     <!-- Tenders List -->
-    <section class="section" style="padding-top: var(--space-6);">
+    <section class="section" style="padding-top: var(--sp-6);">
         <div class="container" style="max-width: 900px;">
             <div id="tenders-list">
                 <!-- Tenders will be loaded here -->
@@ -341,7 +327,7 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
         const container = document.getElementById('tenders-list');
         if (!container) return;
         
-        container.innerHTML = '<div class="tender-card" style="text-align:center;padding:var(--space-8)"><div class="tender-title">लोड हुँदैछ...</div></div>';
+        container.innerHTML = '<div class="tender-card" style="text-align:center;padding:var(--sp-8)"><div class="tender-title">लोड हुँदैछ...</div></div>';
         
         try {
             const resp = await fetch('/api/government-tenders.php?days=30');
@@ -350,10 +336,10 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
             if (data.ok && data.tenders && data.tenders.length > 0) {
                 renderTenders(data.tenders);
             } else {
-                container.innerHTML = '<div class="tender-card" style="text-align:center;padding:var(--space-8)"><div class="tender-title"><?= $t('अहिले कुनै टेन्डर छैन', 'No tenders available') ?></div></div>';
+                container.innerHTML = '<div class="tender-card" style="text-align:center;padding:var(--sp-8)"><div class="tender-title"><?= $t('अहिले कुनै टेन्डर छैन', 'No tenders available') ?></div></div>';
             }
         } catch (e) {
-            container.innerHTML = '<div class="tender-card" style="text-align:center;padding:var(--space-8)"><div class="tender-title"><?= $t('डाटा लोड हुन सकेन', 'Failed to load data') ?></div></div>';
+            container.innerHTML = '<div class="tender-card" style="text-align:center;padding:var(--sp-8)"><div class="tender-title"><?= $t('डाटा लोड हुन सकेन', 'Failed to load data') ?></div></div>';
         }
     }
     
@@ -414,7 +400,7 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
     
     async function loadTendersWithCategory(category) {
         const container = document.getElementById('tenders-list');
-        container.innerHTML = '<div class="tender-card" style="text-align:center;padding:var(--space-8)"><div class="tender-title">लोड हुँदैछ...</div></div>';
+        container.innerHTML = '<div class="tender-card" style="text-align:center;padding:var(--sp-8)"><div class="tender-title">लोड हुँदैछ...</div></div>';
         
         try {
             const url = category === 'all' 
@@ -426,10 +412,10 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
             if (data.ok && data.tenders && data.tenders.length > 0) {
                 renderTenders(data.tenders);
             } else {
-                container.innerHTML = '<div class="tender-card" style="text-align:center;padding:var(--space-8)"><div class="tender-title"><?= $t('यस श्रेणीमा कुनै टेन्डर छैन', 'No tenders in this category') ?></div></div>';
+                container.innerHTML = '<div class="tender-card" style="text-align:center;padding:var(--sp-8)"><div class="tender-title"><?= $t('यस श्रेणीमा कुनै टेन्डर छैन', 'No tenders in this category') ?></div></div>';
             }
         } catch (e) {
-            container.innerHTML = '<div class="tender-card" style="text-align:center;padding:var(--space-8)"><div class="tender-title"><?= $t('डाटा लोड हुन सकेन', 'Failed to load data') ?></div></div>';
+            container.innerHTML = '<div class="tender-card" style="text-align:center;padding:var(--sp-8)"><div class="tender-title"><?= $t('डाटा लोड हुन सकेन', 'Failed to load data') ?></div></div>';
         }
     }
     

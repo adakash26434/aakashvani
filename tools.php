@@ -27,29 +27,17 @@ $tools = [
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/premium.css">
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script src="/assets/js/lucide.min.js"></script>
     <style>
-        .page-header { background: linear-gradient(135deg, var(--dark-900), var(--dark-800)); padding: var(--space-12) 0; color: #fff; }
-        .tools-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: var(--space-6); }
-        .tool-card { background: #fff; border-radius: var(--radius-xl); border: 1px solid var(--dark-100); padding: var(--space-6); text-align: center; transition: all var(--transition); text-decoration: none; display: block; }
+        .page-header { background: linear-gradient(135deg, var(--dark-900), var(--dark-800)); padding: var(--sp-12) 0; color: #fff; }
+        .tools-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: var(--sp-6); }
+        .tool-card { background: #fff; border-radius: var(--radius-xl); border: 1px solid var(--dark-100); padding: var(--sp-6); text-align: center; transition: all var(--transition); text-decoration: none; display: block; }
         .tool-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: var(--primary); }
-        .tool-icon { width: 64px; height: 64px; background: var(--primary-50); border-radius: var(--radius-xl); display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-4); color: var(--primary); }
-        .tool-name { font-size: 1.125rem; font-weight: 700; color: var(--dark-900); margin-bottom: var(--space-2); }
+        .tool-icon { width: 64px; height: 64px; background: var(--primary-50); border-radius: var(--radius-xl); display: flex; align-items: center; justify-content: center; margin: 0 auto var(--sp-4); color: var(--primary); }
+        .tool-name { font-size: 1.125rem; font-weight: 700; color: var(--dark-900); margin-bottom: var(--sp-2); }
         .tool-desc { font-size: 0.875rem; color: var(--dark-500); }
-        .section { padding: var(--space-12) 0; }
+        .section { padding: var(--sp-12) 0; }
         .section:nth-child(even) { background: var(--dark-50); }
-    </style>
-
-    <style>
-        /* Responsive */
-        @media (max-width: 768px) {
-            .page-header { padding: var(--space-8) 0; }
-            .page-header h1 { font-size: 1.75rem; }
-        }
-        
-        @media (max-width: 480px) {
-            .page-header h1 { font-size: 1.5rem; }
-        }
     </style>
 </head>
 <body>
@@ -59,7 +47,7 @@ $tools = [
             <div class="tp-topbar-inner">
                 <div class="tp-topbar-left">
                     <span class="tp-date"><?= date('l, j F Y') ?></span>
-                    <span class="tp-topbar-links"><a href="/unicode">Unicode</a><a href="?lang=en">English</a></span>
+                    <span class="tp-topbar-links"><a href="?">नेपाली</a><a href="?lang=en">English</a></span>
                 </div>
                 <div class="tp-topbar-right">
                     <a href="#" aria-label="Facebook"><i data-lucide="facebook"></i></a>

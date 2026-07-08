@@ -16,20 +16,6 @@ $t=fn($ne,$en)=>$isNepali?$ne:$en;
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/premium.css">
-
-    <style>
-        /* Responsive */
-        @media (max-width: 768px) {
-            .page-header { padding: var(--space-8) 0; }
-            .page-header h1 { font-size: 1.75rem; }
-            .content-section { padding: var(--space-6) 0; }
-        }
-        
-        @media (max-width: 480px) {
-            .page-header h1 { font-size: 1.5rem; }
-            .btn { padding: var(--space-2) var(--space-4); font-size: 0.875rem; }
-        }
-    </style>
 </head>
 <body>
 
@@ -39,7 +25,7 @@ $t=fn($ne,$en)=>$isNepali?$ne:$en;
             <div class="tp-topbar-inner">
                 <div class="tp-topbar-left">
                     <span class="tp-date"><?= date('l, j F Y') ?></span>
-                    <span class="tp-topbar-links"><a href="/unicode">Unicode</a><a href="?lang=en">English</a></span>
+                    <span class="tp-topbar-links"><a href="?">नेपाली</a><a href="?lang=en">English</a></span>
                 </div>
                 <div class="tp-topbar-right">
                     <a href="#" aria-label="Facebook"><i data-lucide="facebook"></i></a>
@@ -110,20 +96,20 @@ $t=fn($ne,$en)=>$isNepali?$ne:$en;
     </div>
 
     
-    <section style="background:linear-gradient(135deg,var(--dark-900),var(--dark-800));padding:var(--space-12) 0;color:#fff">
+    <section style="background:linear-gradient(135deg,var(--dark-900),var(--dark-800));padding:var(--sp-12) 0;color:#fff">
         <div class="container">
             <h1 class="text-3xl font-bold"><?=$t('सेवा सर्त','Terms of Service')?></h1>
         </div>
     </section>
     
-    <section style="padding:var(--space-12) 0">
+    <section style="padding:var(--sp-12) 0">
         <div class="container" style="max-width:800px">
             <div class="card card-body">
-                <h2 style="margin-bottom:var(--space-4)"><?=$t('सेवाको प्रयोग','Use of Service')?></h2>
+                <h2 style="margin-bottom:var(--sp-4)"><?=$t('सेवाको प्रयोग','Use of Service')?></h2>
                 <p style="color:var(--dark-600);line-height:1.8">
                     <?=$isNepali?'आकाशवाणी सेवा प्रयोग गर्दा तपाईं यी सर्तहरूमा सहमत हुनुहुन्छ।':'By using Aakashbani service, you agree to these terms.'?>
                 </p>
-                <h2 style="margin-top:var(--space-8);margin-bottom:var(--space-4)"><?=$t('सामग्री','Content')?></h2>
+                <h2 style="margin-top:var(--sp-8);margin-bottom:var(--sp-4)"><?=$t('सामग्री','Content')?></h2>
                 <p style="color:var(--dark-600);line-height:1.8">
                     <?=$isNepali?'हाम्रो सामग्री सूचनाको उद्देश्यको लागि हो। कुनै पनि निर्णय लिनु अघि अन्य स्रोतहरू पनि जाँच्नुहोस्।':'Our content is for informational purposes. Please verify from other sources before making any decisions.'?>
                 </p>

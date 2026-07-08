@@ -20,37 +20,37 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/premium.css">
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script src="/assets/js/lucide.min.js"></script>
     <style>
-        .cricket-hero { background: linear-gradient(135deg, #1a472a, #2d5a3d); padding: var(--space-16) 0; color: #fff; text-align: center; }
-        .cricket-tabs { display: flex; gap: var(--space-2); justify-content: center; margin-top: var(--space-6); }
-        .cricket-tab { padding: var(--space-2) var(--space-4); background: rgba(255,255,255,0.1); border: none; color: #fff; border-radius: var(--radius-full); cursor: pointer; font-size: 0.875rem; transition: all var(--transition); }
+        .cricket-hero { background: linear-gradient(135deg, #1a472a, #2d5a3d); padding: var(--sp-16) 0; color: #fff; text-align: center; }
+        .cricket-tabs { display: flex; gap: var(--sp-2); justify-content: center; margin-top: var(--sp-6); }
+        .cricket-tab { padding: var(--sp-2) var(--sp-4); background: rgba(255,255,255,0.1); border: none; color: #fff; border-radius: var(--radius-full); cursor: pointer; font-size: 0.875rem; transition: all var(--transition); }
         .cricket-tab:hover { background: rgba(255,255,255,0.2); }
         .cricket-tab.active { background: #fff; color: var(--dark-900); }
-        .section { padding: var(--space-12) 0; }
-        .match-card { background: #fff; border-radius: var(--radius-xl); padding: var(--space-6); box-shadow: var(--shadow); margin-bottom: var(--space-4); transition: all var(--transition); }
+        .section { padding: var(--sp-12) 0; }
+        .match-card { background: #fff; border-radius: var(--radius-xl); padding: var(--sp-6); box-shadow: var(--shadow); margin-bottom: var(--sp-4); transition: all var(--transition); }
         .match-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
-        .match-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4); }
+        .match-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--sp-4); }
         .match-type { font-size: 0.75rem; font-weight: 600; color: var(--primary); text-transform: uppercase; }
-        .match-status { font-size: 0.75rem; padding: var(--space-1) var(--space-3); border-radius: var(--radius-full); }
+        .match-status { font-size: 0.75rem; padding: var(--sp-1) var(--sp-3); border-radius: var(--radius-full); }
         .status-live { background: var(--error); color: #fff; animation: pulse 2s infinite; }
         .status-upcoming { background: var(--dark-100); color: var(--dark-600); }
         .status-completed { background: var(--dark-50); color: var(--dark-500); }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
-        .team-row { display: flex; align-items: center; gap: var(--space-4); padding: var(--space-3) 0; border-bottom: 1px solid var(--dark-100); }
+        .team-row { display: flex; align-items: center; gap: var(--sp-4); padding: var(--sp-3) 0; border-bottom: 1px solid var(--dark-100); }
         .team-row:last-child { border-bottom: none; }
         .team-name { font-weight: 600; flex: 1; }
         .team-score { font-size: 1.25rem; font-weight: 700; color: var(--dark-900); }
         .team-overs { font-size: 0.875rem; color: var(--dark-500); }
-        .match-footer { display: flex; justify-content: space-between; margin-top: var(--space-4); padding-top: var(--space-4); border-top: 1px solid var(--dark-100); font-size: 0.875rem; color: var(--dark-500); }
-        .nepal-badge { display: inline-flex; align-items: center; gap: var(--space-2); padding: var(--space-1) var(--space-3); background: #dc2626; color: #fff; border-radius: var(--radius-full); font-size: 0.75rem; font-weight: 600; }
+        .match-footer { display: flex; justify-content: space-between; margin-top: var(--sp-4); padding-top: var(--sp-4); border-top: 1px solid var(--dark-100); font-size: 0.875rem; color: var(--dark-500); }
+        .nepal-badge { display: inline-flex; align-items: center; gap: var(--sp-2); padding: var(--sp-1) var(--sp-3); background: #dc2626; color: #fff; border-radius: var(--radius-full); font-size: 0.75rem; font-weight: 600; }
         /* Responsive */
         @media (max-width: 640px) {
-            .match-card { padding: var(--space-4); }
+            .match-card { padding: var(--sp-4); }
             .team-name { font-size: 0.875rem; }
             .team-score { font-size: 1.5rem; }
             .cricket-tabs { flex-wrap: wrap; }
-            .cricket-tabs .tab-btn { flex: 1; min-width: 100px; font-size: 0.875rem; padding: var(--space-2) var(--space-3); }
+            .cricket-tabs .tab-btn { flex: 1; min-width: 100px; font-size: 0.875rem; padding: var(--sp-2) var(--sp-3); }
         }
     </style>
 </head>
@@ -61,7 +61,7 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
             <div class="tp-topbar-inner">
                 <div class="tp-topbar-left">
                     <span class="tp-date"><?= date('l, j F Y') ?></span>
-                    <span class="tp-topbar-links"><a href="/unicode">Unicode</a><a href="?lang=en">English</a></span>
+                    <span class="tp-topbar-links"><a href="?">नेपाली</a><a href="?lang=en">English</a></span>
                 </div>
                 <div class="tp-topbar-right">
                     <a href="#" aria-label="Facebook"><i data-lucide="facebook"></i></a>
@@ -135,7 +135,7 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
     <!-- Cricket Hero -->
     <section class="cricket-hero">
         <div class="container">
-            <h1 style="font-size: 2.5rem; font-weight: 800; margin-bottom: var(--space-2);">
+            <h1 style="font-size: 2.5rem; font-weight: 800; margin-bottom: var(--sp-2);">
                 🏏 <?= $t('क्रिकेट स्कोर', 'Cricket Scores') ?>
             </h1>
             <p style="opacity: 0.8;"><?= $t('लाइभ क्रिकेट नतिजा र तालिका', 'Live cricket results and schedule') ?></p>
@@ -348,7 +348,7 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
         loadCricketData('live');
     }
         (function() {
-            var s=document.createElement('script');s.src='https://unpkg.com/lucide@latest/dist/umd/lucide.min.js';document.head.appendChild(s);
+            var s=document.createElement('script');s.src='/assets/js/lucide.min.js';document.head.appendChild(s);
         })();
 );
     </script>
@@ -356,7 +356,7 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
     <!-- Mobile Bottom Nav -->
 <script>document.addEventListener('DOMContentLoaded',function(){if(typeof lucide!=='undefined')lucide.createIcons()}
         (function() {
-            var s=document.createElement('script');s.src='https://unpkg.com/lucide@latest/dist/umd/lucide.min.js';document.head.appendChild(s);
+            var s=document.createElement('script');s.src='/assets/js/lucide.min.js';document.head.appendChild(s);
         })();
 );</script>
 </body>

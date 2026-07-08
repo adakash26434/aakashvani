@@ -38,17 +38,17 @@ $monthDays = [31, 31, 31, 32, 31, 30, 30, 29, 30, 29, 30, 30];
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/premium.css">
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script src="/assets/js/lucide.min.js"></script>
     <style>
         .page-header {
             background: linear-gradient(135deg, var(--dark-900), var(--dark-800));
-            padding: var(--space-12) 0;
+            padding: var(--sp-12) 0;
             color: #fff;
         }
         .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: var(--space-1);
+            gap: var(--sp-1);
         }
         .calendar-day {
             aspect-ratio: 1;
@@ -75,42 +75,30 @@ $monthDays = [31, 31, 31, 32, 31, 30, 30, 29, 30, 29, 30, 30];
         }
         .week-header.weekend { color: var(--error); }
         .day-number { font-size: 1rem; font-weight: 600; }
-        .calendar-section { padding: var(--space-12) 0; }
+        .calendar-section { padding: var(--sp-12) 0; }
         .info-card {
             background: #fff;
             border-radius: var(--radius-xl);
             border: 1px solid var(--dark-100);
-            padding: var(--space-6);
+            padding: var(--sp-6);
         }
         .info-card-title {
             font-size: 0.875rem;
             font-weight: 700;
             color: var(--dark-900);
-            margin-bottom: var(--space-4);
-            padding-bottom: var(--space-2);
+            margin-bottom: var(--sp-4);
+            padding-bottom: var(--sp-2);
             border-bottom: 2px solid var(--primary);
         }
         .info-row {
             display: flex;
             justify-content: space-between;
-            padding: var(--space-2) 0;
+            padding: var(--sp-2) 0;
             border-bottom: 1px solid var(--dark-100);
         }
         .info-row:last-child { border-bottom: none; }
         .info-label { color: var(--dark-500); font-size: 0.875rem; }
         .info-value { font-weight: 600; font-size: 0.875rem; }
-    </style>
-
-    <style>
-        /* Responsive */
-        @media (max-width: 768px) {
-            .page-header { padding: var(--space-8) 0; }
-            .page-header h1 { font-size: 1.75rem; }
-        }
-        
-        @media (max-width: 480px) {
-            .page-header h1 { font-size: 1.5rem; }
-        }
     </style>
 </head>
 <body>
@@ -120,7 +108,7 @@ $monthDays = [31, 31, 31, 32, 31, 30, 30, 29, 30, 29, 30, 30];
             <div class="tp-topbar-inner">
                 <div class="tp-topbar-left">
                     <span class="tp-date"><?= date('l, j F Y') ?></span>
-                    <span class="tp-topbar-links"><a href="/unicode">Unicode</a><a href="?lang=en">English</a></span>
+                    <span class="tp-topbar-links"><a href="?">नेपाली</a><a href="?lang=en">English</a></span>
                 </div>
                 <div class="tp-topbar-right">
                     <a href="#" aria-label="Facebook"><i data-lucide="facebook"></i></a>
@@ -362,7 +350,7 @@ $monthDays = [31, 31, 31, 32, 31, 30, 30, 29, 30, 29, 30, 30];
     <!-- Mobile Bottom Nav -->
 <script>document.addEventListener('DOMContentLoaded',function(){if(typeof lucide!=='undefined')lucide.createIcons()}
         (function() {
-            var s=document.createElement('script');s.src='https://unpkg.com/lucide@latest/dist/umd/lucide.min.js';document.head.appendChild(s);
+            var s=document.createElement('script');s.src='/assets/js/lucide.min.js';document.head.appendChild(s);
         })();
 );</script>
 </body>

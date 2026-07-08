@@ -83,18 +83,18 @@ $pageTitle = $t('समाचार | आकाशवाणी', 'News | Aakashv
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/premium.css">
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script src="/assets/js/lucide.min.js"></script>
     <style>
         .page-header {
             background: linear-gradient(135deg, var(--dark-900), var(--dark-800));
-            padding: var(--space-12) 0;
+            padding: var(--sp-12) 0;
             color: #fff;
         }
         .page-title {
             font-size: 2.5rem;
             font-weight: 800;
             color: #fff;
-            margin-bottom: var(--space-2);
+            margin-bottom: var(--sp-2);
         }
         .page-subtitle {
             color: var(--dark-400);
@@ -109,14 +109,14 @@ $pageTitle = $t('समाचार | आकाशवाणी', 'News | Aakashv
         }
         .categories-list {
             display: flex;
-            gap: var(--space-2);
-            padding: var(--space-4) 0;
+            gap: var(--sp-2);
+            padding: var(--sp-4) 0;
             overflow-x: auto;
             scrollbar-width: none;
         }
         .categories-list::-webkit-scrollbar { display: none; }
         .category-btn {
-            padding: var(--space-2) var(--space-4);
+            padding: var(--sp-2) var(--sp-4);
             background: var(--dark-50);
             border-radius: var(--radius-full);
             font-size: 0.875rem;
@@ -134,12 +134,12 @@ $pageTitle = $t('समाचार | आकाशवाणी', 'News | Aakashv
             color: #fff;
         }
         .news-section {
-            padding: var(--space-12) 0;
+            padding: var(--sp-12) 0;
         }
         .news-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: var(--space-6);
+            gap: var(--sp-6);
         }
         @media (max-width: 1024px) { .news-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 640px) { .news-grid { grid-template-columns: 1fr; } }
@@ -164,25 +164,25 @@ $pageTitle = $t('समाचार | आकाशवाणी', 'News | Aakashv
             object-fit: cover;
         }
         .news-card-body {
-            padding: var(--space-4);
+            padding: var(--sp-4);
         }
         .news-card-category {
             display: inline-block;
-            padding: var(--space-1) var(--space-2);
+            padding: var(--sp-1) var(--sp-2);
             background: var(--primary-50);
             color: var(--primary-700);
             font-size: 0.625rem;
             font-weight: 700;
             border-radius: var(--radius-sm);
             text-transform: uppercase;
-            margin-bottom: var(--space-2);
+            margin-bottom: var(--sp-2);
         }
         .news-card-title {
             font-size: 1rem;
             font-weight: 600;
             line-height: 1.4;
             color: var(--dark-900);
-            margin-bottom: var(--space-2);
+            margin-bottom: var(--sp-2);
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
@@ -191,7 +191,7 @@ $pageTitle = $t('समाचार | आकाशवाणी', 'News | Aakashv
         .news-card-meta {
             display: flex;
             align-items: center;
-            gap: var(--space-3);
+            gap: var(--sp-3);
             font-size: 0.75rem;
             color: var(--dark-400);
         }
@@ -205,7 +205,7 @@ $pageTitle = $t('समाचार | आकाशवाणी', 'News | Aakashv
                 <div class="tp-topbar-left">
                     <span class="tp-date"><?= date('l, j F Y') ?></span>
                     <span class="tp-topbar-links">
-                        <a href="/unicode">Unicode</a>
+                        <a href="?">नेपाली</a>
                         <a href="?lang=en">English</a>
                     </span>
                 </div>
@@ -368,7 +368,7 @@ $pageTitle = $t('समाचार | आकाशवाणी', 'News | Aakashv
                     <div class="tp-side-widget tp-newsletter">
                         <h3 class="tp-widget-title"><?= $t('न्यूजलेटर', 'Newsletter') ?></h3>
                         <p class="tp-newsletter-desc"><?= $t('दैनिक समाचार इमेलमा पाउनुहोस्', 'Get daily news in email') ?></p>
-                        <form class="tp-newsletter-form" onsubmit="event.preventDefault(); this.innerHTML='<p style=color:#059669>&#10003; <?= $t('सब्सक्राइब भयो!', 'Subscribed!') ?></p>'">
+                        <form class="tp-newsletter-form" onsubmit="handleNewsletterSubmit(event, this)">
                             <input type="email" placeholder="<?= $t('इमेल', 'Email') ?>" required class="tp-input">
                             <button type="submit" class="tp-btn-submit"><?= $t('सब्सक्राइब', 'Subscribe') ?></button>
                         </form>
@@ -506,6 +506,11 @@ $pageTitle = $t('समाचार | आकाशवाणी', 'News | Aakashv
             setInterval(loadMarket, 5 * 60 * 1000);
         });
     })();
+    function handleNewsletterSubmit(e, form) {
+        e.preventDefault();
+        form.innerHTML = '<p style="color:var(--primary);text-align:center;padding:var(--sp-4)">&#10003; ' + 
+            (window.__t ? window.__t('Subscribed!') : 'Subscribed!') + '</p>';
+    }
     </script>
 
 </body>

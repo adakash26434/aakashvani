@@ -14,21 +14,12 @@ $t=fn($ne,$en)=>$isNepali?$ne:$en;
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/premium.css">
     <style>
-        .login-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--dark-900), var(--dark-800)); padding: var(--space-8); }
-        .login-card { background: #fff; border-radius: var(--radius-2xl); padding: var(--space-8); width: 100%; max-width: 400px; box-shadow: var(--shadow-xl); }
-        .login-logo { text-align: center; margin-bottom: var(--space-6); }
-        .login-logo .brand-logo { width: 64px; height: 64px; background: var(--primary); border-radius: var(--radius-xl); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; font-size: 2rem; margin: 0 auto var(--space-3); }
+        .login-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--dark-900), var(--dark-800)); padding: var(--sp-8); }
+        .login-card { background: #fff; border-radius: var(--radius-2xl); padding: var(--sp-8); width: 100%; max-width: 400px; box-shadow: var(--shadow-xl); }
+        .login-logo { text-align: center; margin-bottom: var(--sp-6); }
+        .login-logo .brand-logo { width: 64px; height: 64px; background: var(--primary); border-radius: var(--radius-xl); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; font-size: 2rem; margin: 0 auto var(--sp-3); }
     </style>
-
-    <style>
-        /* Responsive */
-        @media (max-width: 480px) {
-            .login-page, .auth-page { padding: var(--space-4); }
-            .login-card, .auth-card { padding: var(--space-6); }
-            .login-logo .brand-logo { width: 48px; height: 48px; font-size: 1.5rem; }
-        }
-    </style>
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script src="/assets/js/lucide.min.js"></script>
 </head>
 <body>
     <div class="login-page">

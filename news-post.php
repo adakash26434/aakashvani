@@ -49,19 +49,19 @@ $related = getRelatedNews($news['id'] ?? 0, $news['category'] ?? '', 4);
     <style>
         .article-header {
             background: linear-gradient(135deg, var(--dark-900), var(--dark-800));
-            padding: var(--space-12) 0;
+            padding: var(--sp-12) 0;
             color: #fff;
         }
         
         .article-badge {
             display: inline-block;
-            padding: var(--space-1) var(--space-3);
+            padding: var(--sp-1) var(--sp-3);
             background: var(--primary);
             color: #fff;
             font-size: 0.75rem;
             font-weight: 700;
             border-radius: var(--radius-full);
-            margin-bottom: var(--space-4);
+            margin-bottom: var(--sp-4);
         }
         
         .article-title {
@@ -69,14 +69,14 @@ $related = getRelatedNews($news['id'] ?? 0, $news['category'] ?? '', 4);
             font-weight: 800;
             line-height: 1.2;
             color: #fff;
-            margin-bottom: var(--space-4);
+            margin-bottom: var(--sp-4);
             max-width: 900px;
         }
         
         .article-meta {
             display: flex;
             align-items: center;
-            gap: var(--space-4);
+            gap: var(--sp-4);
             font-size: 0.875rem;
             color: var(--dark-400);
         }
@@ -84,7 +84,7 @@ $related = getRelatedNews($news['id'] ?? 0, $news['category'] ?? '', 4);
         .article-source {
             display: flex;
             align-items: center;
-            gap: var(--space-2);
+            gap: var(--sp-2);
             color: var(--primary);
             font-weight: 500;
         }
@@ -92,7 +92,7 @@ $related = getRelatedNews($news['id'] ?? 0, $news['category'] ?? '', 4);
         .article-content {
             max-width: 720px;
             margin: 0 auto;
-            padding: var(--space-12) var(--space-6);
+            padding: var(--sp-12) var(--sp-6);
         }
         
         .article-featured-image {
@@ -100,7 +100,7 @@ $related = getRelatedNews($news['id'] ?? 0, $news['category'] ?? '', 4);
             max-height: 500px;
             object-fit: cover;
             border-radius: var(--radius-xl);
-            margin-bottom: var(--space-8);
+            margin-bottom: var(--sp-8);
         }
         
         .article-body {
@@ -110,19 +110,19 @@ $related = getRelatedNews($news['id'] ?? 0, $news['category'] ?? '', 4);
         }
         
         .article-body p {
-            margin-bottom: var(--space-4);
+            margin-bottom: var(--sp-4);
         }
         
         .article-body h2, .article-body h3 {
-            margin-top: var(--space-8);
-            margin-bottom: var(--space-4);
+            margin-top: var(--sp-8);
+            margin-bottom: var(--sp-4);
         }
         
         .article-body blockquote {
-            padding: var(--space-4) var(--space-6);
+            padding: var(--sp-4) var(--sp-6);
             border-left: 4px solid var(--primary);
             background: var(--dark-50);
-            margin: var(--space-6) 0;
+            margin: var(--sp-6) 0;
             font-style: italic;
         }
         
@@ -130,11 +130,11 @@ $related = getRelatedNews($news['id'] ?? 0, $news['category'] ?? '', 4);
         .share-section {
             display: flex;
             align-items: center;
-            gap: var(--space-4);
-            padding: var(--space-6) 0;
+            gap: var(--sp-4);
+            padding: var(--sp-6) 0;
             border-top: 1px solid var(--dark-200);
             border-bottom: 1px solid var(--dark-200);
-            margin: var(--space-8) 0;
+            margin: var(--sp-8) 0;
         }
         
         .share-label {
@@ -145,7 +145,7 @@ $related = getRelatedNews($news['id'] ?? 0, $news['category'] ?? '', 4);
         
         .share-buttons {
             display: flex;
-            gap: var(--space-2);
+            gap: var(--sp-2);
         }
         
         .share-btn {
@@ -171,14 +171,14 @@ $related = getRelatedNews($news['id'] ?? 0, $news['category'] ?? '', 4);
         
         /* Related */
         .related-section {
-            padding: var(--space-12) 0;
+            padding: var(--sp-12) 0;
             background: var(--dark-50);
         }
         
         .related-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: var(--space-6);
+            gap: var(--sp-6);
         }
         
         @media (max-width: 1024px) {
@@ -213,7 +213,7 @@ $related = getRelatedNews($news['id'] ?? 0, $news['category'] ?? '', 4);
         }
         
         .related-body {
-            padding: var(--space-4);
+            padding: var(--sp-4);
         }
         
         .related-title {
@@ -234,7 +234,7 @@ $related = getRelatedNews($news['id'] ?? 0, $news['category'] ?? '', 4);
             <div class="tp-topbar-inner">
                 <div class="tp-topbar-left">
                     <span class="tp-date"><?= date('l, j F Y') ?></span>
-                    <span class="tp-topbar-links"><a href="/unicode">Unicode</a><a href="?lang=en">English</a></span>
+                    <span class="tp-topbar-links"><a href="?">नेपाली</a><a href="?lang=en">English</a></span>
                 </div>
                 <div class="tp-topbar-right">
                     <a href="#" aria-label="Facebook"><i data-lucide="facebook"></i></a>
@@ -327,7 +327,7 @@ $related = getRelatedNews($news['id'] ?? 0, $news['category'] ?? '', 4);
         <?php endif; ?>
         
         <?php if (!empty($news['summary'])): ?>
-        <p style="font-size:1.125rem;font-weight:500;color:var(--dark-700);margin-bottom:var(--space-6)">
+        <p style="font-size:1.125rem;font-weight:500;color:var(--dark-700);margin-bottom:var(--sp-6)">
             <?= nl2br(htmlspecialchars($news['summary'])) ?>
         </p>
         <?php endif; ?>
@@ -357,7 +357,7 @@ $related = getRelatedNews($news['id'] ?? 0, $news['category'] ?? '', 4);
     <?php if (!empty($related)): ?>
     <section class="related-section">
         <div class="container">
-            <h2 class="text-xl font-bold mb-6" style="border-bottom:2px solid var(--primary);padding-bottom:var(--space-3)">
+            <h2 class="text-xl font-bold mb-6" style="border-bottom:2px solid var(--primary);padding-bottom:var(--sp-3)">
                 <?= $t('सम्बन्धित समाचार', 'Related News') ?>
             </h2>
             <div class="related-grid">

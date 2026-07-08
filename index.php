@@ -38,7 +38,7 @@ try {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script src="/assets/js/lucide.min.js"></script>
     <link rel="stylesheet" href="/assets/css/premium.css">
 </head>
 <body>
@@ -52,7 +52,7 @@ try {
             <div class="tp-topbar-left">
                 <span class="tp-date"><?= date('l, j F Y') ?></span>
                 <span class="tp-topbar-links">
-                    <a href="/unicode">Unicode</a>
+                    <a href="?">नेपाली</a>
                     <a href="?lang=en">English</a>
                 </span>
             </div>
@@ -362,7 +362,7 @@ try {
                 <div class="tp-side-widget tp-newsletter">
                     <h3 class="tp-widget-title"><?= $t('न्यूजलेटर', 'Newsletter') ?></h3>
                     <p class="tp-newsletter-desc"><?= $t('दैनिक समाचार इमेलमा पाउनुहोस्', 'Get daily news in your email') ?></p>
-                    <form class="tp-newsletter-form" onsubmit="event.preventDefault(); this.innerHTML='<p style=color:#059669>✓ <?= $t('सब्सक्राइब भयो!', 'Subscribed!') ?></p>'">
+                    <form class="tp-newsletter-form" onsubmit="handleNewsletterSubmit(event, this)">
                         <input type="email" placeholder="<?= $t('इमेल', 'Email') ?>" required class="tp-input">
                         <button type="submit" class="tp-btn-submit"><?= $t('सब्सक्राइब', 'Subscribe') ?></button>
                     </form>
@@ -557,6 +557,11 @@ try {
                 .then(reg => console.log('SW registered'))
                 .catch(err => console.log('SW registration failed'));
         });
+    }
+    function handleNewsletterSubmit(e, form) {
+        e.preventDefault();
+        form.innerHTML = '<p style="color:var(--primary);text-align:center;padding:var(--sp-4)">&#10003; ' + 
+            (window.__t ? window.__t('Subscribed!') : 'Subscribed!') + '</p>';
     }
     </script>
 </body>

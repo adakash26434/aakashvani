@@ -16,20 +16,6 @@ $t=fn($ne,$en)=>$isNepali?$ne:$en;
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/premium.css">
-
-    <style>
-        /* Responsive */
-        @media (max-width: 768px) {
-            .page-header { padding: var(--space-8) 0; }
-            .page-header h1 { font-size: 1.75rem; }
-            .content-section { padding: var(--space-6) 0; }
-        }
-        
-        @media (max-width: 480px) {
-            .page-header h1 { font-size: 1.5rem; }
-            .btn { padding: var(--space-2) var(--space-4); font-size: 0.875rem; }
-        }
-    </style>
 </head>
 <body>
 
@@ -39,7 +25,7 @@ $t=fn($ne,$en)=>$isNepali?$ne:$en;
             <div class="tp-topbar-inner">
                 <div class="tp-topbar-left">
                     <span class="tp-date"><?= date('l, j F Y') ?></span>
-                    <span class="tp-topbar-links"><a href="/unicode">Unicode</a><a href="?lang=en">English</a></span>
+                    <span class="tp-topbar-links"><a href="?">नेपाली</a><a href="?lang=en">English</a></span>
                 </div>
                 <div class="tp-topbar-right">
                     <a href="#" aria-label="Facebook"><i data-lucide="facebook"></i></a>
@@ -117,7 +103,7 @@ $t=fn($ne,$en)=>$isNepali?$ne:$en;
     <section class="section">
         <div class="container" style="max-width:800px">
             <div class="card card-body">
-                <h2 style="margin-bottom:var(--space-4)"><?=$t('आकाशवाणी के हो?','What is Aakashvani?')?></h2>
+                <h2 style="margin-bottom:var(--sp-4)"><?=$t('आकाशवाणी के हो?','What is Aakashvani?')?></h2>
                 <p style="color:var(--dark-600);line-height:1.8">
                     <?=$isNepali?'आकाशवाणी नेपालको सबैभन्दा विश्वसनीय सूचना प्लेटफर्म हो। समाचार, NEPSE, IPO, पात्रो, र सरकारी सेवा सबै एकै ठाउँमा। हाम्रो लक्ष्य नेपाली जनतालाई सही र छिटो सूचना प्रदान गर्नु हो।':'Aakashvani is Nepal\'s most trusted information platform. News, NEPSE, IPO, Calendar, and Government services all in one place. Our mission is to provide accurate and fast information to the people of Nepal.'?>
                 </p>

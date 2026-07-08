@@ -23,35 +23,35 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/premium.css">
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script src="/assets/js/lucide.min.js"></script>
     <style>
-        .page-header { background: linear-gradient(135deg, var(--dark-900), var(--dark-800)); padding: var(--space-12) 0; color: #fff; }
-        .ipo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: var(--space-6); }
-        .ipo-card { background: #fff; border-radius: var(--radius-xl); border: 1px solid var(--dark-100); padding: var(--space-6); transition: all var(--transition); }
+        .page-header { background: linear-gradient(135deg, var(--dark-900), var(--dark-800)); padding: var(--sp-12) 0; color: #fff; }
+        .ipo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: var(--sp-6); }
+        .ipo-card { background: #fff; border-radius: var(--radius-xl); border: 1px solid var(--dark-100); padding: var(--sp-6); transition: all var(--transition); }
         .ipo-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
-        .ipo-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-4); }
+        .ipo-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--sp-4); }
         .ipo-symbol { font-size: 1.5rem; font-weight: 800; color: var(--primary); }
-        .ipo-status { padding: var(--space-1) var(--space-3); border-radius: var(--radius-full); font-size: 0.75rem; font-weight: 700; }
+        .ipo-status { padding: var(--sp-1) var(--sp-3); border-radius: var(--radius-full); font-size: 0.75rem; font-weight: 700; }
         .ipo-status.open { background: var(--primary-50); color: var(--primary-700); }
         .ipo-status.upcoming { background: #fef3c7; color: #92400e; }
         .ipo-status.closed { background: var(--dark-100); color: var(--dark-500); }
-        .ipo-company { font-size: 1rem; font-weight: 600; color: var(--dark-900); margin-bottom: var(--space-4); }
-        .ipo-details { display: flex; flex-direction: column; gap: var(--space-2); margin-bottom: var(--space-4); }
-        .ipo-detail { display: flex; justify-content: space-between; padding: var(--space-2) var(--space-3); background: var(--dark-50); border-radius: var(--radius); }
+        .ipo-company { font-size: 1rem; font-weight: 600; color: var(--dark-900); margin-bottom: var(--sp-4); }
+        .ipo-details { display: flex; flex-direction: column; gap: var(--sp-2); margin-bottom: var(--sp-4); }
+        .ipo-detail { display: flex; justify-content: space-between; padding: var(--sp-2) var(--sp-3); background: var(--dark-50); border-radius: var(--radius); }
         .ipo-detail-label { font-size: 0.875rem; color: var(--dark-500); }
         .ipo-detail-value { font-size: 0.875rem; font-weight: 600; color: var(--dark-900); }
-        .section { padding: var(--space-12) 0; }
+        .section { padding: var(--sp-12) 0; }
         .ipo-section:nth-child(even) { background: var(--dark-50); }
-        .loading-spinner { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: var(--space-12); }
+        .loading-spinner { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: var(--sp-12); }
         .spinner { width: 48px; height: 48px; border: 4px solid var(--dark-200); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
         
         /* Responsive */
         @media (max-width: 640px) {
             .page-title { font-size: 1.5rem; }
-            .ipo-card { padding: var(--space-4); }
+            .ipo-card { padding: var(--sp-4); }
             .ipo-symbol { font-size: 1.25rem; }
-            .ipo-grid { grid-template-columns: 1fr; gap: var(--space-4); }
+            .ipo-grid { grid-template-columns: 1fr; gap: var(--sp-4); }
         }
     </style>
 </head>
@@ -63,7 +63,7 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
                 <div class="tp-topbar-left">
                     <span class="tp-date"><?= date('l, j F Y') ?></span>
                     <span class="tp-topbar-links">
-                        <a href="/unicode">Unicode</a>
+                        <a href="?">नेपाली</a>
                         <a href="?lang=en">English</a>
                     </span>
                 </div>
@@ -156,25 +156,25 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
             <!-- Loading State -->
             <div id="ipo-loading" class="loading-spinner">
                 <div class="spinner"></div>
-                <p style="margin-top:var(--space-4);color:var(--dark-500)"><?= $t('IPO डाटा लोड हुँदै...', 'Loading IPO data...') ?></p>
+                <p style="margin-top:var(--sp-4);color:var(--dark-500)"><?= $t('IPO डाटा लोड हुँदै...', 'Loading IPO data...') ?></p>
             </div>
             
             <!-- Error State -->
-            <div id="ipo-error" style="display:none;text-align:center;padding:var(--space-8)">
-                <p style="color:var(--error);margin-bottom:var(--space-4)"><?= $t('IPO डाटा लोड हुन सकेन', 'Failed to load IPO data') ?></p>
+            <div id="ipo-error" style="display:none;text-align:center;padding:var(--sp-8)">
+                <p style="color:var(--error);margin-bottom:var(--sp-4)"><?= $t('IPO डाटा लोड हुन सकेन', 'Failed to load IPO data') ?></p>
                 <button onclick="loadIPOs()" class="btn btn-primary"><?= $t('पुनः प्रयास गर्नुहोस्', 'Retry') ?></button>
             </div>
             
             <!-- Open IPOs -->
-            <h2 class="text-xl font-bold mb-6" id="open-title" style="padding-top:var(--space-6);display:none"><?= $t('खुला IPO', 'Open IPOs') ?></h2>
+            <h2 class="text-xl font-bold mb-6" id="open-title" style="padding-top:var(--sp-6);display:none"><?= $t('खुला IPO', 'Open IPOs') ?></h2>
             <div class="ipo-grid" id="open-ipos" style="display:none"></div>
             
             <!-- Upcoming IPOs -->
-            <h2 class="text-xl font-bold mb-6" id="upcoming-title" style="padding-top:var(--space-8);display:none"><?= $t('आगामी IPO', 'Upcoming IPOs') ?></h2>
+            <h2 class="text-xl font-bold mb-6" id="upcoming-title" style="padding-top:var(--sp-8);display:none"><?= $t('आगामी IPO', 'Upcoming IPOs') ?></h2>
             <div class="ipo-grid" id="upcoming-ipos" style="display:none"></div>
             
             <!-- Last Updated -->
-            <p id="ipo-updated" style="display:none;text-align:center;padding:var(--space-6);font-size:0.75rem;color:var(--dark-400)"></p>
+            <p id="ipo-updated" style="display:none;text-align:center;padding:var(--sp-6);font-size:0.75rem;color:var(--dark-400)"></p>
         </div>
     </section>
     

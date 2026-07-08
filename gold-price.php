@@ -20,19 +20,19 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/premium.css">
     <style>
-        .page-header { background: linear-gradient(135deg, #b45309, #d97706); padding: var(--space-8) 0; color: #fff; }
-        .gold-card { background: linear-gradient(135deg, #fef3c7, #fde68a); border-radius: var(--radius-xl); padding: var(--space-8); text-align: center; margin-bottom: var(--space-6); }
-        .gold-label { font-size: 0.875rem; color: #92400e; margin-bottom: var(--space-2); }
+        .page-header { background: linear-gradient(135deg, #b45309, #d97706); padding: var(--sp-8) 0; color: #fff; }
+        .gold-card { background: linear-gradient(135deg, #fef3c7, #fde68a); border-radius: var(--radius-xl); padding: var(--sp-8); text-align: center; margin-bottom: var(--sp-6); }
+        .gold-label { font-size: 0.875rem; color: #92400e; margin-bottom: var(--sp-2); }
         .gold-price { font-size: 3rem; font-weight: 800; color: #92400e; }
         .gold-unit { font-size: 1rem; color: #b45309; }
-        .price-card { background: #fff; border-radius: var(--radius-xl); padding: var(--space-6); box-shadow: var(--shadow); margin-bottom: var(--space-4); }
-        .price-row { display: flex; justify-content: space-between; align-items: center; padding: var(--space-3) 0; border-bottom: 1px solid var(--dark-100); }
+        .price-card { background: #fff; border-radius: var(--radius-xl); padding: var(--sp-6); box-shadow: var(--shadow); margin-bottom: var(--sp-4); }
+        .price-row { display: flex; justify-content: space-between; align-items: center; padding: var(--sp-3) 0; border-bottom: 1px solid var(--dark-100); }
         .price-row:last-child { border-bottom: none; }
         .price-type { font-weight: 600; color: var(--dark-900); }
         .price-value { font-size: 1.25rem; font-weight: 700; color: #d97706; }
-        .source-tag { font-size: 0.75rem; color: var(--dark-400); text-align: center; margin-top: var(--space-4); }
-        .section { padding: var(--space-8) 0; }
-        .loading-spinner { display: flex; justify-content: center; padding: var(--space-12); }
+        .source-tag { font-size: 0.75rem; color: var(--dark-400); text-align: center; margin-top: var(--sp-4); }
+        .section { padding: var(--sp-8) 0; }
+        .loading-spinner { display: flex; justify-content: center; padding: var(--sp-12); }
         .spinner { width: 40px; height: 40px; border: 3px solid var(--dark-200); border-top-color: #d97706; border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
         @media (max-width: 768px) { .gold-price { font-size: 2rem; } }
@@ -45,7 +45,7 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
             <div class="tp-topbar-inner">
                 <div class="tp-topbar-left">
                     <span class="tp-date"><?= date('l, j F Y') ?></span>
-                    <span class="tp-topbar-links"><a href="/unicode">Unicode</a><a href="?lang=en">English</a></span>
+                    <span class="tp-topbar-links"><a href="?">नेपाली</a><a href="?lang=en">English</a></span>
                 </div>
                 <div class="tp-topbar-right">
                     <a href="#" aria-label="Facebook"><i data-lucide="facebook"></i></a>
@@ -136,16 +136,16 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
                     <p class="gold-unit"><?= $t('नेरु', 'NPR') ?> / <?= $t('तोला', 'tola') ?></p>
                 </div>
                 <div class="price-card">
-                    <h3 style="font-size:1rem;font-weight:700;color:var(--dark-900);margin-bottom:var(--space-4)"><?= $t('सुनको प्रकार', 'Types of Gold') ?></h3>
+                    <h3 style="font-size:1rem;font-weight:700;color:var(--dark-900);margin-bottom:var(--sp-4)"><?= $t('सुनको प्रकार', 'Types of Gold') ?></h3>
                     <div id="gold-types"></div>
                 </div>
                 <div class="price-card">
-                    <h3 style="font-size:1rem;font-weight:700;color:var(--dark-900);margin-bottom:var(--space-4)"><?= $t('चाँदीको मूल्य', 'Silver Price') ?></h3>
+                    <h3 style="font-size:1rem;font-weight:700;color:var(--dark-900);margin-bottom:var(--sp-4)"><?= $t('चाँदीको मूल्य', 'Silver Price') ?></h3>
                     <div id="silver-price"></div>
                 </div>
                 <p class="source-tag"><?= $t('स्रोत: नेपाल सुन चाँदी व्यापार संघ', 'Source: Nepal Gold and Silver Dealers Association') ?></p>
             </div>
-            <div id="gold-error" style="display:none;text-align:center;padding:var(--space-8);color:var(--error)">
+            <div id="gold-error" style="display:none;text-align:center;padding:var(--sp-8);color:var(--error)">
                 <?= $t('मूल्य लोड हुन सकेन', 'Failed to load prices') ?>
             </div>
         </div>
