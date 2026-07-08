@@ -13,6 +13,13 @@ require_once __DIR__ . '/../includes/auth.php';
 require_once __DIR__ . '/../includes/csrf.php';
 csrfRequire();
 
+// Rate-limit: 30 writes/min/IP
+$rlKey = 'userdata:' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown');
+if (!checkRateLimit($rlKey, 30, 60)) {
+    http_response_code(429); header('Content-Type: application/json');
+    exit(json_encode(['ok'=>false, 'error'=>'Rate limit exceeded']));
+}
+
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store');
 sendSecurityHeaders();

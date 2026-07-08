@@ -6,6 +6,12 @@
 require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../functions.php';
 require_once __DIR__ . '/../includes/csrf.php';
+// Rate-limit: 10 subscribes/min/IP
+$rlKey = 'push:' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown');
+if (!checkRateLimit($rlKey, 10, 60)) {
+    http_response_code(429); header('Content-Type: application/json');
+    exit(json_encode(['ok'=>false, 'error'=>'Rate limit exceeded']));
+}
 csrfRequire();
 header('Content-Type: application/json; charset=utf-8');
 sendSecurityHeaders();

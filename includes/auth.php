@@ -152,7 +152,7 @@ if (!function_exists('requireAdmin')) {
             http_response_code(401);
             header('Content-Type: application/json; charset=utf-8');
             echo json_encode(['ok'=>false, 'error'=>'Admin session required']);
-            return;
+            exit;
         }
     }
 }
@@ -171,7 +171,7 @@ if (!function_exists('requireCron')) {
             http_response_code(401);
             header('Content-Type: application/json; charset=utf-8');
             echo json_encode(['ok'=>false, 'error'=>'Valid CRON_KEY required']);
-            return;
+            exit;
         }
     }
 }

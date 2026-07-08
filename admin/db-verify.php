@@ -5,8 +5,15 @@
  */
 require_once dirname(__DIR__) . '/config.php';
 require_once dirname(__DIR__) . '/functions.php';
+require_once dirname(__DIR__) . '/includes/auth.php';
 
-// Don't require admin - this is a setup tool
+// Require admin or CRON_KEY (diagnostic tool — still gate it)
+if (!isAdmin() && !isCron()) {
+    http_response_code(401);
+    echo '<p style="color:red;text-align:center;margin-top:40px">Unauthorized — <a href="/admin/">login here</a></p>';
+    return;
+}
+
 $pageTitle = 'Database Verification | आकाशवाणी';
 ?>
 <!DOCTYPE html>

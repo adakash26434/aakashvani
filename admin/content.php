@@ -5,18 +5,29 @@
  * Auth shares session with /admin/prices.php (PIN-based).
  */
 session_start();
+require_once __DIR__ . '/../includes/csrf.php';
 $cacheDir = __DIR__ . '/../cache';
 $pinFile  = $cacheDir . '/admin-pin.txt';
 $ovFile   = $cacheDir . '/content-overrides.json';
 if (!is_dir($cacheDir)) @mkdir($cacheDir, 0755, true);
 
 $err = '';
-// Login (reuses same PIN as prices)
+// Login (reuses same PIN as prices) — rate-limited + CSRF-guarded
 if ($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['login_pin'])) {
-  $pin = trim($_POST['login_pin']);
-  $hash = is_file($pinFile) ? file_get_contents($pinFile) : '';
-  if ($hash && password_verify($pin, $hash)) { $_SESSION['nh_admin']=true; header('Location: /admin/content.php'); exit; }
-  $err = 'गलत PIN';
+    $rlKey = 'content_pin:' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown');
+    if (!function_exists('checkRateLimit') && is_file(__DIR__ . '/../functions.php')) {
+        require_once __DIR__ . '/../functions.php';
+    }
+    if (function_exists('checkRateLimit') && !checkRateLimit($rlKey, 5, 60)) {
+        $err = 'बढी प्रयास भयो। १ मिनेट पर्खनुहोस्।';
+    } elseif (!csrfVerify()) {
+        $err = 'Security check failed.';
+    } else {
+        $pin = trim($_POST['login_pin']);
+        $hash = is_file($pinFile) ? file_get_contents($pinFile) : '';
+        if ($hash && password_verify($pin, $hash)) { $_SESSION['nh_admin']=true; header('Location: /admin/content.php'); exit; }
+        $err = 'गलत PIN';
+    }
 }
 if (isset($_GET['logout'])) { session_destroy(); header('Location: /admin/content.php'); exit; }
 
@@ -28,6 +39,7 @@ if (empty($_SESSION['nh_admin'])) {
       <p class="text-sm text-slate-500 mb-4">Content fallback panel</p>
       <?php if ($err): ?><div class="bg-rose-50 text-rose-700 text-sm p-2 rounded mb-3"><?= htmlspecialchars($err) ?></div><?php endif; ?>
       <input type="password" name="login_pin" placeholder="Admin PIN" required class="w-full border rounded-lg px-3 py-2 mb-3"/>
+      <?= csrfField() ?>
       <button class="w-full bg-teal-600 text-white py-2 rounded-lg font-semibold">Login</button>
       <p class="text-xs text-slate-400 mt-3">PIN सेट गर्न <a href="/admin/prices.php" class="underline">/admin/prices.php</a> मा जानुहोस्।</p>
     </form>

@@ -22,6 +22,13 @@ require_once __DIR__ . '/../functions.php';
 require_once __DIR__ . '/../includes/csrf.php';
 csrfRequire();
 
+// Rate-limit: 30 requests/min/IP
+$rlKey = 'overrides:' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown');
+if (!checkRateLimit($rlKey, 30, 60)) {
+    http_response_code(429); header('Content-Type: application/json');
+    exit(json_encode(['ok'=>false, 'error'=>'Rate limit exceeded']));
+}
+
 header('Content-Type: application/json; charset=UTF-8');
 sendSecurityHeaders();
 // GET is public (dashboard reads overrides), POST requires auth

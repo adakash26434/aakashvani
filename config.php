@@ -21,7 +21,24 @@ date_default_timezone_set('Asia/Kathmandu');
 
 // Session
 if (session_status() === PHP_SESSION_NONE) {
-    @session_start();
+    @session_start([
+        'cookie_lifetime' => 0,
+        'cookie_httponly' => 1,
+        'cookie_secure'   => isset($_SERVER['HTTPS']),
+        'use_strict_mode' => 1,
+        'use_only_cookies' => 1,
+    ]);
+}
+// Session timeout: destroy admin sessions idle > 2 hours
+if (!defined('SESSION_TIMEOUT')) define('SESSION_TIMEOUT', 7200); // 2 hours
+if (!empty($_SESSION['admin_logged_in']) || !empty($_SESSION['is_admin']) || !empty($_SESSION['nh_admin'])) {
+    if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity']) > SESSION_TIMEOUT) {
+        session_unset();
+        session_destroy();
+        session_start();
+    } else {
+        $_SESSION['last_activity'] = time();
+    }
 }
 
 // Language

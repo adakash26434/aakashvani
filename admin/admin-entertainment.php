@@ -7,11 +7,14 @@ require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/functions.php';
 require_once __DIR__ . '/includes/functions.entertainment.php';
 
-// ── Admin gate (reuse your existing pattern) ──────────────────────────────
-if (empty($_SESSION['is_admin'])) {
-    header('Location: /admin.php?next=admin-entertainment.php');
+// ── Admin gate ────────────────────────────────────────────────────────────
+require_once __DIR__ . '/includes/auth.php';
+if (!isAdmin()) {
+    header('Location: /admin/index.php?next=' . basename(__FILE__));
     exit;
 }
+require_once __DIR__ . '/includes/csrf.php';
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !csrfVerify()) { die('CSRF verification failed'); }
 
 $msg = '';
 $action = $_POST['action'] ?? $_GET['action'] ?? 'list';
@@ -111,6 +114,7 @@ $storyCount = (int) db()->query("SELECT COUNT(*) FROM success_stories")->fetchCo
     <div class="card">
       <h2>📸 नयाँ घुम्ने ठाउँ थप्नुहोस्</h2>
       <form method="post" enctype="multipart/form-data">
+        <?= csrfField() ?>
         <input type="hidden" name="action" value="add_place">
         <label>शीर्षक (नेपालीमा) *</label>
         <input type="text" name="title" required placeholder="जस्तै: फेवाताल, पोखरा">

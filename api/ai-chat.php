@@ -15,6 +15,14 @@
 require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../functions.php';
 
+// Rate-limit: 20 AI requests/min/IP
+$rlKey = 'aichat:' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown');
+if (!checkRateLimit($rlKey, 20, 60)) {
+    http_response_code(429);
+    header('Content-Type: application/json');
+    exit(json_encode(['error'=>'Rate limit exceeded']));
+}
+
 header('Content-Type: text/event-stream');
 header('Cache-Control: no-cache');
 header('Connection: keep-alive');

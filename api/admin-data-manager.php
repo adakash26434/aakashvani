@@ -33,6 +33,12 @@ if (PHP_SAPI !== 'cli') {
 require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../functions.php';
 require_once __DIR__ . '/../includes/csrf.php';
+// Rate-limit: 60 requests/min/IP (admin ops)
+$rlKey = 'admindm:' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown');
+if (!checkRateLimit($rlKey, 60, 60)) {
+    http_response_code(429); header('Content-Type: application/json');
+    exit(json_encode(['ok'=>false, 'error'=>'Rate limit exceeded']));
+}
 csrfRequire();
 
 // ── Auth: Admin session OR CRON_KEY ─────────────────────────────────────────────

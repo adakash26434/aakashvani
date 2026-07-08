@@ -20,6 +20,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { http_response_code(204); exit; }
 
 require_once __DIR__ . '/../functions.php';
 require_once __DIR__ . '/../includes/csrf.php';
+
+// Rate-limit: 30 requests/min/IP
+$rlKey = 'ipo:' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown');
+if (!checkRateLimit($rlKey, 30, 60)) {
+    http_response_code(429); header('Content-Type: application/json');
+    exit(json_encode(['ok'=>false, 'error'=>'Rate limit exceeded']));
+}
 csrfRequire();
 
 /* ── Read input ─────────────────────────────────────────────────── */
