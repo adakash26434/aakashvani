@@ -225,3 +225,79 @@ if (!function_exists('slugify')) {
         return strtolower(trim($text, '-')) ?: 'post';
     }
 }
+
+// ── ensureNewsTable — creates tech_news if it doesn't exist ─────────────
+// Called by news-rss.php, cron/ai-sync.php, admin/dashboard.php
+if (!function_exists('ensureNewsTable')) {
+    function ensureNewsTable(): void {
+        $pdo = db();
+        if (!$pdo) return;
+        try {
+            $pdo->exec("CREATE TABLE IF NOT EXISTS `tech_news` (
+                `id`              INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                `title`           VARCHAR(500) NOT NULL,
+                `slug`            VARCHAR(500) NOT NULL,
+                `excerpt`         TEXT,
+                `content`         LONGTEXT,
+                `category`        VARCHAR(60) NOT NULL DEFAULT 'general',
+                `lang`            VARCHAR(5)  NOT NULL DEFAULT 'ne',
+                `scope`           VARCHAR(20) NOT NULL DEFAULT 'national',
+                `source_name`     VARCHAR(120),
+                `source_url`      VARCHAR(700),
+                `original_url`    VARCHAR(700),
+                `url_hash`        VARCHAR(64) NOT NULL,
+                `image_url`       VARCHAR(700),
+                `is_published`    TINYINT(1) NOT NULL DEFAULT 0,
+                `is_featured`     TINYINT(1) NOT NULL DEFAULT 0,
+                `is_breaking`    TINYINT(1) NOT NULL DEFAULT 0,
+                `ai_processed`    TINYINT(1) NOT NULL DEFAULT 0,
+                `content_status`  VARCHAR(20) NOT NULL DEFAULT 'unknown',
+                `content_length`  INT NOT NULL DEFAULT 0,
+                `scrape_status`  VARCHAR(20) NOT NULL DEFAULT 'pending',
+                `scrape_error`   TEXT,
+                `last_scraped_at` DATETIME DEFAULT NULL,
+                `published_at`    DATETIME DEFAULT NULL,
+                `created_at`      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                `updated_at`      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                UNIQUE  KEY `uq_url_hash`    (`url_hash`),
+                UNIQUE  KEY `uq_slug`         (`slug`),
+                UNIQUE  KEY `uq_source_guid`  (`source_name`, `original_url`),
+                KEY     `idx_news_hash`       (`url_hash`),
+                KEY     `idx_news_pub_date`   (`is_published`, `created_at`),
+                KEY     `idx_news_source_date`(`source_name`, `created_at`),
+                KEY     `idx_news_quality`    (`content_status`, `scrape_status`),
+                FULLTEXT KEY `ft_title_excerpt`(`title`, `excerpt`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+        } catch (Throwable $e) {
+            error_log('[ensureNewsTable] ' . $e->getMessage());
+        }
+    }
+}
+
+// ── ensureRashifalTable — creates rashifal_daily if it doesn't exist ──────
+if (!function_exists('ensureRashifalTable')) {
+    function ensureRashifalTable(): void {
+        $pdo = db();
+        if (!$pdo) return;
+        try {
+            $pdo->exec("CREATE TABLE IF NOT EXISTS `rashifal_daily` (
+                `id`        INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                `sign`      VARCHAR(60) NOT NULL,
+                `lang`      VARCHAR(5) NOT NULL DEFAULT 'ne',
+                `date_bs`   DATE NOT NULL,
+                `date_ad`   DATE,
+                `overall`   TEXT,
+                `love`      TEXT,
+                `career`    TEXT,
+                `health`    TEXT,
+                `lucky_num` VARCHAR(10),
+                `lucky_col` VARCHAR(30),
+                `compatible` VARCHAR(60),
+                `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                UNIQUE KEY `uq_rashifal` (`sign`, `lang`, `date_bs`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+        } catch (Throwable $e) {
+            error_log('[ensureRashifalTable] ' . $e->getMessage());
+        }
+    }
+}
