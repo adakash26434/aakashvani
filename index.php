@@ -428,12 +428,13 @@ try {
     (function() {
         'use strict';
 
-        // Market data
         async function loadMarket() {
             try {
                 const resp = await fetch('/api/market-data.php?type=all');
                 if (!resp.ok) return;
                 const d = await resp.json();
+
+                // NEPSE
                 if (d.nepse) {
                     const n = d.nepse;
                     const v = document.getElementById('nepse-value');
@@ -445,14 +446,18 @@ try {
                         c.className = 'market-change ' + (up ? 'up' : 'down');
                     }
                 }
+
+                // Gold
                 if (d.gold && d.gold.hallmarkPerTola) {
                     const gv = document.getElementById('gold-value');
                     const gm = document.getElementById('gold-meta');
                     if (gv) gv.textContent = 'रु ' + Number(d.gold.hallmarkPerTola).toLocaleString('en-US');
                     if (gm && d.gold.source) gm.textContent = d.gold.source;
                 }
-                if (d.forex && d.forex.length > 0) {
-                    const usd = d.forex.find(r => r.code === 'USD');
+
+                // Forex (forex.rates is the array, not forex itself)
+                if (d.forex && d.forex.rates && d.forex.rates.length > 0) {
+                    const usd = d.forex.rates.find(r => r.code === 'USD');
                     if (usd) {
                         const fv = document.getElementById('forex-value');
                         const fm = document.getElementById('forex-meta');
@@ -460,28 +465,57 @@ try {
                         if (fm) fm.textContent = 'Buy: रु ' + usd.buy.toFixed(2);
                     }
                 }
+
+                // Petrol
                 if (d.petrol && d.petrol.petrol) {
                     const pv = document.getElementById('petrol-value');
                     if (pv) pv.textContent = 'रु ' + d.petrol.petrol;
                 }
-                document.querySelectorAll('.market-card').forEach((c, i) => setTimeout(() => c.classList.add('loaded'), i * 100));
+
+                // Animate cards in
+                document.querySelectorAll('.market-card').forEach((c, i) => {
+                    setTimeout(() => c.classList.add('loaded'), i * 100);
+                });
             } catch(e) { console.warn('Market data unavailable'); }
         }
 
-        // Featured news
         async function loadNews() {
             try {
-                const resp = await fetch('/api/news-unified.php?limit=3');
+                const resp = await fetch('/api/news-unified.php?limit=5');
                 if (!resp.ok) return;
-                const d = await resp.json();
-                if (d.items && d.items[0]) {
-                    const n = d.items[0];
+                const data = await resp.json();
+                const items = data.items || data.news || [];
+
+                // Update featured
+                if (items[0]) {
                     const t = document.getElementById('featured-title');
                     const ti = document.getElementById('featured-time');
-                    if (t && n.title) t.textContent = n.title;
-                    if (ti && n.published_at) ti.textContent = timeAgo(n.published_at);
+                    if (t && items[0].title) t.textContent = items[0].title;
+                    if (ti && items[0].published_at) ti.textContent = timeAgo(items[0].published_at);
                 }
-            } catch(e) { console.warn('News load failed'); }
+
+                // Update news grid
+                const grid = document.getElementById('newsGrid');
+                if (grid && items.length > 1) {
+                    grid.innerHTML = items.slice(1, 4).map(item => `
+                        <a href="${item.source_url || '#'}" class="news-card anim-fade-up">
+                            <div class="card-img-wrap">
+                                <img src="${item.image_url || 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=400&h=250&fit=crop'}"
+                                     alt="${(item.title || '').substring(0, 60)}"
+                                     class="card-img" loading="lazy">
+                                <span class="card-cat-badge">${item.category || 'general'}</span>
+                            </div>
+                            <div class="card-body">
+                                <h3 class="card-title">${item.title || ''}</h3>
+                                <div class="card-meta">
+                                    <span class="card-source">${item.source || 'Aakashvani'}</span>
+                                    <span class="card-time">${timeAgo(item.published_at)}</span>
+                                </div>
+                            </div>
+                        </a>
+                    `).join('');
+                }
+            } catch(e) { console.warn('News load failed:', e.message); }
         }
 
         function timeAgo(d) {
@@ -496,6 +530,9 @@ try {
         document.addEventListener('DOMContentLoaded', function() {
             loadMarket();
             loadNews();
+            // Refresh every 5 minutes
+            setInterval(loadMarket, 5 * 60 * 1000);
+            setInterval(loadNews, 10 * 60 * 1000);
         });
     })();
     </script>
