@@ -15,7 +15,7 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
     <title><?= $t('दर्ता', 'Register') ?> | <?= $t('आकाशवाणी', 'Aakashvani') ?></title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/assets/css/app.css">
+    <link rel="stylesheet" href="/assets/css/premium.css">
     <style>
         .auth-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--dark-900), var(--dark-800)); padding: var(--space-8); }
         .auth-card { background: #fff; border-radius: var(--radius-2xl); padding: var(--space-8); width: 100%; max-width: 420px; box-shadow: var(--shadow-xl); }
@@ -40,6 +40,7 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
             .login-logo .brand-logo { width: 48px; height: 48px; font-size: 1.5rem; }
         }
     </style>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 </head>
 <body>
     <div class="auth-page">
