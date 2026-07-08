@@ -22,7 +22,7 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/assets/css/app.css">
+    <link rel="stylesheet" href="/assets/css/premium.css">
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
     <style>
         .page-header { background: linear-gradient(135deg, var(--dark-900), var(--dark-800)); padding: var(--space-12) 0; color: #fff; }
@@ -56,48 +56,100 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
     </style>
 </head>
 <body>
-    <header class="site-header">
-        <div class="header-main">
-            <div class="container">
-                <div class="flex items-center justify-between gap-4">
-                    <a href="/" class="header-brand">
-                        <div class="brand-logo">आ</div>
-                        <span class="brand-name"><?= $t('आकाशवाणी', 'Aakashvani') ?></span>
-                    </a>
-                    <nav class="main-nav">
-                        <div class="container">
-                            <div class="nav-list">
-                                <a href="/" class="nav-link"><?= $t('गृह', 'Home') ?></a>
-                                <a href="/news.php" class="nav-link"><?= $t('समाचार', 'News') ?></a>
-                                <a href="/nepali-patro.php" class="nav-link"><?= $t('पात्रो', 'Calendar') ?></a>
-                                <a href="/rashifal.php" class="nav-link"><?= $t('राशिफल', 'Horoscope') ?></a>
-                                <a href="/ipo-tracker.php" class="nav-link active"><?= $t('NEPSE/IPO', 'NEPSE/IPO') ?></a>
-                                <a href="/weather.php" class="nav-link"><?= $t('मौसम', 'Weather') ?></a>
-                                <a href="/cricket.php" class="nav-link"><?= $t('क्रिकेट', 'Cricket') ?></a>
-                                <a href="/tenders.php" class="nav-link"><?= $t('टेन्डर', 'Tenders') ?></a>
-                                <a href="/emergency.php" class="nav-link"><?= $t('आपतकालीन', 'Emergency') ?></a>
-                            </div>
-                        </div>
-                    </nav>
-                    <div class="header-actions">
-                        <button class="btn btn-ghost btn-icon" aria-label="Search">
-                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-                        </button>
-                    </div>
+    <!-- TOP BAR -->
+    <div class="tp-topbar">
+        <div class="tp-container">
+            <div class="tp-topbar-inner">
+                <div class="tp-topbar-left">
+                    <span class="tp-date"><?= date('l, j F Y') ?></span>
+                    <span class="tp-topbar-links">
+                        <a href="/unicode">Unicode</a>
+                        <a href="?lang=en">English</a>
+                    </span>
+                </div>
+                <div class="tp-topbar-right">
+                    <a href="#" aria-label="Facebook"><i data-lucide="facebook"></i></a>
+                    <a href="#" aria-label="Twitter"><i data-lucide="twitter"></i></a>
+                    <a href="#" aria-label="YouTube"><i data-lucide="youtube"></i></a>
                 </div>
             </div>
         </div>
-    </header>
-    
-    <section class="page-header">
-        <div class="container">
-            <h1 class="page-title" style="display:flex;align-items:center;gap:12px">
-                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--primary)"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
-                <?= $t('IPO ट्र्याकर', 'IPO Tracker') ?>
-            </h1>
-            <p class="page-subtitle"><?= $t('नेपालका IPO र मर्जर आइपिओको विवरण', 'Details of IPOs and merger IPOs in Nepal') ?></p>
+    </div>
+
+    <!-- MID HEADER -->
+    <div class="tp-header-mid">
+        <div class="tp-container">
+            <div class="tp-header-mid-inner">
+                <a href="/" class="tp-logo">
+                    <img src="/favicon.svg" alt="Aakashvani" width="48" height="48">
+                    <div class="tp-logo-text">
+                        <span class="tp-logo-name"><?= $t('आकाशवाणी', 'Aakashvani') ?></span>
+                        <span class="tp-logo-tagline"><?= $t('सूचनाको खुला आकाश', 'Your Gateway to Information') ?></span>
+                    </div>
+                </a>
+                <div class="tp-header-ads"></div>
+            </div>
         </div>
-    </section>
+    </div>
+
+    <!-- STICKY NAV -->
+    <nav class="tp-nav" id="tpNav">
+        <div class="tp-container">
+            <div class="tp-nav-inner">
+                <button class="tp-nav-toggle" id="navToggle" aria-label="Menu">
+                    <i data-lucide="menu"></i>
+                </button>
+                <ul class="tp-nav-list" id="navList">
+                    <li><a href="/"><?= $t('गृह', 'Home') ?></a></li>
+                    <li><a href="/news.php"><?= $t('समाचार', 'News') ?></a></li>
+                    <li><a href="/nepali-patro.php"><?= $t('पात्रो', 'Calendar') ?></a></li>
+                    <li><a href="/rashifal.php"><?= $t('राशिफल', 'Horoscope') ?></a></li>
+                    <li><a href="/ipo-tracker.php" class="active"><?= $t('NEPSE/IPO', 'NEPSE/IPO') ?></a></li>
+                    <li><a href="/tools.php"><?= $t('टूलहरू', 'Tools') ?></a></li>
+                    <li><a href="/gov-services.php"><?= $t('सरकारी', 'Gov') ?></a></li>
+                    <li><a href="/weather.php"><?= $t('मौसम', 'Weather') ?></a></li>
+                    <li><a href="/cricket.php"><?= $t('क्रिकेट', 'Cricket') ?></a></li>
+                    <li><a href="/tenders.php"><?= $t('टेन्डर', 'Tenders') ?></a></li>
+                    <li><a href="/emergency.php"><?= $t('आपतकालीन', 'Emergency') ?></a></li>
+                </ul>
+                <div class="tp-nav-search">
+                    <button class="tp-search-btn" id="searchToggle" aria-label="Search">
+                        <i data-lucide="search"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="tp-search-bar" id="searchBar" style="display:none">
+                <input type="search" placeholder="<?= $t('खोज्नुहोस्...', 'Search...') ?>" id="searchInput">
+            </div>
+        </div>
+    </nav>
+
+    <!-- MARKET TICKER -->
+    <div class="tp-market-bar">
+        <div class="tp-container">
+            <div class="tp-market-inner">
+                <span class="tp-market-item"><i data-lucide="trending-up"></i><span class="tp-mkt-label">NEPSE</span><span class="tp-mkt-value" id="nepse-value">...</span><span class="tp-mkt-change" id="nepse-change">...</span></span>
+                <span class="tp-market-divider">|</span>
+                <span class="tp-market-item"><i data-lucide="gem"></i><span class="tp-mkt-label"><?= $t('सुन', 'Gold') ?></span><span class="tp-mkt-value" id="gold-value">...</span></span>
+                <span class="tp-market-divider">|</span>
+                <span class="tp-market-item"><i data-lucide="dollar-sign"></i><span class="tp-mkt-label">USD</span><span class="tp-mkt-value" id="forex-value">...</span></span>
+                <span class="tp-market-divider">|</span>
+                <span class="tp-market-item"><i data-lucide="fuel"></i><span class="tp-mkt-label"><?= $t('पेट्रोल', 'Petrol') ?></span><span class="tp-mkt-value" id="petrol-value">...</span></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE BANNER -->
+    <div class="tp-page-banner">
+        <div class="tp-container">
+            <div class="tp-page-banner-inner">
+                <div>
+                    <h1 class="tp-page-title"><i data-lucide="trending-up"></i> <?= $t('IPO ट्र्याकर', 'IPO Tracker') ?></h1>
+                    <p class="tp-page-subtitle"><?= $t('नेपालका IPO र मर्जर आइपिओको विवरण', 'Details of IPOs and merger IPOs in Nepal') ?></p>
+                </div>
+            </div>
+        </div>
+    </div>
     
     <section class="ipo-section">
         <div class="container">
@@ -126,142 +178,154 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
         </div>
     </section>
     
-    <footer class="site-footer">
-        <div class="container">
-            <div class="footer-bottom" style="border:none;padding:0">
-                <p class="footer-copyright">&copy; <?= date('Y') ?> <?= $t('आकाशवाणी', 'Aakashvani') ?></p>
+    <!-- FOOTER -->
+    <footer class="tp-footer">
+        <div class="tp-container">
+            <div class="tp-footer-grid">
+                <div class="tp-footer-brand">
+                    <a href="/" class="tp-footer-logo">
+                        <img src="/favicon.svg" alt="Aakashvani" width="40" height="40">
+                        <div>
+                            <span class="tp-footer-name"><?= $t('आकाशवाणी', 'Aakashvani') ?></span>
+                            <span class="tp-footer-tagline"><?= $t('सूचनाको खुला आकाश', 'Your Gateway to Information') ?></span>
+                        </div>
+                    </a>
+                    <p class="tp-footer-desc"><?= $t('नेपालको सबैभन्दा विश्वसनीय सूचना प्लेटफर्म।', 'Nepal\'s most trusted information platform.') ?></p>
+                    <div class="tp-footer-social">
+                        <a href="#" aria-label="Facebook"><i data-lucide="facebook"></i></a>
+                        <a href="#" aria-label="Twitter"><i data-lucide="twitter"></i></a>
+                        <a href="#" aria-label="YouTube"><i data-lucide="youtube"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h4><?= $t('लिंकहरू', 'Links') ?></h4>
+                    <ul>
+                        <li><a href="/"><?= $t('गृहपृष्ठ', 'Home') ?></a></li>
+                        <li><a href="/news.php"><?= $t('समाचार', 'News') ?></a></li>
+                        <li><a href="/ipo-tracker.php"><?= $t('NEPSE/IPO', 'NEPSE/IPO') ?></a></li>
+                        <li><a href="/gov-services.php"><?= $t('सरकारी सेवा', 'Gov Services') ?></a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4><?= $t('स्रोतहरू', 'Resources') ?></h4>
+                    <ul>
+                        <li><a href="/rashifal.php"><?= $t('राशिफल', 'Horoscope') ?></a></li>
+                        <li><a href="/nepali-patro.php"><?= $t('नेपाली पात्रो', 'Calendar') ?></a></li>
+                        <li><a href="/weather.php"><?= $t('मौसम', 'Weather') ?></a></li>
+                        <li><a href="/emergency.php"><?= $t('आपतकालीन', 'Emergency') ?></a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4><?= $t('कम्पनी', 'Company') ?></h4>
+                    <ul>
+                        <li><a href="/about.php"><?= $t('हाम्रो बारेमा', 'About') ?></a></li>
+                        <li><a href="/contact.php"><?= $t('सम्पर्क', 'Contact') ?></a></li>
+                        <li><a href="/privacy.php"><?= $t('गोपनीयता', 'Privacy') ?></a></li>
+                        <li><a href="/terms.php"><?= $t('सेवा सर्त', 'Terms') ?></a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="tp-footer-bottom">
+                <span>&copy; <?= date('Y') ?> <?= $t('आकाशवाणी। सर्वाधिकार सुरक्षित।', 'Aakashvani. All rights reserved.') ?></span>
+                <span><?= $t('हामी नेपालको सूचना खुला राख्छौं', 'We keep Nepal\'s information open') ?></span>
             </div>
         </div>
     </footer>
-    
-    <script src="/assets/js/app.js"></script>
-<script>
-async function loadIPOs() {
-    const loading = document.getElementById('ipo-loading');
-    const error = document.getElementById('ipo-error');
-    const openGrid = document.getElementById('open-ipos');
-    const upcomingGrid = document.getElementById('upcoming-ipos');
-    const openTitle = document.getElementById('open-title');
-    const upcomingTitle = document.getElementById('upcoming-title');
-    const updated = document.getElementById('ipo-updated');
-    
-    loading.style.display = 'flex';
-    error.style.display = 'none';
-    
-    try {
-        const resp = await fetch('/api/ipo-data.php');
-        const data = await resp.json();
-        
-        if (data.ok && data.ipos && data.ipos.length > 0) {
-            const now = new Date().toISOString().split('T')[0];
-            const openIPOs = data.ipos.filter(i => i.status === 'Active' || (i.openDate && i.closeDate && i.openDate <= now && i.closeDate >= now));
-            const upcomingIPOs = data.ipos.filter(i => i.status === 'Upcoming' || !i.openDate || i.openDate > now);
-            
-            if (openIPOs.length > 0) {
-                openGrid.innerHTML = openIPOs.map(ipo => `
-                    <div class="ipo-card">
-                        <div class="ipo-header">
-                            <span class="ipo-symbol">${ipo.symbol || '-'}</span>
-                            <span class="ipo-status open"><?= $t('खुला', 'OPEN') ?></span>
-                        </div>
-                        <h3 class="ipo-company">${ipo.name || ipo.company || '-'}</h3>
-                        <div class="ipo-details">
-                            <div class="ipo-detail">
-                                <span class="ipo-detail-label"><?= $t('मूल्य', 'Price') ?></span>
-                                <span class="ipo-detail-value">${ipo.price || 'रु 0'}</span>
-                            </div>
-                            <div class="ipo-detail">
-                                <span class="ipo-detail-label"><?= $t('कुल युनिट', 'Total Units') ?></span>
-                                <span class="ipo-detail-value">${ipo.shares || '-'}</span>
-                            </div>
-                            <div class="ipo-detail">
-                                <span class="ipo-detail-label"><?= $t('बन्द हुने', 'Close Date') ?></span>
-                                <span class="ipo-detail-value">${ipo.closeDate || '-'}</span>
-                            </div>
-                        </div>
-                        <button class="btn btn-primary w-full"><?= $t('थप विवरण', 'More Details') ?></button>
-                    </div>
-                `).join('');
-                openTitle.style.display = 'block';
-                openGrid.style.display = 'grid';
-            }
-            
-            if (upcomingIPOs.length > 0) {
-                upcomingGrid.innerHTML = upcomingIPOs.map(ipo => `
-                    <div class="ipo-card">
-                        <div class="ipo-header">
-                            <span class="ipo-symbol">${ipo.symbol || '-'}</span>
-                            <span class="ipo-status upcoming"><?= $t('आगामी', 'UPCOMING') ?></span>
-                        </div>
-                        <h3 class="ipo-company">${ipo.name || ipo.company || '-'}</h3>
-                        <div class="ipo-details">
-                            <div class="ipo-detail">
-                                <span class="ipo-detail-label"><?= $t('मूल्य', 'Price') ?></span>
-                                <span class="ipo-detail-value">${ipo.price || 'रु 0'}</span>
-                            </div>
-                            <div class="ipo-detail">
-                                <span class="ipo-detail-label"><?= $t('कुल युनिट', 'Total Units') ?></span>
-                                <span class="ipo-detail-value">${ipo.shares || '-'}</span>
-                            </div>
-                            <div class="ipo-detail">
-                                <span class="ipo-detail-label"><?= $t('खुला हुने', 'Open Date') ?></span>
-                                <span class="ipo-detail-value">${ipo.openDate || '-'}</span>
-                            </div>
-                        </div>
-                        <button class="btn btn-secondary w-full"><?= $t('अलर्ट सेट गर्नुहोस्', 'Set Alert') ?></button>
-                    </div>
-                `).join('');
-                upcomingTitle.style.display = 'block';
-                upcomingGrid.style.display = 'grid';
-            }
-            
-            if (data.fetched_at) {
-                updated.textContent = '<?= $t("अन्तिम अपडेट:", "Last updated:") ?> ' + data.fetched_at;
-                updated.style.display = 'block';
-            }
-            
-            loading.style.display = 'none';
-        } else {
-            throw new Error('No IPO data');
+
+    <script>
+    (function() {
+        'use strict';
+
+        async function loadMarket() {
+            try {
+                const resp = await fetch('/api/market-data.php?type=all');
+                if (!resp.ok) return;
+                const d = await resp.json();
+                if (d.nepse) {
+                    const n = d.nepse, v = document.getElementById('nepse-value'), c = document.getElementById('nepse-change');
+                    if (v && n.index) v.textContent = n.index.toLocaleString('en-US', {maximumFractionDigits:2});
+                    if (c && n.change !== undefined) {
+                        const up = n.change >= 0;
+                        c.textContent = (up ? '+' : '') + n.change.toFixed(2) + ' (' + (up ? '+' : '') + n.changePercent.toFixed(2) + '%)';
+                        c.className = 'tp-mkt-change ' + (up ? 'up' : 'down');
+                    }
+                }
+                if (d.gold && d.gold.hallmarkPerTola) { const gv = document.getElementById('gold-value'); if (gv) gv.textContent = 'रु ' + Number(d.gold.hallmarkPerTola).toLocaleString('en-US'); }
+                if (d.forex && d.forex.rates && d.forex.rates.length > 0) {
+                    const usd = d.forex.rates.find(r => r.code === 'USD');
+                    if (usd) { const fv = document.getElementById('forex-value'); if (fv) fv.textContent = 'रु ' + usd.sell.toFixed(2); }
+                }
+                if (d.petrol && d.petrol.petrol) { const pv = document.getElementById('petrol-value'); if (pv) pv.textContent = 'रु ' + d.petrol.petrol; }
+            } catch(e) { console.warn('Market unavailable'); }
         }
-    } catch(e) {
-        loading.style.display = 'none';
-        error.style.display = 'block';
-        console.error('IPO Error:', e);
-    }
-}
 
-document.addEventListener('DOMContentLoaded', loadIPOs);
-</script>
-<script>document.addEventListener('DOMContentLoaded', function() {
-        if (typeof lucide !== 'undefined') lucide.createIcons();
-    });</script>
+        function initSearch() {
+            const toggle = document.getElementById('searchToggle'), bar = document.getElementById('searchBar');
+            if (toggle && bar) toggle.addEventListener('click', function() { bar.style.display = bar.style.display === 'none' ? 'block' : 'none'; });
+            const navToggle = document.getElementById('navToggle'), navList = document.getElementById('navList');
+            if (navToggle && navList) navToggle.addEventListener('click', function() { navList.classList.toggle('open'); });
+        }
 
-    <!-- Mobile Bottom Nav -->
-    <nav class="mobile-bottom-nav" aria-label="Mobile navigation">
-        <div class="bottom-nav-inner">
-            <a href="/" class="bottom-nav-item">
-                <i data-lucide="home"></i>
-                <span>गृह</span>
-            </a>
-            <a href="/news.php" class="bottom-nav-item">
-                <i data-lucide="newspaper"></i>
-                <span>समाचार</span>
-            </a>
-            <a href="/ipo-tracker.php" class="bottom-nav-item active">
-                <i data-lucide="trending-up"></i>
-                <span>NEPSE</span>
-            </a>
-            <a href="/nepali-patro.php" class="bottom-nav-item">
-                <i data-lucide="calendar-days"></i>
-                <span>पात्रो</span>
-            </a>
-            <a href="/rashifal.php" class="bottom-nav-item">
-                <i data-lucide="sparkles"></i>
-                <span>राशिफल</span>
-            </a>
-        </div>
-    </nav>
+        async function loadIPOs() {
+            var loading = document.getElementById('ipo-loading');
+            var error = document.getElementById('ipo-error');
+            var openGrid = document.getElementById('open-ipos');
+            var upcomingGrid = document.getElementById('upcoming-ipos');
+            var openTitle = document.getElementById('open-title');
+            var upcomingTitle = document.getElementById('upcoming-title');
+            var updated = document.getElementById('ipo-updated');
+
+            if (!loading) return;
+            loading.style.display = 'flex';
+            if (error) error.style.display = 'none';
+
+            try {
+                var resp = await fetch('/api/ipo-data.php');
+                var data = await resp.json();
+
+                if (data.ok && data.ipos && data.ipos.length > 0) {
+                    var now = new Date().toISOString().split('T')[0];
+                    var openIPOs = data.ipos.filter(function(i) {
+                        return i.status === 'Active' || (i.openDate && i.closeDate && i.openDate <= now && i.closeDate >= now);
+                    });
+                    var upcomingIPOs = data.ipos.filter(function(i) {
+                        return i.status === 'Upcoming' || !i.openDate || i.openDate > now;
+                    });
+
+                    if (openIPOs.length > 0 && openGrid) {
+                        openGrid.innerHTML = openIPOs.map(function(ipo) {
+                            return '<div class="ipo-card"><div class="ipo-header"><span class="ipo-symbol">' + (ipo.symbol || '-') + '</span><span class="ipo-status open">OPEN</span></div><h3 class="ipo-company">' + (ipo.name || ipo.company || '-') + '</h3><div class="ipo-details"><div class="ipo-detail"><span class="ipo-detail-label">Price</span><span class="ipo-detail-value">' + (ipo.price || 'रु 0') + '</span></div><div class="ipo-detail"><span class="ipo-detail-label">Units</span><span class="ipo-detail-value">' + (ipo.shares || '-') + '</span></div><div class="ipo-detail"><span class="ipo-detail-label">Close</span><span class="ipo-detail-value">' + (ipo.closeDate || '-') + '</span></div></div></div>';
+                        }).join('');
+                        if (openTitle) openTitle.style.display = 'block';
+                        openGrid.style.display = 'grid';
+                    }
+
+                    if (upcomingIPOs.length > 0 && upcomingGrid) {
+                        upcomingGrid.innerHTML = upcomingIPOs.map(function(ipo) {
+                            return '<div class="ipo-card"><div class="ipo-header"><span class="ipo-symbol">' + (ipo.symbol || '-') + '</span><span class="ipo-status upcoming">UPCOMING</span></div><h3 class="ipo-company">' + (ipo.name || ipo.company || '-') + '</h3><div class="ipo-details"><div class="ipo-detail"><span class="ipo-detail-label">Price</span><span class="ipo-detail-value">' + (ipo.price || 'TBD') + '</span></div><div class="ipo-detail"><span class="ipo-detail-label">Opening</span><span class="ipo-detail-value">' + (ipo.openDate || 'TBD') + '</span></div></div></div>';
+                        }).join('');
+                        if (upcomingTitle) upcomingTitle.style.display = 'block';
+                        upcomingGrid.style.display = 'grid';
+                    }
+
+                    if (updated) { updated.style.display = 'block'; updated.textContent = '<?= $t('अपडेट: ', 'Updated: ') ?>' + new Date().toLocaleString('ne-NP'); }
+                }
+            } catch(e) {
+                if (error) { error.style.display = 'block'; }
+            } finally {
+                if (loading) loading.style.display = 'none';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+            loadMarket();
+            initSearch();
+            loadIPOs();
+            setInterval(loadMarket, 5 * 60 * 1000);
+        });
+    })();
+    </script>
 
 </body>
 </html>
