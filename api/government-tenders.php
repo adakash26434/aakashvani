@@ -203,7 +203,7 @@ function ensureGovernmentTendersTable(): void {
         link TEXT,
         published_date TEXT,
         created_at TEXT DEFAULT CURRENT_TIMESTAMP
-    )\$charset");
+    ){$charset}");
 }
 
 function getTenderCategories(): array {
