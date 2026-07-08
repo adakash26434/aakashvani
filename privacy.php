@@ -16,20 +16,6 @@ $t=fn($ne,$en)=>$isNepali?$ne:$en;
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/premium.css">
-
-    <style>
-        /* Responsive */
-        @media (max-width: 768px) {
-            .page-header { padding: var(--space-8) 0; }
-            .page-header h1 { font-size: 1.75rem; }
-            .content-section { padding: var(--space-6) 0; }
-        }
-        
-        @media (max-width: 480px) {
-            .page-header h1 { font-size: 1.5rem; }
-            .btn { padding: var(--space-2) var(--space-4); font-size: 0.875rem; }
-        }
-    </style>
 </head>
 <body>
 
@@ -39,7 +25,7 @@ $t=fn($ne,$en)=>$isNepali?$ne:$en;
             <div class="tp-topbar-inner">
                 <div class="tp-topbar-left">
                     <span class="tp-date"><?= date('l, j F Y') ?></span>
-                    <span class="tp-topbar-links"><a href="/unicode">Unicode</a><a href="?lang=en">English</a></span>
+                    <span class="tp-topbar-links"><a href="?">नेपाली</a><a href="?lang=en">English</a></span>
                 </div>
                 <div class="tp-topbar-right">
                     <a href="#" aria-label="Facebook"><i data-lucide="facebook"></i></a>
@@ -110,21 +96,21 @@ $t=fn($ne,$en)=>$isNepali?$ne:$en;
     </div>
 
     
-    <section style="background:linear-gradient(135deg,var(--dark-900),var(--dark-800));padding:var(--space-12) 0;color:#fff">
+    <section style="background:linear-gradient(135deg,var(--dark-900),var(--dark-800));padding:var(--sp-12) 0;color:#fff">
         <div class="container">
             <h1 class="text-3xl font-bold"><?=$t('गोपनीयता नीति','Privacy Policy')?></h1>
         </div>
     </section>
     
-    <section style="padding:var(--space-12) 0">
+    <section style="padding:var(--sp-12) 0">
         <div class="container" style="max-width:800px">
             <div class="card card-body">
-                <h2 style="margin-bottom:var(--space-4)"><?=$t('हाम्रो प्रतिबद्धता','Our Commitment')?></h2>
+                <h2 style="margin-bottom:var(--sp-4)"><?=$t('हाम्रो प्रतिबद्धता','Our Commitment')?></h2>
                 <p style="color:var(--dark-600);line-height:1.8">
                     <?=$isNepali?'आकाशवाणीले तपाईंको गोपनीयतालाई गम्भीरता राख्छ। हामी तपाईंको व्यक्तिगत जानकारी सुरक्षित राख्छौं।':'Aakashvani takes your privacy seriously. We keep your personal information safe and secure.'?>
                 </p>
-                <h2 style="margin-top:var(--space-8);margin-bottom:var(--space-4)"><?=$t('संकलन गरिएको जानकारी','Information We Collect')?></h2>
-                <ul style="color:var(--dark-600);line-height:1.8;padding-left:var(--space-6)">
+                <h2 style="margin-top:var(--sp-8);margin-bottom:var(--sp-4)"><?=$t('संकलन गरिएको जानकारी','Information We Collect')?></h2>
+                <ul style="color:var(--dark-600);line-height:1.8;padding-left:var(--sp-6)">
                     <li><?=$isNepali?'प्रयोगकर्ताको IP ठेगाना':'IP address'?></li>
                     <li><?=$isNepali?'ब्राउजर प्रकार':'Browser type'?></li>
                     <li><?=$isNepali?'पृष्ठ भ्रमण इतिहास':'Page visit history'?></li>

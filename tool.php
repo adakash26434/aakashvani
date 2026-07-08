@@ -26,22 +26,10 @@ $tool = $tools[$toolId] ?? ['name' => 'टूल', 'en' => 'Tool', 'desc' => '']
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/premium.css">
     <style>
-        .tool-page { padding: var(--space-8) 0; }
-        .tool-card { background: #fff; border-radius: var(--radius-xl); padding: var(--space-8); box-shadow: var(--shadow); }
-        .tool-result { background: var(--primary-50); border-radius: var(--radius-lg); padding: var(--space-6); text-align: center; margin-top: var(--space-6); }
+        .tool-page { padding: var(--sp-8) 0; }
+        .tool-card { background: #fff; border-radius: var(--radius-xl); padding: var(--sp-8); box-shadow: var(--shadow); }
+        .tool-result { background: var(--primary-50); border-radius: var(--radius-lg); padding: var(--sp-6); text-align: center; margin-top: var(--sp-6); }
         .tool-result-value { font-size: 2rem; font-weight: 800; color: var(--primary); }
-    </style>
-
-    <style>
-        /* Responsive */
-        @media (max-width: 768px) {
-            .page-header { padding: var(--space-8) 0; }
-            .page-header h1 { font-size: 1.75rem; }
-        }
-        
-        @media (max-width: 480px) {
-            .page-header h1 { font-size: 1.5rem; }
-        }
     </style>
 </head>
 <body>
@@ -52,7 +40,7 @@ $tool = $tools[$toolId] ?? ['name' => 'टूल', 'en' => 'Tool', 'desc' => '']
             <div class="tp-topbar-inner">
                 <div class="tp-topbar-left">
                     <span class="tp-date"><?= date('l, j F Y') ?></span>
-                    <span class="tp-topbar-links"><a href="/unicode">Unicode</a><a href="?lang=en">English</a></span>
+                    <span class="tp-topbar-links"><a href="?">नेपाली</a><a href="?lang=en">English</a></span>
                 </div>
                 <div class="tp-topbar-right">
                     <a href="#" aria-label="Facebook"><i data-lucide="facebook"></i></a>
@@ -139,7 +127,7 @@ $tool = $tools[$toolId] ?? ['name' => 'टूल', 'en' => 'Tool', 'desc' => '']
                     <input type="number" class="input input-lg" id="income" placeholder="500000" oninput="calculateTax()">
                 </div>
                 <div class="tool-result">
-                    <p style="color: var(--dark-500); margin-bottom: var(--space-2);"><?= $t('अनुमानित कर', 'Estimated Tax') ?></p>
+                    <p style="color: var(--dark-500); margin-bottom: var(--sp-2);"><?= $t('अनुमानित कर', 'Estimated Tax') ?></p>
                     <div class="tool-result-value" id="tax-result">रु. 0</div>
                 </div>
                 <script>
@@ -164,7 +152,7 @@ $tool = $tools[$toolId] ?? ['name' => 'टूल', 'en' => 'Tool', 'desc' => '']
                     <input type="number" class="input input-lg" id="height" placeholder="170" oninput="calculateBMI()">
                 </div>
                 <div class="tool-result">
-                    <p style="color: var(--dark-500); margin-bottom: var(--space-2);"><?= $t('तपाईंको BMI', 'Your BMI') ?></p>
+                    <p style="color: var(--dark-500); margin-bottom: var(--sp-2);"><?= $t('तपाईंको BMI', 'Your BMI') ?></p>
                     <div class="tool-result-value" id="bmi-result">0</div>
                 </div>
                 <script>

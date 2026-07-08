@@ -16,20 +16,6 @@ $t=fn($ne,$en)=>$isNepali?$ne:$en;
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/premium.css">
-
-    <style>
-        /* Responsive */
-        @media (max-width: 768px) {
-            .page-header { padding: var(--space-8) 0; }
-            .page-header h1 { font-size: 1.75rem; }
-            .content-section { padding: var(--space-6) 0; }
-        }
-        
-        @media (max-width: 480px) {
-            .page-header h1 { font-size: 1.5rem; }
-            .btn { padding: var(--space-2) var(--space-4); font-size: 0.875rem; }
-        }
-    </style>
 </head>
 <body>
 
@@ -39,7 +25,7 @@ $t=fn($ne,$en)=>$isNepali?$ne:$en;
             <div class="tp-topbar-inner">
                 <div class="tp-topbar-left">
                     <span class="tp-date"><?= date('l, j F Y') ?></span>
-                    <span class="tp-topbar-links"><a href="/unicode">Unicode</a><a href="?lang=en">English</a></span>
+                    <span class="tp-topbar-links"><a href="?">नेपाली</a><a href="?lang=en">English</a></span>
                 </div>
                 <div class="tp-topbar-right">
                     <a href="#" aria-label="Facebook"><i data-lucide="facebook"></i></a>
@@ -109,12 +95,12 @@ $t=fn($ne,$en)=>$isNepali?$ne:$en;
         </div>
     </div>
 
-    <section class="page-header" style="background:linear-gradient(135deg,var(--dark-900),var(--dark-800));padding:var(--space-12) 0;color:#fff">
+    <section class="page-header" style="background:linear-gradient(135deg,var(--dark-900),var(--dark-800));padding:var(--sp-12) 0;color:#fff">
         <div class="container">
             <h1 class="page-title"><?=$t('सम्पर्क','Contact Us')?></h1>
         </div>
     </section>
-    <section class="section" style="padding:var(--space-12) 0">
+    <section class="section" style="padding:var(--sp-12) 0">
         <div class="container" style="max-width:600px">
             <div class="card card-body">
                 <div class="form-group">

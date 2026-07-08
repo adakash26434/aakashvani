@@ -30,39 +30,25 @@ $cities = [
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/premium.css">
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script src="/assets/js/lucide.min.js"></script>
     <style>
-        .weather-hero { background: linear-gradient(135deg, #1e3a5f, #2563eb); padding: var(--space-16) 0; color: #fff; text-align: center; }
-        .weather-main { display: flex; align-items: center; justify-content: center; gap: var(--space-6); margin-bottom: var(--space-4); }
+        .weather-hero { background: linear-gradient(135deg, #1e3a5f, #2563eb); padding: var(--sp-16) 0; color: #fff; text-align: center; }
+        .weather-main { display: flex; align-items: center; justify-content: center; gap: var(--sp-6); margin-bottom: var(--sp-4); }
         .weather-icon { font-size: 5rem; }
         .weather-temp { font-size: 5rem; font-weight: 800; line-height: 1; }
         .weather-unit { font-size: 2rem; font-weight: 400; opacity: 0.8; }
         .weather-desc { font-size: 1.5rem; opacity: 0.9; }
-        .weather-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: var(--space-4); margin-top: var(--space-8); }
-        .city-card { background: rgba(255,255,255,0.1); border-radius: var(--radius-xl); padding: var(--space-6); backdrop-filter: blur(10px); transition: all var(--transition); cursor: pointer; }
+        .weather-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: var(--sp-4); margin-top: var(--sp-8); }
+        .city-card { background: rgba(255,255,255,0.1); border-radius: var(--radius-xl); padding: var(--sp-6); backdrop-filter: blur(10px); transition: all var(--transition); cursor: pointer; }
         .city-card:hover { background: rgba(255,255,255,0.2); transform: translateY(-2px); }
-        .city-name { font-size: 1rem; font-weight: 600; margin-bottom: var(--space-2); }
+        .city-name { font-size: 1rem; font-weight: 600; margin-bottom: var(--sp-2); }
         .city-temp { font-size: 2rem; font-weight: 800; }
-        .section { padding: var(--space-12) 0; }
-        .weather-card { background: #fff; border-radius: var(--radius-xl); padding: var(--space-6); box-shadow: var(--shadow); }
-        .weather-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-4); margin-top: var(--space-6); }
-        .stat-item { text-align: center; padding: var(--space-4); background: var(--dark-50); border-radius: var(--radius-lg); }
+        .section { padding: var(--sp-12) 0; }
+        .weather-card { background: #fff; border-radius: var(--radius-xl); padding: var(--sp-6); box-shadow: var(--shadow); }
+        .weather-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--sp-4); margin-top: var(--sp-6); }
+        .stat-item { text-align: center; padding: var(--sp-4); background: var(--dark-50); border-radius: var(--radius-lg); }
         .stat-value { font-size: 1.5rem; font-weight: 700; color: var(--primary); }
-        .stat-label { font-size: 0.75rem; color: var(--dark-500); margin-top: var(--space-1); }
-    </style>
-
-    <style>
-        /* Responsive */
-        @media (max-width: 768px) {
-            .emergency-hero, .weather-hero, .tenders-hero { padding: var(--space-8) 0; }
-            .emergency-hero h1, .weather-hero h1, .tenders-hero h1 { font-size: 1.75rem; }
-            .emergency-grid, .weather-grid, .tender-card { padding: var(--space-4); }
-        }
-        
-        @media (max-width: 480px) {
-            .emergency-hero h1, .weather-hero h1, .tenders-hero h1 { font-size: 1.5rem; }
-            .emergency-number { font-size: 1.25rem; }
-        }
+        .stat-label { font-size: 0.75rem; color: var(--dark-500); margin-top: var(--sp-1); }
     </style>
 </head>
 <body>
@@ -72,7 +58,7 @@ $cities = [
             <div class="tp-topbar-inner">
                 <div class="tp-topbar-left">
                     <span class="tp-date"><?= date('l, j F Y') ?></span>
-                    <span class="tp-topbar-links"><a href="/unicode">Unicode</a><a href="?lang=en">English</a></span>
+                    <span class="tp-topbar-links"><a href="?">नेपाली</a><a href="?lang=en">English</a></span>
                 </div>
                 <div class="tp-topbar-right">
                     <a href="#" aria-label="Facebook"><i data-lucide="facebook"></i></a>
@@ -145,20 +131,20 @@ $cities = [
     <!-- Weather Hero -->
     <section class="weather-hero">
         <div class="container">
-            <h1 style="font-size: 1.25rem; opacity: 0.8; margin-bottom: var(--space-4);"><?= $t('नेपालको मौसम', 'Weather in Nepal') ?></h1>
+            <h1 style="font-size: 1.25rem; opacity: 0.8; margin-bottom: var(--sp-4);"><?= $t('नेपालको मौसम', 'Weather in Nepal') ?></h1>
             <div class="weather-main">
                 <span class="weather-icon" id="weather-icon">☀️</span>
                 <span class="weather-temp" id="weather-temp">--°</span>
             </div>
             <p class="weather-desc" id="weather-desc"><?= $t('लोड हुँदै...', 'Loading...') ?></p>
-            <p style="opacity: 0.7; margin-top: var(--space-2);" id="weather-city"><?= $t('काठमाडौं', 'Kathmandu') ?></p>
+            <p style="opacity: 0.7; margin-top: var(--sp-2);" id="weather-city"><?= $t('काठमाडौं', 'Kathmandu') ?></p>
         </div>
     </section>
 
     <!-- Weather Stats -->
-    <section class="section" style="margin-top: -var(--space-8);">
+    <section class="section" style="margin-top: -var(--sp-8);">
         <div class="container">
-            <div class="weather-card" style="margin-top: -var(--space-16);">
+            <div class="weather-card" style="margin-top: -var(--sp-16);">
                 <div class="weather-stats" id="weather-stats">
                     <div class="stat-item">
                         <div class="stat-value" id="stat-humidity">--%</div>
@@ -187,7 +173,7 @@ $cities = [
             <h2 class="text-xl font-bold mb-6"><?= $t('अन्य शहरहरू', 'Other Cities') ?></h2>
             <div class="weather-grid" id="city-grid">
                 <?php foreach ($cities as $city): ?>
-                <div class="city-card" onclick="loadCityWeather('<?= $city['en'] ?>')">
+                <div class="city-card" data-city="<?= htmlspecialchars($city['en']) ?>">
                     <div class="city-name"><?= $isNepali ? $city['name'] : $city['en'] ?></div>
                     <div class="city-temp" id="city-temp-<?= strtolower(str_replace(' ', '-', $city['en'])) ?>">--°</div>
                 </div>
@@ -322,7 +308,7 @@ $cities = [
             
             if (data.earthquakes && data.earthquakes.length > 0) {
                 container.innerHTML = data.earthquakes.slice(0, 3).map(eq => `
-                    <div class="alert ${eq.magnitude > 5 ? 'alert-error' : 'alert-warning'}" style="margin-bottom: var(--space-3);">
+                    <div class="alert ${eq.magnitude > 5 ? 'alert-error' : 'alert-warning'}" style="margin-bottom: var(--sp-3);">
                         <strong>${eq.magnitude} ${eq.magnitude_type || 'M'}</strong> - ${eq.location || 'नेपाल'}
                         <br><small>${eq.time || 'हाल'} | ${eq.depth || '?'} km गहिराइ</small>
                     </div>
@@ -338,6 +324,12 @@ $cities = [
     // Initialize
     document.addEventListener('DOMContentLoaded', function() {
         if (typeof lucide !== 'undefined') lucide.createIcons();
+        
+        // City card click delegation
+        document.querySelectorAll('.city-card[data-city]').forEach(card => {
+            card.style.cursor = 'pointer';
+            card.addEventListener('click', () => loadCityWeather(card.dataset.city));
+        });
         loadWeather();
         loadEarthquakes();
         (async function() {

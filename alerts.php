@@ -21,55 +21,55 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/premium.css">
     <style>
-        .alerts-hero { background: linear-gradient(135deg, #dc2626, #991b1b); padding: var(--space-12) 0; color: #fff; text-align: center; }
-        .alerts-hero h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: var(--space-2); }
-        .tabs-container { display: flex; gap: var(--space-2); justify-content: center; flex-wrap: wrap; margin-top: var(--space-6); }
-        .alert-tab { padding: var(--space-2) var(--space-4); background: rgba(255,255,255,0.2); border: none; border-radius: var(--radius-full); color: #fff; cursor: pointer; font-size: 0.875rem; transition: all var(--transition); }
+        .alerts-hero { background: linear-gradient(135deg, #dc2626, #991b1b); padding: var(--sp-12) 0; color: #fff; text-align: center; }
+        .alerts-hero h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: var(--sp-2); }
+        .tabs-container { display: flex; gap: var(--sp-2); justify-content: center; flex-wrap: wrap; margin-top: var(--sp-6); }
+        .alert-tab { padding: var(--sp-2) var(--sp-4); background: rgba(255,255,255,0.2); border: none; border-radius: var(--radius-full); color: #fff; cursor: pointer; font-size: 0.875rem; transition: all var(--transition); }
         .alert-tab:hover { background: rgba(255,255,255,0.3); }
         .alert-tab.active { background: #fff; color: #dc2626; }
-        .section { padding: var(--space-12) 0; }
+        .section { padding: var(--sp-12) 0; }
         .alert-section { display: none; }
         .alert-section.active { display: block; }
-        .eq-list { display: grid; gap: var(--space-4); }
-        .eq-card { background: #fff; border-radius: var(--radius-xl); padding: var(--space-6); box-shadow: var(--shadow); border-left: 4px solid var(--error); }
+        .eq-list { display: grid; gap: var(--sp-4); }
+        .eq-card { background: #fff; border-radius: var(--radius-xl); padding: var(--sp-6); box-shadow: var(--shadow); border-left: 4px solid var(--error); }
         .eq-card.moderate { border-left-color: #f59e0b; }
         .eq-card.minor { border-left-color: #16a34a; }
         .eq-mag { font-size: 3rem; font-weight: 800; color: var(--error); line-height: 1; }
         .eq-mag.moderate { color: #f59e0b; }
         .eq-mag.minor { color: #16a34a; }
-        .eq-meta { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4); margin-top: var(--space-4); }
+        .eq-meta { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-4); margin-top: var(--sp-4); }
         .eq-meta-item { text-align: center; }
         .eq-meta-label { font-size: 0.75rem; color: var(--dark-500); }
         .eq-meta-value { font-weight: 600; }
-        .weather-card { background: #fff; border-radius: var(--radius-xl); padding: var(--space-8); box-shadow: var(--shadow); }
-        .weather-main { display: flex; align-items: center; gap: var(--space-8); margin-bottom: var(--space-8); }
+        .weather-card { background: #fff; border-radius: var(--radius-xl); padding: var(--sp-8); box-shadow: var(--shadow); }
+        .weather-main { display: flex; align-items: center; gap: var(--sp-8); margin-bottom: var(--sp-8); }
         .weather-icon-big { font-size: 6rem; }
         .weather-temp-big { font-size: 5rem; font-weight: 800; color: var(--dark-900); }
-        .weather-info h2 { font-size: 1.5rem; font-weight: 600; margin-bottom: var(--space-2); }
-        .weather-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-4); }
-        .stat-box { background: var(--dark-50); border-radius: var(--radius-lg); padding: var(--space-4); text-align: center; }
+        .weather-info h2 { font-size: 1.5rem; font-weight: 600; margin-bottom: var(--sp-2); }
+        .weather-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--sp-4); }
+        .stat-box { background: var(--dark-50); border-radius: var(--radius-lg); padding: var(--sp-4); text-align: center; }
         .stat-box-value { font-size: 1.5rem; font-weight: 700; color: var(--primary); }
         .stat-box-label { font-size: 0.75rem; color: var(--dark-500); }
-        .police-list { display: grid; gap: var(--space-3); }
-        .police-item { background: #fff; border-radius: var(--radius-lg); padding: var(--space-4); box-shadow: var(--shadow-sm); display: flex; align-items: flex-start; gap: var(--space-3); }
+        .police-list { display: grid; gap: var(--sp-3); }
+        .police-item { background: #fff; border-radius: var(--radius-lg); padding: var(--sp-4); box-shadow: var(--shadow-sm); display: flex; align-items: flex-start; gap: var(--sp-3); }
         .police-icon { font-size: 1.5rem; }
         .police-content { flex: 1; }
-        .police-title { font-weight: 600; margin-bottom: var(--space-1); }
+        .police-title { font-weight: 600; margin-bottom: var(--sp-1); }
         .police-time { font-size: 0.75rem; color: var(--dark-500); }
-        .jobs-list { display: grid; gap: var(--space-4); }
-        .job-card { background: #fff; border-radius: var(--radius-xl); padding: var(--space-6); box-shadow: var(--shadow); }
-        .job-header { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--space-4); margin-bottom: var(--space-4); }
+        .jobs-list { display: grid; gap: var(--sp-4); }
+        .job-card { background: #fff; border-radius: var(--radius-xl); padding: var(--sp-6); box-shadow: var(--shadow); }
+        .job-header { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--sp-4); margin-bottom: var(--sp-4); }
         .job-title { font-size: 1.125rem; font-weight: 700; color: var(--dark-900); }
-        .job-org { font-size: 0.875rem; color: var(--dark-600); margin-top: var(--space-1); }
-        .job-badge { padding: var(--space-1) var(--space-3); border-radius: var(--radius-full); font-size: 0.75rem; font-weight: 600; background: var(--primary-50); color: var(--primary-700); }
+        .job-org { font-size: 0.875rem; color: var(--dark-600); margin-top: var(--sp-1); }
+        .job-badge { padding: var(--sp-1) var(--sp-3); border-radius: var(--radius-full); font-size: 0.75rem; font-weight: 600; background: var(--primary-50); color: var(--primary-700); }
         .job-deadline { font-size: 0.875rem; color: var(--dark-500); }
         .job-deadline strong { color: var(--error); }
-        .flight-list { display: grid; gap: var(--space-3); }
-        .flight-card { background: #fff; border-radius: var(--radius-xl); padding: var(--space-4); box-shadow: var(--shadow); display: flex; align-items: center; gap: var(--space-4); }
+        .flight-list { display: grid; gap: var(--sp-3); }
+        .flight-card { background: #fff; border-radius: var(--radius-xl); padding: var(--sp-4); box-shadow: var(--shadow); display: flex; align-items: center; gap: var(--sp-4); }
         .flight-icon { font-size: 2rem; }
         .flight-route { font-weight: 600; flex: 1; }
         .flight-time { font-size: 0.875rem; color: var(--dark-500); }
-        .flight-status { padding: var(--space-1) var(--space-3); border-radius: var(--radius-full); font-size: 0.75rem; font-weight: 600; }
+        .flight-status { padding: var(--sp-1) var(--sp-3); border-radius: var(--radius-full); font-size: 0.75rem; font-weight: 600; }
         .status-on-time { background: #dcfce7; color: #166534; }
         .status-delayed { background: #fef3c7; color: #92400e; }
         .status-cancelled { background: #fee2e2; color: #991b1b; }
@@ -87,7 +87,7 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
             <div class="tp-topbar-inner">
                 <div class="tp-topbar-left">
                     <span class="tp-date"><?= date('l, j F Y') ?></span>
-                    <span class="tp-topbar-links"><a href="/unicode">Unicode</a><a href="?lang=en">English</a></span>
+                    <span class="tp-topbar-links"><a href="?">नेपाली</a><a href="?lang=en">English</a></span>
                 </div>
                 <div class="tp-topbar-right">
                     <a href="#" aria-label="Facebook"><i data-lucide="facebook"></i></a>
@@ -177,10 +177,10 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
     <section class="section alert-section active" id="earthquake-section">
         <div class="container">
             <h2 class="text-xl font-bold mb-6">🌍 <?= $t('हालका भूकम्पहरू (USGS Data)', 'Recent Earthquakes (USGS Data)') ?></h2>
-            <p style="color: var(--dark-500); margin-bottom: var(--space-6);"><?= $t('यो USGS (United States Geological Survey) बाट Real-time डेटा हो। भूकम्प भविष्यवाणी गर्न सकिँदैन, तर हालका भूकम्पहरूको जानकारी प्राप्त गर्न सकिन्छ।', 'This is real-time data from USGS. Earthquakes cannot be predicted, but recent earthquake information is available.') ?></p>
+            <p style="color: var(--dark-500); margin-bottom: var(--sp-6);"><?= $t('यो USGS (United States Geological Survey) बाट Real-time डेटा हो। भूकम्प भविष्यवाणी गर्न सकिँदैन, तर हालका भूकम्पहरूको जानकारी प्राप्त गर्न सकिन्छ।', 'This is real-time data from USGS. Earthquakes cannot be predicted, but recent earthquake information is available.') ?></p>
             <div class="eq-list" id="eq-list">
                 <div class="eq-card">
-                    <div style="text-align: center; padding: var(--space-8);">
+                    <div style="text-align: center; padding: var(--sp-8);">
                         <div class="alert-loading"><?= $t('भूकम्प डेटा लोड हुँदै...', 'Loading earthquake data...') ?></div>
                     </div>
                 </div>
@@ -220,7 +220,7 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
                     </div>
                 </div>
             </div>
-            <p style="margin-top: var(--space-4); color: var(--dark-500); font-size: 0.875rem;"><?= $t('Source: Open-Meteo API', 'Source: Open-Meteo API') ?></p>
+            <p style="margin-top: var(--sp-4); color: var(--dark-500); font-size: 0.875rem;"><?= $t('Source: Open-Meteo API', 'Source: Open-Meteo API') ?></p>
         </div>
     </section>
 
@@ -228,10 +228,10 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
     <section class="section alert-section" id="police-section">
         <div class="container">
             <h2 class="text-xl font-bold mb-6">🚨 <?= $t('नेपाल प्रहरी सूचनाहरू', 'Nepal Police Updates') ?></h2>
-            <p style="color: var(--dark-500); margin-bottom: var(--space-6);"><?= $t('नेपाल प्रहरीको सार्वजनिक सूचनाहरू - ट्राफिक, सडक अवरोध, र सार्वजनिक सूचनाहरू।', 'Nepal Police public notices - traffic, road closures, and public notices.') ?></p>
+            <p style="color: var(--dark-500); margin-bottom: var(--sp-6);"><?= $t('नेपाल प्रहरीको सार्वजनिक सूचनाहरू - ट्राफिक, सडक अवरोध, र सार्वजनिक सूचनाहरू।', 'Nepal Police public notices - traffic, road closures, and public notices.') ?></p>
             <div class="police-list" id="police-list">
                 <div class="police-item">
-                    <div class="alert-loading" style="padding: var(--space-8); text-align: center; width: 100%;"><?= $t('प्रहरी सूचना लोड हुँदै...', 'Loading police updates...') ?></div>
+                    <div class="alert-loading" style="padding: var(--sp-8); text-align: center; width: 100%;"><?= $t('प्रहरी सूचना लोड हुँदै...', 'Loading police updates...') ?></div>
                 </div>
             </div>
         </div>
@@ -241,7 +241,7 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
     <section class="section alert-section" id="jobs-section">
         <div class="container">
             <h2 class="text-xl font-bold mb-6">💼 <?= $t('सरकारी जobs', 'Government Jobs') ?></h2>
-            <div class="alert alert-info" style="margin-bottom: var(--space-6);">
+            <div class="alert alert-info" style="margin-bottom: var(--sp-6);">
                 <strong>ℹ️ Source</strong>: <?= $t('Lok Sewa Aayog र विभिन्न नेपाली समाचार स्रोतहरूबाट।', 'From Lok Sewa Aayog and various Nepali news sources.') ?>
             </div>
             <div class="jobs-list" id="jobs-list">
@@ -253,7 +253,7 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
                         </div>
                         <span class="job-badge"><?= $t('नयाँ', 'New') ?></span>
                     </div>
-                    <p style="color: var(--dark-500); margin-top: var(--space-3);"><?= $t('Lok Sewa Aayog को आधिकारिक वेबसाइटमा जानुहोस्: loksewaaayog.gov.np', 'Visit official Lok Sewa Aayog website: loksewaaayog.gov.np') ?></p>
+                    <p style="color: var(--dark-500); margin-top: var(--sp-3);"><?= $t('Lok Sewa Aayog को आधिकारिक वेबसाइटमा जानुहोस्: loksewaaayog.gov.np', 'Visit official Lok Sewa Aayog website: loksewaaayog.gov.np') ?></p>
                 </div>
             </div>
         </div>
@@ -263,7 +263,7 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
     <section class="section alert-section" id="flights-section">
         <div class="container">
             <h2 class="text-xl font-bold mb-6">✈️ <?= $t('हवाई उडान स्थिति', 'Flight Status') ?></h2>
-            <div class="alert alert-info" style="margin-bottom: var(--space-6);">
+            <div class="alert alert-info" style="margin-bottom: var(--sp-6);">
                 <strong>ℹ️ Source</strong>: <?= $t('AviationStack API बाट TIA (VNKT) को उडानहरू। API Key कुञ्फिगर गर्न AviationStack मा निःशुल्क साइनअप गर्नुहोस्।', 'Flight data from AviationStack API for TIA (VNKT). Configure API key by signing up at AviationStack.') ?>
                 <br><small><a href="https://aviationstack.com" target="_blank">aviationstack.com</a> - <?= $t('निःशुल्क 100 रिक्वेस्ट/महिना', 'Free 100 requests/month') ?></small>
             </div>
@@ -280,7 +280,7 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
                     <div class="flight-time">14:00</div>
                     <span class="flight-status status-delayed"><?= $t('विलम्बित', 'Delayed') ?></span>
                 </div>
-                <p style="margin-top: var(--space-4); color: var(--dark-500); font-size: 0.875rem;">
+                <p style="margin-top: var(--sp-4); color: var(--dark-500); font-size: 0.875rem;">
                     <?= $t('यात्रुहरूले TIA को आधिकारिक वेबसाइट: facskyportal.com.np मा जानकारी हेर्नुहोस्।', 'Passengers should check official TIA website: facskyportal.com.np') ?>
                 </p>
             </div>
@@ -368,7 +368,7 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
                     return `
                         <div class="eq-card ${magClass}">
                             <div class="eq-mag ${magClass}">${eq.magnitude} <span style="font-size: 1rem;">M</span></div>
-                            <h3 style="margin-top: var(--space-3);">${eq.place || 'नेपाल क्षेत्र'}</h3>
+                            <h3 style="margin-top: var(--sp-3);">${eq.place || 'नेपाल क्षेत्र'}</h3>
                             <div class="eq-meta">
                                 <div class="eq-meta-item">
                                     <div class="eq-meta-label"><?= $t('गहिराइ', 'Depth') ?></div>
@@ -387,10 +387,10 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
                     `;
                 }).join('');
             } else {
-                container.innerHTML = '<div class="eq-card"><p style="text-align:center; padding: var(--space-8);">✓ <?= $t('हाल कुनै भूकम्प भएको छैन', 'No earthquakes currently') ?></p></div>';
+                container.innerHTML = '<div class="eq-card"><p style="text-align:center; padding: var(--sp-8);">✓ <?= $t('हाल कुनै भूकम्प भएको छैन', 'No earthquakes currently') ?></p></div>';
             }
         } catch (e) {
-            document.getElementById('eq-list').innerHTML = '<div class="eq-card"><p style="text-align:center; padding: var(--space-8); color: var(--dark-500);"><?= $t('भूकम्प डेटा उपलब्ध छैन', 'Earthquake data unavailable') ?></p></div>';
+            document.getElementById('eq-list').innerHTML = '<div class="eq-card"><p style="text-align:center; padding: var(--sp-8); color: var(--dark-500);"><?= $t('भूकम्प डेटा उपलब्ध छैन', 'Earthquake data unavailable') ?></p></div>';
         }
     }
 
@@ -431,10 +431,10 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
                     </div>
                 `).join('');
             } else {
-                container.innerHTML = '<div class="police-item"><p style="text-align:center; padding: var(--space-6); width:100%;">✓ <?= $t('कुनै सूचना छैन', 'No notices') ?></p></div>';
+                container.innerHTML = '<div class="police-item"><p style="text-align:center; padding: var(--sp-6); width:100%;">✓ <?= $t('कुनै सूचना छैन', 'No notices') ?></p></div>';
             }
         } catch (e) {
-            document.getElementById('police-list').innerHTML = '<div class="police-item"><p style="text-align:center; padding: var(--space-6);"><?= $t('प्रहरी डेटा उपलब्ध छैन', 'Police data unavailable') ?></p></div>';
+            document.getElementById('police-list').innerHTML = '<div class="police-item"><p style="text-align:center; padding: var(--sp-6);"><?= $t('प्रहरी डेटा उपलब्ध छैन', 'Police data unavailable') ?></p></div>';
         }
     }
 
@@ -460,10 +460,10 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
                     </div>
                 `).join('');
             } else {
-                container.innerHTML = '<div class="job-card"><p style="text-align:center; padding: var(--space-6);"><?= $t('जobs उपलब्ध छैन', 'No jobs available') ?></p></div>';
+                container.innerHTML = '<div class="job-card"><p style="text-align:center; padding: var(--sp-6);"><?= $t('जobs उपलब्ध छैन', 'No jobs available') ?></p></div>';
             }
         } catch (e) {
-            document.getElementById('jobs-list').innerHTML = '<div class="job-card"><p style="text-align:center; padding: var(--space-6);"><?= $t('जobs डेटा उपलब्ध छैन', 'Jobs data unavailable') ?></p></div>';
+            document.getElementById('jobs-list').innerHTML = '<div class="job-card"><p style="text-align:center; padding: var(--sp-6);"><?= $t('जobs डेटा उपलब्ध छैन', 'Jobs data unavailable') ?></p></div>';
         }
     }
 
@@ -483,10 +483,10 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
                     </div>
                 `).join('');
             } else {
-                container.innerHTML = '<div class="flight-card"><p style="text-align:center; padding: var(--space-6); width:100%;"><?= $t('उडान जानकारी उपलब्ध छैन', 'Flight info unavailable') ?></p></div>';
+                container.innerHTML = '<div class="flight-card"><p style="text-align:center; padding: var(--sp-6); width:100%;"><?= $t('उडान जानकारी उपलब्ध छैन', 'Flight info unavailable') ?></p></div>';
             }
         } catch (e) {
-            document.getElementById('flight-list').innerHTML = '<div class="flight-card"><p style="text-align:center; padding: var(--space-6);"><?= $t('उडान डेटा उपलब्ध छैन', 'Flight data unavailable') ?></p></div>';
+            document.getElementById('flight-list').innerHTML = '<div class="flight-card"><p style="text-align:center; padding: var(--sp-6);"><?= $t('उडान डेटा उपलब्ध छैन', 'Flight data unavailable') ?></p></div>';
         }
     }
 

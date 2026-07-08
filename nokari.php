@@ -20,22 +20,22 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/premium.css">
     <style>
-        .page-header { background: linear-gradient(135deg, #059669, #10b981); padding: var(--space-8) 0; color: #fff; }
-        .job-card { background: #fff; border-radius: var(--radius-xl); padding: var(--space-6); box-shadow: var(--shadow); margin-bottom: var(--space-4); border-left: 4px solid #059669; }
-        .job-title { font-size: 1.125rem; font-weight: 700; color: var(--dark-900); margin-bottom: var(--space-2); }
-        .job-company { font-size: 0.875rem; color: #059669; font-weight: 600; margin-bottom: var(--space-2); }
-        .job-meta { display: flex; flex-wrap: wrap; gap: var(--space-3); font-size: 0.75rem; color: var(--dark-500); margin-bottom: var(--space-3); }
+        .page-header { background: linear-gradient(135deg, #059669, #10b981); padding: var(--sp-8) 0; color: #fff; }
+        .job-card { background: #fff; border-radius: var(--radius-xl); padding: var(--sp-6); box-shadow: var(--shadow); margin-bottom: var(--sp-4); border-left: 4px solid #059669; }
+        .job-title { font-size: 1.125rem; font-weight: 700; color: var(--dark-900); margin-bottom: var(--sp-2); }
+        .job-company { font-size: 0.875rem; color: #059669; font-weight: 600; margin-bottom: var(--sp-2); }
+        .job-meta { display: flex; flex-wrap: wrap; gap: var(--sp-3); font-size: 0.75rem; color: var(--dark-500); margin-bottom: var(--sp-3); }
         .job-meta span { display: flex; align-items: center; gap: 4px; }
-        .job-desc { font-size: 0.875rem; color: var(--dark-600); margin-bottom: var(--space-3); line-height: 1.6; }
+        .job-desc { font-size: 0.875rem; color: var(--dark-600); margin-bottom: var(--sp-3); line-height: 1.6; }
         .job-salary { font-size: 1rem; font-weight: 700; color: #059669; }
         .job-badge { display: inline-block; padding: 2px 10px; border-radius: var(--radius-full); font-size: 0.75rem; font-weight: 600; }
         .badge-new { background: #dcfce7; color: #16a34a; }
         .badge-hot { background: #fee2e2; color: #dc2626; }
-        .section { padding: var(--space-8) 0; }
-        .loading-spinner { display: flex; justify-content: center; padding: var(--space-12); }
+        .section { padding: var(--sp-8) 0; }
+        .loading-spinner { display: flex; justify-content: center; padding: var(--sp-12); }
         .spinner { width: 40px; height: 40px; border: 3px solid var(--dark-200); border-top-color: #059669; border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
-        @media (max-width: 768px) { .job-meta { gap: var(--space-2); } }
+        @media (max-width: 768px) { .job-meta { gap: var(--sp-2); } }
     </style>
 </head>
 <body>
@@ -46,7 +46,7 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
             <div class="tp-topbar-inner">
                 <div class="tp-topbar-left">
                     <span class="tp-date"><?= date('l, j F Y') ?></span>
-                    <span class="tp-topbar-links"><a href="/unicode">Unicode</a><a href="?lang=en">English</a></span>
+                    <span class="tp-topbar-links"><a href="?">नेपाली</a><a href="?lang=en">English</a></span>
                 </div>
                 <div class="tp-topbar-right">
                     <a href="#" aria-label="Facebook"><i data-lucide="facebook"></i></a>
@@ -131,10 +131,10 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
         <div class="container" style="max-width: 900px;">
             <div id="jobs-loading" class="loading-spinner"><div class="spinner"></div></div>
             <div id="jobs-list" style="display:none"></div>
-            <div id="jobs-empty" style="display:none;text-align:center;padding:var(--space-8);color:var(--dark-500)">
+            <div id="jobs-empty" style="display:none;text-align:center;padding:var(--sp-8);color:var(--dark-500)">
                 <?= $t('हाल कुनै नोकरी छैन', 'No jobs available at this time') ?>
             </div>
-            <div id="jobs-error" style="display:none;text-align:center;padding:var(--space-8);color:var(--error)">
+            <div id="jobs-error" style="display:none;text-align:center;padding:var(--sp-8);color:var(--error)">
                 <?= $t('डाटा लोड हुन सकेन', 'Failed to load data') ?>
             </div>
         </div>
@@ -216,7 +216,7 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
         }
         list.innerHTML = jobs.map(job => {
             const badge = job.is_new ? '<span class="job-badge badge-new"><?= $t("नयाँ", "New") ?></span>' : '';
-            return '<div class="job-card"><div class="flex justify-between items-start gap-4" style="margin-bottom:var(--space-2)"><h3 class="job-title">' + (job.title || job.position || '---') + '</h3>' + badge + '</div><p class="job-company">' + (job.company || job.employer || '---') + '</p><div class="job-meta"><span>📍 ' + (job.location || '---') + '</span>' + (job.salary ? '<span>💰 ' + job.salary + '</span>' : '') + (job.deadline ? '<span>⏰ ' + job.deadline + '</span>' : '') + '</div><p class="job-desc">' + (job.description || job.desc || '') + '</p>' + (job.link ? '<a href="' + job.link + '" target="_blank" style="display:inline-block;padding:var(--space-2) var(--space-4);background:#059669;color:#fff;border-radius:var(--radius-lg);font-size:0.875rem;text-decoration:none"><?= $t("आवेदन दिनुहोस्", "Apply Now") ?> →</a>' : '') + '</div>';
+            return '<div class="job-card"><div class="flex justify-between items-start gap-4" style="margin-bottom:var(--sp-2)"><h3 class="job-title">' + (job.title || job.position || '---') + '</h3>' + badge + '</div><p class="job-company">' + (job.company || job.employer || '---') + '</p><div class="job-meta"><span>📍 ' + (job.location || '---') + '</span>' + (job.salary ? '<span>💰 ' + job.salary + '</span>' : '') + (job.deadline ? '<span>⏰ ' + job.deadline + '</span>' : '') + '</div><p class="job-desc">' + (job.description || job.desc || '') + '</p>' + (job.link ? '<a href="' + job.link + '" target="_blank" style="display:inline-block;padding:var(--sp-2) var(--sp-4);background:#059669;color:#fff;border-radius:var(--radius-lg);font-size:0.875rem;text-decoration:none"><?= $t("आवेदन दिनुहोस्", "Apply Now") ?> →</a>' : '') + '</div>';
         }).join('');
     }
     document.addEventListener('DOMContentLoaded', loadJobs);

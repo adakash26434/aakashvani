@@ -85,16 +85,16 @@ $sections = [
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/premium.css">
     <style>
-        .hub-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-6); }
+        .hub-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-6); }
         @media (max-width: 1024px) { .hub-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 640px) { .hub-grid { grid-template-columns: 1fr; } }
         .hub-card { background: #fff; border-radius: var(--radius-xl); border: 1px solid var(--dark-100); overflow: hidden; transition: all var(--transition); }
         .hub-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
-        .hub-header { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-4); border-bottom: 1px solid var(--dark-100); }
+        .hub-header { display: flex; align-items: center; gap: var(--sp-3); padding: var(--sp-4); border-bottom: 1px solid var(--dark-100); }
         .hub-icon { width: 40px; height: 40px; border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; color: #fff; }
         .hub-title { font-size: 1rem; font-weight: 700; color: var(--dark-900); }
-        .hub-items { padding: var(--space-2); }
-        .hub-item { display: flex; align-items: center; justify-content: space-between; padding: var(--space-3); border-radius: var(--radius); transition: background var(--transition); }
+        .hub-items { padding: var(--sp-2); }
+        .hub-item { display: flex; align-items: center; justify-content: space-between; padding: var(--sp-3); border-radius: var(--radius); transition: background var(--transition); }
         .hub-item:hover { background: var(--dark-50); }
         .hub-item span { font-size: 0.875rem; color: var(--dark-700); }
         .hub-item svg { color: var(--dark-400); width: 16px; height: 16px; }
@@ -107,7 +107,7 @@ $sections = [
             <div class="tp-topbar-inner">
                 <div class="tp-topbar-left">
                     <span class="tp-date"><?= date('l, j F Y') ?></span>
-                    <span class="tp-topbar-links"><a href="/unicode">Unicode</a><a href="?lang=en">English</a></span>
+                    <span class="tp-topbar-links"><a href="?">नेपाली</a><a href="?lang=en">English</a></span>
                 </div>
                 <div class="tp-topbar-right">
                     <a href="#" aria-label="Facebook"><i data-lucide="facebook"></i></a>
@@ -178,7 +178,7 @@ $sections = [
     </div>
 
     
-    <section class="page-header" style="background:linear-gradient(135deg,var(--dark-900),var(--dark-800));padding:var(--space-12) 0;color:#fff">
+    <section class="page-header" style="background:linear-gradient(135deg,var(--dark-900),var(--dark-800));padding:var(--sp-12) 0;color:#fff">
         <div class="container">
             <h1 class="page-title" style="display:flex;align-items:center;gap:12px;color:#fff">
                 <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--primary)"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
@@ -188,7 +188,7 @@ $sections = [
         </div>
     </section>
     
-    <section style="padding:var(--space-12) 0">
+    <section style="padding:var(--sp-12) 0">
         <div class="container">
             <div class="hub-grid">
                 <?php foreach ($sections as $section): ?>

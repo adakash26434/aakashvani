@@ -18,27 +18,16 @@ $t=fn($ne,$en)=>$isNepali?$ne:$en;
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/premium.css">
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script src="/assets/js/lucide.min.js"></script>
     <style>
-        .page-header{background:linear-gradient(135deg,var(--dark-900),var(--dark-800));padding:var(--space-12) 0;color:#fff}
-        .services-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:var(--space-6)}
-        .service-card{background:#fff;border-radius:var(--radius-xl);border:1px solid var(--dark-100);padding:var(--space-8);text-align:center;transition:all var(--transition);text-decoration:none;display:block}
+        .page-header{background:linear-gradient(135deg,var(--dark-900),var(--dark-800));padding:var(--sp-12) 0;color:#fff}
+        .services-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:var(--sp-6)}
+        .service-card{background:#fff;border-radius:var(--radius-xl);border:1px solid var(--dark-100);padding:var(--sp-8);text-align:center;transition:all var(--transition);text-decoration:none;display:block}
         .service-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);border-color:var(--primary)}
-        .service-icon{width:72px;height:72px;background:var(--primary-50);border-radius:var(--radius-xl);display:flex;align-items:center;justify-content:center;margin:0 auto var(--space-4);color:var(--primary)}
-        .service-name{font-size:1.125rem;font-weight:700;color:var(--dark-900);margin-bottom:var(--space-2)}
+        .service-icon{width:72px;height:72px;background:var(--primary-50);border-radius:var(--radius-xl);display:flex;align-items:center;justify-content:center;margin:0 auto var(--sp-4);color:var(--primary)}
+        .service-name{font-size:1.125rem;font-weight:700;color:var(--dark-900);margin-bottom:var(--sp-2)}
         .service-desc{font-size:0.875rem;color:var(--dark-500)}
-        .section{padding:var(--space-12) 0}
-        /* Responsive */
-        @media (max-width: 768px) {
-            .page-header { padding: var(--space-8) 0; }
-            .page-header h1 { font-size: 1.75rem; }
-            .content-section { padding: var(--space-6) 0; }
-        }
-        
-        @media (max-width: 480px) {
-            .page-header h1 { font-size: 1.5rem; }
-            .btn { padding: var(--space-2) var(--space-4); font-size: 0.875rem; }
-        }
+        .section{padding:var(--sp-12) 0}
     </style>
 </head>
 <body>
@@ -48,7 +37,7 @@ $t=fn($ne,$en)=>$isNepali?$ne:$en;
             <div class="tp-topbar-inner">
                 <div class="tp-topbar-left">
                     <span class="tp-date"><?= date('l, j F Y') ?></span>
-                    <span class="tp-topbar-links"><a href="/unicode">Unicode</a><a href="?lang=en">English</a></span>
+                    <span class="tp-topbar-links"><a href="?">नेपाली</a><a href="?lang=en">English</a></span>
                 </div>
                 <div class="tp-topbar-right">
                     <a href="#" aria-label="Facebook"><i data-lucide="facebook"></i></a>
@@ -130,17 +119,17 @@ $t=fn($ne,$en)=>$isNepali?$ne:$en;
     <section class="section">
         <div class="container">
             <!-- Category Filter -->
-            <div class="flex gap-4 mb-6" style="flex-wrap:wrap;gap:var(--space-3);margin-bottom:var(--space-6)">
-                <button class="btn-cat active" data-cat="all" style="padding:var(--space-2) var(--space-4);border:1px solid var(--dark-200);border-radius:var(--radius-full);background:var(--primary);color:#fff;cursor:pointer"><?=$t('सबै','All')?></button>
-                <button class="btn-cat" data-cat="citizenship" style="padding:var(--space-2) var(--space-4);border:1px solid var(--dark-200);border-radius:var(--radius-full);background:#fff;cursor:pointer"><?=$t('नागरिकता','Citizenship')?></button>
-                <button class="btn-cat" data-cat="passport" style="padding:var(--space-2) var(--space-4);border:1px solid var(--dark-200);border-radius:var(--radius-full);background:#fff;cursor:pointer"><?=$t('राहदानी','Passport')?></button>
-                <button class="btn-cat" data-cat="tax" style="padding:var(--space-2) var(--space-4);border:1px solid var(--dark-200);border-radius:var(--radius-full);background:#fff;cursor:pointer"><?=$t('कर','Tax')?></button>
-                <button class="btn-cat" data-cat="land" style="padding:var(--space-2) var(--space-4);border:1px solid var(--dark-200);border-radius:var(--radius-full);background:#fff;cursor:pointer"><?=$t('जग्गा','Land')?></button>
-                <button class="btn-cat" data-cat="education" style="padding:var(--space-2) var(--space-4);border:1px solid var(--dark-200);border-radius:var(--radius-full);background:#fff;cursor:pointer"><?=$t('शिक्षा','Education')?></button>
+            <div class="flex gap-4 mb-6" style="flex-wrap:wrap;gap:var(--sp-3);margin-bottom:var(--sp-6)">
+                <button class="btn-cat active" data-cat="all" style="padding:var(--sp-2) var(--sp-4);border:1px solid var(--dark-200);border-radius:var(--radius-full);background:var(--primary);color:#fff;cursor:pointer"><?=$t('सबै','All')?></button>
+                <button class="btn-cat" data-cat="citizenship" style="padding:var(--sp-2) var(--sp-4);border:1px solid var(--dark-200);border-radius:var(--radius-full);background:#fff;cursor:pointer"><?=$t('नागरिकता','Citizenship')?></button>
+                <button class="btn-cat" data-cat="passport" style="padding:var(--sp-2) var(--sp-4);border:1px solid var(--dark-200);border-radius:var(--radius-full);background:#fff;cursor:pointer"><?=$t('राहदानी','Passport')?></button>
+                <button class="btn-cat" data-cat="tax" style="padding:var(--sp-2) var(--sp-4);border:1px solid var(--dark-200);border-radius:var(--radius-full);background:#fff;cursor:pointer"><?=$t('कर','Tax')?></button>
+                <button class="btn-cat" data-cat="land" style="padding:var(--sp-2) var(--sp-4);border:1px solid var(--dark-200);border-radius:var(--radius-full);background:#fff;cursor:pointer"><?=$t('जग्गा','Land')?></button>
+                <button class="btn-cat" data-cat="education" style="padding:var(--sp-2) var(--sp-4);border:1px solid var(--dark-200);border-radius:var(--radius-full);background:#fff;cursor:pointer"><?=$t('शिक्षा','Education')?></button>
             </div>
-            <div id="services-loading" style="text-align:center;padding:var(--space-8)"><div class="spinner" style="width:40px;height:40px;border:3px solid var(--dark-200);border-top-color:var(--primary);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto"></div></div>
+            <div id="services-loading" style="text-align:center;padding:var(--sp-8)"><div class="spinner" style="width:40px;height:40px;border:3px solid var(--dark-200);border-top-color:var(--primary);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto"></div></div>
             <div id="services-grid" class="services-grid" style="display:none"></div>
-            <div id="services-error" style="display:none;text-align:center;padding:var(--space-8);color:var(--error)"><?=$t('सेवा लोड हुन सकेन','Failed to load services')?></div>
+            <div id="services-error" style="display:none;text-align:center;padding:var(--sp-8);color:var(--error)"><?=$t('सेवा लोड हुन सकेन','Failed to load services')?></div>
         </div>
     </section>
     <!-- FOOTER -->
@@ -196,6 +185,14 @@ $t=fn($ne,$en)=>$isNepali?$ne:$en;
     </footer>
 
     <script>
+const i18n = {
+    errorMsg: 'i18n.errorMsg',
+    reload: '<?= $t("पुनः लोड गर्नुहोस्","Reload")?>',
+    requiredDocs: '<?= $t("आवश्यक कागजात","Required Docs")?>',
+    fee: '<?= $t("शुल्क","Fee")?>',
+    time: '<?= $t("समय","Time")?>',
+    website: '<?= $t("वेबसाइट","Website")?>'
+};
 let allServices = {};
 async function loadServices() {
     const grid = document.getElementById('services-grid');
@@ -218,7 +215,7 @@ async function loadServices() {
         console.error('Services load error:', e);
         loading.style.display = 'none'; 
         error.style.display = 'block';
-        error.innerHTML = '<p style="color:var(--error);text-align:center;padding:var(--space-4)"><?= $t("सेवा लोड हुन सकेन। कृपया पुनः प्रयास गर्नुहोस्।","Services failed to load. Please try again.") ?></p><button onclick="loadServices()" class="btn btn-primary"><?= $t("पुनः लोड गर्नुहोस्","Reload") ?></button>';
+        error.innerHTML = '<p style="color:var(--error);text-align:center;padding:var(--sp-4)"><?= $t("सेवा लोड हुन सकेन। कृपया पुनः प्रयास गर्नुहोस्।","Services failed to load. Please try again.") ?></p><button onclick="loadServices()" class="btn btn-primary">i18n.reload</button>';
     }
 }
 function renderServices(cat) {
@@ -228,13 +225,13 @@ function renderServices(cat) {
     cats.forEach(c => {
         if (allServices[c]) {
             allServices[c].forEach(svc => {
-                html += '<div class="service-card" style="background:#fff;border-radius:var(--radius-xl);border:1px solid var(--dark-100);padding:var(--space-6);text-align:left">';
-                html += '<h3 style="font-size:1.125rem;font-weight:700;color:var(--dark-900);margin-bottom:var(--space-2)">' + svc.name + '</h3>';
-                html += '<p style="font-size:0.875rem;color:var(--dark-500);margin-bottom:var(--space-3)">' + svc.desc + '</p>';
-                html += '<div style="font-size:0.75rem;color:var(--dark-400);margin-bottom:var(--space-2)"><strong><?= $t("आवश्यक कागजात","Required Docs") ?>:</strong> ' + (svc.docs ? svc.docs.join(', ') : '-') + '</div>';
-                html += '<div style="font-size:0.75rem;color:var(--dark-400);margin-bottom:var(--space-2)"><strong><?= $t("शुल्क","Fee") ?>:</strong> ' + svc.fee + '</div>';
-                html += '<div style="font-size:0.75rem;color:var(--dark-400);margin-bottom:var(--space-3)"><strong><?= $t("समय","Time") ?>:</strong> ' + svc.time + '</div>';
-                if (svc.url) html += '<a href="' + svc.url + '" target="_blank" style="display:inline-block;padding:var(--space-2) var(--space-4);background:var(--primary);color:#fff;border-radius:var(--radius-lg);font-size:0.875rem;text-decoration:none"><?= $t("वेबसाइट","Website") ?> →</a>';
+                html += '<div class="service-card" style="background:#fff;border-radius:var(--radius-xl);border:1px solid var(--dark-100);padding:var(--sp-6);text-align:left">';
+                html += '<h3 style="font-size:1.125rem;font-weight:700;color:var(--dark-900);margin-bottom:var(--sp-2)">' + svc.name + '</h3>';
+                html += '<p style="font-size:0.875rem;color:var(--dark-500);margin-bottom:var(--sp-3)">' + svc.desc + '</p>';
+                html += '<div style="font-size:0.75rem;color:var(--dark-400);margin-bottom:var(--sp-2)"><strong>i18n.requiredDocs:</strong> ' + (svc.docs ? svc.docs.join(', ') : '-') + '</div>';
+                html += '<div style="font-size:0.75rem;color:var(--dark-400);margin-bottom:var(--sp-2)"><strong>i18n.fee:</strong> ' + svc.fee + '</div>';
+                html += '<div style="font-size:0.75rem;color:var(--dark-400);margin-bottom:var(--sp-3)"><strong>i18n.time:</strong> ' + svc.time + '</div>';
+                if (svc.url) html += '<a href="' + svc.url + '" target="_blank" style="display:inline-block;padding:var(--sp-2) var(--sp-4);background:var(--primary);color:#fff;border-radius:var(--radius-lg);font-size:0.875rem;text-decoration:none">i18n.website →</a>';
                 html += '</div>';
             });
         }
@@ -253,7 +250,7 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.addEventListener('click', () => renderServices(btn.dataset.cat));
     }
         (function() {
-            var s=document.createElement('script');s.src='https://unpkg.com/lucide@latest/dist/umd/lucide.min.js';document.head.appendChild(s);
+            var s=document.createElement('script');s.src='/assets/js/lucide.min.js';document.head.appendChild(s);
         })();
 );
 });
@@ -262,7 +259,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (typeof lucide !== 'undefined') lucide.createIcons();
     }
         (function() {
-            var s=document.createElement('script');s.src='https://unpkg.com/lucide@latest/dist/umd/lucide.min.js';document.head.appendChild(s);
+            var s=document.createElement('script');s.src='/assets/js/lucide.min.js';document.head.appendChild(s);
         })();
 );</script>
 

@@ -36,41 +36,41 @@ if($selectedRashi){foreach($rashis as$r){if($r['id']===$selectedRashi){$selected
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/premium.css">
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script src="/assets/js/lucide.min.js"></script>
     <style>
-        .page-header{background:linear-gradient(135deg,var(--dark-900),var(--dark-800));padding:var(--space-12) 0;color:#fff}
-        .rashi-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:var(--space-4)}
+        .page-header{background:linear-gradient(135deg,var(--dark-900),var(--dark-800));padding:var(--sp-12) 0;color:#fff}
+        .rashi-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:var(--sp-4)}
         @media(max-width:768px){.rashi-grid{grid-template-columns:repeat(4,1fr)}}
         @media(max-width:480px){.rashi-grid{grid-template-columns:repeat(3,1fr)}}
-        .rashi-card{display:flex;flex-direction:column;align-items:center;gap:var(--space-2);padding:var(--space-4);background:#fff;border-radius:var(--radius-xl);border:1px solid var(--dark-100);text-decoration:none;transition:all var(--transition)}
+        .rashi-card{display:flex;flex-direction:column;align-items:center;gap:var(--sp-2);padding:var(--sp-4);background:#fff;border-radius:var(--radius-xl);border:1px solid var(--dark-100);text-decoration:none;transition:all var(--transition)}
         .rashi-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);border-color:var(--rashi-color)}
         .rashi-symbol{font-size:2rem;color:var(--rashi-color)}
         .rashi-name{font-size:0.875rem;font-weight:600;color:var(--dark-900)}
         .rashi-element{font-size:0.75rem;color:var(--dark-400)}
-        .section{padding:var(--space-12) 0}
+        .section{padding:var(--sp-12) 0}
         .rashi-grid{grid-template-columns:repeat(6,1fr)}
         @media(max-width:1024px){.rashi-grid{grid-template-columns:repeat(4,1fr)}}
         @media(max-width:768px){.rashi-grid{grid-template-columns:repeat(3,1fr)}}
         .rashi-card.active{background:var(--rashi-color)}
         .rashi-card.active .rashi-symbol,.rashi-card.active .rashi-name,.rashi-card.active .rashi-element{color:#fff}
-        .rashifal-content{background:#fff;border-radius:var(--radius-xl);padding:var(--space-8);box-shadow:var(--shadow);margin-top:var(--space-6)}
-        .rashifal-section{margin-bottom:var(--space-6);padding-bottom:var(--space-6);border-bottom:1px solid var(--dark-100)}
+        .rashifal-content{background:#fff;border-radius:var(--radius-xl);padding:var(--sp-8);box-shadow:var(--shadow);margin-top:var(--sp-6)}
+        .rashifal-section{margin-bottom:var(--sp-6);padding-bottom:var(--sp-6);border-bottom:1px solid var(--dark-100)}
         .rashifal-section:last-child{border-bottom:none}
-        .rashifal-title{font-size:1.125rem;font-weight:700;color:var(--dark-900);margin-bottom:var(--space-4)}
+        .rashifal-title{font-size:1.125rem;font-weight:700;color:var(--dark-900);margin-bottom:var(--sp-4)}
         .rashifal-text{font-size:1rem;line-height:1.8;color:var(--dark-700)}
-        .rashifal-meta{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-4);margin-top:var(--space-6)}
-        .rashifal-badge{text-align:center;padding:var(--space-4);background:var(--dark-50);border-radius:var(--radius-lg)}
+        .rashifal-meta{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-4);margin-top:var(--sp-6)}
+        .rashifal-badge{text-align:center;padding:var(--sp-4);background:var(--dark-50);border-radius:var(--radius-lg)}
         .rashifal-badge-value{font-size:1.5rem;font-weight:700;color:var(--primary)}
-        .rashifal-badge-label{font-size:0.75rem;color:var(--dark-500);margin-top:var(--space-1)}
-        .loading-spinner{display:flex;justify-content:center;padding:var(--space-12)}
+        .rashifal-badge-label{font-size:0.75rem;color:var(--dark-500);margin-top:var(--sp-1)}
+        .loading-spinner{display:flex;justify-content:center;padding:var(--sp-12)}
         .spinner{width:40px;height:40px;border:3px solid var(--dark-200);border-top-color:var(--primary);border-radius:50%;animation:spin 1s linear infinite}
         @keyframes spin{to{transform:rotate(360deg)}}
-        .error-message{text-align:center;padding:var(--space-8);background:var(--error-50);border-radius:var(--radius-xl);color:var(--error)}
-        .back-link{display:inline-flex;align-items:center;gap:var(--space-2);padding:var(--space-2) var(--space-4);background:var(--dark-100);border-radius:var(--radius-full);color:var(--dark-700);text-decoration:none;font-size:0.875rem;margin-bottom:var(--space-4)}
-        .rashi-hero{text-align:center;padding:var(--space-8);background:linear-gradient(135deg,#1e1b4b,#312e81);border-radius:var(--radius-xl);margin-bottom:var(--space-6)}
-        .rashi-hero-symbol{font-size:4rem;margin-bottom:var(--space-4)}
+        .error-message{text-align:center;padding:var(--sp-8);background:var(--error-50);border-radius:var(--radius-xl);color:var(--error)}
+        .back-link{display:inline-flex;align-items:center;gap:var(--sp-2);padding:var(--sp-2) var(--sp-4);background:var(--dark-100);border-radius:var(--radius-full);color:var(--dark-700);text-decoration:none;font-size:0.875rem;margin-bottom:var(--sp-4)}
+        .rashi-hero{text-align:center;padding:var(--sp-8);background:linear-gradient(135deg,#1e1b4b,#312e81);border-radius:var(--radius-xl);margin-bottom:var(--sp-6)}
+        .rashi-hero-symbol{font-size:4rem;margin-bottom:var(--sp-4)}
         .rashi-hero-name{font-size:2rem;font-weight:800;color:#fff}
-        @media(max-width:768px){.rashifal-content{padding:var(--space-4)}.rashifal-meta{grid-template-columns:1fr}.rashi-hero-name{font-size:1.5rem}.rashi-hero-symbol{font-size:3rem}}
+        @media(max-width:768px){.rashifal-content{padding:var(--sp-4)}.rashifal-meta{grid-template-columns:1fr}.rashi-hero-name{font-size:1.5rem}.rashi-hero-symbol{font-size:3rem}}
     </style>
 </head>
 <body>
@@ -80,7 +80,7 @@ if($selectedRashi){foreach($rashis as$r){if($r['id']===$selectedRashi){$selected
             <div class="tp-topbar-inner">
                 <div class="tp-topbar-left">
                     <span class="tp-date"><?= date('l, j F Y') ?></span>
-                    <span class="tp-topbar-links"><a href="/unicode">Unicode</a><a href="?lang=en">English</a></span>
+                    <span class="tp-topbar-links"><a href="?">नेपाली</a><a href="?lang=en">English</a></span>
                 </div>
                 <div class="tp-topbar-right">
                     <a href="#" aria-label="Facebook"><i data-lucide="facebook"></i></a>
@@ -295,7 +295,7 @@ if($selectedRashi){foreach($rashis as$r){if($r['id']===$selectedRashi){$selected
         if (typeof lucide !== 'undefined') lucide.createIcons();
     }
         (function() {
-            var s=document.createElement('script');s.src='https://unpkg.com/lucide@latest/dist/umd/lucide.min.js';document.head.appendChild(s);
+            var s=document.createElement('script');s.src='/assets/js/lucide.min.js';document.head.appendChild(s);
         })();
 );</script>
 

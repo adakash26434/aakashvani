@@ -20,19 +20,19 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/premium.css">
     <style>
-        .page-header { background: linear-gradient(135deg, var(--dark-900), var(--dark-800)); padding: var(--space-8) 0; color: #fff; }
-        .rate-card { background: #fff; border-radius: var(--radius-xl); padding: var(--space-6); box-shadow: var(--shadow); }
-        .rate-row { display: flex; justify-content: space-between; align-items: center; padding: var(--space-4) 0; border-bottom: 1px solid var(--dark-100); }
+        .page-header { background: linear-gradient(135deg, var(--dark-900), var(--dark-800)); padding: var(--sp-8) 0; color: #fff; }
+        .rate-card { background: #fff; border-radius: var(--radius-xl); padding: var(--sp-6); box-shadow: var(--shadow); }
+        .rate-row { display: flex; justify-content: space-between; align-items: center; padding: var(--sp-4) 0; border-bottom: 1px solid var(--dark-100); }
         .rate-row:last-child { border-bottom: none; }
-        .rate-flag { font-size: 1.5rem; margin-right: var(--space-3); }
+        .rate-flag { font-size: 1.5rem; margin-right: var(--sp-3); }
         .rate-code { font-weight: 700; color: var(--dark-900); }
         .rate-name { font-size: 0.75rem; color: var(--dark-500); }
         .rate-value { font-size: 1.25rem; font-weight: 700; color: var(--primary); }
         .rate-change { font-size: 0.75rem; padding: 2px 8px; border-radius: var(--radius-full); }
         .rate-change.up { background: #dcfce7; color: #16a34a; }
         .rate-change.down { background: #fee2e2; color: #dc2626; }
-        .section { padding: var(--space-8) 0; }
-        .loading-spinner { display: flex; justify-content: center; padding: var(--space-12); }
+        .section { padding: var(--sp-8) 0; }
+        .loading-spinner { display: flex; justify-content: center; padding: var(--sp-12); }
         .spinner { width: 40px; height: 40px; border: 3px solid var(--dark-200); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
         @media (max-width: 768px) { .rate-value { font-size: 1rem; } }
@@ -45,7 +45,7 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
             <div class="tp-topbar-inner">
                 <div class="tp-topbar-left">
                     <span class="tp-date"><?= date('l, j F Y') ?></span>
-                    <span class="tp-topbar-links"><a href="/unicode">Unicode</a><a href="?lang=en">English</a></span>
+                    <span class="tp-topbar-links"><a href="?">नेपाली</a><a href="?lang=en">English</a></span>
                 </div>
                 <div class="tp-topbar-right">
                     <a href="#" aria-label="Facebook"><i data-lucide="facebook"></i></a>
@@ -130,19 +130,19 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
         <div class="container" style="max-width: 800px;">
             <div id="currency-loading" class="loading-spinner"><div class="spinner"></div></div>
             <div id="currency-content" style="display:none">
-                <div class="rate-card" style="margin-bottom:var(--space-6)">
-                    <div class="flex justify-between items-center" style="margin-bottom:var(--space-4)">
+                <div class="rate-card" style="margin-bottom:var(--sp-6)">
+                    <div class="flex justify-between items-center" style="margin-bottom:var(--sp-4)">
                         <h3 style="font-size:1rem;font-weight:700;color:var(--dark-900)"><?= $t('अमेरिकी डलर (USD)', 'US Dollar (USD)') ?></h3>
                         <span id="usd-rate" class="rate-value">-</span>
                     </div>
                     <p style="font-size:0.75rem;color:var(--dark-500)"><?= $t('नोट: यो दर बैंक र मनी एक्सचेन्जमा फरक हुन सक्छ', 'Note: Rates may vary at banks and money exchanges') ?></p>
                 </div>
                 <div class="rate-card">
-                    <h3 style="font-size:1rem;font-weight:700;color:var(--dark-900);margin-bottom:var(--space-4)"><?= $t('अन्य मुद्राहरू', 'Other Currencies') ?></h3>
+                    <h3 style="font-size:1rem;font-weight:700;color:var(--dark-900);margin-bottom:var(--sp-4)"><?= $t('अन्य मुद्राहरू', 'Other Currencies') ?></h3>
                     <div id="currency-list"></div>
                 </div>
             </div>
-            <div id="currency-error" style="display:none;text-align:center;padding:var(--space-8);color:var(--error)">
+            <div id="currency-error" style="display:none;text-align:center;padding:var(--sp-8);color:var(--error)">
                 <?= $t('मुद्रा दर लोड हुन सकेन', 'Failed to load currency rates') ?>
             </div>
         </div>

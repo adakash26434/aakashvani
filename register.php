@@ -17,30 +17,21 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/premium.css">
     <style>
-        .auth-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--dark-900), var(--dark-800)); padding: var(--space-8); }
-        .auth-card { background: #fff; border-radius: var(--radius-2xl); padding: var(--space-8); width: 100%; max-width: 420px; box-shadow: var(--shadow-xl); }
-        .auth-logo { text-align: center; margin-bottom: var(--space-6); }
-        .auth-logo .brand-logo { width: 64px; height: 64px; background: var(--primary); border-radius: var(--radius-xl); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; font-size: 2rem; margin: 0 auto var(--space-3); }
-        .auth-title { font-size: 1.5rem; font-weight: 700; text-align: center; margin-bottom: var(--space-6); color: var(--dark-900); }
-        .form-group { margin-bottom: var(--space-4); }
-        .form-label { display: block; font-size: 0.875rem; font-weight: 500; color: var(--dark-700); margin-bottom: var(--space-2); }
-        .input { width: 100%; padding: var(--space-3) var(--space-4); border: 1px solid var(--dark-200); border-radius: var(--radius-lg); font-size: 1rem; transition: all var(--transition); }
+        .auth-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--dark-900), var(--dark-800)); padding: var(--sp-8); }
+        .auth-card { background: #fff; border-radius: var(--radius-2xl); padding: var(--sp-8); width: 100%; max-width: 420px; box-shadow: var(--shadow-xl); }
+        .auth-logo { text-align: center; margin-bottom: var(--sp-6); }
+        .auth-logo .brand-logo { width: 64px; height: 64px; background: var(--primary); border-radius: var(--radius-xl); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; font-size: 2rem; margin: 0 auto var(--sp-3); }
+        .auth-title { font-size: 1.5rem; font-weight: 700; text-align: center; margin-bottom: var(--sp-6); color: var(--dark-900); }
+        .form-group { margin-bottom: var(--sp-4); }
+        .form-label { display: block; font-size: 0.875rem; font-weight: 500; color: var(--dark-700); margin-bottom: var(--sp-2); }
+        .input { width: 100%; padding: var(--sp-3) var(--sp-4); border: 1px solid var(--dark-200); border-radius: var(--radius-lg); font-size: 1rem; transition: all var(--transition); }
         .input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-50); }
-        .btn-primary { width: 100%; padding: var(--space-3) var(--space-4); background: var(--primary); color: #fff; border: none; border-radius: var(--radius-lg); font-size: 1rem; font-weight: 600; cursor: pointer; transition: all var(--transition); }
+        .btn-primary { width: 100%; padding: var(--sp-3) var(--sp-4); background: var(--primary); color: #fff; border: none; border-radius: var(--radius-lg); font-size: 1rem; font-weight: 600; cursor: pointer; transition: all var(--transition); }
         .btn-primary:hover { background: var(--primary-600); transform: translateY(-1px); }
-        .auth-footer { text-align: center; margin-top: var(--space-6); font-size: 0.875rem; color: var(--dark-500); }
+        .auth-footer { text-align: center; margin-top: var(--sp-6); font-size: 0.875rem; color: var(--dark-500); }
         .auth-footer a { color: var(--primary); font-weight: 600; text-decoration: none; }
     </style>
-
-    <style>
-        /* Responsive */
-        @media (max-width: 480px) {
-            .login-page, .auth-page { padding: var(--space-4); }
-            .login-card, .auth-card { padding: var(--space-6); }
-            .login-logo .brand-logo { width: 48px; height: 48px; font-size: 1.5rem; }
-        }
-    </style>
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script src="/assets/js/lucide.min.js"></script>
 </head>
 <body>
     <div class="auth-page">
@@ -76,7 +67,7 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
                 <?= $t('पहिले नै खाता छ?', 'Already have account?') ?> <a href="/login.php"><?= $t('लगइन', 'Login') ?></a>
             </p>
             
-            <p style="text-align: center; margin-top: var(--space-4);">
+            <p style="text-align: center; margin-top: var(--sp-4);">
                 <a href="/" style="color: var(--dark-400); font-size: 0.875rem;">← <?= $t('गृहपृष्ठ', 'Back to Home') ?></a>
             </p>
         </div>

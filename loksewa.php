@@ -20,23 +20,23 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/assets/css/premium.css">
     <style>
-        .page-header { background: linear-gradient(135deg, #7c3aed, #a855f7); padding: var(--space-8) 0; color: #fff; }
-        .job-card { background: #fff; border-radius: var(--radius-xl); padding: var(--space-6); box-shadow: var(--shadow); margin-bottom: var(--space-4); border-left: 4px solid #7c3aed; }
-        .job-title { font-size: 1.125rem; font-weight: 700; color: var(--dark-900); margin-bottom: var(--space-2); }
-        .job-org { font-size: 0.875rem; color: #7c3aed; font-weight: 600; margin-bottom: var(--space-2); }
-        .job-meta { display: flex; flex-wrap: wrap; gap: var(--space-4); font-size: 0.75rem; color: var(--dark-500); }
+        .page-header { background: linear-gradient(135deg, #7c3aed, #a855f7); padding: var(--sp-8) 0; color: #fff; }
+        .job-card { background: #fff; border-radius: var(--radius-xl); padding: var(--sp-6); box-shadow: var(--shadow); margin-bottom: var(--sp-4); border-left: 4px solid #7c3aed; }
+        .job-title { font-size: 1.125rem; font-weight: 700; color: var(--dark-900); margin-bottom: var(--sp-2); }
+        .job-org { font-size: 0.875rem; color: #7c3aed; font-weight: 600; margin-bottom: var(--sp-2); }
+        .job-meta { display: flex; flex-wrap: wrap; gap: var(--sp-4); font-size: 0.75rem; color: var(--dark-500); }
         .job-badge { display: inline-block; padding: 2px 10px; border-radius: var(--radius-full); font-size: 0.75rem; font-weight: 600; }
         .badge-new { background: #dcfce7; color: #16a34a; }
         .badge-deadline { background: #fee2e2; color: #dc2626; }
         .badge-closed { background: var(--dark-100); color: var(--dark-500); }
-        .tabs { display: flex; gap: var(--space-2); margin-bottom: var(--space-6); flex-wrap: wrap; }
-        .tab { padding: var(--space-2) var(--space-4); border: 1px solid var(--dark-200); border-radius: var(--radius-full); background: #fff; cursor: pointer; font-size: 0.875rem; transition: all var(--transition); }
+        .tabs { display: flex; gap: var(--sp-2); margin-bottom: var(--sp-6); flex-wrap: wrap; }
+        .tab { padding: var(--sp-2) var(--sp-4); border: 1px solid var(--dark-200); border-radius: var(--radius-full); background: #fff; cursor: pointer; font-size: 0.875rem; transition: all var(--transition); }
         .tab.active { background: #7c3aed; color: #fff; border-color: #7c3aed; }
-        .section { padding: var(--space-8) 0; }
-        .loading-spinner { display: flex; justify-content: center; padding: var(--space-12); }
+        .section { padding: var(--sp-8) 0; }
+        .loading-spinner { display: flex; justify-content: center; padding: var(--sp-12); }
         .spinner { width: 40px; height: 40px; border: 3px solid var(--dark-200); border-top-color: #7c3aed; border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
-        @media (max-width: 768px) { .job-meta { gap: var(--space-2); } }
+        @media (max-width: 768px) { .job-meta { gap: var(--sp-2); } }
     </style>
 </head>
 <body>
@@ -47,7 +47,7 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
             <div class="tp-topbar-inner">
                 <div class="tp-topbar-left">
                     <span class="tp-date"><?= date('l, j F Y') ?></span>
-                    <span class="tp-topbar-links"><a href="/unicode">Unicode</a><a href="?lang=en">English</a></span>
+                    <span class="tp-topbar-links"><a href="?">नेपाली</a><a href="?lang=en">English</a></span>
                 </div>
                 <div class="tp-topbar-right">
                     <a href="#" aria-label="Facebook"><i data-lucide="facebook"></i></a>
@@ -138,10 +138,10 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
             </div>
             <div id="jobs-loading" class="loading-spinner"><div class="spinner"></div></div>
             <div id="jobs-list" style="display:none"></div>
-            <div id="jobs-empty" style="display:none;text-align:center;padding:var(--space-8);color:var(--dark-500)">
+            <div id="jobs-empty" style="display:none;text-align:center;padding:var(--sp-8);color:var(--dark-500)">
                 <?= $t('हाल कुनै सुचना छैन', 'No announcements at this time') ?>
             </div>
-            <div id="jobs-error" style="display:none;text-align:center;padding:var(--space-8);color:var(--error)">
+            <div id="jobs-error" style="display:none;text-align:center;padding:var(--sp-8);color:var(--error)">
                 <?= $t('डाटा लोड हुन सकेन', 'Failed to load data') ?>
             </div>
         </div>
@@ -229,7 +229,7 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
         list.innerHTML = filtered.map(job => {
             const badge = job.deadline ? '<?= $t("नयाँ", "New") ?>' : '';
             const deadline = job.deadline ? '<span class="job-badge badge-deadline"><?= $t("अन्तिम मिति", "Deadline") ?>: ' + job.deadline + '</span>' : '';
-            return '<div class="job-card"><div class="flex justify-between items-start gap-4" style="margin-bottom:var(--space-3)"><div><h3 class="job-title">' + (job.title || job.name || '---') + '</h3><p class="job-org">' + (job.organization || job.org || 'लोकसेवा आयोग') + '</p></div>' + (badge ? '<span class="job-badge badge-new">' + badge + '</span>' : '') + '</div><div class="job-meta"><span>' + (job.level || job.category || '---') + '</span><span>' + (job.posts || job.vacancy || '') + '</span>' + deadline + '</div>' + (job.link ? '<a href="' + job.link + '" target="_blank" style="display:inline-block;margin-top:var(--space-3);padding:var(--space-2) var(--space-4);background:#7c3aed;color:#fff;border-radius:var(--radius-lg);font-size:0.875rem;text-decoration:none"><?= $t("विवरण हेर्नुहोस्", "View Details") ?> →</a>' : '') + '</div>';
+            return '<div class="job-card"><div class="flex justify-between items-start gap-4" style="margin-bottom:var(--sp-3)"><div><h3 class="job-title">' + (job.title || job.name || '---') + '</h3><p class="job-org">' + (job.organization || job.org || 'लोकसेवा आयोग') + '</p></div>' + (badge ? '<span class="job-badge badge-new">' + badge + '</span>' : '') + '</div><div class="job-meta"><span>' + (job.level || job.category || '---') + '</span><span>' + (job.posts || job.vacancy || '') + '</span>' + deadline + '</div>' + (job.link ? '<a href="' + job.link + '" target="_blank" style="display:inline-block;margin-top:var(--sp-3);padding:var(--sp-2) var(--sp-4);background:#7c3aed;color:#fff;border-radius:var(--radius-lg);font-size:0.875rem;text-decoration:none"><?= $t("विवरण हेर्नुहोस्", "View Details") ?> →</a>' : '') + '</div>';
         }).join('');
         // Update tabs
         document.querySelectorAll('.tab').forEach(t => {
