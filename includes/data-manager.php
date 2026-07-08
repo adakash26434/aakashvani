@@ -29,6 +29,27 @@ class DataManager {
     public static function getInstance(): self {
         return self::$instance ??= new self();
     }
+
+    /**
+     * Atomic cache write — prevents stampede/corruption from concurrent writes
+     * Uses temp file + rename (atomic on POSIX) + flock for safety
+     */
+    private function writeCache(string $file, string $data): bool {
+        $dir = dirname($file);
+        if (!is_dir($dir)) @mkdir($dir, 0755, true);
+        $tmp = $file . '.tmp.' . getmypid();
+        $fp = @fopen($tmp, 'c');
+        if (!$fp) return false;
+        if (!@flock($fp, LOCK_EX)) { fclose($fp); @unlink($tmp); return false; }
+        ftruncate($fp, 0);
+        fwrite($fp, $data);
+        fflush($fp);
+        flock($fp, LOCK_UN);
+        fclose($fp);
+        // Atomic rename on POSIX — no gap where file doesn't exist
+        if (!@rename($tmp, $file)) { @unlink($tmp); return false; }
+        return true;
+    }
     
     /**
      * GET NEWS - Unified news access (RSS + database)
@@ -126,7 +147,7 @@ class DataManager {
         $result = array_slice($unique, $offset, $limit);
         
         // Cache result
-        @file_put_contents($cacheFile, json_encode($result, JSON_UNESCAPED_UNICODE));
+        $this->writeCache($cacheFile, json_encode($result, JSON_UNESCAPED_UNICODE));
         
         return $result;
     }
@@ -165,7 +186,7 @@ class DataManager {
         }
         
         // Cache result
-        @file_put_contents($cacheFile, json_encode($data, JSON_UNESCAPED_UNICODE));
+        $this->writeCache($cacheFile, json_encode($data, JSON_UNESCAPED_UNICODE));
         
         return $data;
     }
@@ -205,7 +226,7 @@ class DataManager {
                 $trending = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 
                 if (is_array($trending)) {
-                    @file_put_contents($cacheFile, json_encode($trending, JSON_UNESCAPED_UNICODE));
+                    $this->writeCache($cacheFile, json_encode($trending, JSON_UNESCAPED_UNICODE));
                     return $trending;
                 }
             }

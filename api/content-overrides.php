@@ -18,6 +18,8 @@
  * Auth   : Admin session OR CRON_KEY
  */
 require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/../includes/csrf.php';
+csrfRequire();
 
 header('Content-Type: application/json; charset=UTF-8');
 

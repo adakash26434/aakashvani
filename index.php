@@ -4,7 +4,7 @@
  * Clean Architecture | Real API Data | Premium UI
  */
 
-require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/includes/autoload.php';
 
 // Language helper
 $lang = $_SESSION['lang'] ?? 'ne';
@@ -14,22 +14,13 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
 // Page config
 $pageTitle = $t('आकाशवाणी — सूचनाको खुला आकाश', 'Aakashvani — Your Gateway to Information');
 
-// Fetch homepage news server-side
+// Fetch homepage news server-side via dataManager (not HTTP)
 $homepageNews = [];
-$apiBase = 'https://news.bandanasigdel.com.np';
-$ch = curl_init($apiBase . '/api/news-rss.php?limit=4&cat=general');
-curl_setopt_array($ch, [
-    CURLOPT_RETURNTRANSFER => true,
-    CURLOPT_TIMEOUT => 8,
-    CURLOPT_FOLLOWLOCATION => true,
-]);
-$apiResp = curl_exec($ch);
-curl_close($ch);
-if ($apiResp) {
-    $apiData = json_decode($apiResp, true);
-    if (!empty($apiData['items'])) {
-        $homepageNews = array_slice($apiData['items'], 0, 4);
-    }
+try {
+    $dm = dataManager();
+    $homepageNews = array_slice($dm->getNews('general', null, 4, 0), 0, 4);
+} catch (Throwable $e) {
+    error_log('index.php homepageNews fetch failed: ' . $e->getMessage());
 }
 ?>
 <!DOCTYPE html>
