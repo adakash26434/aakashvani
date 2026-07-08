@@ -160,6 +160,8 @@ if (!function_exists('sendSecurityHeaders')) {
         header('X-Frame-Options: SAMEORIGIN');
         header('X-XSS-Protection: 1; mode=block');
         header('Referrer-Policy: strict-origin-when-cross-origin');
+        // HSTS: Force HTTPS for 1 year (uncomment when SSL is properly configured)
+        // header('Strict-Transport-Security: max-age=31536000; includeSubDomains');
     }
 }
 

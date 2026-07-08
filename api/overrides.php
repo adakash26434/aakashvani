@@ -18,8 +18,10 @@
  * }
  */
 require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/../functions.php';
 
 header('Content-Type: application/json; charset=UTF-8');
+sendSecurityHeaders();
 // GET is public (dashboard reads overrides), POST requires auth
 $cronKey = defined('CRON_KEY') ? CRON_KEY : '';
 $reqKey  = trim($_GET['key'] ?? $_SERVER['HTTP_X_CRON_KEY'] ?? '');
