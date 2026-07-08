@@ -4,6 +4,7 @@
  *
  * POST /api/news-expand.php
  * Body: { title, slug?, excerpt?, lang }
+ * Auth: Admin session OR CRON_KEY
  *
  * Priority:
  *  1. If slug provided → load stored DB content → AI polish → return
@@ -12,12 +13,25 @@
  */
 require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../functions.php';
+require_once __DIR__ . '/../includes/auth.php';
 
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store');
 
+// ── Auth: Admin session OR CRON_KEY ─────────────────────────────────────────────
+$cronKey = defined('CRON_KEY') ? CRON_KEY : '';
+$reqKey  = trim($_GET['key'] ?? $_SERVER['HTTP_X_CRON_KEY'] ?? '');
+$hasKey   = $cronKey && $reqKey === $cronKey;
+$hasAdmin = isAdmin();
+
+if (!$hasKey && !$hasAdmin) {
+    http_response_code(401);
+    echo json_encode(['error' => 'Unauthorized — admin session or CRON_KEY required']);
+    return;
+}
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405); echo json_encode(['error'=>'POST only']); exit;
+    http_response_code(405); echo json_encode(['error'=>'POST only']); return;
 }
 
 $body   = json_decode(file_get_contents('php://input'), true);
@@ -26,7 +40,7 @@ $slug   = trim($body['slug']   ?? '');
 $excerpt= trim($body['excerpt']?? '');
 $lang   = ($body['lang'] ?? 'ne') === 'en' ? 'en' : 'ne';
 
-if (!$title) { http_response_code(400); echo json_encode(['error'=>'title required']); exit; }
+if (!$title) { http_response_code(400); echo json_encode(['error'=>'title required']); return; }
 
 $apiKey  = defined('OPENAI_API_KEY')  ? OPENAI_API_KEY  : '';
 $baseUrl = defined('OPENAI_BASE_URL') ? OPENAI_BASE_URL : 'https://api.openai.com/v1';
@@ -58,7 +72,7 @@ if ($slug) {
                     'word_count'  => str_word_count($storedContent),
                     'note'        => 'full_article_from_source'
                 ]);
-                exit;
+                return;
             }
 
             // FIX: DB content too short — try LIVE scrape from original URL before falling back to AI
@@ -82,7 +96,7 @@ if ($slug) {
                                 'word_count'  => str_word_count($scraped),
                                 'note'        => 'full_article_live_fetched'
                             ]);
-                            exit;
+                            return;
                         }
                     } catch(\Throwable $e) {}
                 }
@@ -104,7 +118,7 @@ if (empty($apiKey)) {
         'source_url'  => $sourceUrl,
         'source_name' => $sourceName,
     ]);
-    exit;
+    return;
 }
 
 // ── System prompts for FULL article rewrite ───────────────────────────────────
@@ -140,7 +154,7 @@ if (!$resp || $code !== 200) {
         'source_url'  => $sourceUrl,
         'source_name' => $sourceName,
     ]);
-    exit;
+    return;
 }
 
 $data = json_decode($resp, true);

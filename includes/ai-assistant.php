@@ -153,7 +153,7 @@ var aiStreaming = false;
 
 function aiRemember(role, content) {
   try {
-    var key = 'nsh_ai_recent';
+    var key = 'aakashvani_ai_recent';
     var rows = JSON.parse(localStorage.getItem(key) || '[]');
     rows.push({role: role, content: String(content).slice(0, 240), at: Date.now()});
     localStorage.setItem(key, JSON.stringify(rows.slice(-10)));

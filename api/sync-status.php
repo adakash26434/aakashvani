@@ -11,10 +11,16 @@ require_once __DIR__ . '/../includes/auth.php';
 header('Content-Type: application/json');
 header('Cache-Control: no-store');
 
-if (!isAdmin()) {
+// ── Auth: Admin session OR CRON_KEY ─────────────────────────────────────────────
+$cronKey = defined('CRON_KEY') ? CRON_KEY : '';
+$reqKey  = trim($_GET['key'] ?? $_SERVER['HTTP_X_CRON_KEY'] ?? '');
+$hasKey   = $cronKey && $reqKey === $cronKey;
+$hasAdmin = isAdmin();
+
+if (!$hasKey && !$hasAdmin) {
     http_response_code(403);
-    echo json_encode(['error' => 'Admin only']);
-    exit;
+    echo json_encode(['error' => 'Unauthorized — admin session or CRON_KEY required']);
+    return;
 }
 
 try {
@@ -43,6 +49,7 @@ try {
         'recent_syncs' => $rows,
     ]);
 } catch (\Exception $e) {
+    http_response_code(500);
     echo json_encode(['error' => $e->getMessage()]);
 }
 

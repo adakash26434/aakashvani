@@ -4,6 +4,29 @@ DirectoryIndex index.php
 ErrorDocument 404 /404.php
 ErrorDocument 500 /404.php
 
+# ─── Debug Page Protection ─────────────────────────────────────────────────────
+# test.php and tool.php are for development/debugging only.
+# Block access in production unless:
+#   1. Request is from localhost
+#   2. ?debug=YOUR_DEBUG_KEY query parameter is present
+<Files "test.php">
+    <If "%{REMOTE_ADDR} !~ /^127\.|^::1$/">
+        # Require debug query param (set CRON_KEY as the debug key)
+        <If "! %{QUERY_STRING} =~ /^(.*&)?debug=/">
+            Order deny,allow
+            Deny from all
+        </If>
+    </If>
+</Files>
+<Files "tool.php">
+    <If "%{REMOTE_ADDR} !~ /^127\.|^::1$/">
+        <If "! %{QUERY_STRING} =~ /^(.*&)?debug=/">
+            Order deny,allow
+            Deny from all
+        </If>
+    </If>
+</Files>
+
 # ─── HTTPS redirect ───────────────────────────────────────────────────────────
 <IfModule mod_rewrite.c>
   RewriteEngine On

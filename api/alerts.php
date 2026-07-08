@@ -14,18 +14,30 @@ require_once __DIR__ . '/../includes/error-logger.php';
 // Security headers
 sendSecurityHeaders();
 header('Content-Type: application/json; charset=UTF-8');
-header('Access-Control-Allow-Origin: *');
 header('Cache-Control: public, max-age=300');
+
+// ── CORS: Restrict to same-origin ───────────────────────────────────────────────
+$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+$allowed = [
+    'https://tankaadhikari.com.np',
+    'https://www.tankaadhikari.com.np',
+    'http://localhost',
+    'http://localhost:8080',
+    'http://127.0.0.1',
+];
+if (in_array($origin, $allowed, true)) {
+    header("Access-Control-Allow-Origin: $origin");
+}
 
 // Rate limiting
 $rateKey = 'alerts:' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown');
 if (!checkRateLimit($rateKey, 30, 60)) {
     http_response_code(429);
     echo json_encode(['ok' => false, 'error' => 'Rate limit exceeded']);
-    exit;
+    return;
 }
 
-$cacheDir  = __DIR__ . '/../cache';
+$cacheDir  = __DIR__ . '/../data/cache';
 $cacheFile = $cacheDir . '/alerts.json';
 if (!is_dir($cacheDir)) @mkdir($cacheDir, 0755, true);
 

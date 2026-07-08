@@ -190,3 +190,32 @@ if (!function_exists('checkRateLimit')) {
         return true;
     }
 }
+
+// Slugify — URL-safe Nepali/English slug generator
+if (!function_exists('slugify')) {
+    function slugify(string $text): string {
+        $text = preg_replace('/[\x{200c}\x{200d}]/u', '', $text);
+        $replace = [
+            'आ' => 'a', 'अ' => 'a', 'इ' => 'i', 'ई' => 'i', 'उ' => 'u', 'ऊ' => 'u',
+            'ए' => 'e', 'ऐ' => 'ai', 'ओ' => 'o', 'औ' => 'au', 'ऋ' => 'ri',
+            'ा' => 'aa', 'ि' => 'i', 'ी' => 'i', 'ु' => 'u', 'ू' => 'u',
+            'े' => 'e', 'ै' => 'ai', 'ो' => 'o', 'ौ' => 'au', 'ृ' => 'ri',
+            '्' => '', 'ं' => '', 'ँ' => '',
+            'क' => 'ka', 'ख' => 'kha', 'ग' => 'ga', 'घ' => 'gha',
+            'च' => 'cha', 'छ' => 'chha', 'ज' => 'ja', 'झ' => 'jha',
+            'ट' => 'ta', 'ठ' => 'tha', 'ड' => 'da', 'ढ' => 'dha',
+            'ण' => 'na', 'त' => 'ta', 'थ' => 'tha', 'द' => 'da', 'ध' => 'dha',
+            'न' => 'na', 'प' => 'pa', 'फ' => 'pha', 'ब' => 'ba', 'भ' => 'bha',
+            'म' => 'ma', 'य' => 'ya', 'र' => 'ra', 'ल' => 'la', 'व' => 'wa',
+            'श' => 'sha', 'ष' => 'shha', 'स' => 'sa', 'ह' => 'ha',
+        ];
+        foreach ($replace as $from => $to) {
+            $text = str_replace($from, $to, $text);
+        }
+        $text = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $text);
+        $text = preg_replace('/[^a-zA-Z0-9\s-]/', '', $text);
+        $text = preg_replace('/\s+/', '-', trim($text));
+        $text = preg_replace('/-+/', '-', $text);
+        return strtolower(trim($text, '-')) ?: 'post';
+    }
+}

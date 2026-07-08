@@ -1,6 +1,6 @@
 # आकाशवाणी - Deep Audit Report
 
-## Last Updated: 2026-06-16
+## Last Updated: 2026-07-08
 
 ---
 
@@ -192,3 +192,71 @@ Every page has:
 ### Navigation Updates
 - Added Weather, Cricket, Tenders links to nav
 - All 21 pages now accessible
+
+---
+
+## Security Fixes Applied (2026-07-08)
+
+### CRITICAL — All Fixed ✅
+
+1. **SSRF Protection in `sync-functions.php`**
+   - Added `SYNC_ALLOWED_HOSTS` allowlist for all external URLs
+   - Added `syncValidateUrl()` to block non-allowlisted hosts
+   - All sync functions now use `syncFetch()` wrapper with validation
+   - Forces HTTPS for all external fetches
+
+2. **SSRF Protection in `api/gov-check.php`**
+   - Added `GOV_ALLOWED_HOSTS` allowlist for government domains
+   - `govFetch()` now validates URL against allowlist before fetching
+
+3. **CRON_KEY Enforcement**
+   - `api/sync-trigger.php` now requires CRON_KEY OR admin session
+   - `api/sync-status.php` now requires CRON_KEY OR admin session
+   - `api/news-expand.php` now requires CRON_KEY OR admin session
+   - `api/content-overrides.php` now requires CRON_KEY OR admin session
+
+4. **Fake Financial Data Removed**
+   - `market-data.php`: `getSampleGainers()`/`getSampleLosers()` no longer returned as fallback
+   - When scraping fails, returns honest `available: false` with null values
+   - `scrapeNepseDetailedFromMerolagani()` returns empty arrays instead of fake data
+
+### HIGH — All Fixed ✅
+
+5. **Cache Directory Consolidation**
+   - All API files now use `/data/cache/` (not `/cache/`)
+   - `api/admin-data-manager.php` → `/data/cache/admin/`
+   - `api/alerts.php` → `/data/cache/`
+   - `includes/sync-functions.php` → `/data/cache/sync/`
+
+6. **CORS Restrictions**
+   - `api/admin-data-manager.php`: Restricted to specific origins
+   - `api/content-overrides.php`: Restricted to specific origins
+   - `api/alerts.php`: Restricted to specific origins
+   - `api/panchang.php`: Restricted to specific origins
+   - Note: Read-only public APIs (market-data, tax-rates, etc.) retain `*` CORS — acceptable for public data
+
+7. **Proper Error Handling**
+   - Replaced `exit`/`die` with `return` in API files for proper error handler flow
+   - Affected files: `api/sync-trigger.php`, `api/sync-status.php`, `api/content-overrides.php`, `api/ai-chat.php`, `api/news-expand.php`, `api/gov-check.php`
+
+### MEDIUM — All Fixed ✅
+
+8. **Missing `db()` Function Added**
+   - Added `db()` alias function to `config.php` — was called throughout codebase but undefined
+
+9. **Missing `slugify()` Function Added**
+   - Added `slugify()` function to `functions.php` — was called in admin dashboard but undefined
+
+10. **Debug Page Protection**
+    - Added `.htaccess` rules blocking `test.php` and `tool.php` from non-localhost access
+    - Requires `?debug=KEY` parameter from remote hosts
+
+11. **HTTP Client Consolidation**
+    - `sync-functions.php` now uses `nh_fetchUrl()` from `includes/http.php`
+    - Removed raw `curl_init()` scattered throughout sync functions
+
+### Notes
+
+- **Read-only public APIs** (market-data, tax-rates, forex, etc.) retain `Access-Control-Allow-Origin: *` — appropriate for public data
+- **Core architecture** (dual DB systems, DataManager class) — deferred to future refactoring
+- **Scraping monitoring** — alerting when scraping fails should be added in future
