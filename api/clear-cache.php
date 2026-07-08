@@ -14,10 +14,10 @@ $isCron = $cronKey !== '' && hash_equals($cronKey, $reqKey);
 if (!$isAdmin && !$isCron) {
     http_response_code(401);
     echo json_encode(['ok' => false, 'error' => 'Unauthorized']);
-    exit;
+    return;
 }
 
-$cacheDir = __DIR__ . '/../cache';
+$cacheDir = __DIR__ . '/../data/cache';
 $cleared = [];
 
 // Clear news cache

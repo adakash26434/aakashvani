@@ -23,7 +23,7 @@ if (!$isAllowed) {
         'error' => 'Unauthorized',
         'usage' => '/api/news-db-setup.php?action=status|migrate|reset|fresh&confirm=CONFIRM'
     ], JSON_UNESCAPED_UNICODE);
-    exit;
+    return;
 }
 
 try {

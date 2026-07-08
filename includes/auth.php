@@ -136,3 +136,41 @@ if (!function_exists('validateSession')) {
         return isLoggedIn();
     }
 }
+
+// ── Admin session helpers (separate from user auth) ───────────────────────────
+if (!function_exists('isAdmin')) {
+    function isAdmin(): bool {
+        if (session_status() === PHP_SESSION_NONE) session_start();
+        return !empty($_SESSION['nh_admin']) || !empty($_SESSION['admin_logged_in']) || !empty($_SESSION['is_admin']);
+    }
+}
+
+if (!function_exists('requireAdmin')) {
+    function requireAdmin(): void {
+        if (!isAdmin()) {
+            http_response_code(401);
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode(['ok'=>false, 'error'=>'Admin session required']);
+            return;
+        }
+    }
+}
+
+if (!function_exists('isCron')) {
+    function isCron(): bool {
+        $key = defined('CRON_KEY') ? CRON_KEY : '';
+        $req = trim($_GET['key'] ?? $_SERVER['HTTP_X_CRON_KEY'] ?? '');
+        return $key !== '' && hash_equals($key, $req);
+    }
+}
+
+if (!function_exists('requireCron')) {
+    function requireCron(): void {
+        if (!isCron()) {
+            http_response_code(401);
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode(['ok'=>false, 'error'=>'Valid CRON_KEY required']);
+            return;
+        }
+    }
+}

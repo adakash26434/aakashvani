@@ -100,7 +100,7 @@ switch ($action) {
     case 'get':
         if (!isset($allowedSections[$section])) {
             echo json_encode(['ok' => false, 'error' => 'Invalid section']);
-            exit;
+            return;
         }
         $data = readAdminData($allowedSections[$section]['file']);
         echo json_encode(['ok' => true, 'data' => $data, 'section' => $section]);
@@ -109,13 +109,13 @@ switch ($action) {
     case 'save':
         if (!isset($allowedSections[$section])) {
             echo json_encode(['ok' => false, 'error' => 'Invalid section']);
-            exit;
+            return;
         }
         
         $input = json_decode(file_get_contents('php://input'), true);
         if (!is_array($input)) {
             echo json_encode(['ok' => false, 'error' => 'Invalid data']);
-            exit;
+            return;
         }
         
         if (writeAdminData($allowedSections[$section]['file'], $input)) {
@@ -128,7 +128,7 @@ switch ($action) {
     case 'clear':
         if (!isset($allowedSections[$section])) {
             echo json_encode(['ok' => false, 'error' => 'Invalid section']);
-            exit;
+            return;
         }
         $path = $cacheDir . '/' . $allowedSections[$section]['file'];
         if (file_exists($path)) {

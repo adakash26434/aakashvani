@@ -35,7 +35,7 @@ if (!$isAuthenticated) {
 }
 if (!$isAuthenticated && $cronKey) {
     http_response_code(401);
-    echo json_encode(['ok'=>false,'error'=>'Unauthorized — wrong cron key']); exit;
+    echo json_encode(['ok'=>false,'error'=>'Unauthorized — wrong cron key']); return;
 }
 
 $job   = trim($_GET['job'] ?? 'all');

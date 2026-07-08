@@ -8,6 +8,7 @@
 
 require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../functions.php';
+require_once __DIR__ . '/../includes/http.php';
 require_once __DIR__ . '/../includes/error-logger.php';
 
 // Security headers
@@ -29,26 +30,9 @@ $cacheDir = __DIR__ . '/../data/cache';
 if (!is_dir($cacheDir)) @mkdir($cacheDir, 0755, true);
 
 function ckt_get(string $url, int $timeout = 7): string {
-    if (function_exists('curl_init')) {
-        $ch = curl_init($url);
-        curl_setopt_array($ch, [
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_MAXREDIRS      => 3,
-            CURLOPT_TIMEOUT        => $timeout,
-            CURLOPT_CONNECTTIMEOUT => 4,
-            CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_USERAGENT      => 'Mozilla/5.0 (compatible; AakashVani/1.0)',
-            CURLOPT_HTTPHEADER     => ['Accept: application/json,text/xml,*/*'],
-            CURLOPT_ENCODING       => '',
-        ]);
-        $r = curl_exec($ch);
-        $c = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-        if ($r !== false && $c >= 200 && $c < 400) return (string)$r;
-    }
-    $ctx = stream_context_create(['http'=>['timeout'=>$timeout,'user_agent'=>'AakashVani/1.0','follow_location'=>1],'ssl'=>['verify_peer'=>false]]);
-    return (string)@file_get_contents($url, false, $ctx);
+    // Use nh_fetchUrl for SSL-verified requests (prevents MITM on cricket data feeds)
+    $r = nh_fetchUrl($url, ['Accept: application/json,text/xml,*/*'], $timeout, true);
+    return $r ?: '';
 }
 
 function ckt_ago(int $ts): string {

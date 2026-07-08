@@ -10,7 +10,7 @@ require_once __DIR__ . '/../config.php';
 $cronKey = defined('CRON_KEY') ? CRON_KEY : '';
 $reqKey  = $_GET['key'] ?? '';
 if ($cronKey && $reqKey !== $cronKey) {
-    http_response_code(401); echo json_encode(['ok'=>false,'error'=>'invalid key']); exit;
+    http_response_code(401); echo json_encode(['ok'=>false,'error'=>'invalid key']); return;
 }
 
 $job=$_GET['job']??'all'; $results=[]; $start=microtime(true);

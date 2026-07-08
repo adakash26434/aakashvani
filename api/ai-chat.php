@@ -236,7 +236,7 @@ $model   = defined('OPENAI_MODEL')    ? OPENAI_MODEL    : 'gpt-4o-mini';
 if ($local !== null) {
     streamText($local);
     sse(['done' => true]);
-    exit;
+    return;
 }
 
 // No matching intent → use OpenAI if key present
@@ -245,7 +245,7 @@ if (!$apiKey) {
         ? answerHelp('en') . "\n\n_(Free-form chat needs an OpenAI key — see config.php → OPENAI_API_KEY.)_"
         : answerHelp('ne') . "\n\n_(अरू free-form प्रश्नका लागि config.php मा OPENAI_API_KEY थप्नुहोस्।)_");
     sse(['done' => true]);
-    exit;
+    return;
 }
 
 // ─── OpenAI streaming ────────────────────────────────────────────────────────
