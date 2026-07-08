@@ -7,7 +7,12 @@ require_once __DIR__ . '/functions.php';
 require_once __DIR__ . '/includes/functions.notices.php';
 
 if (empty($_SESSION['is_admin'])) {
-    header('Location: /admin.php?next=admin-notices.php'); exit;
+    header('Location: /admin/index.php?next=' . basename(__FILE__)); exit;
+}
+require_once __DIR__ . '/includes/csrf.php';
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !csrfVerify()) { die('CSRF verification failed'); }
+
+    header('Location: /admin/index.php?next=' . basename(__FILE__)); exit;
 }
 
 $msg = '';
@@ -135,6 +140,7 @@ $typeColors = [
     <div class="card">
       <h2><?= $editing ? '✏️ सम्पादन गर्दै' : '➕ नयाँ सूचना थप्नुहोस्' ?></h2>
       <form method="post" enctype="multipart/form-data">
+        <?= csrfField() ?>
         <input type="hidden" name="action" value="<?= $editing ? 'update' : 'create' ?>">
         <?php if ($editing): ?><input type="hidden" name="id" value="<?= $editing['id'] ?>"><?php endif; ?>
 

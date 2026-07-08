@@ -9,7 +9,12 @@ require_once __DIR__ . '/../includes/functions.entertainment.php';
 
 // Auth check
 if (empty($_SESSION['is_admin'])) {
-    header('Location: /admin.php?next=admin-podcasts.php');
+    header('Location: /admin/index.php?next=' . basename(__FILE__)); exit;
+}
+require_once __DIR__ . '/includes/csrf.php';
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !csrfVerify()) { die('CSRF verification failed'); }
+
+    header('Location: /admin/index.php?next=' . basename(__FILE__));
     exit;
 }
 

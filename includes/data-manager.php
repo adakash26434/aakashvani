@@ -276,7 +276,9 @@ class DataManager {
 }
 
 // Global helper function
-function dataManager(): DataManager {
-    return DataManager::getInstance();
+if (!function_exists('dataManager')) {
+    function dataManager(): DataManager {
+        return DataManager::getInstance();
+    }
 }
 ?>

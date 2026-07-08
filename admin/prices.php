@@ -9,7 +9,12 @@
  *
  * Saves via fetch POST → /api/overrides.php (which we own, with session check)
  */
+require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/../functions.php';
+require_once __DIR__ . '/../includes/auth.php';
+require_once __DIR__ . '/../includes/csrf.php';
 session_start();
+
 $cacheDir = __DIR__ . '/../cache';
 $pinFile  = $cacheDir . '/admin-pin.txt';
 $ovFile   = $cacheDir . '/overrides.json';
@@ -18,8 +23,18 @@ if (!is_dir($cacheDir)) @mkdir($cacheDir, 0755, true);
 $err = '';
 $msg = '';
 
+// Rate-limit PIN attempts: 5 per minute per IP
+if ($_SERVER['REQUEST_METHOD']==='POST' && (isset($_POST['set_pin']) || isset($_POST['login_pin']))) {
+    $rlKey = 'prices_pin:' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown');
+    if (!checkRateLimit($rlKey, 5, 60)) {
+        $err = 'बढी प्रयास भयो। १ मिनेट पर्खनुहोस्।';
+    } elseif (!csrfVerify()) {
+        $err = 'Security check failed. Reload and try again.';
+    }
+}
+
 // ── Set PIN (first run only) ─────────────────────────────────────────────
-if ($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['set_pin']) && !is_file($pinFile)) {
+if ($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['set_pin']) && !is_file($pinFile) && empty($err)) {
   $pin = trim($_POST['set_pin']);
   if (strlen($pin) < 4) $err = 'PIN कम्तीमा ४ अक्षरको हुनुपर्छ';
   else {
@@ -31,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['set_pin']) && !is_file(
 }
 
 // ── Login ────────────────────────────────────────────────────────────────
-if ($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['login_pin'])) {
+if ($_SERVER['REQUEST_METHOD']==='POST' && isset($_POST['login_pin']) && empty($err)) {
   $pin = trim($_POST['login_pin']);
   $hash = is_file($pinFile) ? file_get_contents($pinFile) : '';
   if ($hash && password_verify($pin, $hash)) {
@@ -97,6 +112,7 @@ input:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px rgba(124
       <form method="post">
         <label>नयाँ PIN (कम्तीमा ४ अक्षर)</label>
         <input type="password" name="set_pin" required minlength="4" autofocus>
+        <?= csrfField() ?>
         <div class="hint">यो PIN <code>/cache/admin-pin.txt</code> मा hash गरेर save हुन्छ। बिर्सिएमा यो file delete गरे फेरि बनाउन सकिन्छ।</div>
         <div style="margin-top:14px"><button class="btn" type="submit">Set PIN र Login</button></div>
       </form>
@@ -107,6 +123,7 @@ input:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px rgba(124
       <form method="post">
         <label>PIN</label>
         <input type="password" name="login_pin" required autofocus>
+        <?= csrfField() ?>
         <div style="margin-top:14px"><button class="btn" type="submit">Login</button></div>
       </form>
     </div>
