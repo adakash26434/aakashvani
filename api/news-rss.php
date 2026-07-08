@@ -38,53 +38,56 @@ function nsh_source_key(string $name): string {
 }
 
 try {
-  ensureNewsTable();
-  $sql = "SELECT id,title,slug,excerpt,content,category,source,source_url,source_name,original_url,image_url,created_at
-          FROM tech_news WHERE is_published=1";
-  $params = [];
-  if ($cat && $cat !== 'all') {
-    $sql .= " AND category=?";
-    $params[] = $cat;
-  }
-  if ($sourceFilter) {
-    $sql .= " AND (LOWER(REPLACE(COALESCE(source_name,source,''),' ',''))=? OR LOWER(REPLACE(COALESCE(source,''),' ',''))=?)";
-    $params[] = $sourceFilter;
-    $params[] = $sourceFilter;
-  }
-  $sql .= " ORDER BY created_at DESC LIMIT " . (int)$limit;
-  $stmt = db()->prepare($sql);
-  $stmt->execute($params);
-  $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-  if ($rows) {
-    $items = [];
-    foreach ($rows as $r) {
-      $sourceLabel = $r['source_name'] ?: ($r['source'] ?: 'आकाशवाणी');
-      $sourceKey = nsh_source_key($sourceLabel);
-      $ts = !empty($r['created_at']) ? strtotime($r['created_at']) : time();
-      $items[] = [
-        'id'          => (int)$r['id'],
-        'slug'        => $r['slug'],
-        'title'       => $r['title'],
-        'link'        => $r['original_url'] ?: ($r['source_url'] ?: ''),
-        'internalUrl' => '/news-detail.php?slug=' . rawurlencode($r['slug']) . '&url=' . rawurlencode($r['original_url'] ?: ($r['source_url'] ?: '')) . '&src=' . rawurlencode($sourceLabel),
-        'image'       => $r['image_url'] ?: null,
-        'source'      => $sourceKey,
-        'sourceLabel' => $sourceLabel,
-        'cat'         => strtolower($r['category'] ?: 'general'),
-        'pubDate'     => $ts,
-        'ago'         => nsh_ago($ts),
-        'summary'     => $r['excerpt'] ?: mb_substr(strip_tags((string)$r['content']), 0, 260, 'UTF-8'),
-        'hasContent'  => mb_strlen(trim((string)$r['content']), 'UTF-8') > 80,
-      ];
+  $pdo = db();
+  if ($pdo) {
+    if (function_exists('ensureNewsTable')) ensureNewsTable();
+    $sql = "SELECT id,title,slug,excerpt,content,category,source,source_url,source_name,original_url,image_url,created_at
+            FROM tech_news WHERE is_published=1";
+    $params = [];
+    if ($cat && $cat !== 'all') {
+      $sql .= " AND category=?";
+      $params[] = $cat;
     }
-    echo json_encode([
-      'ok' => true,
-      'mode' => 'database',
-      'count' => count($items),
-      'cat' => $cat,
-      'items' => $items,
-    ], JSON_UNESCAPED_UNICODE);
-    exit;
+    if ($sourceFilter) {
+      $sql .= " AND (LOWER(REPLACE(COALESCE(source_name,source,''),' ',''))=? OR LOWER(REPLACE(COALESCE(source,''),' ',''))=?)";
+      $params[] = $sourceFilter;
+      $params[] = $sourceFilter;
+    }
+    $sql .= " ORDER BY created_at DESC LIMIT " . (int)$limit;
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute($params);
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    if ($rows) {
+      $items = [];
+      foreach ($rows as $r) {
+        $sourceLabel = $r['source_name'] ?: ($r['source'] ?: 'आकाशवाणी');
+        $sourceKey = nsh_source_key($sourceLabel);
+        $ts = !empty($r['created_at']) ? strtotime($r['created_at']) : time();
+        $items[] = [
+          'id'          => (int)$r['id'],
+          'slug'        => $r['slug'],
+          'title'       => $r['title'],
+          'link'        => $r['original_url'] ?: ($r['source_url'] ?: ''),
+          'internalUrl' => '/news-detail.php?slug=' . rawurlencode($r['slug']) . '&url=' . rawurlencode($r['original_url'] ?: ($r['source_url'] ?: '')) . '&src=' . rawurlencode($sourceLabel),
+          'image'       => $r['image_url'] ?: null,
+          'source'      => $sourceKey,
+          'sourceLabel' => $sourceLabel,
+          'cat'         => strtolower($r['category'] ?: 'general'),
+          'pubDate'     => $ts,
+          'ago'         => nsh_ago($ts),
+          'summary'     => $r['excerpt'] ?: mb_substr(strip_tags((string)$r['content']), 0, 260, 'UTF-8'),
+          'hasContent'  => mb_strlen(trim((string)$r['content']), 'UTF-8') > 80,
+        ];
+      }
+      echo json_encode([
+        'ok' => true,
+        'mode' => 'database',
+        'count' => count($items),
+        'cat' => $cat,
+        'items' => $items,
+      ], JSON_UNESCAPED_UNICODE);
+      exit;
+    }
   }
 } catch (Throwable $e) { error_log("news-rss DB fallback: " . $e->getMessage()); }
 }
