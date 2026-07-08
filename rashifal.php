@@ -35,7 +35,7 @@ if($selectedRashi){foreach($rashis as$r){if($r['id']===$selectedRashi){$selected
     <title><?=$t('राशिफल','Horoscope')?> | आकाशवाणी</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/assets/css/app.css">
+    <link rel="stylesheet" href="/assets/css/premium.css">
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
     <style>
         .page-header{background:linear-gradient(135deg,var(--dark-900),var(--dark-800));padding:var(--space-12) 0;color:#fff}
@@ -182,11 +182,58 @@ if($selectedRashi){foreach($rashis as$r){if($r['id']===$selectedRashi){$selected
         </div>
     </section>
     <?php endif;?>
-    <footer class="site-footer">
-        <div class="container">
-            <div class="footer-bottom" style="border:none;padding:0"><p class="footer-copyright">&copy; <?=date('Y')?> <?=$t('आकाशवाणी','Aakashvani')?></p></div>
+    <!-- FOOTER -->
+    <footer class="tp-footer">
+        <div class="tp-container">
+            <div class="tp-footer-grid">
+                <div class="tp-footer-brand">
+                    <a href="/" class="tp-footer-logo">
+                        <img src="/favicon.svg" alt="Aakashvani" width="40" height="40">
+                        <div>
+                            <span class="tp-footer-name"><?= $t('आकाशवाणी', 'Aakashvani') ?></span>
+                            <span class="tp-footer-tagline"><?= $t('सूचनाको खुला आकाश', 'Your Gateway to Information') ?></span>
+                        </div>
+                    </a>
+                    <p class="tp-footer-desc"><?= $t('नेपालको सबैभन्दा विश्वसनीय सूचना प्लेटफर्म।', 'Nepal's most trusted information platform.') ?></p>
+                    <div class="tp-footer-social">
+                        <a href="#" aria-label="Facebook"><i data-lucide="facebook"></i></a>
+                        <a href="#" aria-label="Twitter"><i data-lucide="twitter"></i></a>
+                        <a href="#" aria-label="YouTube"><i data-lucide="youtube"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h4><?= $t('लिंकहरू', 'Links') ?></h4>
+                    <ul>
+                        <li><a href="/"><?= $t('गृहपृष्ठ', 'Home') ?></a></li>
+                        <li><a href="/news.php"><?= $t('समाचार', 'News') ?></a></li>
+                        <li><a href="/ipo-tracker.php"><?= $t('NEPSE/IPO', 'NEPSE/IPO') ?></a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4><?= $t('स्रोतहरू', 'Resources') ?></h4>
+                    <ul>
+                        <li><a href="/rashifal.php"><?= $t('राशिफल', 'Horoscope') ?></a></li>
+                        <li><a href="/nepali-patro.php"><?= $t('नेपाली पात्रो', 'Calendar') ?></a></li>
+                        <li><a href="/weather.php"><?= $t('मौसम', 'Weather') ?></a></li>
+                        <li><a href="/emergency.php"><?= $t('आपतकालीन', 'Emergency') ?></a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4><?= $t('कम्पनी', 'Company') ?></h4>
+                    <ul>
+                        <li><a href="/about.php"><?= $t('हाम्रो बारेमा', 'About') ?></a></li>
+                        <li><a href="/contact.php"><?= $t('सम्पर्क', 'Contact') ?></a></li>
+                        <li><a href="/privacy.php"><?= $t('गोपनीयता', 'Privacy') ?></a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="tp-footer-bottom">
+                <span>&copy; <?= date('Y') ?> <?= $t('आकाशवाणी। सर्वाधिकार सुरक्षित।', 'Aakashvani. All rights reserved.') ?></span>
+                <span><?= $t('हामी नेपालको सूचना खुला राख्छौं', 'We keep Nepal's information open') ?></span>
+            </div>
         </div>
     </footer>
+
     <script>
     async function loadRashifal(){
         const params=new URLSearchParams(window.location.search);
@@ -219,36 +266,14 @@ if($selectedRashi){foreach($rashis as$r){if($r['id']===$selectedRashi){$selected
     }
     document.addEventListener('DOMContentLoaded',loadRashifal);
     </script>
-    <script src="/assets/js/app.js"></script>
-<script>document.addEventListener('DOMContentLoaded', function() {
+    <script>document.addEventListener('DOMContentLoaded', function() {
         if (typeof lucide !== 'undefined') lucide.createIcons();
-    });</script>
+    }
+        (function() {
+            var s=document.createElement('script');s.src='https://unpkg.com/lucide@latest/dist/umd/lucide.min.js';document.head.appendChild(s);
+        })();
+);</script>
 
     <!-- Mobile Bottom Nav -->
-    <nav class="mobile-bottom-nav" aria-label="Mobile navigation">
-        <div class="bottom-nav-inner">
-            <a href="/" class="bottom-nav-item">
-                <i data-lucide="home"></i>
-                <span>गृह</span>
-            </a>
-            <a href="/news.php" class="bottom-nav-item">
-                <i data-lucide="newspaper"></i>
-                <span>समाचार</span>
-            </a>
-            <a href="/ipo-tracker.php" class="bottom-nav-item">
-                <i data-lucide="trending-up"></i>
-                <span>NEPSE</span>
-            </a>
-            <a href="/nepali-patro.php" class="bottom-nav-item">
-                <i data-lucide="calendar-days"></i>
-                <span>पात्रो</span>
-            </a>
-            <a href="/rashifal.php" class="bottom-nav-item active">
-                <i data-lucide="sparkles"></i>
-                <span>राशिफल</span>
-            </a>
-        </div>
-    </nav>
-
 </body>
 </html>
