@@ -5,7 +5,7 @@ const CACHE_IMAGES = `${CACHE_VERSION}-images`;
 
 const OFFLINE_URLS = [
   '/', '/index.php', '/nepali-patro.php', '/tools.php',
-  '/assets/css/premium.css', '/assets/favicon.svg', '/manifest.json'
+  '/assets/css/premium.css', '/favicon.svg', '/manifest.json'
 ];
 
 // Install: Cache critical assets for offline access
@@ -125,8 +125,8 @@ self.addEventListener('sync', event => {
           // Update notifications in background
           return self.registration.showNotification('Market Data Updated', {
             body: `Gold: ₨${data.gold?.hallmarkPerTola || 'N/A'} | USD: ₨${data.forex?.rates?.[0]?.buy || 'N/A'}`,
-            icon: '/assets/favicon.svg',
-            badge: '/assets/favicon.svg',
+            icon: '/favicon.svg',
+            badge: '/favicon.svg',
           });
         })
         .catch(() => {})
@@ -149,8 +149,8 @@ self.addEventListener('push', event => {
   event.waitUntil(
     self.registration.showNotification(data.title || 'आकाशवाणी', {
       body: data.body || 'नयाँ update उपलब्ध छ',
-      icon: '/assets/favicon.svg',
-      badge: '/assets/favicon.svg',
+      icon: '/favicon.svg',
+      badge: '/favicon.svg',
       tag: 'nsh-notification',
       requireInteraction: data.requireInteraction || false,
       data: { url: data.url || '/' }

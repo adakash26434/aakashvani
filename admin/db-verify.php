@@ -241,9 +241,6 @@ if (!$configExists) {
                 <a href="/admin/clear-cache.php" class="btn btn-secondary">
                     <i data-lucide="trash-2" style="width: 14px;"></i> Clear Cache
                 </a>
-                <a href="/admin/article-test.php" class="btn btn-secondary">
-                    <i data-lucide="file-text" style="width: 14px;"></i> Test Articles
-                </a>
                 <a href="/" class="btn btn-secondary">
                     <i data-lucide="home" style="width: 14px;"></i> View Site
                 </a>

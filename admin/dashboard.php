@@ -466,7 +466,7 @@ $navItems = [
         <div class="text-white/70 text-xs mt-0.5">हरेक बिहान AI ले आजका ५ मुख्य समाचारको बुँदा auto-generate गर्छ — cron बाट।</div>
       </div>
       <div class="flex gap-2 flex-shrink-0">
-        <a href="/morning-brief.php" target="_blank" class="bg-white/20 text-white border border-white/30 font-bold text-xs px-4 py-2.5 rounded-lg hover:bg-white/30 transition-all">
+        <a href="/api/morning-brief.php" target="_blank" class="bg-white/20 text-white border border-white/30 font-bold text-xs px-4 py-2.5 rounded-lg hover:bg-white/30 transition-all">
           👁 Preview
         </a>
         <button onclick="regenBrief(this)"
