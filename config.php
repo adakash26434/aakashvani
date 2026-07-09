@@ -16,6 +16,11 @@ define('SITE_NAME', 'आकाशवाणी');
 define('SITE_TAGLINE', 'सूचनाको खुला आकाश');
 define('SITE_URL', 'https://news.bandanasigdel.com.np');
 
+// Auto-sync: set a strong random key, then add to cron:
+//   0,30 * * * * /usr/bin/php /home/USER/public_html/cron/ai-sync.php
+// Use sync-trigger via: POST /api/sync-trigger.php?key=YOUR_CRON_KEY
+define('CRON_KEY', 'CHANGE_ME_to_a_strong_random_string');
+
 // Timezone
 date_default_timezone_set('Asia/Kathmandu');
 

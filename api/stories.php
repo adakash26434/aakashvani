@@ -22,31 +22,37 @@ $limit = (int)($_GET['limit'] ?? 20);
 $offset = (int)($_GET['offset'] ?? 0);
 
 function getStories(?string $category = null, int $limit = 20, int $offset = 0): array {
-    ensureStoriesTable();
     $db = db();
-    
+    if (!$db) return [];
+    ensureStoriesTable();
+
     $sql = 'SELECT * FROM stories WHERE is_published = 1';
     $params = [];
-    
+
     if ($category) {
         $sql .= ' AND category = ?';
         $params[] = $category;
     }
-    
+
     $sql .= ' ORDER BY views DESC LIMIT ' . (int)$limit . ' OFFSET ' . (int)$offset;
-    
-    $stmt = $db->prepare($sql);
-    $stmt->execute($params);
-    $stories = $stmt->fetchAll();
-    
-    // Parse JSON fields
-    foreach ($stories as &$s) {
-        $s['tags'] = json_decode($s['tags'] ?? '[]', true) ?: [];
-        $s['tags_en'] = json_decode($s['tags_en'] ?? '[]', true) ?: [];
+
+    try {
+        $stmt = $db->prepare($sql);
+        $stmt->execute($params);
+        $stories = $stmt->fetchAll();
+
+        foreach ($stories as &$s) {
+            $s['tags'] = json_decode($s['tags'] ?? '[]', true) ?: [];
+            $s['tags_en'] = json_decode($s['tags_en'] ?? '[]', true) ?: [];
+        }
+
+        return $stories;
+    } catch (Throwable $e) {
+        error_log('[stories] getStories: ' . $e->getMessage());
+        return [];
     }
-    
-    return $stories;
 }
+
 
 function getStoryCategories(): array {
     return [

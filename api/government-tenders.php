@@ -188,21 +188,22 @@ function syncTendersToDB(array $tenders): void {
 
 function ensureGovernmentTendersTable(): void {
     $db = db();
-    $db->exec('
-        CREATE TABLE IF NOT EXISTS government_tenders (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            title TEXT NOT NULL,
-            title_ne TEXT,
-            organization TEXT,
-            ministry TEXT,
-            category TEXT,
-            deadline TEXT,
-            status TEXT DEFAULT "Open",
-            link TEXT,
-            published_date TEXT,
-            created_at TEXT DEFAULT CURRENT_TIMESTAMP
-        )
-    ');
+    $isMysql = defined('DB_DRIVER') && DB_DRIVER === 'mysql';
+    $ai = $isMysql ? 'INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY' : 'INTEGER PRIMARY KEY AUTOINCREMENT';
+    $charset = $isMysql ? ' ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci' : '';
+    $db->exec("CREATE TABLE IF NOT EXISTS government_tenders (
+        id $ai,
+        title TEXT NOT NULL,
+        title_ne TEXT,
+        organization TEXT,
+        ministry TEXT,
+        category TEXT,
+        deadline TEXT,
+        status TEXT DEFAULT 'Open',
+        link TEXT,
+        published_date TEXT,
+        created_at TEXT DEFAULT CURRENT_TIMESTAMP
+    ){$charset}");
 }
 
 function getTenderCategories(): array {

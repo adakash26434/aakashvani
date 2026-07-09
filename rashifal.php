@@ -112,20 +112,58 @@ if($selectedRashi){foreach($rashis as$r){if($r['id']===$selectedRashi){$selected
         <div class="tp-container">
             <div class="tp-nav-inner">
                 <button class="tp-nav-toggle" id="navToggle" aria-label="Menu"><i data-lucide="menu"></i></button>
-                <ul class="tp-nav-list" id="navList">
+                                <ul class="tp-nav-list" id="navList">
                     <li><a href="/"><?= $t('गृह', 'Home') ?></a></li>
-                    <li><a href="/news.php"><?= $t('समाचार', 'News') ?></a></li>
-                    <li><a href="/nepali-patro.php"><?= $t('पात्रो', 'Calendar') ?></a></li>
-                    <li><a href="/rashifal.php"><?= $t('राशिफल', 'Horoscope') ?></a></li>
-                    <li><a href="/ipo-tracker.php"><?= $t('NEPSE/IPO', 'NEPSE/IPO') ?></a></li>
-                    <li><a href="/tools.php"><?= $t('टूलहरू', 'Tools') ?></a></li>
-                    <li><a href="/gov-services.php"><?= $t('सरकारी', 'Gov') ?></a></li>
-                    <li><a href="/weather.php"><?= $t('मौसम', 'Weather') ?></a></li>
+                    <li class="has-dropdown">
+                        <a href="/news.php"><?= $t('समाचार', 'News') ?></a>
+                        <ul class="tp-nav-sub">
+                            <li><a href="/news.php"><?= $t('सबै समाचार', 'All News') ?></a></li>
+                            <li><a href="/news-post.php"><?= $t('समाचार विवरण', 'News Detail') ?></a></li>
+                        </ul>
+                    </li>
+                    <li class="has-dropdown">
+                        <a href="/ipo-tracker.php"><?= $t('बजार', 'Markets') ?></a>
+                        <ul class="tp-nav-sub">
+                            <li><a href="/ipo-tracker.php"><?= $t('NEPSE / IPO', 'NEPSE / IPO') ?></a></li>
+                            <li><a href="/currency.php"><?= $t('मुद्रा विनिमय', 'Currency') ?></a></li>
+                            <li><a href="/gold-price.php"><?= $t('सुन / चाँदी', 'Gold / Silver') ?></a></li>
+                            <li><a href="/bank-interest-rates.php"><?= $t('ब्याज दर', 'Bank Interest') ?></a></li>
+                        </ul>
+                    </li>
+                    <li class="has-dropdown">
+                        <a href="/loksewa.php"><?= $t('करियर', 'Career') ?></a>
+                        <ul class="tp-nav-sub">
+                            <li><a href="/loksewa.php"><?= $t('लोकसेवा', 'Loksewa') ?></a></li>
+                            <li><a href="/nokari.php"><?= $t('नोकरी', 'Jobs') ?></a></li>
+                        </ul>
+                    </li>
+                    <li class="has-dropdown">
+                        <a href="/gov-services.php"><?= $t('सरकारी', 'Gov') ?></a>
+                        <ul class="tp-nav-sub">
+                            <li><a href="/gov-services.php"><?= $t('सरकारी सेवाहरू', 'Gov Services') ?></a></li>
+                            <li><a href="/tenders.php"><?= $t('टेन्डर', 'Tenders') ?></a></li>
+                            <li><a href="/alerts.php"><?= $t('अलर्ट', 'Alerts') ?></a></li>
+                        </ul>
+                    </li>
+                    <li class="has-dropdown">
+                        <a href="/nepali-patro.php" class="active"><?= $t('दैनिक', 'Daily') ?></a>
+                        <ul class="tp-nav-sub">
+                            <li><a href="/nepali-patro.php" class="active"><?= $t('पात्रो', 'Calendar') ?></a></li>
+                            <li><a href="/rashifal.php"><?= $t('राशिफल', 'Horoscope') ?></a></li>
+                            <li><a href="/weather.php"><?= $t('मौसम', 'Weather') ?></a></li>
+                            <li><a href="/emergency.php"><?= $t('आपतकालीन', 'Emergency') ?></a></li>
+                        </ul>
+                    </li>
                     <li><a href="/cricket.php"><?= $t('क्रिकेट', 'Cricket') ?></a></li>
-                    <li><a href="/tenders.php"><?= $t('टेन्डर', 'Tenders') ?></a></li>
-                    <li><a href="/emergency.php"><?= $t('आपतकालीन', 'Emergency') ?></a></li>
+                    <li class="has-dropdown">
+                        <a href="/tools.php"><?= $t('टूलहरू', 'Tools') ?></a>
+                        <ul class="tp-nav-sub">
+                            <li><a href="/tools.php"><?= $t('सबै टूलहरू', 'All Tools') ?></a></li>
+                            <li><a href="/info-hub.php"><?= $t('सूचना केन्द्र', 'Info Hub') ?></a></li>
+                        </ul>
+                    </li>
                 </ul>
-                <div class="tp-nav-search">
+<div class="tp-nav-search">
                     <button class="tp-search-btn" id="searchToggle" aria-label="Search"><i data-lucide="search"></i></button>
                 </div>
             </div>
@@ -297,7 +335,16 @@ if($selectedRashi){foreach($rashis as$r){if($r['id']===$selectedRashi){$selected
         (function() {
             var s=document.createElement('script');s.src='/assets/js/lucide.min.js';document.head.appendChild(s);
         })();
-);</script>
+);
+            // Mobile dropdown: clicking has-dropdown links toggles submenu
+            navList?.querySelectorAll('.has-dropdown > a').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    if (window.innerWidth <= 768) {
+                        e.preventDefault();
+                        link.parentElement.classList.toggle('open');
+                    }
+                });
+            });</script>
 
     <!-- Mobile Bottom Nav -->
 </body>
