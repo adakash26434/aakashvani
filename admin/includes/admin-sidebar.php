@@ -20,11 +20,18 @@ $currentPage = basename($_SERVER['PHP_SELF'], '.php');
         <div class="pt-4">
             <div class="px-3 py-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">📰 News Portal</div>
             
-            <a href="/admin/news-manager.php" class="flex items-center gap-3 px-3 py-2 rounded-lg <?= strpos($currentPage, 'news') !== false ? 'bg-primary text-white' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' ?>">
+            <a href="/admin/news-manager.php" class="flex items-center gap-3 px-3 py-2 rounded-lg <?= strpos($currentPage, 'news') !== false && strpos($currentPage, 'space') === false ? 'bg-primary text-white' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' ?>">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/>
                 </svg>
                 <span class="font-medium">News Manager</span>
+            </a>
+            
+            <a href="/admin/space-manager.php" class="flex items-center gap-3 px-3 py-2 rounded-lg <?= strpos($currentPage, 'space') !== false ? 'bg-primary text-white' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' ?>">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                </svg>
+                <span class="font-medium">Spaces</span>
             </a>
             
             <a href="/admin/category-manager.php" class="flex items-center gap-3 px-3 py-2 rounded-lg <?= strpos($currentPage, 'category') !== false ? 'bg-primary text-white' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700' ?>">

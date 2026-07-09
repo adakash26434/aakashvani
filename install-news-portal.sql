@@ -1,5 +1,5 @@
 -- ============================================
--- आकाशवाणी News Portal - Complete Database Setup
+-- а§Жа§Ха§Ња§ґа§µа§Ња§£а•А News Portal - Complete Database Setup
 -- Version: 1.0
 -- Date: 2026-07-09
 -- ============================================
@@ -118,27 +118,27 @@ CREATE TABLE `aak_categories` (
 
 -- Default categories
 INSERT INTO `aak_categories` (`name`, `name_ne`, `slug`, `description`, `icon`, `color`, `sort_order`, `show_in_menu`, `show_in_home`) VALUES
-('Politics', 'राजनीति', 'politics', 'Political news and updates from Nepal and around the world', '🏛️', '#dc2626', 10, 1, 1),
-('Economy', 'अर्थतन्त्र', 'economy', 'Business, finance, and economic news', '💰', '#059669', 20, 1, 1),
-('Sports', 'खेलकुद', 'sports', 'Sports news including cricket, football, and more', '⚽', '#f59e0b', 30, 1, 1),
-('Technology', 'प्रविधि', 'technology', 'Technology, gadgets, and digital trends', '💻', '#6366f1', 40, 1, 1),
-('Entertainment', 'मनोरञ्जन', 'entertainment', 'Movies, music, celebrity news, and entertainment', '🎬', '#ec4899', 50, 1, 1),
-('World', 'विश्व', 'world', 'International news and global affairs', '🌍', '#0ea5e9', 60, 1, 1),
-('Health', 'स्वास्थ्य', 'health', 'Health tips, medical news, and wellness', '🏥', '#10b981', 70, 1, 1),
-('Education', 'शिक्षा', 'education', 'Education news, exams, and career guidance', '📚', '#8b5cf6', 80, 1, 1),
-('Lifestyle', 'जीवनशैली', 'lifestyle', 'Lifestyle, travel, food, and fashion', '🌿', '#84cc16', 90, 1, 1);
+('Politics', 'а§∞а§Ња§Ьа§®а•Аа§§а§њ', 'politics', 'Political news and updates from Nepal and around the world', 'рЯПЫпЄП', '#dc2626', 10, 1, 1),
+('Economy', 'а§Еа§∞а•На§•а§§а§®а•На§§а•На§∞', 'economy', 'Business, finance, and economic news', 'рЯТ∞', '#059669', 20, 1, 1),
+('Sports', 'а§Ца•За§≤а§Ха•Ба§¶', 'sports', 'Sports news including cricket, football, and more', 'вЪљ', '#f59e0b', 30, 1, 1),
+('Technology', 'а§™а•На§∞а§µа§ња§Іа§њ', 'technology', 'Technology, gadgets, and digital trends', 'рЯТї', '#6366f1', 40, 1, 1),
+('Entertainment', 'а§Ѓа§®а•Ла§∞а§Юа•На§Ьа§®', 'entertainment', 'Movies, music, celebrity news, and entertainment', 'рЯОђ', '#ec4899', 50, 1, 1),
+('World', 'а§µа§ња§ґа•На§µ', 'world', 'International news and global affairs', 'рЯМН', '#0ea5e9', 60, 1, 1),
+('Health', 'а§Єа•На§µа§Ња§Єа•На§•а•На§ѓ', 'health', 'Health tips, medical news, and wellness', 'рЯП•', '#10b981', 70, 1, 1),
+('Education', 'а§ґа§ња§Ха•На§Ја§Њ', 'education', 'Education news, exams, and career guidance', 'рЯУЪ', '#8b5cf6', 80, 1, 1),
+('Lifestyle', 'а§Ьа•Аа§µа§®а§ґа•Иа§≤а•А', 'lifestyle', 'Lifestyle, travel, food, and fashion', 'рЯМњ', '#84cc16', 90, 1, 1);
 
 -- Subcategories for Politics
 INSERT INTO `aak_categories` (`parent_id`, `name`, `name_ne`, `slug`, `description`, `icon`, `color`, `sort_order`) VALUES
-(1, 'Parliament', 'संसद', 'parliament', 'Parliament and legislative news', '🏛️', '#dc2626', 1),
-(1, 'Elections', 'निर्वाचन', 'elections', 'Election news and updates', '🗳️', '#dc2626', 2),
-(1, 'Government', 'सरकार', 'government', 'Government policies and decisions', '⚖️', '#dc2626', 3);
+(1, 'Parliament', 'а§Єа§Ва§Єа§¶', 'parliament', 'Parliament and legislative news', 'рЯПЫпЄП', '#dc2626', 1),
+(1, 'Elections', 'а§®а§ња§∞а•На§µа§Ња§Ъа§®', 'elections', 'Election news and updates', 'рЯЧ≥пЄП', '#dc2626', 2),
+(1, 'Government', 'а§Єа§∞а§Ха§Ња§∞', 'government', 'Government policies and decisions', 'вЪЦпЄП', '#dc2626', 3);
 
 -- Subcategories for Economy
 INSERT INTO `aak_categories` (`parent_id`, `name`, `name_ne`, `slug`, `description`, `icon`, `color`, `sort_order`) VALUES
-(2, 'Stock Market', 'शेयर बजार', 'stock-market', 'NEPSE and stock market updates', '📈', '#059669', 1),
-(2, 'Banking', 'बैंकिङ', 'banking', 'Banking and financial news', '🏦', '#059669', 2),
-(2, 'Agriculture', 'कृषि', 'agriculture', 'Agriculture and rural economy', '🌾', '#059669', 3);
+(2, 'Stock Market', 'а§ґа•За§ѓа§∞ а§ђа§Ьа§Ња§∞', 'stock-market', 'NEPSE and stock market updates', 'рЯУИ', '#059669', 1),
+(2, 'Banking', 'а§ђа•Иа§Ва§Ха§ња§Щ', 'banking', 'Banking and financial news', 'рЯП¶', '#059669', 2),
+(2, 'Agriculture', 'а§Ха•Га§Ја§њ', 'agriculture', 'Agriculture and rural economy', 'рЯМЊ', '#059669', 3);
 
 -- ============================================
 -- TABLE: aak_tags
@@ -403,16 +403,16 @@ CREATE TABLE `aak_homepage_sections` (
 
 -- Default homepage sections
 INSERT INTO `aak_homepage_sections` (`section_key`, `title`, `title_ne`, `subtitle`, `type`, `max_items`, `style`, `cols_md`, `show_title`, `show_excerpt`, `show_image`, `sort_order`, `is_active`) VALUES
-('breaking-news', 'Breaking News', 'भयो के ?', 'Latest breaking news updates', 'breaking', 8, 'list', 1, 1, 0, 1, 1, 1),
-('featured-news', 'Featured Stories', 'विशेष कथाहरू', 'Top featured stories of the day', 'featured', 4, 'big_featured', 2, 1, 1, 1, 2, 1),
-('latest-news', 'Latest News', 'ताजा समाचार', 'Recently published articles', 'latest', 12, 'grid', 4, 1, 1, 1, 3, 1),
-('trending-news', 'Trending Now', 'ट्रेन्डिङ', 'Most popular articles today', 'trending', 8, 'compact', 4, 1, 0, 1, 4, 1),
-('politics-news', 'Politics', 'राजनीति', 'Latest from politics', 'category', 6, 'grid', 3, 1, 1, 1, 5, 1, 1),
-('economy-news', 'Economy & Finance', 'अर्थ र वित्त', 'Business and financial news', 'category', 6, 'grid', 3, 1, 1, 1, 6, 1, 2),
-('sports-news', 'Sports', 'खेलकुद', 'Sports updates', 'category', 6, 'grid', 3, 1, 1, 1, 7, 1, 3),
-('editors-choice', 'Editor''s Choice', 'सम्पादकको छनोट', 'Handpicked stories by our editors', 'editors_pick', 6, 'magazine', 3, 1, 1, 1, 8, 1),
-('most-read', 'Most Read', 'धेरै पढिएका', 'Articles with highest views', 'most_viewed', 10, 'list', 1, 1, 0, 1, 9, 1),
-('popular-tags', 'Popular Tags', 'लोकप्रिय ट्यागहरू', 'Browse by popular topics', 'popular_tags', 20, 'compact', 6, 1, 0, 0, 10, 1);
+('breaking-news', 'Breaking News', 'а§≠а§ѓа•Л а§Ха•З ?', 'Latest breaking news updates', 'breaking', 8, 'list', 1, 1, 0, 1, 1, 1),
+('featured-news', 'Featured Stories', 'а§µа§ња§ґа•За§Ј а§Ха§•а§Ња§єа§∞а•В', 'Top featured stories of the day', 'featured', 4, 'big_featured', 2, 1, 1, 1, 2, 1),
+('latest-news', 'Latest News', 'а§§а§Ња§Ьа§Њ а§Єа§Ѓа§Ња§Ъа§Ња§∞', 'Recently published articles', 'latest', 12, 'grid', 4, 1, 1, 1, 3, 1),
+('trending-news', 'Trending Now', 'а§Яа•На§∞а•За§®а•На§°а§ња§Щ', 'Most popular articles today', 'trending', 8, 'compact', 4, 1, 0, 1, 4, 1),
+('politics-news', 'Politics', 'а§∞а§Ња§Ьа§®а•Аа§§а§њ', 'Latest from politics', 'category', 6, 'grid', 3, 1, 1, 1, 5, 1, 1),
+('economy-news', 'Economy & Finance', 'а§Еа§∞а•На§• а§∞ а§µа§ња§§а•На§§', 'Business and financial news', 'category', 6, 'grid', 3, 1, 1, 1, 6, 1, 2),
+('sports-news', 'Sports', 'а§Ца•За§≤а§Ха•Ба§¶', 'Sports updates', 'category', 6, 'grid', 3, 1, 1, 1, 7, 1, 3),
+('editors-choice', 'Editor''s Choice', 'а§Єа§Ѓа•На§™а§Ња§¶а§Ха§Ха•Л а§Ыа§®а•Ла§Я', 'Handpicked stories by our editors', 'editors_pick', 6, 'magazine', 3, 1, 1, 1, 8, 1),
+('most-read', 'Most Read', 'а§Іа•За§∞а•И а§™а§Ґа§ња§Па§Ха§Њ', 'Articles with highest views', 'most_viewed', 10, 'list', 1, 1, 0, 1, 9, 1),
+('popular-tags', 'Popular Tags', 'а§≤а•Ла§Ха§™а•На§∞а§ња§ѓ а§Яа•На§ѓа§Ња§Ча§єа§∞а•В', 'Browse by popular topics', 'popular_tags', 20, 'compact', 6, 1, 0, 0, 10, 1);
 
 -- ============================================
 -- TABLE: aak_seo_settings
@@ -458,11 +458,11 @@ CREATE TABLE `aak_seo_settings` (
 
 -- Default SEO settings
 INSERT INTO `aak_seo_settings` (`page_type`, `reference_slug`, `meta_title`, `meta_description`, `meta_robots`) VALUES
-('home', 'home', 'आकाशवाणी - सूचनाको खुला आकाश', 'नेपालको नवीनतम समाचार, बजार, खेल, मनोरञ्जन र थप। आकाशवाणी - तपाईंको सूचना गेटवे।', 'index, follow'),
-('category', 'politics', 'राजनीति समाचार | आकाशवाणी', 'नेपाल र विश्व राजनीतिका ताजा समाचार र विश्लेषण।', 'index, follow'),
-('category', 'economy', 'अर्थतन्त्र र बजार समाचार | आकाशवाणी', 'शेयर बजार, बैंकिङ, र नेपाली अर्थतन्त्रका ताजा समाचार।', 'index, follow'),
-('category', 'sports', 'खेलकुद समाचार | आकाशवाणी', 'क्रिकेट, फुटबल र नेपाली खेलकुदका ताजा समाचार।', 'index, follow'),
-('category', 'technology', 'प्रविधि समाचार | आकाशवाणी', 'टेक्नोलोजी, ग्याजेट्स र डिजिटल ट्रेंडहरूको समाचार।', 'index, follow');
+('home', 'home', 'а§Жа§Ха§Ња§ґа§µа§Ња§£а•А - а§Єа•Ва§Ъа§®а§Ња§Ха•Л а§Ца•Ба§≤а§Њ а§Жа§Ха§Ња§ґ', 'а§®а•За§™а§Ња§≤а§Ха•Л а§®а§µа•Аа§®а§§а§Ѓ а§Єа§Ѓа§Ња§Ъа§Ња§∞, а§ђа§Ьа§Ња§∞, а§Ца•За§≤, а§Ѓа§®а•Ла§∞а§Юа•На§Ьа§® а§∞ а§•а§™а•§ а§Жа§Ха§Ња§ґа§µа§Ња§£а•А - а§§а§™а§Ња§Иа§Ва§Ха•Л а§Єа•Ва§Ъа§®а§Њ а§Ча•За§Яа§µа•За•§', 'index, follow'),
+('category', 'politics', 'а§∞а§Ња§Ьа§®а•Аа§§а§њ а§Єа§Ѓа§Ња§Ъа§Ња§∞ | а§Жа§Ха§Ња§ґа§µа§Ња§£а•А', 'а§®а•За§™а§Ња§≤ а§∞ а§µа§ња§ґа•На§µ а§∞а§Ња§Ьа§®а•Аа§§а§ња§Ха§Њ а§§а§Ња§Ьа§Њ а§Єа§Ѓа§Ња§Ъа§Ња§∞ а§∞ а§µа§ња§ґа•На§≤а•За§Ја§£а•§', 'index, follow'),
+('category', 'economy', 'а§Еа§∞а•На§•а§§а§®а•На§§а•На§∞ а§∞ а§ђа§Ьа§Ња§∞ а§Єа§Ѓа§Ња§Ъа§Ња§∞ | а§Жа§Ха§Ња§ґа§µа§Ња§£а•А', 'а§ґа•За§ѓа§∞ а§ђа§Ьа§Ња§∞, а§ђа•Иа§Ва§Ха§ња§Щ, а§∞ а§®а•За§™а§Ња§≤а•А а§Еа§∞а•На§•а§§а§®а•На§§а•На§∞а§Ха§Њ а§§а§Ња§Ьа§Њ а§Єа§Ѓа§Ња§Ъа§Ња§∞а•§', 'index, follow'),
+('category', 'sports', 'а§Ца•За§≤а§Ха•Ба§¶ а§Єа§Ѓа§Ња§Ъа§Ња§∞ | а§Жа§Ха§Ња§ґа§µа§Ња§£а•А', 'а§Ха•На§∞а§ња§Ха•За§Я, а§Ђа•Ба§Яа§ђа§≤ а§∞ а§®а•За§™а§Ња§≤а•А а§Ца•За§≤а§Ха•Ба§¶а§Ха§Њ а§§а§Ња§Ьа§Њ а§Єа§Ѓа§Ња§Ъа§Ња§∞а•§', 'index, follow'),
+('category', 'technology', 'а§™а•На§∞а§µа§ња§Іа§њ а§Єа§Ѓа§Ња§Ъа§Ња§∞ | а§Жа§Ха§Ња§ґа§µа§Ња§£а•А', 'а§Яа•За§Ха•На§®а•Ла§≤а•Ла§Ьа•А, а§Ча•На§ѓа§Ња§Ьа•За§Яа•На§Є а§∞ а§°а§ња§Ьа§ња§Яа§≤ а§Яа•На§∞а•За§Ва§°а§єа§∞а•Ва§Ха•Л а§Єа§Ѓа§Ња§Ъа§Ња§∞а•§', 'index, follow');
 
 -- ============================================
 -- TABLE: aak_activity_log
@@ -593,6 +593,129 @@ INSERT INTO `aak_advertisements` (`name`, `position`, `slot_id`, `type`, `is_act
 ('Sidebar Top', 'sidebar', 'mrec', 'image', 1, 10),
 ('Between Articles 1', 'between_articles', 'mrec', 'image', 1, 5),
 ('Footer Banner', 'footer', 'leaderboard', 'image', 1, 10);
+
+-- ============================================
+-- TABLE: aak_spaces
+-- Content collections/spaces like OnlineKhabar, Ratopati
+-- ============================================
+DROP TABLE IF EXISTS `aak_spaces`;
+CREATE TABLE `aak_spaces` (
+    `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(100) NOT NULL,
+    `name_ne` VARCHAR(100) DEFAULT NULL,
+    `slug` VARCHAR(100) NOT NULL,
+    `description` TEXT DEFAULT NULL,
+    `description_ne` TEXT DEFAULT NULL,
+    `icon` VARCHAR(50) DEFAULT NULL,
+    `color` VARCHAR(7) NOT NULL DEFAULT '#16a34a',
+    `image` VARCHAR(255) DEFAULT NULL,
+    `cover_image` VARCHAR(255) DEFAULT NULL,
+    
+    `layout` ENUM('grid','list','magazine','featured','masonry','carousel','timeline') NOT NULL DEFAULT 'grid',
+    `template` VARCHAR(50) DEFAULT 'default',
+    
+    `category_id` INT UNSIGNED DEFAULT NULL,
+    `parent_id` INT UNSIGNED DEFAULT NULL,
+    
+    `sort_by` ENUM('latest','popular','custom','alphabetical') NOT NULL DEFAULT 'latest',
+    `max_articles` INT NOT NULL DEFAULT 20,
+    `articles_per_page` INT NOT NULL DEFAULT 12,
+    
+    `show_title` TINYINT(1) NOT NULL DEFAULT 1,
+    `show_description` TINYINT(1) NOT NULL DEFAULT 1,
+    `show_cover` TINYINT(1) NOT NULL DEFAULT 1,
+    `show_excerpt` TINYINT(1) NOT NULL DEFAULT 1,
+    `show_author` TINYINT(1) NOT NULL DEFAULT 0,
+    `show_date` TINYINT(1) NOT NULL DEFAULT 1,
+    `show_views` TINYINT(1) NOT NULL DEFAULT 0,
+    `show_thumbnail` TINYINT(1) NOT NULL DEFAULT 1,
+    `show_category` TINYINT(1) NOT NULL DEFAULT 1,
+    `show_read_time` TINYINT(1) NOT NULL DEFAULT 0,
+    `show_pagination` TINYINT(1) NOT NULL DEFAULT 1,
+    
+    `is_featured` TINYINT(1) NOT NULL DEFAULT 0,
+    `is_active` TINYINT(1) NOT NULL DEFAULT 1,
+    `show_in_menu` TINYINT(1) NOT NULL DEFAULT 1,
+    `show_in_home` TINYINT(1) NOT NULL DEFAULT 1,
+    `show_in_footer` TINYINT(1) NOT NULL DEFAULT 0,
+    `is_public` TINYINT(1) NOT NULL DEFAULT 1,
+    `requires_subscription` TINYINT(1) NOT NULL DEFAULT 0,
+    
+    `meta_title` VARCHAR(150) DEFAULT NULL,
+    `meta_description` VARCHAR(300) DEFAULT NULL,
+    `meta_keywords` VARCHAR(255) DEFAULT NULL,
+    `og_image` VARCHAR(255) DEFAULT NULL,
+    
+    `featured_article_id` INT UNSIGNED DEFAULT NULL,
+    `custom_css` TEXT DEFAULT NULL,
+    
+    `view_count` INT NOT NULL DEFAULT 0,
+    `subscriber_count` INT NOT NULL DEFAULT 0,
+    
+    `sort_order` INT NOT NULL DEFAULT 0,
+    `columns` INT NOT NULL DEFAULT 3,
+    
+    `created_by` INT UNSIGNED DEFAULT NULL,
+    `updated_by` INT UNSIGNED DEFAULT NULL,
+    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uq_slug` (`slug`),
+    KEY `idx_active` (`is_active`),
+    KEY `idx_featured` (`is_featured`),
+    KEY `idx_menu` (`show_in_menu`),
+    KEY `idx_home` (`show_in_home`),
+    KEY `idx_sort` (`sort_order`),
+    KEY `idx_category` (`category_id`),
+    CONSTRAINT `fk_space_category` FOREIGN KEY (`category_id`) REFERENCES `aak_categories` (`id`) ON DELETE SET NULL,
+    CONSTRAINT `fk_space_featured` FOREIGN KEY (`featured_article_id`) REFERENCES `aak_articles` (`id`) ON DELETE SET NULL,
+    CONSTRAINT `fk_space_created` FOREIGN KEY (`created_by`) REFERENCES `aak_users` (`id`) ON DELETE SET NULL,
+    CONSTRAINT `fk_space_updated` FOREIGN KEY (`updated_by`) REFERENCES `aak_users` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Content collections/spaces';
+
+-- Default spaces
+INSERT INTO `aak_spaces` (`name`, `name_ne`, `slug`, `description`, `description_ne`, `icon`, `color`, `layout`, `sort_by`, `max_articles`, `show_in_menu`, `show_in_home`, `sort_order`) VALUES
+('Breaking News', 'भयो के ?', 'breaking-news', 'Latest breaking news and urgent updates from Nepal and around the world', 'नेपाल र विश्वका ताजा समाचार र अर्जेन्ट अपडेटहरू', '🔥', '#ef4444', 'featured', 'latest', 10, 1, 1, 1),
+('Featured Stories', 'विशेष कथाहरू', 'featured', 'Handpicked featured stories by our editors', 'हाम्रा सम्पादकहरूद्वारा चुनिएका विशेष कथाहरू', '⭐', '#8b5cf6', 'magazine', 'popular', 12, 1, 1, 2),
+('Politics', 'राजनीति', 'politics-space', 'Comprehensive coverage of Nepal politics, parliament, and government', 'नेपाली राजनीति, संसद र सरकारको व्यापक कभरेज', '🏛️', '#dc2626', 'grid', 'latest', 20, 1, 1, 3),
+('Economy & Markets', 'अर्थ र बजार', 'economy-markets', 'Stock market, banking, business news and economic analysis', 'शेयर बजार, बैंकिङ, व्यापार समाचार र आर्थिक विश्लेषण', '💰', '#059669', 'grid', 'latest', 20, 1, 1, 4),
+('Sports', 'खेलकुद', 'sports-space', 'Cricket, football, and all sports coverage', 'क्रिकेट, फुटबल र सबै खेलकुद कभरेज', '⚽', '#f59e0b', 'grid', 'latest', 20, 1, 1, 5),
+('Technology', 'प्रविधि', 'technology-space', 'Tech news, gadgets, startups and digital trends', 'प्रविधि समाचार, ग्याजेट्स, स्टार्टअप र डिजिटल ट्रेंडहरू', '💻', '#6366f1', 'grid', 'latest', 20, 1, 1, 6),
+('Entertainment', 'मनोरञ्जन', 'entertainment-space', 'Movies, music, celebrities and entertainment news', 'चलचित्र, संगीत, सेलिब्रेटी र मनोरञ्जन समाचार', '🎬', '#ec4899', 'grid', 'latest', 20, 1, 1, 7),
+('Opinion & Analysis', 'राय र विश्लेषण', 'opinion-analysis', 'Expert opinions, editorial and in-depth analysis', 'विशेषज्ञ राय, सम्पादकीय र गहिरो विश्लेषण', '💡', '#0ea5e9', 'list', 'latest', 15, 1, 1, 8),
+('Interviews', 'अन्तर्वार्ता', 'interviews', 'Exclusive interviews with newsmakers', 'समाचारकर्ताहरूसँगको एक्सक्लुसिभ अन्तर्वार्ता', '🎤', '#14b8a6', 'featured', 'latest', 10, 1, 0, 9),
+('Photo Stories', 'फोटो कथा', 'photo-stories', 'Visual stories and photo galleries', 'भिजुअल स्टोरी र फोटो ग्यालेरी', '📷', '#84cc16', 'masonry', 'latest', 16, 1, 0, 10),
+('Videos', 'भिडियो', 'video-stories', 'Video stories and news clips', 'भिडियो स्टोरी र समाचार क्लिपहरू', '🎥', '#f97316', 'carousel', 'latest', 12, 1, 1, 11),
+('Lifestyle', 'जीवनशैली', 'lifestyle-space', 'Travel, food, fashion and lifestyle', 'यात्रा, खाना, फेसन र लाइफस्टाइल', '🌿', '#22c55e', 'grid', 'latest', 20, 1, 1, 12);
+
+-- ============================================
+-- TABLE: aak_space_articles
+-- Many-to-many relationship for space articles
+-- ============================================
+DROP TABLE IF EXISTS `aak_space_articles`;
+CREATE TABLE `aak_space_articles` (
+    `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    `space_id` INT UNSIGNED NOT NULL,
+    `article_id` INT UNSIGNED NOT NULL,
+    `is_featured` TINYINT(1) NOT NULL DEFAULT 0,
+    `is_pinned` TINYINT(1) NOT NULL DEFAULT 0,
+    `sort_order` INT NOT NULL DEFAULT 0,
+    `custom_title` VARCHAR(255) DEFAULT NULL,
+    `custom_excerpt` TEXT DEFAULT NULL,
+    `added_by` INT UNSIGNED DEFAULT NULL,
+    `added_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uq_space_article` (`space_id`, `article_id`),
+    KEY `idx_space` (`space_id`),
+    KEY `idx_article` (`article_id`),
+    KEY `idx_sort` (`sort_order`),
+    KEY `idx_featured` (`is_featured`),
+    KEY `idx_pinned` (`is_pinned`),
+    CONSTRAINT `fk_sa_space` FOREIGN KEY (`space_id`) REFERENCES `aak_spaces` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `fk_sa_article` FOREIGN KEY (`article_id`) REFERENCES `aak_articles` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `fk_sa_added` FOREIGN KEY (`added_by`) REFERENCES `aak_users` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Space-article relationships';
 
 -- ============================================
 -- TABLE: aak_page_views

@@ -838,6 +838,401 @@ class Tag {
 }
 
 /**
+ * Space Class - Content Collections like OnlineKhabar, Ratopati
+ */
+class Space {
+    private $db;
+    
+    public function __construct($db = null) {
+        $this->db = $db ?? $this->getDB();
+    }
+    
+    private function getDB() {
+        static $pdo = null;
+        if ($pdo === null) {
+            try {
+                $pdo = new PDO(
+                    'mysql:host=' . DB_HOST . ';dbname=' . DB_NAME . ';charset=' . DB_CHARSET,
+                    DB_USER,
+                    DB_PASS,
+                    [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC]
+                );
+            } catch (PDOException $e) {
+                error_log('DB Error: ' . $e->getMessage());
+                return null;
+            }
+        }
+        return $pdo;
+    }
+    
+    /**
+     * Create a new space
+     */
+    public function create(array $data): int|false {
+        $data['slug'] = $this->generateSlug($data['name']);
+        
+        $columns = ['name', 'name_ne', 'slug', 'description', 'description_ne', 'icon', 'color', 
+                    'image', 'cover_image', 'layout', 'template', 'category_id', 'parent_id',
+                    'sort_by', 'max_articles', 'articles_per_page', 'columns', 'sort_order',
+                    'show_title', 'show_description', 'show_cover', 'show_excerpt', 'show_author',
+                    'show_date', 'show_views', 'show_thumbnail', 'show_category', 'show_read_time',
+                    'show_pagination', 'is_featured', 'is_active', 'show_in_menu', 'show_in_home',
+                    'show_in_footer', 'is_public', 'requires_subscription', 'meta_title', 
+                    'meta_description', 'meta_keywords', 'og_image', 'featured_article_id',
+                    'created_by', 'updated_by'];
+        
+        $insertData = [];
+        foreach ($columns as $col) {
+            $insertData[$col] = $data[$col] ?? null;
+        }
+        
+        $cols = implode(', ', array_keys($insertData));
+        $placeholders = ':' . implode(', :', array_keys($insertData));
+        
+        $sql = "INSERT INTO aak_spaces ({$cols}) VALUES ({$placeholders})";
+        
+        try {
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute($insertData);
+            return (int)$this->db->lastInsertId();
+        } catch (PDOException $e) {
+            error_log('Space Create Error: ' . $e->getMessage());
+            return false;
+        }
+    }
+    
+    /**
+     * Update a space
+     */
+    public function update(int $id, array $data): bool {
+        if (isset($data['name']) && $data['name'] !== $this->getById($id)['name'] ?? '') {
+            $data['slug'] = $this->generateSlug($data['name'], $id);
+        }
+        
+        $fields = array_keys($data);
+        $setClause = implode(' = ?, ', $fields) . ' = ?';
+        $values = array_values($data);
+        $values[] = $id;
+        
+        $sql = "UPDATE aak_spaces SET {$setClause} WHERE id = ?";
+        
+        try {
+            return $this->db->prepare($sql)->execute($values);
+        } catch (PDOException $e) {
+            error_log('Space Update Error: ' . $e->getMessage());
+            return false;
+        }
+    }
+    
+    /**
+     * Get space by ID
+     */
+    public function getById(int $id): ?array {
+        $sql = "SELECT s.*, c.name as category_name,
+                        (SELECT COUNT(*) FROM aak_space_articles sa WHERE sa.space_id = s.id) as article_count,
+                        u.display_name as created_by_name
+                 FROM aak_spaces s
+                 LEFT JOIN aak_categories c ON s.category_id = c.id
+                 LEFT JOIN aak_users u ON s.created_by = u.id
+                 WHERE s.id = ?";
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$id]);
+        return $stmt->fetch() ?: null;
+    }
+    
+    /**
+     * Get space by slug
+     */
+    public function getBySlug(string $slug): ?array {
+        $sql = "SELECT s.*, c.name as category_name,
+                        (SELECT COUNT(*) FROM aak_space_articles sa WHERE sa.space_id = s.id) as article_count
+                 FROM aak_spaces s
+                 LEFT JOIN aak_categories c ON s.category_id = c.id
+                 WHERE s.slug = ? AND s.is_active = 1";
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$slug]);
+        return $stmt->fetch() ?: null;
+    }
+    
+    /**
+     * Get all spaces
+     */
+    public function getAll(bool $activeOnly = true, bool $includeCounts = true): array {
+        $sql = "SELECT s.*, c.name as category_name";
+        if ($includeCounts) {
+            $sql .= ", (SELECT COUNT(*) FROM aak_space_articles sa WHERE sa.space_id = s.id) as article_count";
+        }
+        $sql .= " FROM aak_spaces s LEFT JOIN aak_categories c ON s.category_id = c.id";
+        
+        if ($activeOnly) {
+            $sql .= " WHERE s.is_active = 1";
+        }
+        
+        $sql .= " ORDER BY s.sort_order ASC, s.name ASC";
+        
+        return $this->db->query($sql)->fetchAll();
+    }
+    
+    /**
+     * Get spaces for navigation menu
+     */
+    public function getMenuSpaces(): array {
+        $sql = "SELECT * FROM aak_spaces WHERE is_active = 1 AND show_in_menu = 1 ORDER BY sort_order ASC LIMIT 12";
+        return $this->db->query($sql)->fetchAll();
+    }
+    
+    /**
+     * Get spaces for homepage
+     */
+    public function getHomepageSpaces(): array {
+        $sql = "SELECT s.*, c.name as category_name,
+                       (SELECT COUNT(*) FROM aak_space_articles sa WHERE sa.space_id = s.id) as article_count
+                FROM aak_spaces s
+                LEFT JOIN aak_categories c ON s.category_id = c.id
+                WHERE s.is_active = 1 AND s.show_in_home = 1
+                ORDER BY s.sort_order ASC";
+        
+        return $this->db->query($sql)->fetchAll();
+    }
+    
+    /**
+     * Get articles in a space
+     */
+    public function getSpaceArticles(int $spaceId, int $page = 1, int $perPage = 12): array {
+        $space = $this->getById($spaceId);
+        if (!$space) return ['data' => [], 'total' => 0, 'page' => 1, 'total_pages' => 0];
+        
+        // Get manually added articles first
+        $sql = "SELECT a.*, sa.is_featured as space_featured, sa.is_pinned, sa.sort_order as space_sort,
+                       c.name as category_name, c.slug as category_slug,
+                       u.display_name as author_name
+                FROM aak_space_articles sa
+                JOIN aak_articles a ON sa.article_id = a.id
+                LEFT JOIN aak_categories c ON a.category_id = c.id
+                LEFT JOIN aak_users u ON a.author_id = u.id
+                WHERE sa.space_id = ? AND a.status = 'published' AND a.deleted_at IS NULL
+                ORDER BY sa.is_pinned DESC, sa.is_featured DESC, sa.space_sort ASC, ";
+        
+        $sql .= match($space['sort_by']) {
+            'popular' => 'a.view_count DESC',
+            'alphabetical' => 'a.title ASC',
+            'custom' => 'sa.space_sort ASC',
+            default => 'a.published_at DESC'
+        };
+        
+        $sql .= " LIMIT {$perPage} OFFSET " . (($page - 1) * $perPage);
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$spaceId]);
+        $articles = $stmt->fetchAll();
+        
+        // Count total
+        $countSql = "SELECT COUNT(*) FROM aak_space_articles sa 
+                     JOIN aak_articles a ON sa.article_id = a.id 
+                     WHERE sa.space_id = ? AND a.status = 'published' AND a.deleted_at IS NULL";
+        $countStmt = $this->db->prepare($countSql);
+        $countStmt->execute([$spaceId]);
+        $total = (int)$countStmt->fetchColumn();
+        
+        return [
+            'data' => $articles,
+            'space' => $space,
+            'total' => $total,
+            'page' => $page,
+            'per_page' => $perPage,
+            'total_pages' => ceil($total / $perPage)
+        ];
+    }
+    
+    /**
+     * Add article to space
+     */
+    public function addArticle(int $spaceId, int $articleId, bool $isFeatured = false, bool $isPinned = false, int $sortOrder = 0): bool {
+        // Check if already exists
+        $check = $this->db->prepare("SELECT id FROM aak_space_articles WHERE space_id = ? AND article_id = ?");
+        $check->execute([$spaceId, $articleId]);
+        if ($check->fetch()) return true; // Already exists
+        
+        $sql = "INSERT INTO aak_space_articles (space_id, article_id, is_featured, is_pinned, sort_order, added_by) 
+                VALUES (?, ?, ?, ?, ?, ?)";
+        
+        return $this->db->prepare($sql)->execute([$spaceId, $articleId, $isFeatured ? 1 : 0, $isPinned ? 1 : 0, $sortOrder, $_SESSION['user_id'] ?? null]);
+    }
+    
+    /**
+     * Remove article from space
+     */
+    public function removeArticle(int $spaceId, int $articleId): bool {
+        $sql = "DELETE FROM aak_space_articles WHERE space_id = ? AND article_id = ?";
+        return $this->db->prepare($sql)->execute([$spaceId, $articleId]);
+    }
+    
+    /**
+     * Update article in space (pinned, featured, sort order)
+     */
+    public function updateSpaceArticle(int $spaceId, int $articleId, array $data): bool {
+        $fields = [];
+        $values = [];
+        
+        if (isset($data['is_featured'])) {
+            $fields[] = 'is_featured = ?';
+            $values[] = $data['is_featured'] ? 1 : 0;
+        }
+        if (isset($data['is_pinned'])) {
+            $fields[] = 'is_pinned = ?';
+            $values[] = $data['is_pinned'] ? 1 : 0;
+        }
+        if (isset($data['sort_order'])) {
+            $fields[] = 'sort_order = ?';
+            $values[] = $data['sort_order'];
+        }
+        if (isset($data['custom_title'])) {
+            $fields[] = 'custom_title = ?';
+            $values[] = $data['custom_title'];
+        }
+        if (isset($data['custom_excerpt'])) {
+            $fields[] = 'custom_excerpt = ?';
+            $values[] = $data['custom_excerpt'];
+        }
+        
+        if (empty($fields)) return false;
+        
+        $values[] = $spaceId;
+        $values[] = $articleId;
+        
+        $sql = "UPDATE aak_space_articles SET " . implode(', ', $fields) . " WHERE space_id = ? AND article_id = ?";
+        return $this->db->prepare($sql)->execute($values);
+    }
+    
+    /**
+     * Get available articles not in space (for adding)
+     */
+    public function getAvailableArticles(int $spaceId, string $search = '', int $limit = 20): array {
+        $sql = "SELECT a.id, a.title, a.title_ne, a.slug, a.excerpt, a.featured_image, 
+                       a.published_at, a.view_count, c.name as category_name
+                FROM aak_articles a
+                LEFT JOIN aak_categories c ON a.category_id = c.id
+                WHERE a.status = 'published' AND a.deleted_at IS NULL
+                AND a.id NOT IN (SELECT article_id FROM aak_space_articles WHERE space_id = ?)
+                AND (a.title LIKE ? OR a.title_ne LIKE ?)
+                ORDER BY a.published_at DESC
+                LIMIT {$limit}";
+        
+        $searchTerm = '%' . $search . '%';
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$spaceId, $searchTerm, $searchTerm]);
+        return $stmt->fetchAll();
+    }
+    
+    /**
+     * Get space articles with auto-include based on category
+     */
+    public function getSpaceArticlesWithAuto(int $spaceId, int $page = 1, int $perPage = 12): array {
+        $space = $this->getById($spaceId);
+        if (!$space) return ['data' => [], 'total' => 0, 'space' => null];
+        
+        // Get manual articles
+        $manualIds = $this->db->prepare(
+            "SELECT article_id FROM aak_space_articles WHERE space_id = ?"
+        )->execute([$spaceId])->fetchAll(PDO::FETCH_COLUMN);
+        
+        // If space has category, include auto articles
+        $autoArticles = [];
+        if ($space['category_id'] && $space['max_articles'] > count($manualIds)) {
+            $autoLimit = $space['max_articles'] - count($manualIds);
+            $placeholders = $manualIds ? 'AND a.id NOT IN (' . implode(',', $manualIds) . ')' : '';
+            
+            $autoSql = "SELECT a.*, c.name as category_name, c.slug as category_slug,
+                               u.display_name as author_name, 'auto' as source
+                        FROM aak_articles a
+                        LEFT JOIN aak_categories c ON a.category_id = c.id
+                        LEFT JOIN aak_users u ON a.author_id = u.id
+                        WHERE a.status = 'published' AND a.deleted_at IS NULL
+                        AND a.category_id = ? {$placeholders}
+                        ORDER BY a.published_at DESC
+                        LIMIT {$autoLimit}";
+            
+            $stmt = $this->db->prepare($autoSql);
+            $stmt->execute([$space['category_id']]);
+            $autoArticles = $stmt->fetchAll();
+        }
+        
+        // Get manual articles
+        $manualSql = "SELECT a.*, sa.is_featured as space_featured, sa.is_pinned, sa.sort_order as space_sort,
+                             c.name as category_name, c.slug as category_slug,
+                             u.display_name as author_name, 'manual' as source
+                      FROM aak_space_articles sa
+                      JOIN aak_articles a ON sa.article_id = a.id
+                      LEFT JOIN aak_categories c ON a.category_id = c.id
+                      LEFT JOIN aak_users u ON a.author_id = u.id
+                      WHERE sa.space_id = ? AND a.status = 'published' AND a.deleted_at IS NULL
+                      ORDER BY sa.is_pinned DESC, sa.is_featured DESC, sa.space_sort ASC";
+        
+        $stmt = $this->db->prepare($manualSql);
+        $stmt->execute([$spaceId]);
+        $manualArticles = $stmt->fetchAll();
+        
+        // Merge and limit
+        $allArticles = array_merge($manualArticles, $autoArticles);
+        $total = count($allArticles);
+        $offset = ($page - 1) * $perPage;
+        $paginatedArticles = array_slice($allArticles, $offset, $perPage);
+        
+        return [
+            'data' => $paginatedArticles,
+            'space' => $space,
+            'total' => $total,
+            'page' => $page,
+            'per_page' => $perPage,
+            'total_pages' => ceil($total / $perPage)
+        ];
+    }
+    
+    /**
+     * Delete space
+     */
+    public function delete(int $id): bool {
+        return (bool)$this->db->prepare("DELETE FROM aak_spaces WHERE id = ?")->execute([$id]);
+    }
+    
+    /**
+     * Generate unique slug
+     */
+    private function generateSlug(string $name, int $excludeId = 0): string {
+        $slug = preg_replace('/[\s]+/u', '-', strtolower(trim($name)));
+        $slug = preg_replace('/[^\p{L}\p{N}\-]+/u', '', $slug);
+        $slug = substr($slug, 0, 100);
+        
+        $sql = "SELECT id FROM aak_spaces WHERE slug = ? AND id != ? LIMIT 1";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$slug, $excludeId]);
+        
+        if ($stmt->fetch()) {
+            $slug .= '-' . time();
+        }
+        
+        return $slug;
+    }
+    
+    /**
+     * Get statistics
+     */
+    public function getStats(): array {
+        $sql = "SELECT 
+                    COUNT(*) as total_spaces,
+                    SUM(CASE WHEN is_active = 1 THEN 1 ELSE 0 END) as active_spaces,
+                    SUM(CASE WHEN show_in_menu = 1 THEN 1 ELSE 0 END) as menu_spaces,
+                    SUM(CASE WHEN show_in_home = 1 THEN 1 ELSE 0 END) as homepage_spaces,
+                    SUM((SELECT COUNT(*) FROM aak_space_articles sa WHERE sa.space_id = aak_spaces.id)) as total_articles
+                FROM aak_spaces";
+        
+        return $this->db->query($sql)->fetch();
+    }
+}
+
+/**
  * Media Library Class
  */
 class MediaLibrary {
