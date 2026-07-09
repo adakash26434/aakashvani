@@ -5,21 +5,34 @@
  */
 
 // Database Configuration - UPDATE THESE WITH YOUR CREDENTIALS
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'your_database');
-define('DB_USER', 'your_username');
-define('DB_PASS', 'your_password');
+define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
+define('DB_NAME', getenv('DB_NAME') ?: 'your_database');
+define('DB_USER', getenv('DB_USER') ?: 'your_username');
+define('DB_PASS', getenv('DB_PASS') ?: 'your_password');
 define('DB_CHARSET', 'utf8mb4');
 
 // Site Configuration
-define('SITE_NAME', 'आकाशवाणी');
-define('SITE_TAGLINE', 'सूचनाको खुला आकाश');
-define('SITE_URL', 'https://news.bandanasigdel.com.np');
+define('SITE_NAME', getenv('SITE_NAME') ?: 'आकाशवाणी');
+define('SITE_TAGLINE', getenv('SITE_TAGLINE') ?: 'सूचनाको खुला आकाश');
+define('SITE_URL', getenv('SITE_URL') ?: 'https://news.bandanasigdel.com.np');
+define('SITE_EMAIL', getenv('SITE_EMAIL') ?: 'admin@example.com');
+
+// Admin Password - SET THIS via ADMIN_PASS environment variable
+// For security, use: define('ADMIN_PASS', getenv('ADMIN_PASS'));
+// Default fallback for initial setup only - CHANGE IN PRODUCTION
+define('ADMIN_PASS', getenv('ADMIN_PASS') ?: 'CHANGE_ME_admin_password_123');
+
+// Social Media Links - SET THESE via environment variables
+// Leave empty to hide social icons
+define('SOCIAL_FACEBOOK', getenv('SOCIAL_FACEBOOK') ?: '');
+define('SOCIAL_TWITTER', getenv('SOCIAL_TWITTER') ?: '');
+define('SOCIAL_YOUTUBE', getenv('SOCIAL_YOUTUBE') ?: '');
+define('SOCIAL_INSTAGRAM', getenv('SOCIAL_INSTAGRAM') ?: '');
 
 // Auto-sync: set a strong random key, then add to cron:
 //   0,30 * * * * /usr/bin/php /home/USER/public_html/cron/ai-sync.php
 // Use sync-trigger via: POST /api/sync-trigger.php?key=YOUR_CRON_KEY
-define('CRON_KEY', 'CHANGE_ME_to_a_strong_random_string');
+define('CRON_KEY', getenv('CRON_KEY') ?: 'CHANGE_ME_to_a_strong_random_string');
 
 // Timezone
 date_default_timezone_set('Asia/Kathmandu');

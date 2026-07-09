@@ -206,7 +206,7 @@ $typeColors = [
 
         <div style="margin-top:18px;display:flex;gap:8px">
           <button type="submit"><?= $editing ? '✓ अद्यावधिक' : '✓ थप्नुहोस्' ?></button>
-          <?php if ($editing): ?><a href="/admin-notices.php" class="btn btn-ghost">रद्द</a><?php endif; ?>
+          <?php if ($editing): ?><a href="/admin/admin-notices.php" class="btn btn-ghost">रद्द</a><?php endif; ?>
         </div>
       </form>
     </div>

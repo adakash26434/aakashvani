@@ -154,10 +154,6 @@ $tools = [
             </div>
         </div>
     </div>
-
-                </div>
-            </div>
-        </div>
     </header>
     
     <section class="page-header">

@@ -3,11 +3,18 @@
  * आकाशवाणी — Homepage 2026 (TechPana-inspired redesign)
  */
 require_once __DIR__ . '/includes/autoload.php';
+require_once __DIR__ . '/includes/bs-date.php';
 
 $lang = $_SESSION['lang'] ?? 'ne';
 $isNepali = ($lang !== 'en');
 $t = fn($ne, $en) => $isNepali ? $ne : $en;
 $pageTitle = $t('आकाशवाणी — सूचनाको खुला आकाश', 'Aakashvani — Your Gateway to Information');
+
+// Get formatted date (BS in Nepali mode, AD in English mode)
+$today = getTodayBS();
+$formattedDate = $isNepali 
+    ? $today['weekday'] . ', ' . toNeDigits((string)$today['day']) . ' ' . ['', 'बैशाख','जेठ','असार','श्रावण','भाद्र','आश्विन','कार्तिक','मंसिर','पौष','माघ','फाल्गुन','चैत्र'][$today['month']] . ' ' . toNeDigits((string)$today['year'])
+    : date('l, j F Y');
 
 // Server-side news fetch (graceful fallback)
 $homepageNews = [];
@@ -50,18 +57,38 @@ try {
     <div class="tp-container">
         <div class="tp-topbar-inner">
             <div class="tp-topbar-left">
-                <span class="tp-date"><?= date('l, j F Y') ?></span>
+                <span class="tp-date"><?= $formattedDate ?></span>
                 <span class="tp-topbar-links">
                     <a href="?">नेपाली</a>
                     <a href="?lang=en">English</a>
                 </span>
             </div>
             <div class="tp-topbar-right">
-                <a href="https://www.facebook.com" target="_blank" aria-label="Facebook"><i data-lucide="facebook"></i></a>
-                <a href="https://twitter.com" target="_blank" aria-label="X/Twitter"><i data-lucide="twitter"></i></a>
-                <a href="https://www.youtube.com" target="_blank" aria-label="YouTube"><i data-lucide="youtube"></i></a>
+                <?php if (defined('SOCIAL_FACEBOOK') && SOCIAL_FACEBOOK): ?>
+                <a href="<?= SOCIAL_FACEBOOK ?>" target="_blank" rel="noopener" aria-label="Facebook"><i data-lucide="facebook"></i></a>
+                <?php endif; ?>
+                <?php if (defined('SOCIAL_TWITTER') && SOCIAL_TWITTER): ?>
+                <a href="<?= SOCIAL_TWITTER ?>" target="_blank" rel="noopener" aria-label="X/Twitter"><i data-lucide="twitter"></i></a>
+                <?php endif; ?>
+                <?php if (defined('SOCIAL_YOUTUBE') && SOCIAL_YOUTUBE): ?>
+                <a href="<?= SOCIAL_YOUTUBE ?>" target="_blank" rel="noopener" aria-label="YouTube"><i data-lucide="youtube"></i></a>
+                <?php endif; ?>
                 <a href="/login.php" class="tp-login-btn"><?= $t('लगइन', 'Login') ?></a>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     BREAKING NEWS TICKER — Ratopati-style scrolling bar
+     ═══════════════════════════════════════════════════════ -->
+<div class="tp-breaking-news" id="breakingNews">
+    <div class="tp-breaking-label">
+        <i data-lucide="zap"></i> <?= $t('ताजा', 'Breaking') ?>
+    </div>
+    <div class="tp-breaking-scroll">
+        <div class="tp-breaking-content" id="breakingContent">
+            <?= $t('ताजा समाचारहरू लोड हुँदै...', 'Loading breaking news...') ?>
         </div>
     </div>
 </div>
@@ -380,12 +407,8 @@ try {
                 <div class="tp-side-widget">
                     <h3 class="tp-widget-title"><?= $t('ताजा लिंकहरू', 'Trending Now') ?></h3>
                     <ul class="tp-trending-list" id="trendingList">
-                        <li><a href="/ipo-tracker.php"><i data-lucide="trending-up"></i><?= $t('IPO खुला छ', 'Open IPOs') ?></a></li>
-                        <li><a href="/weather.php"><i data-lucide="cloud-sun"></i><?= $t('आजको मौसम', 'Today\'s Weather') ?></a></li>
-                        <li><a href="/rashifal.php"><i data-lucide="sparkles"></i><?= $t('आजको राशिफल', 'Today\'s Horoscope') ?></a></li>
-                        <li><a href="/nepali-patro.php"><i data-lucide="calendar-days"></i><?= $t('नेपाली पात्रो', 'Nepali Calendar') ?></a></li>
-                        <li><a href="/tenders.php"><i data-lucide="file-text"></i><?= $t('नयाँ टेन्डर', 'New Tenders') ?></a></li>
-                        <li><a href="/cricket.php"><i data-lucide="circle-dot"></i><?= $t('क्रिकेट स्कोर', 'Cricket Score') ?></a></li>
+                        <!-- Populated by JS from /api/news-unified.php -->
+                        <li class="trending-loading"><i data-lucide="loader-2" class="spin"></i> <?= $t('लोड हुँदै...', 'Loading...') ?></li>
                     </ul>
                 </div>
 
@@ -430,10 +453,18 @@ try {
                     </a>
                     <p class="tp-footer-desc"><?= $t('नेपालको सबैभन्दा विश्वसनीय सूचना प्लेटफर्म। समाचार, NEPSE, IPO, पात्रो, र सरकारी सेवा एकैठाउँमा।', 'Nepal\'s most trusted information platform.') ?></p>
                     <div class="tp-footer-social">
-                        <a href="#" aria-label="Facebook"><i data-lucide="facebook"></i></a>
-                        <a href="#" aria-label="Twitter"><i data-lucide="twitter"></i></a>
-                        <a href="#" aria-label="YouTube"><i data-lucide="youtube"></i></a>
-                        <a href="#" aria-label="Instagram"><i data-lucide="instagram"></i></a>
+                        <?php if (defined('SOCIAL_FACEBOOK') && SOCIAL_FACEBOOK): ?>
+                        <a href="<?= SOCIAL_FACEBOOK ?>" target="_blank" rel="noopener" aria-label="Facebook"><i data-lucide="facebook"></i></a>
+                        <?php endif; ?>
+                        <?php if (defined('SOCIAL_TWITTER') && SOCIAL_TWITTER): ?>
+                        <a href="<?= SOCIAL_TWITTER ?>" target="_blank" rel="noopener" aria-label="Twitter"><i data-lucide="twitter"></i></a>
+                        <?php endif; ?>
+                        <?php if (defined('SOCIAL_YOUTUBE') && SOCIAL_YOUTUBE): ?>
+                        <a href="<?= SOCIAL_YOUTUBE ?>" target="_blank" rel="noopener" aria-label="YouTube"><i data-lucide="youtube"></i></a>
+                        <?php endif; ?>
+                        <?php if (defined('SOCIAL_INSTAGRAM') && SOCIAL_INSTAGRAM): ?>
+                        <a href="<?= SOCIAL_INSTAGRAM ?>" target="_blank" rel="noopener" aria-label="Instagram"><i data-lucide="instagram"></i></a>
+                        <?php endif; ?>
                     </div>
                 </div>
                 <div>
@@ -520,19 +551,33 @@ try {
                     const ti = document.getElementById('featured-time');
                     const ts = document.getElementById('featured-source');
                     const lnk = document.getElementById('featuredLink');
+                    const img = document.getElementById('featuredImg');
+                    const cat = document.getElementById('featuredCat');
                     if (t && items[0].title) t.textContent = items[0].title;
                     if (ti && items[0].pubDate) ti.textContent = timeAgo(items[0].pubDate);
                     if (ts && items[0].sourceLabel) ts.textContent = items[0].sourceLabel;
-                    if (lnk && items[0].link) lnk.href = items[0].link;
+                    // Use internalUrl if available (our internal article), otherwise external link
+                    const itemLink = items[0].internalUrl || items[0].link || '#';
+                    if (lnk) lnk.href = itemLink;
+                    // Replace hero image if we have one
+                    if (img && items[0].image) {
+                        img.src = items[0].image;
+                        img.onerror = function() { this.src = 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=900&h=480&fit=crop'; };
+                    }
+                    // Update hero category badge
+                    if (cat && items[0].cat) cat.textContent = items[0].cat.charAt(0).toUpperCase() + items[0].cat.slice(1);
                 }
                 const grid = document.getElementById('newsGrid');
                 if (grid && items.length > 1) {
-                    grid.innerHTML = items.slice(1, 7).map((item, i) => `
-                        <a href="${item.link || '#'}" class="tp-news-card anim-fade-up delay-${(i % 3) + 1}">
+                    grid.innerHTML = items.slice(1, 7).map((item, i) => {
+                        // Prefer internalUrl for our articles, fall back to external link
+                        const itemLink = item.internalUrl || item.link || '#';
+                        const itemImage = item.image || item.image_url || 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=400&h=240&fit=crop';
+                        const itemCat = item.cat || item.category || 'general';
+                        return `<a href="${itemLink}" class="tp-news-card anim-fade-up delay-${(i % 3) + 1}">
                             <div class="tp-card-img-wrap">
-                                <img src="${item.image || 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=400&h=240&fit=crop'}"
-                                     alt="${(item.title || '').substring(0, 60)}" class="tp-card-img" loading="lazy">
-                                <span class="tp-card-cat">${item.cat || 'general'}</span>
+                                <img src="${itemImage}" alt="${(item.title || '').substring(0, 60)}" class="tp-card-img" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=400&h=240&fit=crop'">
+                                <span class="tp-card-cat tp-card-cat-${itemCat}">${itemCat.charAt(0).toUpperCase() + itemCat.slice(1)}</span>
                             </div>
                             <div class="tp-card-body">
                                 <h3 class="tp-card-title">${item.title || ''}</h3>
@@ -541,8 +586,8 @@ try {
                                     <span class="tp-card-time">${timeAgo(item.pubDate || item.published_at)}</span>
                                 </div>
                             </div>
-                        </a>
-                    `).join('');
+                        </a>`;
+                    }).join('');
                     if (typeof lucide !== 'undefined') lucide.createIcons();
                 }
             } catch(e) { console.warn('News load failed:', e.message); }
@@ -555,6 +600,64 @@ try {
             if (s < 3600) return Math.floor(s/60) + 'm <?= $t('अघि', 'ago') ?>';
             if (s < 86400) return Math.floor(s/3600) + 'h <?= $t('अघि', 'ago') ?>';
             return Math.floor(s/86400) + 'd <?= $t('अघि', 'ago') ?>';
+        }
+
+        async function loadTrending() {
+            const trendingList = document.getElementById('trendingList');
+            if (!trendingList) return;
+            
+            try {
+                const resp = await fetch('/api/news-unified.php?limit=8');
+                if (!resp.ok) return;
+                const data = await resp.json();
+                const items = data.items || [];
+                
+                if (items.length === 0) {
+                    trendingList.innerHTML = '<li><?= $t('ताजा समाचार छैन', 'No trending news') ?></li>';
+                    return;
+                }
+                
+                trendingList.innerHTML = items.slice(0, 6).map((item, i) => {
+                    const itemLink = item.internalUrl || item.link || '#';
+                    return `<li><a href="${itemLink}"><i data-lucide="file-text"></i>${(item.title || '').substring(0, 60)}${(item.title || '').length > 60 ? '...' : ''}</a></li>`;
+                }).join('');
+                
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            } catch(e) {
+                console.warn('Trending load failed:', e.message);
+                trendingList.innerHTML = '<li><?= $t('लोड हुन सकेन', 'Failed to load') ?></li>';
+            }
+        }
+
+        async function loadBreakingNews() {
+            const breakingContent = document.getElementById('breakingContent');
+            if (!breakingContent) return;
+            
+            try {
+                const resp = await fetch('/api/news-unified.php?limit=10');
+                if (!resp.ok) return;
+                const data = await resp.json();
+                const items = data.items || [];
+                
+                if (items.length === 0) {
+                    breakingContent.innerHTML = '<span><?= $t('कुनै समाचार छैन', 'No news available') ?></span>';
+                    return;
+                }
+                
+                // Build scrolling news items with separators
+                let html = '';
+                items.slice(0, 8).forEach((item, i) => {
+                    const itemLink = item.internalUrl || item.link || '#';
+                    if (i > 0) html += '<span class="separator">•</span>';
+                    html += `<a href="${itemLink}">${item.title || ''}</a>`;
+                });
+                
+                // Duplicate for seamless loop
+                breakingContent.innerHTML = html + '<span class="separator">•</span>' + html;
+                
+            } catch(e) {
+                console.warn('Breaking news load failed:', e.message);
+            }
         }
 
         function initSearch() {
@@ -585,9 +688,13 @@ try {
         document.addEventListener('DOMContentLoaded', function() {
             loadMarket();
             loadNews();
+            loadTrending();
+            loadBreakingNews();
             initSearch();
             setInterval(loadMarket, 5 * 60 * 1000);
             setInterval(loadNews, 10 * 60 * 1000);
+            setInterval(loadTrending, 10 * 60 * 1000);
+            setInterval(loadBreakingNews, 5 * 60 * 1000);
         });
     })();
 
@@ -598,10 +705,37 @@ try {
                 .catch(err => console.log('SW registration failed'));
         });
     }
+
+    // Newsletter form handler
     function handleNewsletterSubmit(e, form) {
         e.preventDefault();
-        form.innerHTML = '<p style="color:var(--primary);text-align:center;padding:var(--sp-4)">&#10003; ' + 
-            (window.__t ? window.__t('Subscribed!') : 'Subscribed!') + '</p>';
+        const emailInput = form.querySelector('input[type="email"]');
+        const email = emailInput?.value;
+        if (!email) return;
+        
+        const btn = form.querySelector('button');
+        const originalText = btn?.textContent || 'Subscribe';
+        if (btn) { btn.disabled = true; btn.textContent = '...'; }
+        
+        fetch('/api/newsletter.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: email })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.ok) {
+                form.innerHTML = '<p style="color:var(--primary);text-align:center;padding:var(--sp-4);font-weight:600;">&#10003; ' + (data.message || 'Subscribed!') + '</p>';
+            } else {
+                alert(data.error || 'Subscription failed');
+                if (btn) { btn.disabled = false; btn.textContent = originalText; }
+            }
+        })
+        .catch(err => {
+            console.error('Newsletter error:', err);
+            alert('Subscription failed. Please try again.');
+            if (btn) { btn.disabled = false; btn.textContent = originalText; }
+        });
     }
     </script>
 </body>

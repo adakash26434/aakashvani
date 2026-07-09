@@ -1,7 +1,8 @@
 -- ============================================================
--- आकाशवाणी — MASTER DATABASE INSTALL SCRIPT v3
+-- आकाशवाणी — MASTER DATABASE INSTALL SCRIPT v4
 -- Run this ONCE in phpMyAdmin → Import
 -- Safe to re-run (uses IF NOT EXISTS everywhere)
+-- Includes: auth_users, user_data, newsletter_subscribers tables
 -- ============================================================
 
 SET NAMES utf8mb4;
@@ -136,6 +137,49 @@ CREATE TABLE IF NOT EXISTS `news_cache` (
     `updated_at`  TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     UNIQUE KEY `unique_source` (`source`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ===== NEWS ARTICLES =====
+
+CREATE TABLE IF NOT EXISTS `news` (
+    `id`              INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `title`           VARCHAR(500) NOT NULL,
+    `slug`            VARCHAR(500) NOT NULL,
+    `excerpt`         TEXT,
+    `summary`         TEXT,
+    `content`         LONGTEXT,
+    `image`           VARCHAR(700),
+    `image_url`       VARCHAR(700),
+    `category`        VARCHAR(60) NOT NULL DEFAULT 'general',
+    `lang`            VARCHAR(5)  NOT NULL DEFAULT 'ne',
+    `source`          VARCHAR(100),
+    `source_name`     VARCHAR(120),
+    `source_url`      VARCHAR(700),
+    `author`          VARCHAR(200),
+    `url_hash`        VARCHAR(64),
+    `status`          ENUM('draft','published','archived') NOT NULL DEFAULT 'published',
+    `is_published`   TINYINT(1) NOT NULL DEFAULT 1,
+    `is_featured`     TINYINT(1) NOT NULL DEFAULT 0,
+    `is_breaking`     TINYINT(1) NOT NULL DEFAULT 0,
+    `view_count`      INT UNSIGNED NOT NULL DEFAULT 0,
+    `ai_processed`    TINYINT(1) NOT NULL DEFAULT 0,
+    `content_status`  VARCHAR(20) NOT NULL DEFAULT 'unknown',
+    `content_length`  INT NOT NULL DEFAULT 0,
+    `scrape_status`   VARCHAR(20) NOT NULL DEFAULT 'pending',
+    `scrape_error`    TEXT,
+    `last_scraped_at` DATETIME DEFAULT NULL,
+    `published_at`    DATETIME DEFAULT NULL,
+    `created_at`      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE  KEY `uq_slug`         (`slug`),
+    UNIQUE  KEY `uq_url_hash`      (`url_hash`),
+    UNIQUE  KEY `uq_source_guid`   (`source_name`, `source_url`),
+    KEY     `idx_status_pub_date`  (`status`, `published_at`),
+    KEY     `idx_published`        (`is_published`),
+    KEY     `idx_news_category`    (`category`),
+    KEY     `idx_news_source_date` (`source_name`, `created_at`),
+    KEY     `idx_news_view_count`  (`view_count`),
+    FULLTEXT KEY `ft_title_summary`(`title`, `summary`, `excerpt`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ===== SUCCESS STORIES =====
 
@@ -322,6 +366,50 @@ CREATE TABLE IF NOT EXISTS `push_subscriptions` (
     `created_at`   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
     KEY `idx_user_id` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ===== NEWSLETTER SUBSCRIBERS =====
+
+CREATE TABLE IF NOT EXISTS `newsletter_subscribers` (
+    `id`              INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `email`           VARCHAR(255) NOT NULL UNIQUE,
+    `is_active`      TINYINT(1) NOT NULL DEFAULT 1,
+    `subscribed_at`  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `unsubscribed_at` DATETIME DEFAULT NULL,
+    INDEX `idx_email` (`email`),
+    INDEX `idx_active` (`is_active`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ===== AUTH USERS (Unified Auth) =====
+
+CREATE TABLE IF NOT EXISTS `auth_users` (
+    `id`             INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `email`          VARCHAR(255) NOT NULL UNIQUE,
+    `password_hash`  VARCHAR(255) NOT NULL,
+    `full_name`      VARCHAR(200) NOT NULL,
+    `phone`          VARCHAR(20) DEFAULT NULL,
+    `language`       VARCHAR(5) NOT NULL DEFAULT 'ne',
+    `is_active`      TINYINT(1) NOT NULL DEFAULT 1,
+    `is_verified`    TINYINT(1) NOT NULL DEFAULT 0,
+    `verify_token`   VARCHAR(64) DEFAULT NULL,
+    `reset_token`    VARCHAR(64) DEFAULT NULL,
+    `reset_expires`  DATETIME DEFAULT NULL,
+    `last_login`     DATETIME DEFAULT NULL,
+    `login_count`    INT UNSIGNED NOT NULL DEFAULT 0,
+    `created_at`    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX `idx_auth_email`    (`email`),
+    INDEX `idx_auth_active`   (`is_active`),
+    INDEX `idx_auth_verify`   (`verify_token`),
+    INDEX `idx_auth_reset`    (`reset_token`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ===== USER DATA (Preferences/Settings) =====
+
+CREATE TABLE IF NOT EXISTS `user_data` (
+    `user_id`     INT PRIMARY KEY,
+    `data_json`   LONGTEXT NOT NULL DEFAULT '{}',
+    `updated_at`  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 SET foreign_key_checks = 1;

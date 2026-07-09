@@ -163,7 +163,10 @@ if (!function_exists('sendSecurityHeaders')) {
         header('Referrer-Policy: strict-origin-when-cross-origin');
         header('Permissions-Policy: camera=(), microphone=(), geolocation=()');
         // Content Security Policy — restrict scripts to self + inline for Lucide CDN
-        header("Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://news.bandanasigdel.com.np; frame-ancestors 'self';");
+        // Note: 'unsafe-inline' needed for inline <script> blocks. For better security, use nonces.
+        $siteHost = parse_url(SITE_URL, PHP_URL_HOST) ?: 'localhost';
+        $connectSrc = "'self' https://*.{$siteHost} https:";
+        header("Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src {$connectSrc}; frame-ancestors 'self';");
         // HSTS: Force HTTPS for 1 year (uncomment when SSL is properly configured)
         // header('Strict-Transport-Security: max-age=31536000; includeSubDomains');
     }
@@ -226,47 +229,55 @@ if (!function_exists('slugify')) {
     }
 }
 
-// ── ensureNewsTable — creates tech_news if it doesn't exist ─────────────
+// ── ensureNewsTable — creates unified news table ─────────────────────────
 // Called by news-rss.php, cron/ai-sync.php, admin/dashboard.php
+// Uses 'news' table (not tech_news) to match query expectations
 if (!function_exists('ensureNewsTable')) {
     function ensureNewsTable(): void {
         $pdo = db();
         if (!$pdo) return;
         try {
-            $pdo->exec("CREATE TABLE IF NOT EXISTS `tech_news` (
+            // Create news table with unified schema supporting both
+            // getPublishedNews() and data-manager.php queries
+            $pdo->exec("CREATE TABLE IF NOT EXISTS `news` (
                 `id`              INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
                 `title`           VARCHAR(500) NOT NULL,
                 `slug`            VARCHAR(500) NOT NULL,
                 `excerpt`         TEXT,
+                `summary`         TEXT,
                 `content`         LONGTEXT,
+                `image`           VARCHAR(700),
+                `image_url`       VARCHAR(700),
                 `category`        VARCHAR(60) NOT NULL DEFAULT 'general',
                 `lang`            VARCHAR(5)  NOT NULL DEFAULT 'ne',
-                `scope`           VARCHAR(20) NOT NULL DEFAULT 'national',
+                `source`          VARCHAR(100),
                 `source_name`     VARCHAR(120),
                 `source_url`      VARCHAR(700),
-                `original_url`    VARCHAR(700),
-                `url_hash`        VARCHAR(64) NOT NULL,
-                `image_url`       VARCHAR(700),
-                `is_published`    TINYINT(1) NOT NULL DEFAULT 0,
+                `author`          VARCHAR(200),
+                `url_hash`        VARCHAR(64),
+                `status`          ENUM('draft','published','archived') NOT NULL DEFAULT 'published',
+                `is_published`   TINYINT(1) NOT NULL DEFAULT 1,
                 `is_featured`     TINYINT(1) NOT NULL DEFAULT 0,
-                `is_breaking`    TINYINT(1) NOT NULL DEFAULT 0,
+                `is_breaking`     TINYINT(1) NOT NULL DEFAULT 0,
+                `view_count`      INT UNSIGNED NOT NULL DEFAULT 0,
                 `ai_processed`    TINYINT(1) NOT NULL DEFAULT 0,
                 `content_status`  VARCHAR(20) NOT NULL DEFAULT 'unknown',
                 `content_length`  INT NOT NULL DEFAULT 0,
-                `scrape_status`  VARCHAR(20) NOT NULL DEFAULT 'pending',
-                `scrape_error`   TEXT,
+                `scrape_status`   VARCHAR(20) NOT NULL DEFAULT 'pending',
+                `scrape_error`    TEXT,
                 `last_scraped_at` DATETIME DEFAULT NULL,
                 `published_at`    DATETIME DEFAULT NULL,
                 `created_at`      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 `updated_at`      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                UNIQUE  KEY `uq_url_hash`    (`url_hash`),
                 UNIQUE  KEY `uq_slug`         (`slug`),
-                UNIQUE  KEY `uq_source_guid`  (`source_name`, `original_url`),
-                KEY     `idx_news_hash`       (`url_hash`),
-                KEY     `idx_news_pub_date`   (`is_published`, `created_at`),
-                KEY     `idx_news_source_date`(`source_name`, `created_at`),
-                KEY     `idx_news_quality`    (`content_status`, `scrape_status`),
-                FULLTEXT KEY `ft_title_excerpt`(`title`, `excerpt`)
+                UNIQUE  KEY `uq_url_hash`      (`url_hash`),
+                UNIQUE  KEY `uq_source_guid`   (`source_name`, `source_url`),
+                KEY     `idx_status_pub_date`  (`status`, `published_at`),
+                KEY     `idx_published`        (`is_published`),
+                KEY     `idx_news_category`    (`category`),
+                KEY     `idx_news_source_date` (`source_name`, `created_at`),
+                KEY     `idx_news_view_count`  (`view_count`),
+                FULLTEXT KEY `ft_title_summary`(`title`, `summary`, `excerpt`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
         } catch (Throwable $e) {
             error_log('[ensureNewsTable] ' . $e->getMessage());
@@ -422,5 +433,68 @@ if (!function_exists('getOfferCatCounts')) {
         } catch (Throwable $e) {
             return [];
         }
+    }
+}
+
+// ── Flash Messages ────────────────────────────────────────────────────────────
+if (!function_exists('flash')) {
+    function flash(string $message, string $type = 'success'): void {
+        $_SESSION['flash'] = ['message' => $message, 'type' => $type];
+    }
+}
+
+if (!function_exists('getFlash')) {
+    function getFlash(): ?array {
+        if (empty($_SESSION['flash'])) return null;
+        $flash = $_SESSION['flash'];
+        unset($_SESSION['flash']);
+        return $flash;
+    }
+}
+
+if (!function_exists('showFlash')) {
+    function showFlash(): string {
+        $flash = getFlash();
+        if (!$flash) return '';
+        $type = htmlspecialchars($flash['type'], ENT_QUOTES, 'UTF-8');
+        $message = htmlspecialchars($flash['message'], ENT_QUOTES, 'UTF-8');
+        $class = $type === 'error' ? 'flash-error' : 'flash-success';
+        return "<div class=\"$class\">$message</div>";
+    }
+}
+
+// ── Brand Helpers ─────────────────────────────────────────────────────────────
+if (!function_exists('brandName')) {
+    function brandName(): string {
+        return defined('SITE_NAME') ? SITE_NAME : 'आकाशवाणी';
+    }
+}
+
+if (!function_exists('brandLogoUrl')) {
+    function brandLogoUrl(): string {
+        return defined('SITE_LOGO') ? SITE_LOGO : '/favicon.svg';
+    }
+}
+
+if (!function_exists('brandInitials')) {
+    function brandInitials(): string {
+        $name = brandName();
+        // Extract Devanagari or Latin initials
+        if (preg_match('/^[आ-ह]/u', $name)) {
+            return mb_substr($name, 0, 1, 'UTF-8');
+        }
+        $words = preg_split('/\s+/', $name);
+        $initials = '';
+        foreach (array_slice($words, 0, 2) as $word) {
+            $initials .= mb_substr($word, 0, 1, 'UTF-8');
+        }
+        return strtoupper($initials) ?: 'आ';
+    }
+}
+
+// ── DataManager Singleton Alias ───────────────────────────────────────────────
+if (!function_exists('dataManager')) {
+    function dataManager() {
+        return DataManager::getInstance();
     }
 }

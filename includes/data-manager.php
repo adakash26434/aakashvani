@@ -74,26 +74,14 @@ class DataManager {
         
         $articles = [];
         
-        // 1. Fetch from RSS API
-        try {
-            $baseUrl = defined('SITE_URL') ? SITE_URL : 'https://news.bandanasigdel.com.np';
-            $rssData = @json_decode(@file_get_contents(
-                $baseUrl . '/api/news-rss.php?cat=' . urlencode($category ?? 'general')
-            ), true);
-            if ($rssData && is_array($rssData['items'] ?? null)) {
-                $articles = array_merge($articles, $rssData['items']);
-            }
-        } catch (Throwable $e) {
-            error_log("RSS fetch failed: " . $e->getMessage());
-        }
-        
-        // 2. Fetch from database if available
+        // 1. Fetch from database first (reliable local source)
         try {
             $pdo = function_exists('db') ? db() : null;
             if ($pdo) {
-                $query = "SELECT id, title, excerpt, content, category, 
-                                 image_url, author, published_at, language
-                          FROM news WHERE 1=1";
+                $query = "SELECT id, title, slug, excerpt, content, category, 
+                                 image, image_url, source, source_name, source_url, 
+                                 author, published_at, language, view_count
+                          FROM news WHERE is_published=1";
                 $params = [];
                 
                 if ($category && $category !== 'general') {
@@ -121,6 +109,26 @@ class DataManager {
             }
         } catch (Throwable $e) {
             error_log("Database news fetch failed: " . $e->getMessage());
+        }
+        
+        // 2. If DB returned no results, try fetching from RSS (only if no search)
+        if (empty($articles) && empty($search)) {
+            try {
+                $baseUrl = defined('SITE_URL') ? SITE_URL : 'https://news.bandanasigdel.com.np';
+                $context = stream_context_create([
+                    'http' => ['timeout' => 3, 'ignore_errors' => true] // Short timeout
+                ]);
+                $rssData = @json_decode(@file_get_contents(
+                    $baseUrl . '/api/news-rss.php?cat=' . urlencode($category ?? 'all') . '&limit=' . $limit,
+                    false,
+                    $context
+                ), true);
+                if ($rssData && is_array($rssData['items'] ?? null)) {
+                    $articles = array_merge($articles, $rssData['items']);
+                }
+            } catch (Throwable $e) {
+                error_log("RSS fetch failed: " . $e->getMessage());
+            }
         }
         
         // 3. Deduplicate using fingerprint (title + URL)
@@ -220,7 +228,7 @@ class DataManager {
             if ($pdo) {
                 $stmt = $pdo->prepare("SELECT * FROM news 
                     WHERE published_at > ? 
-                    ORDER BY views DESC, published_at DESC 
+                    ORDER BY view_count DESC, published_at DESC 
                     LIMIT ?");
                 $stmt->execute([time() - 86400*7, $limit]);
                 $trending = $stmt->fetchAll(PDO::FETCH_ASSOC);

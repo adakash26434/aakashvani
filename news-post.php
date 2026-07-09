@@ -25,6 +25,22 @@ if (!$news) {
         'published_at' => date('Y-m-d H:i:s'),
         'source_name' => 'आकाशवाणी',
     ];
+} else {
+    // Increment view count (fire-and-forget, don't block page load)
+    $newsId = $news['id'] ?? 0;
+    if ($newsId > 0) {
+        register_shutdown_function(function() use ($newsId) {
+            try {
+                $pdo = db();
+                if ($pdo) {
+                    $stmt = $pdo->prepare("UPDATE news SET view_count = view_count + 1 WHERE id = ?");
+                    $stmt->execute([$newsId]);
+                }
+            } catch (Throwable $e) {
+                error_log("View count update failed: " . $e->getMessage());
+            }
+        });
+    }
 }
 
 // Related news
