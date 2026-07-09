@@ -4,16 +4,18 @@
 -- Date: 2026-07-09
 -- ============================================
 
+-- ============================================
+-- INSTRUCTIONS:
+-- 1. Create your database first:
+--    CREATE DATABASE your_db_name CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+--    USE your_db_name;
+-- 2. Then run this file
+-- ============================================
+
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+05:45";
 SET NAMES utf8mb4;
 SET CHARACTER SET utf8mb4;
-
--- ============================================
--- DATABASE CREATION
--- ============================================
-CREATE DATABASE IF NOT EXISTS `{DB_NAME}` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE `{DB_NAME}`;
 
 -- ============================================
 -- TABLE: aak_users
