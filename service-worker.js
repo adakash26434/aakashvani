@@ -1,19 +1,26 @@
-const CACHE_VERSION = 'v5.0.0';
+const CACHE_VERSION = 'v6.0.0';
 const CACHE_ASSETS = `${CACHE_VERSION}-assets`;
 const CACHE_DATA = `${CACHE_VERSION}-data`;
 const CACHE_IMAGES = `${CACHE_VERSION}-images`;
 
 const OFFLINE_URLS = [
-  '/', '/index.php', '/nepali-patro.php', '/tools.php', '/morning-brief.php',
-  '/assets/js/app.js', '/assets/favicon.svg', '/manifest.webmanifest'
+  '/', '/index.php', '/nepali-patro.php', '/tools.php',
+  '/assets/css/premium.css', '/assets/favicon.svg', '/manifest.json'
 ];
 
 // Install: Cache critical assets for offline access
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_ASSETS).then(cache => {
-      return cache.addAll(OFFLINE_URLS).catch(() => null);
-    })
+      // Only cache URLs that exist - filter out 404s
+      return Promise.all(
+        OFFLINE_URLS.map(url =>
+          fetch(url, { mode: 'cors' })
+            .then(res => { if (res.ok) cache.add(url); })
+            .catch(() => null)
+        )
+      ).then(() => cache);
+    }).catch(() => null)
   );
   self.skipWaiting();
 });

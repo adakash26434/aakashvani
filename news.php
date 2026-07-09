@@ -4,10 +4,17 @@
  */
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/functions.php';
+require_once __DIR__ . '/includes/bs-date.php';
 
 $lang = siteLang();
 $isNepali = ($lang !== 'en');
 $t = fn($ne, $en) => $isNepali ? $ne : $en;
+
+// Get formatted date (BS in Nepali mode, AD in English mode)
+$today = getTodayBS();
+$formattedDate = $isNepali 
+    ? $today['weekday'] . ', ' . toNeDigits((string)$today['day']) . ' ' . ['', 'बैशाख','जेठ','असार','श्रावण','भाद्र','आश्विन','कार्तिक','मंसिर','पौष','माघ','फाल्गुन','चैत्र'][$today['month']] . ' ' . toNeDigits((string)$today['year'])
+    : date('l, j F Y');
 
 // Get news
 $category = isset($_GET['category']) ? sanitize($_GET['category']) : null;
@@ -33,7 +40,12 @@ if (empty($news)) {
 function fetchNewsFromRSS($category = null) {
     $cacheFile = __DIR__ . '/data/cache/news-rss-' . ($category ?: 'all') . '.json';
     if (file_exists($cacheFile) && (time() - filemtime($cacheFile)) < 600) {
-        return json_decode(file_get_contents($cacheFile), true) ?: [];
+        $cached = json_decode(file_get_contents($cacheFile), true);
+        // news-rss.php returns 'items', not 'news'
+        if (!empty($cached['items'])) {
+            return $cached['items'];
+        }
+        return $cached ?: [];
     }
     
     $cat = $category ?: 'all';
@@ -46,6 +58,12 @@ function fetchNewsFromRSS($category = null) {
     $resp = @file_get_contents('http://' . $_SERVER['HTTP_HOST'] . $url, false, $context);
     if ($resp) {
         $data = json_decode($resp, true);
+        // news-rss.php returns 'items' key, not 'news'
+        if (!empty($data['items'])) {
+            file_put_contents($cacheFile, $resp);
+            return $data['items'];
+        }
+        // Fallback: try 'news' for backward compatibility
         if (!empty($data['news'])) {
             file_put_contents($cacheFile, $resp);
             return $data['news'];
@@ -203,7 +221,7 @@ $pageTitle = $t('समाचार | आकाशवाणी', 'News | Aakashv
         <div class="tp-container">
             <div class="tp-topbar-inner">
                 <div class="tp-topbar-left">
-                    <span class="tp-date"><?= date('l, j F Y') ?></span>
+                    <span class="tp-date"><?= $formattedDate ?></span>
                     <span class="tp-topbar-links">
                         <a href="?">नेपाली</a>
                         <a href="?lang=en">English</a>

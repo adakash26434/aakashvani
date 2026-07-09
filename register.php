@@ -3,9 +3,13 @@
  * आकाशवाणी — Register Page
  */
 require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/functions.php';
+require_once __DIR__ . '/includes/csrf.php';
+
 $lang = siteLang();
 $isNepali = ($lang !== 'en');
 $t = fn($ne, $en) => $isNepali ? $ne : $en;
+$flash = getFlash();
 ?>
 <!DOCTYPE html>
 <html lang="<?= $isNepali ? 'ne' : 'en' ?>">
@@ -30,6 +34,8 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
         .btn-primary:hover { background: var(--primary-600); transform: translateY(-1px); }
         .auth-footer { text-align: center; margin-top: var(--sp-6); font-size: 0.875rem; color: var(--dark-500); }
         .auth-footer a { color: var(--primary); font-weight: 600; text-decoration: none; }
+        .flash-error { background: #fef2f2; color: #b91c1c; padding: 12px 16px; border-radius: var(--radius-lg); margin-bottom: 16px; border: 1px solid #fecaca; }
+        .flash-success { background: #f0fdf4; color: #15803d; padding: 12px 16px; border-radius: var(--radius-lg); margin-bottom: 16px; border: 1px solid #bbf7d0; }
     </style>
     <script src="/assets/js/lucide.min.js"></script>
 </head>
@@ -37,28 +43,40 @@ $t = fn($ne, $en) => $isNepali ? $ne : $en;
     <div class="auth-page">
         <div class="auth-card">
             <div class="auth-logo">
-                <div class="brand-logo">आ</div>
+                <div class="brand-logo"><?= brandInitials() ?></div>
                 <h1 style="font-size: 1.25rem; font-weight: 700; color: var(--dark-900);"><?= $t('आकाशवाणी', 'Aakashvani') ?></h1>
             </div>
             
             <h2 class="auth-title"><?= $t('नयाँ खाता बनाउनुहोस्', 'Create New Account') ?></h2>
             
-            <form>
+            <?php if ($flash): ?>
+                <div class="<?= $flash['type'] === 'error' ? 'flash-error' : 'flash-success' ?>">
+                    <?= htmlspecialchars($flash['message']) ?>
+                </div>
+            <?php endif; ?>
+            
+            <form method="POST" action="/auth/register.php">
+                <?= csrfField() ?>
                 <div class="form-group">
                     <label class="form-label"><?= $t('पूरा नाम', 'Full Name') ?></label>
-                    <input type="text" class="input" placeholder="<?= $t('तपाईंको नाम', 'Your name') ?>">
+                    <input type="text" name="name" class="input" placeholder="<?= $t('तपाईंको नाम', 'Your name') ?>" required>
                 </div>
                 <div class="form-group">
                     <label class="form-label"><?= $t('इमेल', 'Email') ?></label>
-                    <input type="email" class="input" placeholder="info@example.com">
+                    <input type="email" name="email" class="input" placeholder="info@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label"><?= $t('फोन (वैकल्पिक)', 'Phone (optional)') ?></label>
+                    <input type="tel" name="phone" class="input" placeholder="98XXXXXXXX">
                 </div>
                 <div class="form-group">
                     <label class="form-label"><?= $t('पासवर्ड', 'Password') ?></label>
-                    <input type="password" class="input" placeholder="••••••••">
+                    <input type="password" name="password" class="input" placeholder="••••••••" required minlength="8" pattern="(?=.*[A-Z])(?=.*[0-9]).*">
+                    <small style="color: var(--dark-400); font-size: 0.75rem;"><?= $t('कम्तीमा ८ अक्षर, एउटा ठूलो अक्षर र एउटा नम्बर', 'Min 8 chars, one uppercase, one number') ?></small>
                 </div>
                 <div class="form-group">
                     <label class="form-label"><?= $t('पासवर्ड पुष्टि', 'Confirm Password') ?></label>
-                    <input type="password" class="input" placeholder="••••••••">
+                    <input type="password" name="password_confirm" class="input" placeholder="••••••••" required>
                 </div>
                 <button type="submit" class="btn-primary"><?= $t('दर्ता गर्नुहोस्', 'Register') ?></button>
             </form>

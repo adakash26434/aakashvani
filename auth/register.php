@@ -12,26 +12,38 @@ if (!csrfVerify()) {
     header('Location: /register.php'); exit;
 }
 
-$name     = trim($_POST['name']     ?? '');
-$email    = trim($_POST['email']    ?? '');
-$phone    = trim($_POST['phone']    ?? '');
-$password = (string)($_POST['password'] ?? '');
+$name            = trim($_POST['name'] ?? '');
+$email           = trim($_POST['email'] ?? '');
+$phone           = trim($_POST['phone'] ?? '');
+$password        = (string)($_POST['password'] ?? '');
+$passwordConfirm = (string)($_POST['password_confirm'] ?? '');
 
-if ($name === '' || $email === '' || strlen($password) < 6) {
-    flash('नाम, इमेल र पासवर्ड (कम्तीमा ६ अक्षर) आवश्यक।', 'error');
+if ($name === '' || $email === '') {
+    flash('नाम र इमेल आवश्यक।', 'error');
+    header('Location: /register.php'); exit;
+}
+
+if (strlen($password) < 6) {
+    flash('पासवर्ड कम्तीमा ६ अक्षर हुनुपर्छ।', 'error');
+    header('Location: /register.php'); exit;
+}
+
+if ($password !== $passwordConfirm) {
+    flash('पासवर्ड मिलेन।', 'error');
     header('Location: /register.php'); exit;
 }
 
 try {
     if (function_exists('registerUser')) {
-        $res = registerUser($email, $password, $name, $phone);
+        $res = registerUser($email, $password, $name, $phone ?: null);
         if (!empty($res['success'])) {
-            $_SESSION['user_id']   = $res['user_id'] ?? null;
-            $_SESSION['user_name'] = $name;
+            $_SESSION['user_id']    = $res['user_id'] ?? null;
+            $_SESSION['user_name']  = $name;
+            $_SESSION['auth_user_id'] = $res['user_id'] ?? null;
             flash('दर्ता सफल भयो, स्वागत छ ' . htmlspecialchars($name));
             header('Location: /profile.php'); exit;
         }
-        flash($res['message'] ?? 'दर्ता असफल।', 'error');
+        flash($res['error'] ?? $res['message'] ?? 'दर्ता असफल।', 'error');
         header('Location: /register.php'); exit;
     }
     flash('User registration अहिले उपलब्ध छैन।', 'error');

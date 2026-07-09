@@ -68,7 +68,7 @@ try {
           'slug'        => $r['slug'],
           'title'       => $r['title'],
           'link'        => $r['original_url'] ?: ($r['source_url'] ?: ''),
-          'internalUrl' => '/news-detail.php?slug=' . rawurlencode($r['slug']) . '&url=' . rawurlencode($r['original_url'] ?: ($r['source_url'] ?: '')) . '&src=' . rawurlencode($sourceLabel),
+          'internalUrl' => '/news-post.php?slug=' . rawurlencode($r['slug']) . '&url=' . rawurlencode($r['original_url'] ?: ($r['source_url'] ?: '')) . '&src=' . rawurlencode($sourceLabel),
           'image'       => $r['image_url'] ?: null,
           'source'      => $sourceKey,
           'sourceLabel' => $sourceLabel,
@@ -298,7 +298,7 @@ if ($allItems === null) {
       // Generate slug for internal URL
       $slug = nsh_make_slug($item['title'], $item['link']);
       $item['slug'] = $slug;
-      $item['internalUrl'] = '/news-detail.php?slug=' . rawurlencode($slug) . '&url=' . rawurlencode($item['link']) . '&src=' . rawurlencode($label);
+      $item['internalUrl'] = '/news-post.php?slug=' . rawurlencode($slug) . '&url=' . rawurlencode($item['link']) . '&src=' . rawurlencode($label);
       
       // Store to database for internal reading
       try {
@@ -387,7 +387,7 @@ if ($allItems === null) {
   // Add internalUrl to cached items if missing
   foreach ($allItems as &$it) {
     if (empty($it['internalUrl']) && !empty($it['slug'])) {
-      $it['internalUrl'] = '/news-detail.php?slug=' . rawurlencode($it['slug']) . '&url=' . rawurlencode($it['link'] ?? '') . '&src=' . rawurlencode($it['sourceLabel'] ?? '');
+      $it['internalUrl'] = '/news-post.php?slug=' . rawurlencode($it['slug']) . '&url=' . rawurlencode($it['link'] ?? '') . '&src=' . rawurlencode($it['sourceLabel'] ?? '');
     }
   }
   
@@ -413,7 +413,7 @@ $out = array_slice($out, 0, $limit);
 // Ensure internalUrl is set for all items
 foreach ($out as &$item) {
   if (empty($item['internalUrl']) && !empty($item['slug'])) {
-    $item['internalUrl'] = '/news-detail.php?slug=' . rawurlencode($item['slug']) . '&url=' . rawurlencode($item['link'] ?? '') . '&src=' . rawurlencode($item['sourceLabel'] ?? '');
+    $item['internalUrl'] = '/news-post.php?slug=' . rawurlencode($item['slug']) . '&url=' . rawurlencode($item['link'] ?? '') . '&src=' . rawurlencode($item['sourceLabel'] ?? '');
   }
   // Map to expected API format
   $item['id'] = $item['id'] ?? 0;

@@ -46,18 +46,52 @@ try {
     );
     
     // Ensure all articles have required fields and are properly formatted
+    // Normalize to field names that frontend JS expects
     $items = [];
     foreach ($news as $article) {
+        // Determine the best link to use
+        $link = $article['link'] ?? $article['source_url'] ?? $article['original_url'] ?? '';
+        $internalUrl = $article['internalUrl'] ?? '';
+        
+        // If no internalUrl but we have a slug, generate one
+        if (empty($internalUrl) && !empty($article['slug'])) {
+            $srcLabel = $article['sourceLabel'] ?? $article['source_name'] ?? 'Aakashvani';
+            $internalUrl = '/news-post.php?slug=' . rawurlencode($article['slug']);
+        }
+        
+        // Determine image - prefer image_url, fallback to image
+        $imageUrl = $article['image_url'] ?? $article['image'] ?? '';
+        
+        // published_at can be various formats
+        $pubDate = $article['published_at'] ?? $article['pubDate'] ?? time();
+        if (is_string($pubDate)) {
+            $pubDate = strtotime($pubDate) ?: time();
+        }
+        
         $items[] = [
-            'id'         => $article['id'] ?? '',
-            'title'      => $article['title'] ?? '',
-            'excerpt'    => truncateText($article['excerpt'] ?? $article['summary'] ?? '', 250),
-            'category'   => $article['category'] ?? 'general',
-            'source'     => $article['source'] ?? $article['source_name'] ?? 'Unknown',
-            'source_url' => $article['source_url'] ?? $article['link'] ?? '',
-            'image_url'  => $article['image_url'] ?? '',
-            'published_at' => $article['published_at'] ?? $article['pubDate'] ?? time(),
-            'language'   => $article['language'] ?? 'ne',
+            'id'          => $article['id'] ?? '',
+            'title'       => $article['title'] ?? '',
+            'excerpt'     => truncateText($article['excerpt'] ?? $article['summary'] ?? '', 250),
+            'summary'     => truncateText($article['summary'] ?? $article['excerpt'] ?? '', 250),
+            // Frontend JS expects: cat, image, sourceLabel
+            'cat'         => strtolower($article['category'] ?? $article['cat'] ?? 'general'),
+            'category'    => $article['category'] ?? 'general',
+            'sourceLabel' => $article['sourceLabel'] ?? $article['source_name'] ?? $article['source'] ?? 'Aakashvani',
+            'source'      => $article['source'] ?? $article['source_name'] ?? 'Aakashvani',
+            // Link fields
+            'link'        => $link,
+            'internalUrl' => $internalUrl,
+            'source_url'  => $article['source_url'] ?? '',
+            // Image - normalize to 'image' for JS compatibility
+            'image'       => $imageUrl,
+            'image_url'   => $imageUrl,
+            // Time fields
+            'pubDate'     => is_numeric($pubDate) ? $pubDate : strtotime($pubDate),
+            'published_at' => is_numeric($pubDate) ? $pubDate : strtotime($pubDate),
+            'ago'         => $article['ago'] ?? '',
+            // Meta
+            'language'    => $article['language'] ?? 'ne',
+            'slug'        => $article['slug'] ?? '',
         ];
     }
     
